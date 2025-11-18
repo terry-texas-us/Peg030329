@@ -416,6 +416,7 @@ void CSeg::Write(CFile& f, char* p)
 		pPrim->Write(f, p);
 	}
 }
+#if ODA_FUNCTIONALITY
 void CSeg::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD_ENT hen)
 {
 	POSITION pos = GetHeadPosition();
@@ -425,3 +426,4 @@ void CSeg::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD_ENT
 		pPrim->Write(hdb, entlist, henhd, hen);
 	}	
 }
+#endif

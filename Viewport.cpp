@@ -10,12 +10,14 @@ CViewport::CViewport(const CViewport& src)
 	m_iDeviceWidthInPixels = src.m_iDeviceWidthInPixels;
 	m_dDeviceWidthInInches = src.m_dDeviceWidthInInches;
 }
+#if ODA_FUNCTIONALITY
 CViewport::CViewport(PAD_VPENT pVp)
 {
 	m_ptCenter = CPnt(pVp->cen[0], pVp->cen[1], pVp->cen[2]);
 	m_dWidth = pVp->width;
 	m_dHeight = pVp->height;
 }
+#endif
 CViewport& CViewport::operator=(const CViewport& src) 
 {
 	m_ptCenter = src.m_ptCenter;

@@ -11,7 +11,9 @@ private:
 public: // Constructors and destructor
 	CPrimArc() {}
 	CPrimArc(char*, int iVer);	
+#if ODA_FUNCTIONALITY
 	CPrimArc(PAD_ENT_HDR, PAD_ENT);
+#endif
 	CPrimArc(const CPnt&, const CVec&, const CVec&, double);
 	CPrimArc(PENCOLOR nPenColor, PENSTYLE nPenStyle, const CPnt&, const CVec&, const CVec&, double);
 	CPrimArc(const CPnt& ptCent, const CPnt& ptBeg);
@@ -49,7 +51,9 @@ public: // Methods - absolute virtuals
 	void		TranslateUsingMask(const CVec&, const DWORD);
 	bool		Write(CFile&) const;
 	void		Write(CFile&, char*) const;
+#if ODA_FUNCTIONALITY
 	bool		Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT);
+#endif
 
 public: // Methods
 	void		CutAtPt(const CPnt&, CSeg*);

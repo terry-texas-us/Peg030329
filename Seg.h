@@ -38,7 +38,9 @@ public:
 	void		Translate(const CVec&) const;
 	void		Write(CFile&);
 	void		Write(CFile&, char*);
+#if ODA_FUNCTIONALITY
 	void		Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT);
+#endif
 
 public:
 	static CPrim*& IgnorePrim() {return mS_pPrimIgnore;}

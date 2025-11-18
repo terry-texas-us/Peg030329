@@ -9,7 +9,9 @@ private:
 public:	// Constructors and destructor
 	CPrimPolyline();
 	CPrimPolyline(char*);
+#if ODA_FUNCTIONALITY
 	CPrimPolyline(PAD_ENT);
+#endif
 	CPrimPolyline(CPnts& pts);
 	CPrimPolyline(WORD wPts, CPnt* pPts);
 
@@ -48,10 +50,17 @@ public: // Methods - absolute virtuals
 	void	TranslateUsingMask(const CVec&, const DWORD);
 	bool	Write(CFile&) const;
 	void	Write(CFile&, char*) const;
+#if ODA_FUNCTIONALITY
 	bool	Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT);
+#endif
 
 public: // Methods
+#if ODA_FUNCTIONALITY
 	bool	IsLooped() const {return (m_wFlags & AD_LWPLINE_IS_CLOSED) == AD_LWPLINE_IS_CLOSED;}
+#else
+#define PRIM_POLYLINE_CLOSED 0x0200	// This flag value must match AD_LWPLINE_IS_CLOSED (I don't have access to the 2003 ODAheaders, so this may be wrong)
+	bool	IsLooped() const {return (m_wFlags & PRIM_POLYLINE_CLOSED) == PRIM_POLYLINE_CLOSED;}
+#endif
 
 private:
 	WORD	SwingVertex() const;

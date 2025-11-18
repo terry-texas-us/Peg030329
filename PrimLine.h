@@ -8,7 +8,9 @@ private:
 public: // Constructors and destructor
 	CPrimLine() {}
 	CPrimLine(char*, int iVer);
+#if ODA_FUNCTIONALITY
 	CPrimLine(PAD_ENT);
+#endif
 	CPrimLine(const CPnt& pt0, const CPnt& pt1);
 	CPrimLine(PENCOLOR nPenColor, PENSTYLE nPenStyle, const CLine& ln);
 	CPrimLine(PENCOLOR nPenColor, PENSTYLE nPenStyle, const CPnt& pt0, const CPnt& pt1);	
@@ -45,8 +47,10 @@ public: //	Methods - absolute virtuals
 	void	TranslateUsingMask(const CVec&, const DWORD);
 	bool	Write(CFile&) const;
 	void	Write(CFile&, char*) const;
+#if ODA_FUNCTIONALITY
 	bool	Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT);
-	
+#endif
+
 public: // Methods - virtuals
 	void	CutAt2Pts(CPnt*, CSegs*, CSegs*);
 	void	CutAtPt(const CPnt&, CSeg*);

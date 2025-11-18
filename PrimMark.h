@@ -11,7 +11,9 @@ private:
 public: // Constructors and destructor
 	CPrimMark();
 	CPrimMark(char*, int iVer);
+#if ODA_FUNCTIONALITY
 	CPrimMark(PAD_ENT);
+#endif
 	CPrimMark(PENCOLOR nPenColor, short nMarkStyle, const CPnt& pt);
 
 	CPrimMark(const CPrimMark& src);
@@ -46,7 +48,9 @@ public: // Methods - absolute virtuals
 	void	TranslateUsingMask(const CVec&, const DWORD);
 	bool	Write(CFile&) const;
 	void	Write(CFile&, char*) const;
+#if ODA_FUNCTIONALITY
 	bool	Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT);
+#endif
 
 public: // Methods
 	double	GetDat(WORD wDat) const {return (m_dDat[wDat]);}

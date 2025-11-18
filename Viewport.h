@@ -15,7 +15,9 @@ public: // Constructors and destructors
 
 	CViewport() {}
 	CViewport(int iWidth, int iHeight) {Set(iWidth, iHeight);}
+#if ODA_FUNCTIONALITY
 	CViewport(PAD_VPENT);
+#endif
 	CViewport(const CViewport& src);
 
 	~CViewport() {};

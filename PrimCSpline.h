@@ -52,5 +52,7 @@ public: // Methods - absolute virtuals
 	void	TranslateUsingMask(const CVec&, const DWORD);
 	bool	Write(CFile&) const;
 	void	Write(CFile&, char*) const;
+#if ODA_FUNCTIONALITY
 	bool	Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT) {return false;}
+#endif
 };

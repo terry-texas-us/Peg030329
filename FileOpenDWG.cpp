@@ -9,7 +9,9 @@
 #include "StringExtra.h"
 #include "Text.h"
 
+#if ODA_FUNCTIONALITY
 AD_OBJHANDLE CFileOpenDWG::ms_objecthandle = {0, 0, 0, 0, 0, 0, 0, 0};
+#endif
 
 #if defined(_DEBUG)
 void myloadometer(short percent) {TRACE("Load Progress: %d\n", percent);}
@@ -17,13 +19,17 @@ void myloadometer(short percent) {TRACE("Load Progress: %d\n", percent);}
 
 CFileOpenDWG::CFileOpenDWG()
 {
-	m_henhd = (PAD_ENT_HDR) new char[sizeof(AD_ENT_HDR)]; 
-	m_hen = (PAD_ENT) new char[sizeof(AD_ENT)]; 
+#if ODA_FUNCTIONALITY
+	m_henhd = (PAD_ENT_HDR) new char[sizeof(AD_ENT_HDR)];
+	m_hen = (PAD_ENT) new char[sizeof(AD_ENT)];
 	m_htb = (PAD_TB) new char[sizeof(AD_TB)];
 	m_hxd = (PAD_XD) new char[sizeof(AD_XD)];
+#endif
 }
+
 CFileOpenDWG::~CFileOpenDWG()
 {
+#if ODA_FUNCTIONALITY
 	if (m_bInitialized)
 	{
 		adCloseFile(m_hdb);
@@ -35,7 +41,9 @@ CFileOpenDWG::~CFileOpenDWG()
 	delete [] m_henhd;
 
 	m_hdb = 0;
+#endif
 }
+
 ///<summary>Creates a new DWG or DXF file.</summary>
 bool CFileOpenDWG::Create(char* szPathKey, WORD wType)
 {
@@ -47,20 +55,28 @@ bool CFileOpenDWG::Create(char* szPathKey, WORD wType)
 	{
 		return false;
 	}
+#if ODA_FUNCTIONALITY
 	m_hdb = adNewFile(0, 0, 0, AD_ACAD2000);
+#endif
 
 	WritePenStyleTable();
 	WriteLayerTable();
 	WriteBlocksSection();
 	WriteEntities();
 
+#if ODA_FUNCTIONALITY
 	char cFileType = wType == CPegDoc::FILE_TYPE_DWG ? AD_DWG : AD_DXF;
+#endif
+#if ODA_FUNCTIONALITY
 	adSaveFile(m_hdb, szPathKey, cFileType, AD_ACAD2000, 0, 6, 1, 1);
+#endif
 
 	return true;
 }
 bool CFileOpenDWG::Initialize(short* nError)
 {
+	m_bInitialized = false;
+#if ODA_FUNCTIONALITY
 	m_bInitialized = (adInitAd2(app.m_strAppPath + "\\adinit.dat", nError) == 1);
 	if (m_bInitialized)
 	{
@@ -72,13 +88,14 @@ bool CFileOpenDWG::Initialize(short* nError)
 	}
 	else
 	{
-// TODO: Embed adinit.dat
 		msgInformation("Initialization data not loaded. (adinit.dat file must reside in same directory as application.)");
 	}
+#endif
 	return m_bInitialized;
 }
 void CFileOpenDWG::Load(char* szPathKey)
 {
+#if ODA_FUNCTIONALITY
 	if (!m_bInitialized)
 	{
 		return;
@@ -117,8 +134,10 @@ void CFileOpenDWG::Load(char* szPathKey)
 	
 	ReadBlocks(m_hdb);
 	ReadEntities();
+#endif
 }
 
+#if ODA_FUNCTIONALITY
 void CFileOpenDWG::ReadBlock(AD_DB_HANDLE hdb, PAD_BLKH blkh, PAD_ENT_HDR henhd)
 {
 	CBlock* pBlock;
@@ -197,7 +216,9 @@ void CFileOpenDWG::ReadBlock(AD_DB_HANDLE hdb, PAD_BLKH blkh, PAD_ENT_HDR henhd)
 	}
 	while (nSuccess && henhd->enttype != AD_ENT_ENDBLK);
 }
+#endif
 
+#if ODA_FUNCTIONALITY
 void CFileOpenDWG::ReadBlocks(AD_DB_HANDLE hdb)
 {
 	adStartBlockheaderGet(hdb);
@@ -221,6 +242,9 @@ void CFileOpenDWG::ReadBlocks(AD_DB_HANDLE hdb)
 		}
 	}
 }
+#endif
+
+#if ODA_FUNCTIONALITY
 ///<summary>
 ///Load all block containers, local or external. An external reference contains the
 ///name and the filename of the external drawing. Local blocks containers are an unordered list
@@ -284,9 +308,11 @@ void CFileOpenDWG::ReadBlockTable(AD_DB_HANDLE hdb)
 		}
 	}
 }
+#endif
 
 void CFileOpenDWG::ReadEntities()
 {
+#if ODA_FUNCTIONALITY
 	CPegView* pView = CPegView::GetActiveView();
 
 	short nBlockType[] = {AD_PAPERSPACE_HANDLE, AD_MODELSPACE_HANDLE};
@@ -402,8 +428,10 @@ void CFileOpenDWG::ReadEntities()
 		TRACE("      %d SeqEnd entities not loaded\n", iSeqEndEnts);
 		TRACE("      %d Dimension entities not loaded\n", iDimensionEnts);
 	}
+#endif
 }
 
+#if ODA_FUNCTIONALITY
 CPrim* CFileOpenDWG::ReadEntity(AD_VMADDR entlist)
 {
 	CPrim* pPrim;
@@ -501,7 +529,9 @@ CPrim* CFileOpenDWG::ReadEntity(AD_VMADDR entlist)
 	}
 	return (pPrim);
 }
+#endif
 
+#if ODA_FUNCTIONALITY
 CPrim* CFileOpenDWG::ReadEntityPolyline(AD_VMADDR entlist)
 {
 	WORD wFlag = m_hen->pline.polyflag;
@@ -538,11 +568,13 @@ CPrim* CFileOpenDWG::ReadEntityPolyline(AD_VMADDR entlist)
 
 	return ((CPrim*) 0);
 }
+#endif
 
 void CFileOpenDWG::ReadHeaderSection()
 {
 	TRACE("Loading header section ..\n");
 	
+#if ODA_FUNCTIONALITY
 	if (m_dhd->tilemode == 1)
 	{
 		// Use tiled viewports only .. displaying only those entities in model space
@@ -555,9 +587,7 @@ void CFileOpenDWG::ReadHeaderSection()
 		AD_OBJHANDLE blkobjhandle;
 	
 		adGetBlockHandle(m_hdb, blkobjhandle, AD_PAPERSPACE_HANDLE);
-		
 		AD_BLKH blkh;
-	
 		adSeekBlockheader(m_hdb, blkobjhandle, &blkh);
 
 		// paperspace blocks should contain at least one viewport entity. The first
@@ -596,11 +626,13 @@ void CFileOpenDWG::ReadHeaderSection()
 			}
 		}
 	}
+#endif
 }
 void CFileOpenDWG::ReadLayerTable()
 {
 	TRACE("Loading layer definitions ...\n");
-	
+
+#if ODA_FUNCTIONALITY
 	adStartLayerGet(m_hdb);
 	
 	for (int i = 0; i < int(adNumLayers(m_hdb)); i++) 
@@ -631,12 +663,14 @@ void CFileOpenDWG::ReadLayerTable()
 			if (m_htb->lay.xdblob != AD_VMNULL) { /* extended data ?? */ }
 		}
 	}
+#endif
 }
 
 void CFileOpenDWG::ReadLnTypsTable()
 {
 	TRACE("Loading line type definitions ...\n");
 	
+#if ODA_FUNCTIONALITY
 	adStartLinetypeGet(m_hdb);
 	
 	for (int i = 0; i < int(adNumLinetypes(m_hdb)); i++) 
@@ -665,12 +699,14 @@ void CFileOpenDWG::ReadLnTypsTable()
 		
 		if (m_htb->ltype.xdblob != AD_VMNULL) {	/* extended data ?? */	}
 	}
+#endif
 }
 
 void CFileOpenDWG::ReadVPortTable()
 {
 	TRACE("Loading view port definitions ...\n");
 	
+#if ODA_FUNCTIONALITY
 	adStartVportGet(m_hdb);
 	
 	for (int i = 0; i < int(adNumVports(m_hdb)); i++) 
@@ -692,10 +728,12 @@ void CFileOpenDWG::ReadVPortTable()
 			}
 		}
     }
+#endif
 }
 
 void CFileOpenDWG::WriteBlocksSection()
 {
+#if ODA_FUNCTIONALITY
 	CPegDoc* pDoc = CPegDoc::GetDoc();
 						
 	CString strKey;
@@ -743,10 +781,12 @@ void CFileOpenDWG::WriteBlocksSection()
 		adGenerateObjhandle(m_hdb, m_henhd->enthandle);
 		adAddEntityToList(m_hdb, entlist, m_henhd, m_hen);
 	}
+#endif
 }
 
 void CFileOpenDWG::WriteEntities()
 {
+#if ODA_FUNCTIONALITY
 	CPegDoc* pDoc = CPegDoc::GetDoc();
 						
 	AD_OBJHANDLE blkobjhandle;
@@ -770,6 +810,7 @@ void CFileOpenDWG::WriteEntities()
 			pSeg->Write(m_hdb, mspaceentlist, m_henhd, m_hen);
 		}
 	}
+#endif
 }
 
 void CFileOpenDWG::WriteLayerTable()
@@ -779,10 +820,14 @@ void CFileOpenDWG::WriteLayerTable()
 	// layer "0" table entry created by toolkit .. not added here .. modify some defaults
 	CLayer* pLayer = pDoc->LayersGetAt(0);
 	
+#if ODA_FUNCTIONALITY
 	adStartLayerGet(m_hdb);
 	adGetLayer(m_hdb, &m_htb->lay);
-	
+#endif
+
+#if ODA_FUNCTIONALITY
 	m_htb->lay.color = pLayer->PenColor();
+#endif
 
 	for (int i = 1; i < pDoc->LayersGetSize(); i++)
 	{
@@ -793,6 +838,7 @@ void CFileOpenDWG::WriteLayerTable()
 
 void CFileOpenDWG::WriteLayer(const CString& strName, PENCOLOR nColor)
 {
+#if ODA_FUNCTIONALITY
 	adSetDefaultLayer(m_hdb, &m_htb->lay);
 	
 	strcpy(m_htb->lay.name, strName);
@@ -802,6 +848,7 @@ void CFileOpenDWG::WriteLayer(const CString& strName, PENCOLOR nColor)
 	
 	adGenerateObjhandle(m_hdb, m_htb->lay.objhandle);
 	adAddLayer(m_hdb, &m_htb->lay);
+#endif
 }
 
 void CFileOpenDWG::WritePenStyleTable()
@@ -818,6 +865,7 @@ void CFileOpenDWG::WritePenStyleTable()
 }
 void CFileOpenDWG::WritePenStyle(CPenStyle* pPenStyle)
 {
+#if ODA_FUNCTIONALITY
 	adSetDefaultLinetype(&m_htb->ltype);
   
 	strcpy(m_htb->ltype.name, pPenStyle->GetName());
@@ -853,8 +901,10 @@ void CFileOpenDWG::WritePenStyle(CPenStyle* pPenStyle)
 	{
 	
 	}
+#endif
 }
 
+#if ODA_FUNCTIONALITY
 CPrimArc::CPrimArc(PAD_ENT_HDR henhd, PAD_ENT hen)
 {
 	CVec vNorm(henhd->extrusion[0], henhd->extrusion[1], henhd->extrusion[2]);
@@ -956,6 +1006,8 @@ CPrimArc::CPrimArc(PAD_ENT_HDR henhd, PAD_ENT hen)
 		m_dSwpAng = dAng; 
 	}
 }
+#endif
+#if ODA_FUNCTIONALITY
 bool CPrimArc::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD_ENT hen)
 {
 	henhd->enttype = AD_ENT_ELLIPSE;
@@ -993,14 +1045,20 @@ bool CPrimArc::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD
 
 	return true;
 }
+#endif
+#if ODA_FUNCTIONALITY
 bool CPrimBSpline::Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT)
 {
 	return false;
 }
+#endif
+#if ODA_FUNCTIONALITY
 bool CPrimDim::Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT)
 {
 	return false;
 }
+#endif
+#if ODA_FUNCTIONALITY
 CPrimInsert::CPrimInsert(AD_DB_HANDLE hdb, PAD_ENT_HDR henhd, PAD_ENT hen)
 {
 	AD_BLKH blkh;
@@ -1030,6 +1088,8 @@ CPrimInsert::CPrimInsert(AD_DB_HANDLE hdb, PAD_ENT_HDR henhd, PAD_ENT hen)
 	m_vX = tm * m_vX;
 	m_vY = tm * m_vY;
 }
+#endif
+#if ODA_FUNCTIONALITY
 bool CPrimInsert::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD_ENT hen)
 {
 	henhd->enttype = AD_ENT_INSERT;
@@ -1071,12 +1131,16 @@ bool CPrimInsert::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, 
 
 	return true;
 }
+#endif
+#if ODA_FUNCTIONALITY
 CPrimLine::CPrimLine(PAD_ENT hen)
 {
 	m_ln[0](hen->line.pt0[0], hen->line.pt0[1], hen->line.pt0[2]);
 	m_ln[1](hen->line.pt1[0], hen->line.pt1[1], hen->line.pt1[2]);
 }
+#endif
 
+#if ODA_FUNCTIONALITY
 bool CPrimLine::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD_ENT hen)
 {
 	henhd->enttype = AD_ENT_LINE;
@@ -1110,6 +1174,8 @@ bool CPrimLine::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PA
 
 	return true;
 }
+#endif
+#if ODA_FUNCTIONALITY
 CPrimMark::CPrimMark(PAD_ENT hen)
 {
 	m_nMarkStyle = m_nPenStyle;
@@ -1118,6 +1184,8 @@ CPrimMark::CPrimMark(PAD_ENT hen)
 	m_Dats = 0;
 	m_dDat = 0;
 }
+#endif
+#if ODA_FUNCTIONALITY
 bool CPrimMark::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD_ENT hen)
 {
 	henhd->enttype = AD_ENT_POINT;
@@ -1133,6 +1201,8 @@ bool CPrimMark::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PA
 
 	return true;
 }
+#endif
+#if ODA_FUNCTIONALITY
 CPrimPolygon::CPrimPolygon(AD_DB_HANDLE	hdb, PAD_ENT_HDR henhd, PAD_ENT hen)
 {
 	if (henhd->enttype == AD_ENT_FACE3D)
@@ -1359,7 +1429,9 @@ CPrimPolygon::CPrimPolygon(AD_DB_HANDLE	hdb, PAD_ENT_HDR henhd, PAD_ENT hen)
 		
 	}
 }
+#endif
 
+#if ODA_FUNCTIONALITY
 bool CPrimPolygon::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD_ENT hen)
 {
 	henhd->enttype = adLwplineEnttype(hdb);
@@ -1386,6 +1458,8 @@ bool CPrimPolygon::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd,
 
 	return true;
 }
+#endif
+#if ODA_FUNCTIONALITY
 CPrimPolyline::CPrimPolyline(PAD_ENT hen)
 {
 	// Note: this is a lightweight polyline. will not succeed if adConvertPlinesOnLoad(0) is
@@ -1415,6 +1489,8 @@ CPrimPolyline::CPrimPolyline(PAD_ENT hen)
 	}
 	adEndBlobRead(bcptr);
 }
+#endif
+#if ODA_FUNCTIONALITY
 bool CPrimPolyline::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD_ENT hen)
 {
 	henhd->enttype = adLwplineEnttype(hdb);
@@ -1448,6 +1524,8 @@ bool CPrimPolyline::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd
 
 	return true;
 }
+#endif
+#if ODA_FUNCTIONALITY
 CPrimSegRef::CPrimSegRef(AD_DB_HANDLE hdb, PAD_ENT_HDR henhd, PAD_ENT hen)
 {
 	AD_BLKH blkh;
@@ -1464,6 +1542,8 @@ CPrimSegRef::CPrimSegRef(AD_DB_HANDLE hdb, PAD_ENT_HDR henhd, PAD_ENT hen)
 	m_dColSpac = hen->insert.coldist;
 	m_dRowSpac = hen->insert.rowdist;
 }
+#endif
+#if ODA_FUNCTIONALITY
 bool CPrimSegRef::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD_ENT hen)
 {
 	henhd->enttype = AD_ENT_INSERT;
@@ -1503,10 +1583,14 @@ bool CPrimSegRef::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, 
 
 	return true;
 }
+#endif
+#if ODA_FUNCTIONALITY
 bool CPrimTag::Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT)
 {
 	return false;
 }
+#endif
+#if ODA_FUNCTIONALITY
 ///<summary>Constructs a text primative using OpenDWG library.</summary>
 CPrimText::CPrimText(AD_DB_HANDLE hdb, PAD_ENT_HDR henhd, PAD_ENT hen)
 {
@@ -1648,6 +1732,8 @@ CPrimText::CPrimText(AD_DB_HANDLE hdb, PAD_ENT_HDR henhd, PAD_ENT hen)
 		}
 	}
 }
+#endif
+#if ODA_FUNCTIONALITY
 bool CPrimText::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD_ENT hen)
 {
 	henhd->enttype = AD_ENT_TEXT;
@@ -1683,3 +1769,4 @@ bool CPrimText::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PA
 	
 	return true;
 }
+#endif

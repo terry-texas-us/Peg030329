@@ -56,8 +56,10 @@ public: // Constructors and destructor
 
 	CAbstractView();
 	CAbstractView(const CAbstractView& av);
+#if ODA_FUNCTIONALITY
 	CAbstractView(PAD_VPENT);
-	
+#endif
+
 	~CAbstractView() {}
 
 public: // Operators

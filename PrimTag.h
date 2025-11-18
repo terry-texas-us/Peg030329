@@ -37,5 +37,7 @@ public: // Methods - absolute virtuals
 	void	Transform(const CTMat&); 
 	bool	Write(CFile&) const;
 	void	Write(CFile&, char*) const;
+#if ODA_FUNCTIONALITY
 	bool	Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT);
+#endif
 };

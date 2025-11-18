@@ -49,6 +49,7 @@ CAbstractView::CAbstractView(const CAbstractView& src)
 	m_dNearClipDistance = src.m_dNearClipDistance;
 	m_dFarClipDistance = src.m_dFarClipDistance;
 }
+#if ODA_FUNCTIONALITY
 CAbstractView::CAbstractView(PAD_VPENT pVP)
 {
 	m_ptUCSOrigin = CPnt(pVP->ucsorg[0], pVP->ucsorg[1], pVP->ucsorg[2]);
@@ -72,6 +73,7 @@ CAbstractView::CAbstractView(PAD_VPENT pVP)
 	m_ptEye = m_ptTarget + m_vDirection * m_dLensLength;
 	m_vVwUp(0., 1., 0.);
 }
+#endif
 CAbstractView& CAbstractView::operator=(const CAbstractView& src)
 {
 	m_nViewMode = src.m_nViewMode; 

@@ -10,7 +10,9 @@ private:
 public:	// Constructors and destructor
 	CPrimText() {}
 	CPrimText(char*, int iVer);
+#if ODA_FUNCTIONALITY
 	CPrimText(AD_DB_HANDLE hdb, PAD_ENT_HDR henhd, PAD_ENT hen);
+#endif
 	CPrimText(const CFontDef& fd, const CRefSys& rs, const char* pszText);
 	CPrimText(const CPrimText&);
 	
@@ -46,8 +48,10 @@ public: // Methods - absolute virtuals
 	void	Transform(const CTMat&);
 	bool	Write(CFile&) const;
 	void	Write(CFile&, char*) const;
+#if ODA_FUNCTIONALITY
 	bool	Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT);
-	
+#endif
+
 public: // Methods
 	void				GetBoundingBox(CPnts&, double) const;
 	void				GetFontDef(CFontDef& fd) const {fd = m_fd;}

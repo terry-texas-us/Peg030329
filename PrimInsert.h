@@ -20,7 +20,9 @@ private:
 public: // Constructors and destructor
 	CPrimInsert();
 	CPrimInsert(const CString& strName, const CPnt& pt);
+#if ODA_FUNCTIONALITY
 	CPrimInsert(AD_DB_HANDLE, PAD_ENT_HDR, PAD_ENT);
+#endif
 
 	CPrimInsert(const CPrimInsert&);
 
@@ -55,7 +57,9 @@ public: // Methods - absolute virtuals
 	void	TranslateUsingMask(const CVec& v, const DWORD dwMask);
 	bool	Write(CFile& fl) const;
 	void	Write(CFile&, char*) const;
+#if ODA_FUNCTIONALITY
 	bool	Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT);
+#endif
 
 	CString&	BlkNam() {return m_strName;}
 	WORD&		ColCnt() {return m_wColCnt;}

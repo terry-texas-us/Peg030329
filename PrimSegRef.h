@@ -17,7 +17,9 @@ private:
 public: // Constructors and destructor
 	CPrimSegRef();
 	CPrimSegRef(const CString& strName, const CPnt& pt);
+#if ODA_FUNCTIONALITY
 	CPrimSegRef(AD_DB_HANDLE, PAD_ENT_HDR, PAD_ENT);
+#endif
 	CPrimSegRef(const CPrimSegRef&);
 	
 	virtual ~CPrimSegRef() {};
@@ -51,7 +53,9 @@ public: // Methods - absolute virtuals
 	void	TranslateUsingMask(const CVec& v, const DWORD dwMask);
 	bool	Write(CFile& fl) const;
 	void	Write(CFile&, char*) const;
+#if ODA_FUNCTIONALITY
 	bool	Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT);
+#endif
 
 public: // Methods
 	WORD&		ColCnt() {return m_wColCnt;}

@@ -75,7 +75,9 @@ public: // Methods - absolute virtuals
 	virtual void	TranslateUsingMask(const CVec&, const DWORD) = 0;
 	virtual bool	Write(CFile& fl) const = 0;
 	virtual void	Write(CFile& fl, char*) const = 0;
+#if ODA_FUNCTIONALITY
 	virtual bool	Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT) = 0;
+#endif
 
 public: // Methods - virtuals
 

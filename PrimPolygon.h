@@ -16,7 +16,9 @@ private:
 public:	// Constructors and destructor
 	CPrimPolygon();
 	CPrimPolygon(char*, int iVer);
+#if ODA_FUNCTIONALITY
 	CPrimPolygon(AD_DB_HANDLE, PAD_ENT_HDR, PAD_ENT);
+#endif
 	CPrimPolygon(WORD, CPnt*);
 	CPrimPolygon(WORD, CPnt, const CVec&, const CVec&, const CPnt*);
 	
@@ -51,7 +53,9 @@ public: // Methods - absolute virtuals
 	void	TranslateUsingMask(const CVec&, const DWORD);
 	bool	Write(CFile&) const;
 	void	Write(CFile&, char*) const;
+#if ODA_FUNCTIONALITY
 	bool	Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT);
+#endif
 
 	CString			FormatIntStyle() const;
 	const short&	IntStyle() const {return (m_nIntStyle);}
