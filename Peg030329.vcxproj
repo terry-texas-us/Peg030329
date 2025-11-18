@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>18.0</VCProjectVersion>
+    <ProjectGuid>{ED2BC82E-9309-B12D-761C-FDE002B9AC5F}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AbstractView.cpp" />
+    <ClCompile Include="Block.cpp" />
+    <ClCompile Include="CharCellDef.cpp" />
+    <ClCompile Include="ChildFrm.cpp" />
+    <ClCompile Include="CutPaste.cpp" />
+    <ClCompile Include="Dde.cpp" />
+    <ClCompile Include="DdeCmds.cpp" />
+    <ClCompile Include="DdeConversation.cpp" />
+    <ClCompile Include="DdeGItms.cpp" />
+    <ClCompile Include="DdeItem.cpp" />
+    <ClCompile Include="DdeSys.cpp" />
+    <ClCompile Include="DdeTopic.cpp" />
+    <ClCompile Include="Directory.cpp" />
+    <ClCompile Include="DlgAbout.cpp" />
+    <ClCompile Include="DlgProcAnnotateOptions.cpp" />
+    <ClCompile Include="DlgProcBlockInsert.cpp" />
+    <ClCompile Include="DlgProcDrawOptions.cpp" />
+    <ClCompile Include="DlgProcEditOps.cpp" />
+    <ClCompile Include="DlgProcEditTrap_CommandsQuery.cpp" />
+    <ClCompile Include="DlgProcFileManage.cpp" />
+    <ClCompile Include="DlgProcFileTracing.cpp" />
+    <ClCompile Include="DlgProcFixupOptions.cpp" />
+    <ClCompile Include="DlgProcGetLayerName.cpp" />
+    <ClCompile Include="DlgProcHomePoints.cpp" />
+    <ClCompile Include="DlgProcLPDOptions.cpp" />
+    <ClCompile Include="DlgProcModeLetter.cpp" />
+    <ClCompile Include="DlgProcModeRevise.cpp" />
+    <ClCompile Include="DlgProcPipeOptions.cpp" />
+    <ClCompile Include="DlgProcPipeSymbol.cpp" />
+    <ClCompile Include="DlgProcProjAxonometric.cpp" />
+    <ClCompile Include="DlgProcProjIsometric.cpp" />
+    <ClCompile Include="DlgProcProjOblique.cpp" />
+    <ClCompile Include="DlgProcProjPerspective.cpp" />
+    <ClCompile Include="DlgProcRPDOptions.cpp" />
+    <ClCompile Include="DlgProcSetPasteLoc.cpp" />
+    <ClCompile Include="DlgProcSetupHatch.cpp" />
+    <ClCompile Include="DlgProcSetupMouse_Buttons.cpp" />
+    <ClCompile Include="DlgProcSetupNote.cpp" />
+    <ClCompile Include="DlgProcSetupPenStyle.cpp" />
+    <ClCompile Include="DlgProcSetupPen_Color.cpp" />
+    <ClCompile Include="DlgProcSetupUnits.cpp" />
+    <ClCompile Include="DlgProcTrapModify.cpp" />
+    <ClCompile Include="DlgProcViewLighting.cpp" />
+    <ClCompile Include="DlgProcViewParameters.cpp" />
+    <ClCompile Include="DlgSetAngle.cpp" />
+    <ClCompile Include="DlgSetLength.cpp" />
+    <ClCompile Include="DlgSetScale.cpp" />
+    <ClCompile Include="DlgSetText.cpp" />
+    <ClCompile Include="DlgViewZoom.cpp" />
+    <ClCompile Include="FfaRead.cpp" />
+    <ClCompile Include="FileBitmap.cpp" />
+    <ClCompile Include="FileBlock.cpp" />
+    <ClCompile Include="FileJob.cpp" />
+    <ClCompile Include="FileOpenDWG.cpp" />
+    <ClCompile Include="FilePeg.cpp" />
+    <ClCompile Include="FileTracing.cpp" />
+    <ClCompile Include="FontDef.cpp" />
+    <ClCompile Include="Grid.cpp" />
+    <ClCompile Include="Layer.cpp" />
+    <ClCompile Include="Lex.cpp" />
+    <ClCompile Include="Line.cpp" />
+    <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="Mat4.cpp" />
+    <ClCompile Include="Messages.cpp" />
+    <ClCompile Include="ModeLine.cpp" />
+    <ClCompile Include="ModelTransform.cpp" />
+    <ClCompile Include="ModelView.cpp" />
+    <ClCompile Include="MsgProcs.cpp" />
+    <ClCompile Include="OpenGL.cpp" />
+    <ClCompile Include="OwnerDraw.cpp" />
+    <ClCompile Include="ParLines.cpp" />
+    <ClCompile Include="PegAEsys.cpp" />
+    <ClCompile Include="PegAEsysDoc.cpp" />
+    <ClCompile Include="PegAEsysView.cpp" />
+    <ClCompile Include="PenStyle.cpp" />
+    <ClCompile Include="PixelMapRGB.cpp" />
+    <ClCompile Include="Pnt.cpp" />
+    <ClCompile Include="Pnt4.cpp" />
+    <ClCompile Include="Polygon.cpp" />
+    <ClCompile Include="Polyline.cpp" />
+    <ClCompile Include="Prim.cpp" />
+    <ClCompile Include="PrimArc.cpp" />
+    <ClCompile Include="PrimBSpline.cpp" />
+    <ClCompile Include="PrimCSpline.cpp" />
+    <ClCompile Include="PrimDim.cpp" />
+    <ClCompile Include="PrimInsert.cpp" />
+    <ClCompile Include="PrimLine.cpp" />
+    <ClCompile Include="PrimMark.cpp" />
+    <ClCompile Include="PrimPolygon.cpp" />
+    <ClCompile Include="PrimPolyline.cpp" />
+    <ClCompile Include="PrimSegRef.cpp" />
+    <ClCompile Include="PrimState.cpp" />
+    <ClCompile Include="PrimTag.cpp" />
+    <ClCompile Include="PrimText.cpp" />
+    <ClCompile Include="RefSys.cpp" />
+    <ClCompile Include="Seg.cpp" />
+    <ClCompile Include="Segs.cpp" />
+    <ClCompile Include="SegsDet.cpp" />
+    <ClCompile Include="SegsTrap.cpp" />
+    <ClCompile Include="Stdafx.cpp" />
+    <ClCompile Include="StringExtra.cpp" />
+    <ClCompile Include="SubProcAnnotate.cpp" />
+    <ClCompile Include="SubProcCut.cpp" />
+    <ClCompile Include="SubProcDimension.cpp" />
+    <ClCompile Include="SubProcDraw.cpp" />
+    <ClCompile Include="SubProcDraw2.cpp" />
+    <ClCompile Include="SubProcEdit.cpp" />
+    <ClCompile Include="SubProcEditPrimitive.cpp" />
+    <ClCompile Include="SubProcEditSegment.cpp" />
+    <ClCompile Include="SubProcFixup.cpp" />
+    <ClCompile Include="SubProcLPD.cpp" />
+    <ClCompile Include="SubProcMendPrim.cpp" />
+    <ClCompile Include="SubProcNodal.cpp" />
+    <ClCompile Include="SubProcPipe.cpp" />
+    <ClCompile Include="SubProcPower.cpp" />
+    <ClCompile Include="SubProcRLPD.cpp" />
+    <ClCompile Include="SubProcTrapAdd.cpp" />
+    <ClCompile Include="SubProcTrapRemove.cpp" />
+    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="TMat.cpp" />
+    <ClCompile Include="TrpFiltr.cpp" />
+    <ClCompile Include="UnitsString.cpp" />
+    <ClCompile Include="UserAxis.cpp" />
+    <ClCompile Include="Vax.cpp" />
+    <ClCompile Include="Vec.cpp" />
+    <ClCompile Include="Vec4.cpp" />
+    <ClCompile Include="Viewport.cpp" />
+    <ClCompile Include="WndProcKeyPlan.cpp" />
+    <ClCompile Include="WndProcPreview.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AbstractView.h" />
+    <ClInclude Include="Block.h" />
+    <ClInclude Include="CharCellDef.h" />
+    <ClInclude Include="ChildFrm.h" />
+    <ClInclude Include="Dde.h" />
+    <ClInclude Include="DdeCmds.h" />
+    <ClInclude Include="DdeGItms.h" />
+    <ClInclude Include="DdeSys.h" />
+    <ClInclude Include="Directory.h" />
+    <ClInclude Include="DlgProcEditOps.h" />
+    <ClInclude Include="DlgProcEditTrap_CommandsQuery.h" />
+    <ClInclude Include="DlgProcFileManage.h" />
+    <ClInclude Include="DlgProcTrapModify.h" />
+    <ClInclude Include="DlgSetAngle.h" />
+    <ClInclude Include="DlgSetLength.h" />
+    <ClInclude Include="DlgSetScale.h" />
+    <ClInclude Include="DlgSetText.h" />
+    <ClInclude Include="DlgViewZoom.h" />
+    <ClInclude Include="ExpProcs.h" />
+    <ClInclude Include="FileBitmap.h" />
+    <ClInclude Include="FileBlock.h" />
+    <ClInclude Include="FileJob.h" />
+    <ClInclude Include="FileOpenDWG.h" />
+    <ClInclude Include="FilePeg.h" />
+    <ClInclude Include="FileTracing.h" />
+    <ClInclude Include="FontDef.h" />
+    <ClInclude Include="Grid.h" />
+    <ClInclude Include="Hatch.h" />
+    <ClInclude Include="Layer.h" />
+    <ClInclude Include="Lex.h" />
+    <ClInclude Include="LexTable.h" />
+    <ClInclude Include="Line.h" />
+    <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="Mat4.h" />
+    <ClInclude Include="Messages.h" />
+    <ClInclude Include="ModelTransform.h" />
+    <ClInclude Include="ModelView.h" />
+    <ClInclude Include="OpenGL.h" />
+    <ClInclude Include="OwnerDraw.h" />
+    <ClInclude Include="ParLines.h" />
+    <ClInclude Include="PegAEsys.h" />
+    <ClInclude Include="PegAEsysDoc.h" />
+    <ClInclude Include="PegAEsysView.h" />
+    <ClInclude Include="PegColors.h" />
+    <ClInclude Include="PenStyle.h" />
+    <ClInclude Include="PixelMapRGB.h" />
+    <ClInclude Include="Pnt.h" />
+    <ClInclude Include="Pnt4.h" />
+    <ClInclude Include="Polygon.h" />
+    <ClInclude Include="Polyline.h" />
+    <ClInclude Include="Preview.h" />
+    <ClInclude Include="Prim.h" />
+    <ClInclude Include="PrimArc.h" />
+    <ClInclude Include="PrimBSpline.h" />
+    <ClInclude Include="PrimCSpline.h" />
+    <ClInclude Include="PrimDim.h" />
+    <ClInclude Include="PrimInsert.h" />
+    <ClInclude Include="PrimLine.h" />
+    <ClInclude Include="PrimMark.h" />
+    <ClInclude Include="PrimPolygon.h" />
+    <ClInclude Include="PrimPolyline.h" />
+    <ClInclude Include="PrimSegRef.h" />
+    <ClInclude Include="PrimState.h" />
+    <ClInclude Include="PrimTag.h" />
+    <ClInclude Include="PrimText.h" />
+    <ClInclude Include="RefSys.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SafeMath.h" />
+    <ClInclude Include="Seg.h" />
+    <ClInclude Include="Segs.h" />
+    <ClInclude Include="SegsDet.h" />
+    <ClInclude Include="SegsTrap.h" />
+    <ClInclude Include="Stdafx.h" />
+    <ClInclude Include="StringExtra.h" />
+    <ClInclude Include="SubProcAnnotate.h" />
+    <ClInclude Include="SubProcCut.h" />
+    <ClInclude Include="SubProcDimension.h" />
+    <ClInclude Include="SubProcDraw.h" />
+    <ClInclude Include="SubProcDraw2.h" />
+    <ClInclude Include="SubProcEdit.h" />
+    <ClInclude Include="SubProcEditPrimitive.h" />
+    <ClInclude Include="SubProcEditSegment.h" />
+    <ClInclude Include="SubProcFixup.h" />
+    <ClInclude Include="SubProcLPD.h" />
+    <ClInclude Include="SubProcMendPrim.h" />
+    <ClInclude Include="SubProcNodal.h" />
+    <ClInclude Include="SubProcPipe.h" />
+    <ClInclude Include="SubProcPower.h" />
+    <ClInclude Include="SubProcRLPD.h" />
+    <ClInclude Include="SubProcTrapAdd.h" />
+    <ClInclude Include="SubProcTrapRemove.h" />
+    <ClInclude Include="Text.h" />
+    <ClInclude Include="TMat.h" />
+    <ClInclude Include="UnitsString.h" />
+    <ClInclude Include="UserAxis.h" />
+    <ClInclude Include="Vax.h" />
+    <ClInclude Include="Vec.h" />
+    <ClInclude Include="Vec4.h" />
+    <ClInclude Include="Viewport.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="res\PegAEsys.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\PegAEsys.rc2" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
