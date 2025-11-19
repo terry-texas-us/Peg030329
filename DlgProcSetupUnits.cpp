@@ -45,7 +45,7 @@ void UnitsDlgProcInit(HWND hDlg)
 	}	
 	if (iCtrlId == IDC_METRIC)
 	{
-		i = app.GetUnits() - Meters;
+		int i = app.GetUnits() - Meters;
 		::SendDlgItemMessage(hDlg, IDC_METRIC_UNITS, LB_SETCURSEL, (WPARAM) i, 0L);
 	}
 }

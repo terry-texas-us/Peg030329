@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <io.h>
 
 void Path_UnquoteSpaces(CString& strPathName)
 {

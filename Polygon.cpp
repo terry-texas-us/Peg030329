@@ -61,7 +61,7 @@ void Polygon_GenPts(const CPnt& ptCP, const CVec& vXRefAx, const CVec& vYRefAx, 
 	{
 		pt[i + 1](pt[i][0] * dCosInc - pt[i][1] * dSinInc, pt[i][1] * dCosInc + pt[i][0] * dSinInc, 0.);
 	}
-	for (i = 0; i < iPts; i++)
+	for (int i = 0; i < iPts; i++)
 	{
 		pt[i] = tm * pt[i];
 	}

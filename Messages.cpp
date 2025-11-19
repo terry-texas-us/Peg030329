@@ -57,8 +57,8 @@ void msgWarning(UINT uiMsgId, const CString& strVal)
 void msgInformation(const CString& strMes)
 {
 	char szMsg[256];
-	
-	for (int n = 0; n < strMes.GetLength(); n++)
+	int n = 0;
+	for (; n < strMes.GetLength(); n++)
 	{
 		szMsg[n] = isprint(strMes.GetAt(n)) ? strMes.GetAt(n) : '.';
 	}

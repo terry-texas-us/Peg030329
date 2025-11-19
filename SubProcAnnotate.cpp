@@ -43,7 +43,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
 			switch (LOWORD(wParam)) 
 			{
 				case ID_OP0:
-					::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_ANNOTATE_OPTIONS), hwnd, DlgProcAnnotateOptions);
+					::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_ANNOTATE_OPTIONS), hwnd, reinterpret_cast<DLGPROC>(DlgProcAnnotateOptions));
 					return 0;
 
 				case ID_OP1:									// unused

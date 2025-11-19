@@ -18,16 +18,14 @@ LRESULT CALLBACK SubProcEdit(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 	{
 		CTMat	tm;
 		
-		char	szKey[] = "EDIT";
-		
 		switch (LOWORD(wParam))
 		{
 			case ID_HELP_KEY:
-				WinHelp(hwnd, "peg.hlp", HELP_KEY, (DWORD) (LPSTR) szKey);
+				WinHelp(hwnd, "peg.hlp", HELP_KEY, reinterpret_cast<DWORD_PTR>("EDIT"));
 				return 0;
 			
 			case ID_OP0:
-				::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_EDIT_OPTIONS), hwnd, DlgProcEditOps);
+				::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_EDIT_OPTIONS), hwnd, reinterpret_cast<DLGPROC>(DlgProcEditOps));
 				return 0;
 
 			case ID_OP1:		// Reposition trap pivot point

@@ -980,23 +980,24 @@ CSeg* CPegDoc::WorkLayerGetTail() const
 }
 void CPegDoc::SetOpenFile(WORD wFileType, const CString& strFileName)
 {
-	for (int n = strFileName.GetLength() - 1; n > 0; n--)
-	{
-		if (strFileName[n] == '\\')
-		{
-			n++;
-			break;
-		}
-	}
-	
-	CString strItem = "&File:" + strFileName.Mid(n);
+    int n = 0;
+    for (n = strFileName.GetLength() - 1; n > 0; n--)
+    {
+        if (strFileName[n] == '\\')
+        {
+            n++;
+            break;
+        }
+    }
 
-	app.ModifyMenu(0, strItem);
+    CString strItem = "&File:" + strFileName.Mid(n);
 
-	if (wFileType == FILE_TYPE_NONE)
-		WorkLayerSet(LayersGetAt(0));
-	
-	m_wOpenFileType = wFileType;
+    app.ModifyMenu(0, strItem);
+
+    if (wFileType == FILE_TYPE_NONE)
+        WorkLayerSet(LayersGetAt(0));
+
+    m_wOpenFileType = wFileType;
 }
 ///<summary>Tracing is converted to a static layer.</summary>
 ///<remarks>
@@ -1696,7 +1697,7 @@ void CPegDoc::OnEditTrapPaste()
 
 		if (IsClipboardFormatAvailable(nClipboardFormat))
 		{
-			if (::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PASTE_POSITION), pWnd->GetSafeHwnd(), DlgProcSetPasteLoc) > 0)
+			if (::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PASTE_POSITION), pWnd->GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetPasteLoc)) > 0)
 			{
 				HGLOBAL hGbl = GetClipboardData(nClipboardFormat);
 				if (hGbl != 0)
@@ -1819,12 +1820,12 @@ void CPegDoc::OnTrapCommandsSquare()
 void CPegDoc::OnTrapCommandsQuery()
 {
 	CWnd* pWnd = AfxGetApp()->GetMainWnd();
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_EDIT_TRAPCOMMANDS_QUERY), pWnd->GetSafeHwnd(), DlgProcEditTrap_CommandsQuery);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_EDIT_TRAPCOMMANDS_QUERY), pWnd->GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcEditTrap_CommandsQuery));
 }
 void CPegDoc::OnTrapCommandsFilter()
 {
 	CWnd* pWnd = AfxGetApp()->GetMainWnd();
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_TRAP_FILTER), pWnd->GetSafeHwnd(), DlgProcTrapFilter);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_TRAP_FILTER), pWnd->GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcTrapFilter));
 }
 void CPegDoc::OnTrapCommandsBlock()
 {
@@ -1867,13 +1868,13 @@ void CPegDoc::OnSetupPenColor()
 {
 	CWnd* pWnd = AfxGetApp()->GetMainWnd();
 	
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_COLOR), pWnd->GetSafeHwnd(), DlgProcSetupPenColor);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_COLOR), pWnd->GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupPenColor));
 	app.StatusLineDisplay(Pen);
 }
 void CPegDoc::OnSetupPenStyle()
 {
 	CWnd* pWnd = AfxGetApp()->GetMainWnd();
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_PENSTYLE), pWnd->GetSafeHwnd(), DlgProcSetupPenStyle);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_PENSTYLE), pWnd->GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupPenStyle));
 	app.StatusLineDisplay(Line);
 }
 void CPegDoc::OnSetupFillHollow()
@@ -1890,12 +1891,12 @@ void CPegDoc::OnSetupFillPattern()
 void CPegDoc::OnSetupFillHatch()
 {
 	CWnd* pWnd = AfxGetApp()->GetMainWnd();
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_HATCH), pWnd->GetSafeHwnd(), DlgProcSetupHatch);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_HATCH), pWnd->GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupHatch));
 }
 void CPegDoc::OnSetupNote()
 {
 	CWnd* pWnd = AfxGetApp()->GetMainWnd();
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_NOTE), pWnd->GetSafeHwnd(), DlgProcSetupNote);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_NOTE), pWnd->GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupNote));
 }
 void CPegDoc::OnSegBreak()
 {
@@ -2012,23 +2013,23 @@ void CPegDoc::OnPrimModifyAttributes()
 void CPegDoc::OnSetupSavePoint()
 {
 	CWnd* pWnd = AfxGetApp()->GetMainWnd();
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_HOME_POINT_EDIT), pWnd->GetSafeHwnd(), DlgProcHomePointSet);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_HOME_POINT_EDIT), pWnd->GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcHomePointSet));
 }
 void CPegDoc::OnSetupGotoPoint()
 {
 	CWnd* pWnd = AfxGetApp()->GetMainWnd();
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_HOME_POINT_GO), pWnd->GetSafeHwnd(), DlgProcHomePointGo);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_HOME_POINT_GO), pWnd->GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcHomePointGo));
 }
 void CPegDoc::OnSetupOptionsDraw()
 {
 	CWnd* pWnd = AfxGetApp()->GetMainWnd();
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_DRAW_OPTIONS), pWnd->GetSafeHwnd(), DlgProcDrawOptions);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_DRAW_OPTIONS), pWnd->GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcDrawOptions));
 	app.StatusLineDisplay();
 }
 void CPegDoc::OnFileManage()
 {
 	CWnd* pWnd = AfxGetApp()->GetMainWnd();
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_FILE_MANAGE), pWnd->GetSafeHwnd(), DlgProcFileManage);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_FILE_MANAGE), pWnd->GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcFileManage));
 }
 void CPegDoc::OnFileTracing()
 {
@@ -2049,7 +2050,7 @@ void CPegDoc::OnFileTracing()
 	of.lpstrTitle = "Tracing File";
 	of.Flags = OFN_EXPLORER | OFN_ENABLETEMPLATE | OFN_ENABLEHOOK | OFN_HIDEREADONLY | OFN_FILEMUSTEXIST;
 	of.lpstrDefExt = "tra";
-	of.lpfnHook = OFNHookProcFileTracing;
+	of.lpfnHook = reinterpret_cast<LPOFNHOOKPROC>(OFNHookProcFileTracing);
 	of.lpTemplateName = MAKEINTRESOURCE(IDD_TRACING_EX);
 	
 	if (GetOpenFileName(&of))

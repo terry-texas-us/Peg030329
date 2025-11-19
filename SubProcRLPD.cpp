@@ -741,7 +741,7 @@ void rlpd::SetOptions(double* dSecDiam)
 {	
 	rlpd::dSecDiam = *dSecDiam;
 	
-	if (::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_DLGPROC_RLPD_OPTIONS), app.GetSafeHwnd(), DlgProcRLPDOptions) > 0)
+	if (::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_DLGPROC_RLPD_OPTIONS), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcRLPDOptions)) > 0)
 	{
 		*dSecDiam = Max(0., rlpd::dSecDiam);
 	}

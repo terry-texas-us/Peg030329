@@ -1344,7 +1344,7 @@ void lpd::SetOptions(double* dSecWid, double* dSecDep)
 	lpd::dSecWid = *dSecWid;
 	lpd::dSecDep = *dSecDep;
 	
-	if (::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_DLGPROC_LPD_OPTIONS), app.GetSafeHwnd(), DlgProcLPDOptions) > 0)
+	if (::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_DLGPROC_LPD_OPTIONS), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcLPDOptions)) > 0)
 	{
 		*dSecWid = Max(0., lpd::dSecWid);
 		*dSecDep = Max(0., lpd::dSecDep);

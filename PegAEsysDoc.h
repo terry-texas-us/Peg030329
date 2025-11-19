@@ -91,7 +91,7 @@ public:
 	POSITION	DeletedSegsAddHead(CSeg* pSeg) {return (m_segsDeleted.AddHead(pSeg));}
 	POSITION	DeletedSegsAddTail(CSeg* pSeg) {return (m_segsDeleted.AddTail(pSeg));}
 	bool		DeletedSegsIsEmpty() {return (m_segsDeleted.IsEmpty() == TRUE);}
-#pragma tasMSG(CobList asserts on calls to RemoveHead & RemoveTail if list is empty!)
+//#pragma tasMSG(CobList asserts on calls to RemoveHead & RemoveTail if list is empty!)
 	CSeg*		DeletedSegsRemoveHead() {return (m_segsDeleted.RemoveHead());}
 	void		DeletedSegsRemoveSegs() {m_segsDeleted.RemoveSegs();}
 	CSeg*		DeletedSegsRemoveTail() {return (m_segsDeleted.RemoveTail());}

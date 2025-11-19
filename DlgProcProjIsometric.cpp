@@ -4,7 +4,7 @@
 
 BOOL CALLBACK DlgProcProjIsometric(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM  )
 {
-	static iLeftRight, iFrontBack, iAboveUnder;
+	static int iLeftRight, iFrontBack, iAboveUnder;
 
 	CPegView* pView = CPegView::GetActiveView();
 

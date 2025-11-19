@@ -38,11 +38,11 @@ LRESULT CALLBACK SubProcDraw(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 		switch (LOWORD(wParam)) 
 		{
 			case ID_HELP_KEY:
-				WinHelp(hwnd, "peg.hlp", HELP_KEY, (DWORD) (LPSTR) "DRAW");
+				WinHelp(hwnd, "peg.hlp", HELP_KEY, reinterpret_cast<DWORD_PTR>("DRAW"));
 				return 0;
 			
 			case ID_OP0:
-				::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_DRAW_OPTIONS), hwnd, DlgProcDrawOptions);
+				::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_DRAW_OPTIONS), hwnd, reinterpret_cast<DLGPROC>(DlgProcDrawOptions));
 				app.StatusLineDisplay();
 				break;
 				
@@ -295,7 +295,7 @@ LRESULT CALLBACK SubProcDraw(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 				
 			case ID_OP9:
 				if (pDoc->BlksSize() > 0)
-					::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_INSERT_BLOCK), hwnd, DlgProcBlockInsert);
+					::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_INSERT_BLOCK), hwnd, reinterpret_cast<DLGPROC>(DlgProcBlockInsert));
 
 				break;
 				

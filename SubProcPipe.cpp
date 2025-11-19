@@ -41,7 +41,7 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 		switch (LOWORD(wParam))
 		{
 			case ID_OP0:
-				::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SUBPROC_PIPE_OPTIONS), app.GetSafeHwnd(), DlgProcPipeOptions);
+				::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SUBPROC_PIPE_OPTIONS), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcPipeOptions));
 				break;
 			
 			case ID_OP1:	// Join existing component of pipe system
@@ -539,7 +539,7 @@ void pipe::GenSyms(CDC* pDC, const CPnt& P0)
 				
 FoundIt:
 
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SUBPROC_PIPE_SYMBOL), app.GetSafeHwnd(), DlgProcPipeSymbol);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SUBPROC_PIPE_SYMBOL), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcPipeSymbol));
 
 	CPnt pt[5];
 	

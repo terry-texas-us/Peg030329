@@ -8,7 +8,7 @@
 
 CBitmap* WndProcPreview_pBitmap = NULL;
 
-LRESULT CALLBACK WndProcPreview(HWND hwnd, UINT nMsg, UINT nParam, LPARAM lParam)
+LRESULT CALLBACK WndProcPreview(HWND hwnd, UINT nMsg, WPARAM nParam, LPARAM lParam)
 {
 	switch (nMsg)
 	{

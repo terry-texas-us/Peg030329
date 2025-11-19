@@ -710,9 +710,12 @@ int CPrimArc::IsWithinArea(const CPnt& ptLL, const CPnt& ptUR, CPnt* ptInt)
 			dIntAng[iInts] += TWOPI;
 		if (fabs(dIntAng[iInts]) - m_dSwpAng < 0.) 
 		{	// Intersection lies on arc
-			for (int i = 0; i < iInts && ptWrk[i2] != ptInt[i]; i++);
-			if (i == iInts) 								// Unique intersection
+			int i;
+			for (i = 0; i < iInts && ptWrk[i2] != ptInt[i]; i++) {}
+
+			if (i == iInts) {	// Unique intersection
 				ptInt[iInts++] = ptWrk[i2];
+			}
 		}
 	}
 	if (iInts == 0)
@@ -721,7 +724,7 @@ int CPrimArc::IsWithinArea(const CPnt& ptLL, const CPnt& ptUR, CPnt* ptInt)
 		
 	for (int i1 = 0; i1 < iInts; i1++)
 	{	// Sort intersections from begin to end of sweep
-		for (i2 = 1; i2 < iInts - i1; i2++)
+		for (int i2 = 1; i2 < iInts - i1; i2++)
 		{
 			if (fabs(dIntAng[i2]) < fabs(dIntAng[i2 - 1])) 
 			{

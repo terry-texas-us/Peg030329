@@ -95,7 +95,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	EnableDocking(CBRS_ALIGN_ANY);
 	DockControlBar(&m_wndToolBar);
 	
-	app.m_wpMainWnd = (WNDPROC) ::GetWindowLong(m_hWnd, GWL_WNDPROC);
+	app.m_wpMainWnd = reinterpret_cast<WNDPROC>(::GetWindowLongPtr(m_hWnd, GWLP_WNDPROC));
 
 	lex::Init();
 

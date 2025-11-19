@@ -11,7 +11,7 @@ void WndProcKeyPlanOnDraw(HWND);
 void WndProcKeyPlanOnMouseMove(HWND, UINT, LPARAM);
 void WndProcKeyPlanOnNewRatio(HWND, LPARAM);
 
-LRESULT CALLBACK WndProcKeyPlan(HWND hwnd, UINT nMsg, UINT nParam, LPARAM lParam)
+LRESULT CALLBACK WndProcKeyPlan(HWND hwnd, UINT nMsg, WPARAM nParam, LPARAM lParam)
 {
 	switch (nMsg)
 	{

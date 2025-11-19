@@ -49,7 +49,7 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
 		switch (LOWORD(wParam)) 
 		{
 			case ID_HELP_KEY:
-				WinHelp(hwnd, "peg.hlp", HELP_KEY, (DWORD) (LPSTR) "FIXUP");
+				WinHelp(hwnd, "peg.hlp", HELP_KEY, reinterpret_cast<DWORD_PTR>("FIXUP"));
 				return 0;
 			
 			case ID_OP0:
@@ -418,7 +418,7 @@ bool fixup::SetOptions(double* dSiz, double* dAxTol)
 	fixup::dSiz = *dSiz;
 	fixup::dAxTol = *dAxTol;
 	
-	if (::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_FIXUP_OPTIONS), app.GetSafeHwnd(), DlgProcFixupOptions) > 0)
+	if (::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_FIXUP_OPTIONS), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcFixupOptions)) > 0)
 	{
 		*dSiz = Max(0., fixup::dSiz);
 		*dAxTol = Max(0., fixup::dAxTol);

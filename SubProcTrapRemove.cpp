@@ -19,8 +19,6 @@ LRESULT CALLBACK SubProcTrapRemove(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM 
 	static WORD wPrvKeyDwn = 0;
 	static CPnt rPt[8];
 
-	char	szKey[] = "TRAP";
-
 	CPegDoc* pDoc = CPegDoc::GetDoc();
 	CPegView* pView = CPegView::GetActiveView();
 		
@@ -30,7 +28,7 @@ LRESULT CALLBACK SubProcTrapRemove(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM 
 			switch (LOWORD(wParam))
 			{
 				case ID_HELP_KEY:
-					WinHelp(hwnd, "peg.hlp", HELP_KEY, (DWORD) (LPSTR) szKey);
+					WinHelp(hwnd, "peg.hlp", HELP_KEY, reinterpret_cast<DWORD_PTR>("TRAP"));
 					return 0;
 	
 				case ID_OP0:
@@ -98,7 +96,7 @@ LRESULT CALLBACK SubProcTrapRemove(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM 
 
 				case ID_OP9:
 					if (!trapsegs.IsEmpty())
-						::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_TRAP_MODIFY), hwnd, DlgProcTrapModify);
+						::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_TRAP_MODIFY), hwnd, reinterpret_cast<DLGPROC>(DlgProcTrapModify));
 					else 
 						msgInformation(0);
 					return 0;

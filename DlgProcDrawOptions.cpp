@@ -23,29 +23,29 @@ BOOL CALLBACK DlgProcDrawOptions(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM  )
 			
 				case IDC_PEN:
 					::EndDialog(hDlg, TRUE);
-					::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_COLOR), app.GetSafeHwnd(), DlgProcSetupPenColor);
+					::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_COLOR), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupPenColor));
 					app.StatusLineDisplay(Pen);
 					break;
 
 				case IDC_LINE:
 					::EndDialog(hDlg, TRUE);
-					::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_PENSTYLE), app.GetSafeHwnd(), DlgProcSetupPenStyle);
+					::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_PENSTYLE), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupPenStyle));
 					app.StatusLineDisplay(Line);
 					break;
 
 				case IDC_TEXT:
 					::EndDialog(hDlg, TRUE);
-					::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_NOTE), app.GetSafeHwnd(), DlgProcSetupNote);
+					::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_NOTE), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupNote));
 					break;
 
 				case IDC_FILL:
 					::EndDialog(hDlg, TRUE);
-					::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_HATCH), app.GetSafeHwnd(), DlgProcSetupHatch);
+					::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_HATCH), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupHatch));
 					break;
 
 				case IDC_CONSTRAINTS:
 					::EndDialog(hDlg, TRUE);
-					::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_CONSTRAINTS_GRID), app.GetSafeHwnd(), DlgProcSetupConstraints);
+					::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_CONSTRAINTS_GRID), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupConstraints));
 					break;
 				
 				default:

@@ -368,7 +368,7 @@ void CPegApp::OnModeFixup()
 void CPegApp::OnModeLetter()
 {
 #pragma tasMSG(OnModeLetter - Using app main window as parent of dialog)
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_ADD_NOTE), GetSafeHwnd(), DlgProcModeLetter);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_ADD_NOTE), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcModeLetter));
 }
 void CPegApp::OnModePipe()
 {
@@ -410,7 +410,7 @@ void CPegApp::OnModeSegEdit()
 void CPegApp::OnModeRevise()
 {
 #pragma tasMSG(OnModeRevise - Using app main window as parent of dialog)
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_ADD_NOTE), GetSafeHwnd(), DlgProcModeRevise);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_ADD_NOTE), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcModeRevise));
 }
 void CPegApp::OnModePrimMend()
 {
@@ -896,8 +896,7 @@ void CPegApp::SetBackGround(COLORREF cr)
 	CPegView* pView = CPegView::GetActiveView();
 	if (pView != NULL)
 	{
-		::SetClassLong(pView->GetSafeHwnd(), GCL_HBRBACKGROUND, (LONG) ::CreateSolidBrush(cr));
-
+		::SetClassLongPtr(pView->GetSafeHwnd(), GCLP_HBRBACKGROUND, reinterpret_cast<LONG_PTR>(::CreateSolidBrush(cr)));
 		CDC* pDC = pView->GetDC();
 		pDC->SetBkColor(cr);
 	}
@@ -964,73 +963,73 @@ void CPegApp::SetWindowMode(int aiModeId)
 	switch (aiModeId)
 	{
 		case ID_MODE_DRAW2:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcDraw2);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcDraw2));
 			break;
 
 		case ID_MODE_ANNOTATE:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcAnnotate);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcAnnotate));
 			m_iPrimModeId = ID_MODE_ANNOTATE;
 			break;
 
 		case ID_MODE_CUT:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcCut);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcCut));
 			break;
 
 		case ID_MODE_DIMENSION:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcDimension);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcDimension));
 			break;
 
 		case ID_MODE_DRAW:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcDraw);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcDraw));
 			m_iPrimModeId = ID_MODE_DRAW;
 			break;
 
 		case ID_MODE_EDIT:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcEdit);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcEdit));
 			break;
 
 		case ID_MODE_FIXUP:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcFixup);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcFixup));
 			break;
 
 		case ID_MODE_LPD:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcLPD);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcLPD));
 			break;
 
 		case ID_MODE_RLPD:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcRLPD);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcRLPD));
 			break;
 
 		case ID_MODE_NODAL:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcNodal);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcNodal));
 			break;
 
 		case ID_MODE_PIPE:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcPipe);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcPipe));
 			break;
 		
 		case ID_MODE_POWER:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcPower);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcPower));
 			break;
 
 		case ID_MODE_PRIM_EDIT:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcEditPrimitive);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcEditPrimitive));
 			break;
 
 		case ID_MODE_SEG_EDIT:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcEditSegment);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcEditSegment));
 			break;
 
 		case ID_MODE_PRIM_MEND:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcMendPrim);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcMendPrim));
 			break;
 
 		case ID_MODE_TRAP:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcTrapAdd);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcTrapAdd));
 			break;
 
 		case ID_MODE_TRAPR:
-			::SetWindowLong(hwnd, GWL_WNDPROC, (LPARAM) SubProcTrapRemove);
+			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcTrapRemove));
 	}
 	
 	RubberBandingDisable();
@@ -1075,7 +1074,7 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli)
 		if (sli == All || sli == TrapCnt)
 		{	// print num in trap 
 			rc.SetRect(10 * tm.tmAveCharWidth, rcClient.top, 19 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-			sprintf(szBuf, " %i  ", trapsegs.GetCount());
+			sprintf(szBuf, " %zu  ", trapsegs.GetCount());
 			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE,  &rc, szBuf, (UINT) strlen(szBuf), 0);
 		}
 		if (sli == All || sli == Pen)

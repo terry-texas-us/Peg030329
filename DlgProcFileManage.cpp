@@ -544,9 +544,11 @@ void DlgProcFileManageInit(HWND hDlg)
 		::SendDlgItemMessage(hDlg, iCtrlId, LB_ADDSTRING, 0, (LPARAM) (LPCSTR) strName);
 	}
 
-	for (i = 0; i < sizeof(crHotCols) / sizeof(COLORREF); i++)
-		::SendDlgItemMessage(hDlg, IDC_COLOR_ID, CB_ADDSTRING, 0, (LPARAM) (LPCSTR) _itoa(i, szBuf, 10));
-	
+
+	for (int i = 0; i < sizeof(crHotCols) / sizeof(COLORREF); i++)
+	{
+		::SendDlgItemMessage(hDlg, IDC_COLOR_ID, CB_ADDSTRING, 0, (LPARAM)(LPCSTR)_itoa(i, szBuf, 10));
+	}
 	pDoc->PenStylesFillCB(::GetDlgItem(hDlg, IDC_PENSTYLE));
 				
 	::SendDlgItemMessage(hDlg, IDC_BLOCKS_LIST, LB_SETHORIZONTALEXTENT, 512, 0);

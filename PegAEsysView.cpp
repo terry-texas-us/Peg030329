@@ -776,22 +776,22 @@ void CPegView::On3dViewsBack()
 }
 void CPegView::On3dViewsIsometric()
 {
-    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_ISOMETRIC), GetSafeHwnd(), DlgProcProjIsometric);
+    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_ISOMETRIC), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcProjIsometric));
 	InvalidateRect(NULL, TRUE);
 }
 void CPegView::On3dViewsAxonometric()
 {
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_AXONOMETRIC), GetSafeHwnd(), DlgProcProjAxonometric);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_AXONOMETRIC), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcProjAxonometric));
 	InvalidateRect(NULL, TRUE);
 }
 void CPegView::On3dViewsOblique()
 {
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_OBLIQUE), GetSafeHwnd(), DlgProcProjOblique);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_OBLIQUE), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcProjOblique));
 	InvalidateRect(NULL, TRUE);
 }
 void CPegView::On3dViewsPerspective()
 {
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_PERSPECTIVE), GetSafeHwnd(), DlgProcProjPerspective);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_PERSPECTIVE), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcProjPerspective));
 	InvalidateRect(NULL, TRUE);
 }
 void CPegView::OnViewTrueTypeFonts()
@@ -835,7 +835,7 @@ void CPegView::OnViewRendered()
 }
 void CPegView::OnViewParameters()
 {
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_VIEWPARAMS), GetSafeHwnd(), DlgProcViewParameters);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_VIEWPARAMS), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcViewParameters));
 }
 void CPegView::OnViewSolid()
 {
@@ -843,7 +843,7 @@ void CPegView::OnViewSolid()
 }
 void CPegView::OnViewLighting()
 {
-    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_VIEWLIGHTING), GetSafeHwnd(), DlgProcViewLighting);
+    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_VIEWLIGHTING), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcViewLighting));
 }
 void CPegView::OnWindowNormal()
 {
@@ -968,16 +968,16 @@ void CPegView::OnSetupDimAngle()
 }
 void CPegView::OnSetupUnits()
 {
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_UNITS), GetSafeHwnd(), DlgProcUnits);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_UNITS), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcUnits));
 }
 void CPegView::OnSetupConstraintsAxis()
 {
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_CONSTRAINTS_AXIS), GetSafeHwnd(), DlgProcSetupConstraintsAxis);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_CONSTRAINTS_AXIS), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupConstraintsAxis));
 	app.StatusLineDisplay();
 }
 void CPegView::OnSetupConstraintsGrid()
 {
-	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_CONSTRAINTS_GRID), GetSafeHwnd(), DlgProcSetupConstraints);
+	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_CONSTRAINTS_GRID), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupConstraints));
 	app.StatusLineDisplay();
 }
 void CPegView::OnCursorDefault()
@@ -994,7 +994,7 @@ void CPegView::OnCursorCrosshair()
 }
 void CPegView::OnSetupMouseButtons()
 {
-    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_MOUSEKEYS), GetSafeHwnd(), DlgProcSetupMouse_Buttons);
+    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_MOUSEKEYS), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupMouse_Buttons));
 }
 void CPegView::OnRelativeMovesEngDown()
 {
@@ -1190,7 +1190,7 @@ void CPegView::OnPrimPerpJump()
 }
 void CPegView::OnHelpKey()
 {
-	::WinHelp(GetSafeHwnd(), "peg.hlp", HELP_KEY, (DWORD) (LPSTR) "READY");
+	::WinHelp(GetSafeHwnd(), "peg.hlp", HELP_KEY, reinterpret_cast<DWORD_PTR>("READY"));
 }
 void CPegView::DoCustomMouseClick(LPTSTR lpCmds)
 {
@@ -1241,7 +1241,7 @@ void CPegView::OnUpdateViewOdometer(CCmdUI *pCmdUI)
 }
 void CPegView::DisplayOdometer()
 {
-	static fuOptions = ETO_CLIPPED | ETO_OPAQUE;
+	static UINT fuOptions = ETO_CLIPPED | ETO_OPAQUE;
 	CPnt pt = app.CursorPosGet();
 
 	m_vRelPos = pt - grid::GetOrign();

@@ -33,7 +33,7 @@ LRESULT CALLBACK SubProcEditSegment(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM 
 	switch (wId)
 	{
 		case ID_OP0:
-			::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_EDIT_OPTIONS), hwnd, DlgProcEditOps);
+			::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_EDIT_OPTIONS), hwnd, reinterpret_cast<DLGPROC>(DlgProcEditOps));
 			return 0;
 
 		case ID_OP1:
