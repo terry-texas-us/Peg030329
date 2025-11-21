@@ -270,7 +270,7 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
 							CPnt ptPvt = Pnt_ProjPtTo(ptCur, ptCen, - .25);
 							CharCellDef_EncdRefSys(ccd, vXAx, vYAx);
 							CRefSys rs(ptPvt, vXAx, vYAx);
-							UnitsString_FormatAngle(szNote, dAng, 8, 3); 
+							UnitsString_FormatAngle(szNote, sizeof(szNote), dAng, 8, 3); 
 							pSeg->AddTail(new CPrimText(fd, rs, szNote));
 							pDoc->WorkLayerAddTail(pSeg); 
 							pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);

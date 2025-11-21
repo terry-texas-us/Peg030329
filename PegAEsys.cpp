@@ -737,9 +737,9 @@ void CPegApp::PenStylesLoad(const CString& strFileName)
 			strName = strtok_s(0, ",", &context);
 			strDescription = strtok_s(0, "\n", &context);
 			fl.ReadString(pBuf, sizeof(pBuf) - 1);
-			
+
 			WORD wLens = WORD(atoi(strtok_s(pBuf,",\n", &context)));
-			
+
 			if (wLens > wLensMax)
 			{
 				delete [] pLen;
@@ -793,7 +793,7 @@ void CPegApp::PenColorsLoad(const CString& strFileName)
 		char	pBuf[128];
 		LPSTR	pId, pRed, pGreen, pBlue;
 		
-		while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0 && strnicmp(pBuf, "<Colors>", 8) != 0);
+		while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0 && _strnicmp(pBuf, "<Colors>", 8) != 0);
 		
 		char* context = nullptr;
 		while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0 && *pBuf != '<')
@@ -1070,25 +1070,25 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli)
 		if (sli == All || sli == WorkCnt)
 		{	// print num in work 
 			rc.SetRect(0, rcClient.top, 8 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-			sprintf(szBuf, "%i  ", CPegDoc::GetDoc()->GetHotCount() + CPegDoc::GetDoc()->GetWarmCount());
+			sprintf_s(szBuf, sizeof(szBuf), "%i  ", CPegDoc::GetDoc()->GetHotCount() + CPegDoc::GetDoc()->GetWarmCount());
 			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED  | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
 		}
 		if (sli == All || sli == TrapCnt)
 		{	// print num in trap 
 			rc.SetRect(10 * tm.tmAveCharWidth, rcClient.top, 19 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-			sprintf(szBuf, " %zu  ", trapsegs.GetCount());
+			sprintf_s(szBuf, sizeof(szBuf), " %zu  ", trapsegs.GetCount());
 			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE,  &rc, szBuf, (UINT) strlen(szBuf), 0);
 		}
 		if (sli == All || sli == Pen)
 		{	// print pen  info
 			rc.SetRect(21 * tm.tmAveCharWidth, rcClient.top, 27 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-			sprintf(szBuf, "P %i ", pstate.PenColor());
+			sprintf_s(szBuf, sizeof(szBuf), "P %i ", pstate.PenColor());
 			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
 		}
 		if (sli == All || sli == Line)
 		{	// print line info
 			rc.SetRect(29 * tm.tmAveCharWidth, rcClient.top, 35 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-			sprintf(szBuf, "L %i", pstate.PenStyle());
+			sprintf_s(szBuf, sizeof(szBuf), "L %i", pstate.PenStyle());
 			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
 		}
 		if (sli == All || sli == TextHeight)
@@ -1096,20 +1096,20 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli)
 			CCharCellDef ccd;
 			pstate.GetCharCellDef(ccd);
 			rc.SetRect(37 * tm.tmAveCharWidth, rcClient.top, 47 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-			sprintf(szBuf, "T %6.2f", ccd.ChrHgtGet());
+			sprintf_s(szBuf, sizeof(szBuf), "T %6.2f", ccd.ChrHgtGet());
 			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
 		}
 		if (sli == All || sli == Scale)
 		{	//print scale
 			rc.SetRect(49 * tm.tmAveCharWidth, rcClient.top, 59 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-			sprintf(szBuf, "1: %6.2f", GetScale());
+			sprintf_s(szBuf, sizeof(szBuf), "1: %6.2f", GetScale());
 			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
 		}
 		if (sli == All || sli == WndRatio)
 		{	//print zoom
 			rc.SetRect(61 * tm.tmAveCharWidth, rcClient.top, 71 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight); 
 			double dRatio = pView->GetWidthInInches() / pView->ModelViewGetUExt();
-			sprintf(szBuf, "@ %6.3f", dRatio);
+			sprintf_s(szBuf, sizeof(szBuf), "@ %6.3f", dRatio);
 			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
 		}
 		if (sli == All || sli == DimLen)
@@ -1121,7 +1121,7 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli)
 		if (sli == All || sli == DimAng)
 		{	// print DimAngle
 			rc.SetRect(92 * tm.tmAveCharWidth, rcClient.top, 107 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight); 
-			sprintf(szBuf, ">> %8.4f", GetDimAngZ());
+			sprintf_s(szBuf, sizeof(szBuf), ">> %8.4f", GetDimAngZ());
 			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
 		}
 		// restore Device Context to its original state

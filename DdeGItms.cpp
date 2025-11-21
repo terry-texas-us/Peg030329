@@ -33,7 +33,7 @@ bool dde::DimAngZPoke(UINT, HSZ, HSZ, HDDEDATA hData)
 HDDEDATA dde::DimAngZRequest(UINT wFmt, HSZ, HSZ hszItem)
 {
 	char sz[32];
-	sprintf(sz, "%f", app.GetDimAngZ());
+	sprintf_s(sz, sizeof(sz), "%f", app.GetDimAngZ());
 	return dde::MakeCFText(wFmt, (LPSTR) sz, hszItem);
 }
 // Dimension length interface
@@ -49,28 +49,28 @@ bool dde::DimLenPoke(UINT, HSZ, HSZ, HDDEDATA hData)
 HDDEDATA dde::DimLenRequest(UINT wFmt, HSZ, HSZ hszItem)
 {
 	char sz[32];
-	sprintf(sz, "%f", app.GetDimLen());
+	sprintf_s(sz, sizeof(sz), "%f", app.GetDimLen());
 	return dde::MakeCFText(wFmt, (LPSTR) sz, hszItem);
 }
 // Engaged length interface (no poke)
 HDDEDATA dde::EngLenRequest(UINT wFmt, HSZ, HSZ hszItem)
 {
 	char sz[32];
-	sprintf(sz, "%f", app.GetEngLen());
+	sprintf_s(sz, sizeof(sz), "%f", app.GetEngLen());
 	return dde::MakeCFText(wFmt, (LPSTR) sz, hszItem);
 }
 // Engaged z axis angle interface (no poke) 
 HDDEDATA dde::EngAngZRequest(UINT wFmt, HSZ, HSZ hszItem)
 {
 	char sz[32];
-	sprintf(sz, "%f", app.GetEngAngZ());
+	sprintf_s(sz, sizeof(sz), "%f", app.GetEngAngZ());
 	return dde::MakeCFText(wFmt, (LPSTR) sz, hszItem);
 }
 // Extracted number interface (no poke)
 HDDEDATA dde::ExtNumRequest(UINT wFmt, HSZ, HSZ hszItem)
 {
 	char sz[32];
-	sprintf(sz, "%f", gbl_dExtNum);
+	sprintf_s(sz, sizeof(sz), "%f", gbl_dExtNum);
 	return dde::MakeCFText(wFmt, (LPSTR) sz, hszItem);
 }
 // Extracted string interface (no poke)
@@ -82,21 +82,21 @@ HDDEDATA dde::ExtStrRequest(UINT wFmt, HSZ, HSZ hszItem)
 HDDEDATA dde::RelPosXRequest(UINT wFmt, HSZ, HSZ hszItem)
 {
 	char sz[32];
-	sprintf(sz, "%f", CPegView::GetActiveView()->GetRelPos()[0]);
+	sprintf_s(sz, sizeof(sz), "%f", CPegView::GetActiveView()->GetRelPos()[0]);
 	return dde::MakeCFText(wFmt, (LPSTR) sz, hszItem);
 }
 // Relative y position interface (no poke)
 HDDEDATA dde::RelPosYRequest(UINT wFmt, HSZ, HSZ hszItem)
 {
 	char sz[32];
-	sprintf(sz, "%f", CPegView::GetActiveView()->GetRelPos()[1]);
+	sprintf_s(sz, sizeof(sz), "%f", CPegView::GetActiveView()->GetRelPos()[1]);
 	return dde::MakeCFText(wFmt, (LPSTR) sz, hszItem);
 }
 // Relative z position interface (no poke)
 HDDEDATA dde::RelPosZRequest(UINT wFmt, HSZ, HSZ hszItem)
 {
 	char sz[32];
-	sprintf(sz, "%f", CPegView::GetActiveView()->GetRelPos()[2]);
+	sprintf_s(sz, sizeof(sz), "%f", CPegView::GetActiveView()->GetRelPos()[2]);
 	return dde::MakeCFText(wFmt, (LPSTR) sz, hszItem);
 }
 // Scale interface
@@ -111,6 +111,6 @@ bool dde::ScalePoke(UINT, HSZ, HSZ, HDDEDATA hData)
 HDDEDATA dde::ScaleRequest(UINT wFmt, HSZ, HSZ hszItem)
 {
 	char sz[32];
-	sprintf(sz, "%f", app.GetScale());
+	sprintf_s(sz, sizeof(sz), "%f", app.GetScale());
 	return dde::MakeCFText(wFmt, (LPSTR) sz, hszItem);
 }

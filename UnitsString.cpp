@@ -22,23 +22,23 @@ int UnitsString_GCD(int aiNmb1, int aiNmb2)
 	return (iRetVal);
 }
 
-void UnitsString_FormatAngle(char* szBuf, double dAng, int iPrec, int iScal) 
+void UnitsString_FormatAngle(char* buffer, size_t bufferSize, double angle, int precision, int scale)
 {
-	char szFmt[24];
+	char format[24];
 
-	strcpy_s(szFmt, sizeof(szFmt), "%");
-	strcat_s(szFmt, sizeof(szFmt), _itoa(iPrec, szBuf, 10));
-	strcat_s(szFmt, sizeof(szFmt), ".");
-	strcat_s(szFmt, sizeof(szFmt), _itoa(iScal, szBuf, 10));
-	strcat_s(szFmt, sizeof(szFmt), "f");
+	strcpy_s(format, sizeof(format), "%");
+	strcat_s(format, sizeof(format), _itoa(precision, buffer, 10));
+	strcat_s(format, sizeof(format), ".");
+	strcat_s(format, sizeof(format), _itoa(scale, buffer, 10));
+	strcat_s(format, sizeof(format), "f");
 
-	strcat_s(szFmt, sizeof(szFmt), "d");
-	sprintf(szBuf, szFmt, dAng / RADIAN);
+	strcat_s(format, sizeof(format), "d");
+	sprintf_s(buffer, bufferSize, format, angle / RADIAN);
 }
 
-void UnitsString_FormatLength(char* aszBuf, size_t bufferSize, EUnits units, double adVal, int aiPrec, int aiScal)
+void UnitsString_FormatLength(char* buffer, size_t bufferSize, EUnits units, double adVal, int aiPrec, int aiScal)
 {
-	char szBuf[16];
+	char numberBuffer[16];
 
 	// Reduce length to number of scaled inches
 	double dLen = adVal * app.GetScale();			
@@ -63,31 +63,31 @@ void UnitsString_FormatLength(char* aszBuf, size_t bufferSize, EUnits units, dou
 			
 			iNum = 0;
 		}
-		aszBuf[0] = '\0';
+		buffer[0] = '\0';
 		if (iNmbFt == 0 && dLen < 0.)
 		{
-			aszBuf[0] = '-';
-			aszBuf[1] = '\0';
+			buffer[0] = '-';
+			buffer[1] = '\0';
 		}
-		_itoa(iNmbFt, szBuf, 10);
-		strcat_s(aszBuf, bufferSize, szBuf);
-		strcat_s(aszBuf, bufferSize, "'");
-		_itoa(iNmbIn, szBuf, 10);
-		strcat_s(aszBuf, bufferSize, szBuf);
+		_itoa(iNmbFt, numberBuffer, 10);
+		strcat_s(buffer, bufferSize, numberBuffer);
+		strcat_s(buffer, bufferSize, "'");
+		_itoa(iNmbIn, numberBuffer, 10);
+		strcat_s(buffer, bufferSize, numberBuffer);
 		if (iNum > 0)				// Significant decimal inch component
 		{
-			strcat_s(aszBuf, bufferSize, "^/");
+			strcat_s(buffer, bufferSize, "^/");
 			int	iGrtComDivisor = UnitsString_GCD(iNum, iUnitsPrec);
 			iNum = iNum / iGrtComDivisor;
 			int iDen = iUnitsPrec / iGrtComDivisor; // Add fractional component of inches
-			_itoa(iNum, szBuf, 10);
-			strcat_s(aszBuf, bufferSize, szBuf);
-			strcat_s(aszBuf, bufferSize, "/");
-			_itoa(iDen, szBuf, 10);
-			strcat_s(aszBuf, bufferSize, szBuf);
-			strcat_s(aszBuf, bufferSize, "^");
+			_itoa(iNum, numberBuffer, 10);
+			strcat_s(buffer, bufferSize, numberBuffer);
+			strcat_s(buffer, bufferSize, "/");
+			_itoa(iDen, numberBuffer, 10);
+			strcat_s(buffer, bufferSize, numberBuffer);
+			strcat_s(buffer, bufferSize, "^");
 		}
-		strcat_s(aszBuf, bufferSize, "\"");
+		strcat_s(buffer, bufferSize, "\"");
 	}
 	else if (units == Engineering)
 	{
@@ -99,73 +99,73 @@ void UnitsString_FormatLength(char* aszBuf, size_t bufferSize, EUnits units, dou
 			double dScalFac = pow(10., (double) iScal);
 			
 			dLen = fabs(dLen) + .5 /  dScalFac; 				// Round it
-			aszBuf[0] = ' ';
-			aszBuf[1] = '\0';
-			_itoa(int(dLen / 12.), szBuf, 10);
-			strcat_s(aszBuf, bufferSize, szBuf);
+			buffer[0] = ' ';
+			buffer[1] = '\0';
+			_itoa(int(dLen / 12.), numberBuffer, 10);
+			strcat_s(buffer, bufferSize, numberBuffer);
 			dLen = fmod(dLen, 12.);
 			if (adVal < 0.) 
-				aszBuf[0] = '-';
-			strcat_s(aszBuf, bufferSize, "'");
-			_itoa(int(dLen), szBuf, 10);
-			strcat_s(aszBuf, bufferSize, szBuf);
-			strcat_s(aszBuf, bufferSize, ".");
+				buffer[0] = '-';
+			strcat_s(buffer, bufferSize, "'");
+			_itoa(int(dLen), numberBuffer, 10);
+			strcat_s(buffer, bufferSize, numberBuffer);
+			strcat_s(buffer, bufferSize, ".");
 			dLen = fmod(dLen, 1.) * dScalFac;
-			_itoa(int(dLen), szBuf, 10);
-			strcat_s(aszBuf, bufferSize, szBuf);
-			strcat_s(aszBuf, bufferSize, "\"");
+			_itoa(int(dLen), numberBuffer, 10);
+			strcat_s(buffer, bufferSize, numberBuffer);
+			strcat_s(buffer, bufferSize, "\"");
 		}	
 		else
-			aszBuf[0] = '\0';
-		
+			buffer[0] = '\0';
+
 	}
 	else
 	{
-		char szFmt[12];
-		
-		strcpy_s(szFmt, sizeof(szFmt), "%");
-		strcat_s(szFmt, sizeof(szFmt), _itoa(aiPrec, szBuf, 10));
-		strcat_s(szFmt, sizeof(szFmt), ".");
-		strcat_s(szFmt, sizeof(szFmt), _itoa(aiScal, szBuf, 10));
-		strcat_s(szFmt, sizeof(szFmt), "f");
+		char format[24];
+
+		strcpy_s(format, sizeof(format), "%");
+		strcat_s(format, sizeof(format), _itoa(aiPrec, numberBuffer, 10));
+		strcat_s(format, sizeof(format), ".");
+		strcat_s(format, sizeof(format), _itoa(aiScal, numberBuffer, 10));
+		strcat_s(format, sizeof(format), "f");
 
 		if (units == Feet)
 		{
-			strcat_s(szFmt, sizeof(szFmt), "'");
-			sprintf(aszBuf, szFmt, dLen / 12.);
+			strcat_s(format, sizeof(format), "'");
+			sprintf_s(buffer, bufferSize, format, dLen / 12.);
 		}
 		else if (units == Inches)
 		{
-			strcat_s(szFmt, sizeof(szFmt), "\"");
-			sprintf(aszBuf, szFmt, dLen);
+			strcat_s(format, sizeof(format), "\"");
+			sprintf_s(buffer, bufferSize, format, dLen);
 		}
 		else if (units == Meters)
 		{
-			strcat_s(szFmt, sizeof(szFmt), "m");
-			sprintf(aszBuf, szFmt, dLen * .0254);
+			strcat_s(format, sizeof(format), "m");
+			sprintf_s(buffer, bufferSize, format, dLen * 0.0254);
 		}
 		else if (units == Millimeters)
 		{
-			strcat_s(szFmt, sizeof(szFmt), "mm");
-			sprintf(aszBuf, szFmt, dLen * 25.4);
+			strcat_s(format, sizeof(format), "mm");
+			sprintf_s(buffer, bufferSize, format, dLen * 25.4);
 		}
 		else if (units == Centimeters)
 		{
-			strcat_s(szFmt, sizeof(szFmt), "cm");
-			sprintf(aszBuf, szFmt, dLen * 2.54);
+			strcat_s(format, sizeof(format), "cm");
+			sprintf_s(buffer, bufferSize, format, dLen * 2.54);
 		}
 		else if (units == Decimeters)
 		{
-			strcat_s(szFmt, sizeof(szFmt), "dm");
-			sprintf(aszBuf, szFmt, dLen * .254);
+			strcat_s(format, sizeof(format), "dm");
+			sprintf_s(buffer, bufferSize, format, dLen * 0.254);
 		}
 		else if (units == Kilometers)
 		{
-			strcat_s(szFmt, sizeof(szFmt), "km");
-			sprintf(aszBuf, szFmt, dLen * .0000254);
+			strcat_s(format, sizeof(format), "km");
+			sprintf_s(buffer, bufferSize, format, dLen * 0.0000254);
 		}
 		else
-			aszBuf[0] = '\0';
+			buffer[0] = '\0';
 	}
 }
 

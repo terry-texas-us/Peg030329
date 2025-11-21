@@ -1263,7 +1263,7 @@ void CPegView::DisplayOdometer()
 
 			CString strRep;
 			strRep += szBuf;
-			UnitsString_FormatAngle(szBuf, dAng);
+			UnitsString_FormatAngle(szBuf, sizeof(szBuf), dAng);
 			strRep += szBuf;	
 	
 			msgInformation(strRep);

@@ -252,7 +252,7 @@ void lex::ConvertStringToVal(int aiTyp, long alDef, char* aszVal, long* alDefReq
 	char szTok[64];
 	int iNxt = 0;
 	
-	int iTyp = Scan(szTok, aszVal, iNxt);
+	int iTyp = Scan(szTok, sizeof(szTok), aszVal, iNxt);
 	if (aiTyp == TOK_INTEGER)									// Conversion to integer
 	{
 		long *pVal = (long *) aVal;
@@ -528,7 +528,7 @@ void lex::Parse(const char* szLine)
 	
 	while (iBeg < iLnLen) 
 	{
-		int iTyp = Scan(szTok, szLine, iBeg);
+		int iTyp = Scan(szTok, sizeof(szTok), szLine, iBeg);
 		
 		if (iTyp == - 1) return;
 		if (iToks == TOKS_MAX) return;
@@ -593,7 +593,7 @@ void lex::ParseStringOperand(const char* pszTok)
 	iValsCount += iLen;
 }
 
-int lex::Scan(char* aszTok, const char* szLine, int& iLP)
+int lex::Scan(char* tokenBuffer, size_t tokenBufferSize, const char* szLine, int& iLP)
 {
 	int iLen;
 
@@ -626,8 +626,8 @@ int lex::Scan(char* aszTok, const char* szLine, int& iLP)
 	}
 	
 	iLen = iTokLoc - iBegLoc + 1;
-	strncpy(aszTok, &szLine[iBegLoc], iLen);
-	aszTok[iLen] = '\0';
+	strncpy_s(tokenBuffer, tokenBufferSize, &szLine[iBegLoc], iLen);
+	tokenBuffer[iLen] = '\0';
 	TRACE("LinePointer = %d, TokenID = %d\n", iLP, iRetVal);	
 	if (iRetVal == - 1) {iLP = iBegLoc + 1;}
 	return (iRetVal);

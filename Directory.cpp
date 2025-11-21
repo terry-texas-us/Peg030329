@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <io.h>
+#include <string>
 
 void Path_UnquoteSpaces(CString& strPathName)
 {
@@ -12,7 +13,7 @@ void Path_UnquoteSpaces(CString& strPathName)
 	while (n != 0 && pPathName[n] != '\\')
 		n--;
 	pPathName[n] = 0;
-    strPathName = &pPathName[1];
+	strPathName = &pPathName[1];
 	delete [] pPathName;
 }
 
@@ -57,8 +58,11 @@ void Directory_ExamineFile(char* oldfile, char* newfile)
 		{	// path with drive id
 			return;
 		}
-	    char* envptr = getenv("ACAD");
-		if (envptr == 0) 
+		char* envptr = nullptr;
+		size_t len;
+		errno_t err = _dupenv_s(&envptr, &len, "ACAD");
+
+	    if (err != 0 || envptr == nullptr) 
 		{	// no ACAD environment to search
 			return;
 		}

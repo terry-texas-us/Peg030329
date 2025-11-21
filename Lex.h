@@ -133,7 +133,7 @@ namespace lex
 	void ParseStringOperand(const char* pszTok);
 	LPSTR ScanForChar(char c, LPSTR *ppStr);
 	LPSTR ScanForString(LPSTR *ppStr, LPSTR pszTerm, LPSTR *ppArgBuf);
-	int Scan(char* aszTok, const char* pszLine, int& iLP);
+	int Scan(char* aszTok, size_t bufferSize, const char* pszLine, int& iLP);
 	LPSTR SkipWhiteSpace(LPSTR pszString);
 	int TokType(int);
 	void UnaryOp(int, int*, long*,	double*, size_t bufferSize);

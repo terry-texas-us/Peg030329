@@ -1007,7 +1007,7 @@ void CPegDoc::SetOpenFile(WORD wFileType, const CString& strFileName)
 /// No new segments may be added to the layer.
 ///</remarks>
 void CPegDoc::TracingFuse(CString& strName)
-{	
+{
 	CLayer* pLayer = LayersGet(strName);
 	if (pLayer != 0)
 	{
@@ -1022,7 +1022,7 @@ void CPegDoc::TracingFuse(CString& strName)
 		pLayer->ClrStateFlg();
 		pLayer->SetStateFlg(CLayer::STATE_FLG_RESIDENT | CLayer::STATE_FLG_INTERNAL);
 		pLayer->SetStateCold();
-	
+
 		pLayer->SetName(strName);
 	}
 }
@@ -1800,7 +1800,7 @@ void CPegDoc::OnTrapCommandsInvert()
 	{
 		CLayer* pLayer = m_layers.GetAt(i);
 		if (pLayer->IsHot() || pLayer->IsWarm())
-		{
+		{	
 			POSITION pos = pLayer->GetHeadPosition();
 			while (pos != 0)
 			{
@@ -1840,7 +1840,7 @@ void CPegDoc::OnTrapCommandsBlock()
 	
 	do
 	{
-		sprintf(szBlkNam, "_%.3i", ++w);
+		sprintf_s(szBlkNam, sizeof(szBlkNam), "_%.3i", ++w);
 	}
 	while (BlksLookup(szBlkNam, pBlock));
 	
@@ -2183,7 +2183,7 @@ void CPegDoc::OnPrimExtractNum()
 	int iTyp;
 	double dVal[32];
 	size_t bufferSize = sizeof(dVal);
-				
+
 	try
 	{
 		lex::Parse(strChr);
@@ -2191,8 +2191,10 @@ void CPegDoc::OnPrimExtractNum()
 		
 		char szBuf[64];
 		if (iTyp != lex::TOK_LENGTH_OPERAND)
+		{
 			lex::ConvertValTyp(iTyp, lex::TOK_REAL, &lDef, dVal);
-		sprintf(szBuf, "%10.4f ", dVal[0]);
+		}
+		sprintf_s(szBuf, sizeof(szBuf), "%10.4f ", dVal[0]);
 		strcat_s(szBuf, sizeof(szBuf), "was extracted from drawing");
 		msgInformation(szBuf);
 		gbl_dExtNum = dVal[0];
@@ -2220,7 +2222,7 @@ void CPegDoc::OnPrimExtractStr()
 			strChr = static_cast<CPrimDim*>(pPrim)->Text();
 		else
 			return;
-		
+
 		strcpy_s(gbl_szExtStr, sizeof(gbl_szExtStr), strChr.GetString());
 
 		strChr += " was extracted from drawing";

@@ -4,7 +4,7 @@
 
 #include "StringExtra.h"
 
-void	UnitsString_FormatAngle(char*, double, int = 6, int = 2);
+void	UnitsString_FormatAngle(char* buffer, size_t bufferSize, double angle, int = 6, int = 2);
 
 /// <summary>
 /// Formats a length value into a string based on the specified units.

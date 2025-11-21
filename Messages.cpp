@@ -23,7 +23,7 @@ int msgConfirm(UINT uiMsgId, const CString& strVal)
 
 	::LoadString(app.GetInstance(), uiMsgId, szFmt, sizeof(szFmt));
 	
-	sprintf(szMsg, szFmt, strVal);
+	sprintf_s(szMsg, sizeof(szMsg), szFmt, strVal);
 	
 	char* context = nullptr;
 	char* pMsg = strtok_s(szMsg, "\t", &context);
@@ -50,7 +50,7 @@ void msgWarning(UINT uiMsgId, const CString& strVal)
 	
 	::LoadString(app.GetInstance(), uiMsgId, szFmt, sizeof(szFmt));
 
-	sprintf(szMsg, szFmt, strVal);
+	sprintf_s(szMsg, sizeof(szMsg), szFmt, strVal);
 
 	char* context = nullptr;
 	char* pMsg = strtok_s(szMsg, "\t", &context);
@@ -98,7 +98,7 @@ void msgInformation(UINT nId, const CString& strVal)
 
 	::LoadString(app.GetInstance(), nId, szFmt, sizeof(szFmt));
 	
-	sprintf(szMsg, szFmt, strVal);
+	sprintf_s(szMsg, sizeof(szMsg), szFmt, strVal);
 	
 	msgInformation(szMsg);
 }
