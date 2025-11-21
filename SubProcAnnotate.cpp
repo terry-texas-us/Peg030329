@@ -180,7 +180,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
 					dlg.m_sText = annotate::szCurTxt;
 					if (dlg.DoModal() == IDOK)
 					{
-						strcpy(annotate::szCurTxt, dlg.m_sText);
+						strcpy_s(annotate::szCurTxt, sizeof(annotate::szCurTxt), dlg.m_sText.GetString());
 					}
 					pSeg = new CSeg;
 					if (wPrvKeyDwn == 0 || wPrvKeyDwn == ID_OP4) // No operation pending
@@ -462,7 +462,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
 						dlg.m_sText = annotate::szCurTxt;
 						if (dlg.DoModal() == IDOK)
 						{
-							strcpy(annotate::szCurTxt, dlg.m_sText);
+							strcpy_s(annotate::szCurTxt, sizeof(annotate::szCurTxt), dlg.m_sText.GetString());
 						}
 						pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSeg);
 						

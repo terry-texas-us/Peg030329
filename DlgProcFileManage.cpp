@@ -308,7 +308,7 @@ void DlgProcFileManageDoLayerRename(HWND hDlg)
 			msgWarning(IDS_MSG_LAYER_NO_RENAME_0);
 		else
 		{
-			strcpy(szLayerName, strName);
+			strcpy_s(szLayerName, sizeof(szLayerName), strName.GetString());
 			if (pGetLayerName())
 			{
 				if (strlen(szLayerName) > 0)

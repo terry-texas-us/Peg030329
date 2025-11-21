@@ -286,20 +286,20 @@ void CFileOpenDWG::ReadBlockTable(AD_DB_HANDLE hdb)
 			if ((m_htb->blkh.flag & AD_BLOCK_ANONYMOUS) == AD_BLOCK_ANONYMOUS)
 			{
 				char szBuf[8];
-				strcat(m_htb->blkh.name, _itoa(lBlockHeader, szBuf, 10));
+				strcat_s(m_htb->blkh.name, sizeof(m_htb->blkh.name), _itoa(lBlockHeader, szBuf, 10));
 				adReplaceBlockheader(hdb, &m_htb->blkh);
 			}
 			if ((m_htb->blkh.flag & AD_BLOCK_XREF) == AD_BLOCK_XREF)
 			{
 				char szBuf[256];
 				Directory_ExamineFile(m_hen->block.xrefpath, szBuf);
-				strcpy(m_hen->block.xrefpath, szBuf);
+				strcpy_s(m_hen->block.xrefpath, sizeof(m_hen->block.xrefpath), szBuf);
 			}
 			CBlock* pBlock;
 			if (CPegDoc::GetDoc()->BlksLookup(m_htb->blkh.name, pBlock))
 			{
 				char szBuf[8];
-				strcat(m_htb->blkh.name, _itoa(lBlockHeader, szBuf, 10));
+				strcat_s(m_htb->blkh.name, sizeof(m_htb->blkh.name), _itoa(lBlockHeader, szBuf, 10));
 				adReplaceBlockheader(hdb, &m_htb->blkh);
 			}
 			CPnt ptBase(m_hen->block.base[0], m_hen->block.base[1], m_hen->block.base[2]);
@@ -745,7 +745,7 @@ void CFileOpenDWG::WriteBlocksSection()
         pDoc->BlksGetNextAssoc(pos, strKey, pBlock);
 
 		adSetDefaultBlockheader(&m_htb->blkh);
-		strcpy(m_htb->blkh.name, strKey);
+		strcpy_s(m_htb->blkh.name, sizeof(m_htb->blkh.name), strKey.GetString());
 		adGenerateObjhandle(m_hdb, m_htb->blkh.objhandle);
 		adAddBlockheader(m_hdb, &m_htb->blkh); 
 	}
@@ -755,7 +755,7 @@ void CFileOpenDWG::WriteBlocksSection()
         pDoc->BlksGetNextAssoc(pos, strKey, pBlock);
 
 		char szName[64];
-		strcpy(szName, strKey);
+		strcpy_s(szName, sizeof(szName), strKey.GetString());
 			
 		AD_OBJHANDLE blkobjhandle;
 		if (adFindBlockheaderByName(m_hdb, szName, blkobjhandle) == 0)
@@ -770,7 +770,7 @@ void CFileOpenDWG::WriteBlocksSection()
 	
 			CPnt pt = pBlock->GetBasePt();
 			pt.Get(m_hen->block.base);
-			strcpy(m_hen->block.name2, strKey);
+			strcpy_s(m_hen->block.name2, sizeof(m_hen->block.name2), strKey.GetString());
 			
 			adAddEntityToList(m_hdb, entlist, m_henhd, m_hen);
 		}
@@ -800,7 +800,7 @@ void CFileOpenDWG::WriteEntities()
 		CLayer* pLayer = pDoc->LayersGetAt(i);
 		
 		char szName[64];
-		strcpy(szName, pLayer->GetName());
+		strcpy_s(szName, sizeof(szName), pLayer->GetName());
 		adFindLayerByName(m_hdb, szName, CFileOpenDWG::ms_objecthandle);
 	
 		POSITION pos = pLayer->GetHeadPosition();
@@ -840,8 +840,8 @@ void CFileOpenDWG::WriteLayer(const CString& strName, PENCOLOR nColor)
 {
 #if ODA_FUNCTIONALITY
 	adSetDefaultLayer(m_hdb, &m_htb->lay);
-	
-	strcpy(m_htb->lay.name, strName);
+
+	strcpy_s(m_htb->lay.name, sizeof(m_htb->lay.name), strName.GetString());
 	m_htb->lay.color = nColor;
 	
 #pragma tasMSG(TODO: Need to modify default pen style)
@@ -867,10 +867,10 @@ void CFileOpenDWG::WritePenStyle(CPenStyle* pPenStyle)
 {
 #if ODA_FUNCTIONALITY
 	adSetDefaultLinetype(&m_htb->ltype);
-  
-	strcpy(m_htb->ltype.name, pPenStyle->GetName());
-	strcpy(m_htb->ltype.text, pPenStyle->GetDescription());
-	
+
+	strcpy_s(m_htb->ltype.name, sizeof(m_htb->ltype.name), pPenStyle->GetName().GetString());
+	strcpy_s(m_htb->ltype.text, sizeof(m_htb->ltype.text), pPenStyle->GetDescription().GetString());
+
 	WORD wDefLen = pPenStyle->GetDefLen();
 	
 	m_htb->ltype.numlinetypesegs = wDefLen;
@@ -1020,12 +1020,12 @@ bool CPrimArc::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD
 	char szName[64];
 	if (m_nPenStyle == PENSTYLE_BYLAYER)
 	{
-		strcpy(szName, "ByLayer");	
+		strcpy_s(szName, sizeof(szName), "ByLayer");	
 	}
 	else
 	{
 		CPenStyle* pPenStyle = CPegDoc::GetDoc()->PenStylesGetAt(m_nPenStyle);
-		strcpy(szName, pPenStyle->GetName());
+		strcpy_s(szName, sizeof(szName), pPenStyle->GetName().GetString());
 	}
 	adFindLinetypeByName(hdb, szName, henhd->entltypeobjhandle);
 	
@@ -1102,16 +1102,16 @@ bool CPrimInsert::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, 
 	char szName[64];
 	if (m_nPenStyle == PENSTYLE_BYLAYER)
 	{
-		strcpy(szName, "ByLayer");	
+		strcpy_s(szName, sizeof(szName), "ByLayer");	
 	}
 	else 
 	{
 		CPenStyle* pPenStyle = CPegDoc::GetDoc()->PenStylesGetAt(m_nPenStyle);
-		strcpy(szName, pPenStyle->GetName());
+		strcpy_s(szName, sizeof(szName), pPenStyle->GetName().GetString());
 	}
 	adFindLinetypeByName(hdb, szName, henhd->entltypeobjhandle);
 	
-	strcpy(szName, m_strName);
+	strcpy_s(szName, sizeof(szName), m_strName.GetString());
 	
 	adFindBlockheaderByName(hdb, szName, hen->insert.blockheaderobjhandle);
 	m_pt.Get(hen->insert.pt0);
@@ -1153,12 +1153,12 @@ bool CPrimLine::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PA
 	char szName[64];
 	if (m_nPenStyle == PENSTYLE_BYLAYER)
 	{
-		strcpy(szName, "ByLayer");	
+		strcpy_s(szName, sizeof(szName), "ByLayer");	
 	}
 	else 
 	{
 		CPenStyle* pPenStyle = CPegDoc::GetDoc()->PenStylesGetAt(m_nPenStyle);
-		strcpy(szName, pPenStyle->GetName());
+		strcpy_s(szName, sizeof(szName), pPenStyle->GetName().GetString());
 	}
 	adFindLinetypeByName(hdb, szName, henhd->entltypeobjhandle);
 	
@@ -1554,16 +1554,19 @@ bool CPrimSegRef::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, 
 	henhd->entcolor = m_nPenColor;
 	
 	char szName[64];
-	if (m_nPenStyle == PENSTYLE_BYLAYER) {strcpy(szName, "ByLayer");}
+	if (m_nPenStyle == PENSTYLE_BYLAYER) 
+	{
+		strcpy_s(szName, sizeof(szName), "ByLayer");
+	}
 	else 
 	{
 		CPenStyle* pPenStyle = CPegDoc::GetDoc()->PenStylesGetAt(m_nPenStyle);
-		strcpy(szName, pPenStyle->GetName());
+		strcpy_s(szName, sizeof(szName), pPenStyle->GetName().GetString());
 	}
 	adFindLinetypeByName(hdb, szName, henhd->entltypeobjhandle);
 	m_vZ.Get(henhd->extrusion);
-	
-	strcpy(szName, m_strName);
+
+	strcpy_s(szName, sizeof(szName), m_strName.GetString());
 	
 	adFindBlockheaderByName(hdb, szName, hen->insert.blockheaderobjhandle);
 	m_pt.Get(hen->insert.pt0);
@@ -1746,12 +1749,12 @@ bool CPrimText::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PA
 	char szName[64];
 	if (m_nPenStyle == PENSTYLE_BYLAYER)
 	{
-		strcpy(szName, "ByLayer");	
+		strcpy_s(szName, sizeof(szName), "ByLayer");	
 	}
 	else 
 	{
 		CPenStyle* pPenStyle = CPegDoc::GetDoc()->PenStylesGetAt(m_nPenStyle);
-		strcpy(szName, pPenStyle->GetName());
+		strcpy_s(szName, sizeof(szName), pPenStyle->GetName().GetString());
 	}
 	adFindLinetypeByName(hdb, szName, henhd->entltypeobjhandle);
 
@@ -1763,7 +1766,7 @@ bool CPrimText::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PA
 	
 	hen->text.tdata.height = m_rs.DirY().Length();
 	hen->text.tdata.rotang = Vec_Angle_xy(m_rs.DirX());
-	strcpy(hen->text.textstr, m_strText);
+	strcpy_s(hen->text.textstr, sizeof(hen->text.textstr), m_strText.GetString());
 	
 	adAddEntityToList(hdb, entlist, henhd, hen);
 	

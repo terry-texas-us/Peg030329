@@ -101,7 +101,7 @@ void lex::BreakExpression(int& iLoc, int& iEnd, int* aiTyp, int* aiTokLoc)
 		throw "Syntax error";
 }
 
-void lex::ConvertValToString(char* acVal, CD* arCD, char* acPic, int* aiLen)
+void lex::ConvertValToString(char* acVal, CD* arCD, char* acPic, size_t picBufferSize, int* aiLen)
 {
 	long lTyp = arCD->lTyp;
 	int iDim = LOWORD(arCD->lDef);
@@ -156,8 +156,9 @@ void lex::ConvertValToString(char* acVal, CD* arCD, char* acPic, int* aiLen)
 				{
 					iLoc = 1;
 					// pCvtDoubToFltDecTxt(*dVal, 7, iLoc, cVal);
-					szpVal = strtok(cVal, " ");
-					strcpy(&acPic[iLnLoc], szpVal);
+					char* context = nullptr;
+					szpVal = strtok_s(cVal, " ", &context);
+					strcpy_s(&acPic[iLnLoc], picBufferSize - iLnLoc, szpVal);
 					iLnLoc += (int) strlen(szpVal);
 				}
 				else if (lTyp == TOK_LENGTH_OPERAND) 
@@ -199,7 +200,7 @@ void lex::ConvertValTyp(int aiTyp, int aiTypReq, long* alDef, void* apVal)
 	{
 		char	szVal[256];
 		
-		strcpy(szVal, (char*) apVal);
+		strcpy_s(szVal, sizeof(szVal), (char*) apVal);
 		if (aiTypReq == TOK_INTEGER) 
 		{
 			piVal[0] = atoi(szVal);
@@ -284,7 +285,7 @@ void lex::ConvertStringToVal(int aiTyp, long alDef, char* aszVal, long* alDefReq
 //				alDef		dimension (lo word) and length (hi word) of result
 //				aiTyp		type of result
 //				apOp		result
-void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* apOp)	
+void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* apOp, size_t bufferSize)	
 {
 	char szTok[256];
 
@@ -351,7 +352,7 @@ void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* ap
 				if (iTyp1 == TOK_STRING) 
 				{
 					iDim1 = LOWORD(lDef1);
-					strcpy(szTok, cOp1);
+					strcpy_s(szTok, sizeof(szTok), cOp1);
 					if (iTokTyp == TOK_TOINTEGER) 
 					{
 						iTyp1 = TOK_INTEGER;
@@ -368,9 +369,9 @@ void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* ap
 						throw "String operand conversions error: unknown";
 				}
 				else if (iTyp1 == TOK_INTEGER)
-					UnaryOp(iTokTyp, &iTyp1, &lDef1, lOp1);
+					UnaryOp(iTokTyp, &iTyp1, &lDef1, lOp1, bufferSize);
 				else 
-					UnaryOp(iTokTyp, &iTyp1, &lDef1, dOp1);
+					UnaryOp(iTokTyp, &iTyp1, &lDef1, dOp1, bufferSize);
 			}
 			else if (toktbl[iTokTyp].eClass == BinaryArithOp)
 			{	// Binary arithmetic operator 
@@ -403,7 +404,8 @@ void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* ap
 						iDim1 = LOWORD(lDef1);
 						iDim2 = LOWORD(lDef2);
 						iDim = iDim2 + iDim1;
-						strcpy(cOp1, strcat(cOp2, cOp1));
+						strcat_s(cOp2, sizeof(cOp2), cOp1);
+						strcpy_s(cOp1, sizeof(cOp1), cOp2);
 						iLen1 = 1 + (iDim - 1) / 4;
 						lDef1 = MAKELONG(iDim, iLen1);
 					}
@@ -637,7 +639,7 @@ int lex::TokType(int aiTokId)
 {
 	return (aiTokId >= 0 && aiTokId < lex::iToks) ? iTokenType[aiTokId] : - 1;
 }
-void lex::UnaryOp(int aiTokTyp, int* aiTyp, long* alDef, double* adOp)
+void lex::UnaryOp(int aiTokTyp, int* aiTyp, long* alDef, double* adOp, size_t bufferSize)
 {
 	CD		cd;
 	char	szTok[32];
@@ -727,9 +729,9 @@ void lex::UnaryOp(int aiTokTyp, int* aiTyp, long* alDef, double* adOp)
 			*aiTyp = TOK_STRING;
 			cd.lTyp = TOK_REAL;
 			cd.lDef = *alDef;
-			ConvertValToString((char*) adOp, &cd, szTok, &iDim);
+			ConvertValToString((char*) adOp, &cd, szTok, sizeof(szTok), &iDim);
 			iLen = 1 + (iDim - 1) / 4;
-			strcpy((char*) adOp, szTok);
+			strcpy_s((char*) adOp, bufferSize, szTok);
 			*alDef = MAKELONG(iDim, iLen);
 			break;
 		
@@ -737,7 +739,7 @@ void lex::UnaryOp(int aiTokTyp, int* aiTyp, long* alDef, double* adOp)
 			throw "Unknown operation";
 	}
 }
-void lex::UnaryOp(int aiTokTyp, int* aiTyp, long* alDef, long* alOp)
+void lex::UnaryOp(int aiTokTyp, int* aiTyp, long* alDef, long* alOp, size_t bufferSize)
 {
 	CD		cd;
 	char	szTok[32];
@@ -770,9 +772,9 @@ void lex::UnaryOp(int aiTokTyp, int* aiTyp, long* alDef, long* alOp)
 			*aiTyp = TOK_STRING;
 			cd.lTyp = TOK_INTEGER;
 			cd.lDef = *alDef;
-			ConvertValToString((char*) alOp, &cd, szTok, &iDim);
+			ConvertValToString((char*) alOp, &cd, szTok, sizeof(szTok), &iDim);
 			iLen = 1 + (iDim - 1) / 4;
-			strcpy((char*) alOp, szTok);
+			strcpy_s((char*) alOp, bufferSize, szTok);
 			*alDef = MAKELONG(iDim, iLen);
 			break;
 		

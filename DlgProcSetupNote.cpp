@@ -124,7 +124,7 @@ void DlgProcSetupNoteInit(HWND hDlg)
 	pstate.GetFontDef(fd);
 			
 	char szBuf[32];
-	strcpy(szBuf, fd.TextFont());
+	strcpy_s(szBuf, sizeof(szBuf), fd.TextFont());
 	::SendDlgItemMessage(hDlg, IDC_FONT_NAME, CB_SELECTSTRING, (WPARAM) - 1, (LPARAM) ((LPSTR) szBuf));
 			
 	DlgBoxSetItemDouble(hDlg, IDC_TEXT_SPACING, fd.ChrSpac());

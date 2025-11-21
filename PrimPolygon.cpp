@@ -225,9 +225,9 @@ void CPrimPolygon::DisRep(const CPnt& ptPic) const
 			dAng = line::GetAngAboutZAx(CLine(*pBegPt, *pEndPt));
 		
 		char szBuf[24];
-		UnitsString_FormatLength(szBuf, app.GetUnits(), dLen, 16, 4);
+		UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), dLen, 16, 4);
 		strRep += szBuf;
-		sprintf(szBuf, " @ %6.2f degrees", dAng / RADIAN);
+		sprintf_s(szBuf, sizeof(szBuf), " @ %6.2f degrees", dAng / RADIAN);
 		strRep += szBuf;	
 		msgInformation(strRep);
 		
@@ -602,7 +602,7 @@ void DisplayFilAreaHatch(CPegView* pView, CDC* pDC, CTMat& tm, const int iSets, 
 		double dHatOrigX = dX * dCosAng - dY * (- dSinAng);
 		double dHatOrigY = dX * (- dSinAng) + dY * dCosAng;
 
-		// Add rotation to matrix which gets current scan lines parallel to x-axis
+		// Add rotation to matrix which transforms current scan lines parallel to x-axis
 		CTMat tmRotZ;
 		tm *= tmRotZ.RotateZ(- dSinAng, dCosAng);
 		tmInv = tm;

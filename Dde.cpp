@@ -503,7 +503,7 @@ LPSTR dde::GetCFNameFromId(WORD wFmt, LPSTR lpBuf, int iSize)
 	{
 		if (pCTN->wFmt == wFmt) 
 		{
-			strncpy(lpBuf, pCTN->pszName, iSize);
+			strncpy_s(lpBuf, iSize, pCTN->pszName, _TRUNCATE);
 			return lpBuf;
 		}
 		pCTN++;
@@ -657,14 +657,14 @@ bool dde::ParseCmd(LPSTR *ppszCmdLine, PTOPICINFO pTopic, LPSTR pszError, UINT u
 	
 	if (!lex::ScanForChar('[', &pCmd))
 	{	// Scan for a command leading
-		strncpy(pszError, "Missing '['", uiErrorSize - 1);
+		strncpy_s(pszError, uiErrorSize, "Missing '['", _TRUNCATE);
 		return false;
 	}
 	
 	pExecFnInfo = ScanForCommand(pTopic->pCmdList, &pCmd);
 	if (!pExecFnInfo)				
 	{	// Not a valid command
-		strncpy(pszError, "Invalid Command", uiErrorSize - 1);
+		strncpy_s(pszError, uiErrorSize, "Invalid Command", _TRUNCATE);
 		return false;
 	}
 	*ppOp++ = pExecFnInfo->pFn; 		// Add the function pointer to the opcode list
@@ -684,23 +684,23 @@ bool dde::ParseCmd(LPSTR *ppszCmdLine, PTOPICINFO pTopic, LPSTR pszError, UINT u
 
 		if ((cTerm != ')') && (!lex::ScanForChar(')', &pCmd)))
 		{	// Do not have a terminating ) char
-			strncpy(pszError, "Missing ')'", uiErrorSize - 1);
+			strncpy_s(pszError, uiErrorSize, "Missing ')'", _TRUNCATE);
 			return false;
 		}
 	}	
 	if (!lex::ScanForChar(']', &pCmd))
 	{	// Do not have a terminating ] char
-		strncpy(pszError, "Missing ']'", uiErrorSize - 1);
+		strncpy_s(pszError, uiErrorSize, "Missing ']'", _TRUNCATE);
 		return false;
 	}
 	if (uiNargs < pExecFnInfo->uiMinArgs) 
 	{
-		strncpy(pszError, "Too few arguments", uiErrorSize - 1);
+		strncpy_s(pszError, uiErrorSize, "Too few arguments", _TRUNCATE);
 		return false;
 	}
 	if (uiNargs > pExecFnInfo->uiMaxArgs) 
 	{
-		strncpy(pszError, "Too many arguments", uiErrorSize - 1);
+		strncpy_s(pszError, uiErrorSize, "Too many arguments", _TRUNCATE);
 		return false;
 	}
 	*ppOp++ = 0; 					// Terminate this op list with a 0
@@ -770,7 +770,7 @@ PEXECCMDFNINFO dde::ScanForCommand(PEXECCMDFNINFO pCmdInfo, LPSTR *ppStr)
 
 	while (pCmdInfo)					// Search for a command that matches the name we have
 	{
-		if (stricmp(pStart, pCmdInfo->pszCmdName) == 0) 	// Found it, so restore the delimter and return the info pointer
+		if (_stricmp(pStart, pCmdInfo->pszCmdName) == 0) 	// Found it, so restore the delimter and return the info pointer
 		{
 			*p = cSave;
 			*ppStr = p;

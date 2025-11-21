@@ -838,8 +838,9 @@ CPrimText::CPrimText(char* p, int iVer)
 			vDirY.RotAboutZAx(sin(dAng), cos(dAng));
 			m_rs.SetDirY(vDirY);
 		}
-		char* pChr = strtok(&p[44], "\\");
-		
+		char* context = nullptr;
+		char* pChr = strtok_s(&p[44], "\\", &context);
+
 		if (pChr == 0)
 			m_strText = "CFileJob.PrimText error: Missing string terminator.";
 		else if (strlen(pChr) > 132)

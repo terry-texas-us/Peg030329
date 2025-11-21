@@ -88,9 +88,9 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
 					iEndCapId = (wPrvKeyDwn == 0) ? 1 : - 1; // 1 (start) and -1 (end)
 
 					CString strMes("Cross sectional dimension (Width by Depth) is ");
-					UnitsString_FormatLength(szLen, max(app.GetUnits(), Inches), dWid[1], 12, 2);
+					UnitsString_FormatLength(szLen, sizeof(szLen), max(app.GetUnits(), Inches), dWid[1], 12, 2);
 					strMes += szLen;
-					UnitsString_FormatLength(szWid, max(app.GetUnits(), Inches), dDep[1], 12, 2);
+					UnitsString_FormatLength(szWid, sizeof(szWid), max(app.GetUnits(), Inches), dDep[1], 12, 2);
 					strMes += " by ";
 					strMes += szWid;
 					msgInformation(strMes);
@@ -819,12 +819,12 @@ void lpd::GenSizeNote(CPnt arPt, double adAng, double adWid, double adDep)
 	char pNote[48];
 	char pSize[16];
 	
-	UnitsString_FormatLength(pSize, max(app.GetUnits(), Inches), adWid, 8, 0);
-	strcpy(pNote, string_TrimLeadingSpace(pSize));
-	strcat(pNote, "/");
+	UnitsString_FormatLength(pSize, sizeof(pSize), max(app.GetUnits(), Inches), adWid, 8, 0);
+	strcpy_s(pNote, sizeof(pNote), string_TrimLeadingSpace(pSize));
+	strcat_s(pNote, sizeof(pNote), "/");
 
-	UnitsString_FormatLength(pSize, max(app.GetUnits(), Inches), adDep, 8, 0);
-	strcat(pNote, string_TrimLeadingSpace(pSize));
+	UnitsString_FormatLength(pSize, sizeof(pSize), max(app.GetUnits(), Inches), adDep, 8, 0);
+	strcat_s(pNote, sizeof(pNote), string_TrimLeadingSpace(pSize));
 
 	CPegView* pView = CPegView::GetActiveView();
 	CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();

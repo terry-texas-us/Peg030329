@@ -162,7 +162,7 @@ void CPrimArc::CutAt2Pts(CPnt* pt, CSegs* pSegs, CSegs* pSegsNew)
 		pArc = this;
 	}										
 	else
-	{	// Something gets cut
+	{	// Something needs to get cut
 		CVec vPlnNorm = m_vMajAx ^ m_vMinAx;
 		vPlnNorm.Normalize();
 	

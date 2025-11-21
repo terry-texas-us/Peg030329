@@ -15,7 +15,7 @@ using namespace dde;
 bool dde::ExecNoteHT(PTOPICINFO , LPSTR , UINT , UINT , LPSTR *ppArgs)
 {
 	char szBuf[32];
-	strncpy(szBuf, ppArgs[0], sizeof(szBuf) - 1);
+	strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 	CCharCellDef ccd;
 	pstate.GetCharCellDef(ccd);
 	ccd.ChrHgtSet(atof(szBuf));
@@ -26,7 +26,7 @@ bool dde::ExecNoteHT(PTOPICINFO , LPSTR , UINT , UINT , LPSTR *ppArgs)
 bool dde::ExecFill(PTOPICINFO , LPSTR , UINT , UINT , LPSTR *ppArgs)
 {
 	char szBuf[8];
-	strncpy(szBuf, ppArgs[0], sizeof(szBuf) - 1);
+	strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 	pstate.SetPolygonIntStyleId(WORD(atoi(szBuf)));
 	return true;
 }
@@ -34,7 +34,7 @@ bool dde::ExecFill(PTOPICINFO , LPSTR , UINT , UINT , LPSTR *ppArgs)
 bool dde::ExecScale(PTOPICINFO , LPSTR , UINT , UINT , LPSTR *ppArgs)
 {
 	char szBuf[32];
-	strncpy(szBuf, ppArgs[0], sizeof(szBuf) - 1);
+	strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 	app.SetScale(atof(szBuf));
 	app.StatusLineDisplay(Scale);				
 	return true;
@@ -43,7 +43,7 @@ bool dde::ExecScale(PTOPICINFO , LPSTR , UINT , UINT , LPSTR *ppArgs)
 bool dde::ExecDL(PTOPICINFO , LPSTR , UINT , UINT , LPSTR *ppArgs)
 {
 	char szBuf[32];
-	strncpy(szBuf, ppArgs[0], sizeof(szBuf) - 1);
+	strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 	app.SetDimLen(UnitsString_ParseLength(app.GetUnits(), szBuf));
 	app.StatusLineDisplay(DimLen);				
 	return true;
@@ -52,7 +52,7 @@ bool dde::ExecDL(PTOPICINFO , LPSTR , UINT , UINT , LPSTR *ppArgs)
 bool dde::ExecDA(PTOPICINFO , LPSTR , UINT , UINT , LPSTR *ppArgs)
 {
 	char szBuf[32];
-	strncpy(szBuf, ppArgs[0], sizeof(szBuf) - 1);
+	strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 	app.SetDimAngZ(atof(szBuf));
 	app.StatusLineDisplay(DimAng);				
 	return true;
@@ -133,9 +133,9 @@ bool dde::ExecFileGet(PTOPICINFO , LPSTR , UINT , UINT uiNargs, LPSTR *ppArgs)
 bool dde::ExecGotoPoint(PTOPICINFO , LPSTR , UINT , UINT , LPSTR *ppArgs)
 {
 	char szBuf[8];
-	
-	strncpy(szBuf, ppArgs[0], sizeof(szBuf) - 1);
-	
+
+	strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+
 	int iStakeId = atoi(szBuf);
 	app.CursorPosSet(app.HomePointGet(iStakeId));
 
@@ -145,9 +145,9 @@ bool dde::ExecGotoPoint(PTOPICINFO , LPSTR , UINT , UINT , LPSTR *ppArgs)
 bool dde::ExecPen(PTOPICINFO , LPSTR , UINT , UINT , LPSTR *ppArgs)
 {
 	char szBuf[8];
-	
-	strncpy(szBuf, ppArgs[0], sizeof(szBuf) - 1);
-	
+
+	strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+
 	pstate.SetPenColor(PENCOLOR(atoi(szBuf)));
 	app.StatusLineDisplay(Pen);
 		
@@ -157,9 +157,9 @@ bool dde::ExecPen(PTOPICINFO , LPSTR , UINT , UINT , LPSTR *ppArgs)
 bool dde::ExecLine(PTOPICINFO , LPSTR , UINT , UINT , LPSTR *ppArgs)
 {
 	char szBuf[8];
-	
-	strncpy(szBuf, ppArgs[0], sizeof(szBuf) - 1);
-	
+
+	strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+
 	pstate.SetPenStyle(PENSTYLE(atoi(szBuf)));
 	app.StatusLineDisplay(Line);
 	
@@ -215,9 +215,9 @@ bool dde::ExecSend(PTOPICINFO , LPSTR , UINT , UINT , LPSTR *ppArgs)
 bool dde::ExecSetPoint(PTOPICINFO , LPSTR , UINT , UINT , LPSTR *ppArgs)
 {
 	char szBuf[8];
-	
-	strncpy(szBuf, ppArgs[0], sizeof(szBuf) - 1);
-	
+
+	strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+
 	int iStakeId = atoi(szBuf);
 	
 	app.HomePointSave(iStakeId, app.CursorPosGet());

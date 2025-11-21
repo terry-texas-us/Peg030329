@@ -69,7 +69,7 @@ void CPrimDim::CutAt2Pts(CPnt* pt, CSegs* pSegs, CSegs* pSegsNew)
 		// Put entire dimension in trap
 		pDim = this;
 	else
-	{	// Something gets cut
+	{	// Something needs to get cut
 		pDim = new CPrimDim(*this);
 		if (dRel[0] > DBL_EPSILON && dRel[1] < 1. - DBL_EPSILON)
 		{	// Cut section out of middle
@@ -384,7 +384,7 @@ void CPrimDim::SetDefaultNote()
 	m_rs.SetDirY(vRefYAx);
 
 	char szBuf[64];
-	UnitsString_FormatLength(szBuf, app.GetUnits(), m_ln.Length(), 16, 4);
+	UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), m_ln.Length(), 16, 4);
 	m_strText = szBuf;
 	m_strText.TrimLeft();
 	if (cText0 == 'R' || cText0 == 'D')

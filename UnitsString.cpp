@@ -26,30 +26,24 @@ void UnitsString_FormatAngle(char* szBuf, double dAng, int iPrec, int iScal)
 {
 	char szFmt[24];
 
-	strcpy(szFmt, "%");
-	strcat(szFmt, _itoa(iPrec, szBuf, 10));
-	strcat(szFmt, ".");
-	strcat(szFmt, _itoa(iScal, szBuf, 10));
-	strcat(szFmt, "f");
+	strcpy_s(szFmt, sizeof(szFmt), "%");
+	strcat_s(szFmt, sizeof(szFmt), _itoa(iPrec, szBuf, 10));
+	strcat_s(szFmt, sizeof(szFmt), ".");
+	strcat_s(szFmt, sizeof(szFmt), _itoa(iScal, szBuf, 10));
+	strcat_s(szFmt, sizeof(szFmt), "f");
 
-	sprintf(szBuf, strcat(szFmt, "d"), dAng / RADIAN);
+	strcat_s(szFmt, sizeof(szFmt), "d");
+	sprintf(szBuf, szFmt, dAng / RADIAN);
 }
 
-void UnitsString_FormatLength(char* aszBuf, EUnits eUnits, double adVal, int aiPrec, int aiScal)		
+void UnitsString_FormatLength(char* aszBuf, size_t bufferSize, EUnits units, double adVal, int aiPrec, int aiScal)
 {
-	// Produces a string formatted to type eUnits from a "length" value
-	// Architectural units formatted as follows:
-	//	<feet>'<inches>.<fraction numerator>/<fraction denominator>"
-	// Engineering units formatted as follows:
-	//	<feet>'<inches>.<decimal inches>"
-	// All other units formatted using floating decimal.
-	
 	char szBuf[16];
 
 	// Reduce length to number of scaled inches
 	double dLen = adVal * app.GetScale();			
 	
-	if (eUnits == Architectural)
+	if (units == Architectural)
 	{
 		// Determine how many whole feet and inches
 		int iNmbFt = int(dLen / 12.);
@@ -76,26 +70,26 @@ void UnitsString_FormatLength(char* aszBuf, EUnits eUnits, double adVal, int aiP
 			aszBuf[1] = '\0';
 		}
 		_itoa(iNmbFt, szBuf, 10);
-		strcat(aszBuf, szBuf);
-		strcat(aszBuf, "'");
+		strcat_s(aszBuf, bufferSize, szBuf);
+		strcat_s(aszBuf, bufferSize, "'");
 		_itoa(iNmbIn, szBuf, 10);
-		strcat(aszBuf, szBuf);
+		strcat_s(aszBuf, bufferSize, szBuf);
 		if (iNum > 0)				// Significant decimal inch component
 		{
-			strcat(aszBuf, "^/");
+			strcat_s(aszBuf, bufferSize, "^/");
 			int	iGrtComDivisor = UnitsString_GCD(iNum, iUnitsPrec);
 			iNum = iNum / iGrtComDivisor;
 			int iDen = iUnitsPrec / iGrtComDivisor; // Add fractional component of inches
 			_itoa(iNum, szBuf, 10);
-			strcat(aszBuf, szBuf);
-			strcat(aszBuf, "/");
+			strcat_s(aszBuf, bufferSize, szBuf);
+			strcat_s(aszBuf, bufferSize, "/");
 			_itoa(iDen, szBuf, 10);
-			strcat(aszBuf, szBuf);
-			strcat(aszBuf, "^");
+			strcat_s(aszBuf, bufferSize, szBuf);
+			strcat_s(aszBuf, bufferSize, "^");
 		}
-		strcat(aszBuf, "\"");
+		strcat_s(aszBuf, bufferSize, "\"");
 	}
-	else if (eUnits == Engineering)
+	else if (units == Engineering)
 	{
 		int iScal = aiScal;
 		if (fabs(dLen) >= 1.)			 
@@ -108,18 +102,18 @@ void UnitsString_FormatLength(char* aszBuf, EUnits eUnits, double adVal, int aiP
 			aszBuf[0] = ' ';
 			aszBuf[1] = '\0';
 			_itoa(int(dLen / 12.), szBuf, 10);
-			strcat(aszBuf, szBuf);
+			strcat_s(aszBuf, bufferSize, szBuf);
 			dLen = fmod(dLen, 12.);
 			if (adVal < 0.) 
 				aszBuf[0] = '-';
-			strcat(aszBuf, "'");
+			strcat_s(aszBuf, bufferSize, "'");
 			_itoa(int(dLen), szBuf, 10);
-			strcat(aszBuf, szBuf);
-			strcat(aszBuf, ".");
+			strcat_s(aszBuf, bufferSize, szBuf);
+			strcat_s(aszBuf, bufferSize, ".");
 			dLen = fmod(dLen, 1.) * dScalFac;
 			_itoa(int(dLen), szBuf, 10);
-			strcat(aszBuf, szBuf);
-			strcat(aszBuf, "\"");
+			strcat_s(aszBuf, bufferSize, szBuf);
+			strcat_s(aszBuf, bufferSize, "\"");
 		}	
 		else
 			aszBuf[0] = '\0';
@@ -129,26 +123,47 @@ void UnitsString_FormatLength(char* aszBuf, EUnits eUnits, double adVal, int aiP
 	{
 		char szFmt[12];
 		
-		strcpy(szFmt, "%");
-		strcat(szFmt, _itoa(aiPrec, szBuf, 10));
-		strcat(szFmt, ".");
-		strcat(szFmt, _itoa(aiScal, szBuf, 10));
-		strcat(szFmt, "f");
-		
-		if (eUnits == Feet) 
-			sprintf(aszBuf, strcat(szFmt, "'"), dLen / 12.);
-		else if (eUnits == Inches)
-			sprintf(aszBuf, strcat(szFmt, "\""), dLen);
-		else if (eUnits == Meters)
-			sprintf(aszBuf, strcat(szFmt, "m"), dLen * .0254);
-		else if (eUnits == Millimeters) 
-			sprintf(aszBuf, strcat(szFmt, "mm"), dLen * 25.4);
-		else if (eUnits == Centimeters)
-			sprintf(aszBuf, strcat(szFmt, "cm"), dLen * 2.54);
-		else if (eUnits == Decimeters)
-			sprintf(aszBuf, strcat(szFmt, "dm"), dLen * .254);
-		else if (eUnits == Kilometers)
-			sprintf(aszBuf, strcat(szFmt, "km"), dLen * .0000254);
+		strcpy_s(szFmt, sizeof(szFmt), "%");
+		strcat_s(szFmt, sizeof(szFmt), _itoa(aiPrec, szBuf, 10));
+		strcat_s(szFmt, sizeof(szFmt), ".");
+		strcat_s(szFmt, sizeof(szFmt), _itoa(aiScal, szBuf, 10));
+		strcat_s(szFmt, sizeof(szFmt), "f");
+
+		if (units == Feet)
+		{
+			strcat_s(szFmt, sizeof(szFmt), "'");
+			sprintf(aszBuf, szFmt, dLen / 12.);
+		}
+		else if (units == Inches)
+		{
+			strcat_s(szFmt, sizeof(szFmt), "\"");
+			sprintf(aszBuf, szFmt, dLen);
+		}
+		else if (units == Meters)
+		{
+			strcat_s(szFmt, sizeof(szFmt), "m");
+			sprintf(aszBuf, szFmt, dLen * .0254);
+		}
+		else if (units == Millimeters)
+		{
+			strcat_s(szFmt, sizeof(szFmt), "mm");
+			sprintf(aszBuf, szFmt, dLen * 25.4);
+		}
+		else if (units == Centimeters)
+		{
+			strcat_s(szFmt, sizeof(szFmt), "cm");
+			sprintf(aszBuf, szFmt, dLen * 2.54);
+		}
+		else if (units == Decimeters)
+		{
+			strcat_s(szFmt, sizeof(szFmt), "dm");
+			sprintf(aszBuf, szFmt, dLen * .254);
+		}
+		else if (units == Kilometers)
+		{
+			strcat_s(szFmt, sizeof(szFmt), "km");
+			sprintf(aszBuf, szFmt, dLen * .0000254);
+		}
 		else
 			aszBuf[0] = '\0';
 	}
@@ -197,9 +212,10 @@ double UnitsString_ParseLength(EUnits eUnits, char* aszLen)
 		long lDef;
 		int iTyp;
 		double dVal[32];
-		
+		size_t bufferSize = sizeof(dVal);
+
 		lex::Parse(aszLen);
-		lex::EvalTokenStream((char*) 0, &iTokId, &lDef, &iTyp, (void*) dVal);
+		lex::EvalTokenStream((char*) 0, &iTokId, &lDef, &iTyp, (void*) dVal, bufferSize);
 		
 		if (iTyp == lex::TOK_LENGTH_OPERAND)
 			return (dVal[0]);

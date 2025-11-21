@@ -14,12 +14,12 @@ BOOL CALLBACK DlgProcHomePointGo(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 	{		 
 		char szNames[256];
 		::LoadString(app.GetInstance(), IDS_HOME_POINT_GO_NAMES, szNames, 256);
-	
-		char* pName = strtok(szNames, "\t");
+		char* context = nullptr;
+		char* pName = strtok_s(szNames, "\t", &context);
 		while (pName != 0)
 		{		
 			::SendDlgItemMessage(hDlg, IDC_LIST, CB_ADDSTRING, 0, (LPARAM) (LPCSTR) pName);
-			pName = strtok(0, "\t");
+			pName = strtok_s(0, "\t", &context);
 		}
 		::SendDlgItemMessage(hDlg, IDC_LIST, CB_SETCURSEL, 9, 0L);
 			
@@ -126,11 +126,12 @@ BOOL CALLBACK DlgProcHomePointSet(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 
 		::LoadString(app.GetInstance(), IDS_HOME_POINT_SET_NAMES, szNames, 256);
 	
-		char* pName = strtok(szNames, "\t");
+		char* context = nullptr;
+		char* pName = strtok_s(szNames, "\t", &context);
 		while (pName != 0)
 		{		
 			::SendDlgItemMessage(hDlg, IDC_LIST, CB_ADDSTRING, 0, (LPARAM) (LPCSTR) pName);
-			pName = strtok(0, "\t");
+			pName = strtok_s(0, "\t", &context);
 		}
 		::SendDlgItemMessage(hDlg, IDC_LIST, CB_SETCURSEL, 9, 0L);
 		

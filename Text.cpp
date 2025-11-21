@@ -228,7 +228,7 @@ bool text_Display(CPegView* pView, CDC* pDC, const CFontDef& fd, const CRefSys& 
 	logfont.lfClipPrecision = CLIP_DEFAULT_PRECIS;
 	logfont.lfQuality = DEFAULT_QUALITY;
 	logfont.lfPitchAndFamily = DEFAULT_PITCH;
-	strcpy(logfont.lfFaceName, fd.TextFont());
+	strcpy_s(logfont.lfFaceName, sizeof(logfont.lfFaceName), fd.TextFont().GetString());
 
 	CFont font;
 	font.CreateFontIndirect(&logfont);

@@ -30,7 +30,7 @@ BOOL CDlgSetLength::OnInitDialog()
 	{
 		SetWindowText(m_strTitle);
 	}
-	UnitsString_FormatLength(szBuf, app.GetUnits(), m_dLength, 16, 4);
+	UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), m_dLength, 16, 4);
 	SetDlgItemText(IDC_DISTANCE, szBuf);
 	return TRUE;
 }

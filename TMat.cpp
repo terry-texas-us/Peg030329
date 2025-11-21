@@ -78,7 +78,7 @@ CTMat::CTMat(
 	vScale[1] = 1. / vYAxT[1];
 	vScale[2] = 1.;
 	
-	// Add shear to matrix which gets positive y-axis reference vector as y-axis
+	// Add shear to matrix which transforms positive y-axis reference vector as y-axis
 	if (fabs(vYAxT[0]) > DBL_EPSILON)
 	{
 		double dShrFac = - vYAxT[0] / vYAxT[1];

@@ -114,12 +114,13 @@ void DlgProcEditTrap_CommandsQueryFillExtraList(HWND hDlg, CPrim* pPrim)
 	for (size_t nDel = str.Mid(nOff).Find(';'); nDel != - 1;)
 	{
 		lvi.iItem = iItem; 
-		lvi.pszText = strcpy(szBuf, str.Mid(nOff, nDel));
+		strcpy_s(szBuf, sizeof(szBuf), str.Mid(nOff, nDel));
+		lvi.pszText = szBuf;
 		ListView_InsertItem (hWndExtra, &lvi);
 		nOff += nDel + 1;
 		nDel = str.Mid(nOff).Find('\t');
 		size_t nLen = min(nDel, sizeof(szBuf) - 1);
-		strcpy(szBuf, str.Mid(nOff, nLen));
+		strcpy_s(szBuf, sizeof(szBuf), str.Mid(nOff, nLen));
 		ListView_SetItemText(hWndExtra, iItem++, 1, szBuf);
 		nOff += nDel + 1;
 		nDel = str.Mid(nOff).Find(';');
@@ -144,19 +145,20 @@ void DlgProcEditTrap_CommandsQueryFillGeometryList(HWND hDlg, CPrim* pPrim)
 	for (size_t nDel = strBuf.Mid(nOff).Find(';'); nDel != - 1;)
 	{
 		lvi.iItem = iItem; 
-		lvi.pszText = strcpy(szBuf, strBuf.Mid(nOff, nDel));
+		strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
+		lvi.pszText = szBuf;
 		ListView_InsertItem (hWndGeometry, &lvi);
 		nOff += nDel + 1;
 		nDel = strBuf.Mid(nOff).Find(';');
-		strcpy(szBuf, strBuf.Mid(nOff, nDel));
+		strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
 		ListView_SetItemText(hWndGeometry, iItem, 1, szBuf);
 		nOff += nDel + 1;
 		nDel = strBuf.Mid(nOff).Find(';');
-		strcpy(szBuf, strBuf.Mid(nOff, nDel));
+		strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
 		ListView_SetItemText(hWndGeometry, iItem, 2, szBuf);
 		nOff += nDel + 1;
 		nDel = strBuf.Mid(nOff).Find('\t');
-		strcpy(szBuf, strBuf.Mid(nOff, nDel));
+		strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
 		ListView_SetItemText(hWndGeometry, iItem++, 3, szBuf);
 		nOff += nDel + 1;
 		nDel = strBuf.Mid(nOff).Find(';');

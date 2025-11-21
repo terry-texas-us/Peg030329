@@ -1,10 +1,12 @@
 #pragma once
 
 enum ETokClass {Other, Constant, Identifier, BinaryArithOp, BinaryRelatOp, BinaryLogicOp, UnaryLogicOp, AssignOp, OpenParen, CloseParen};
+/// @brief Represents a column definition in the lexical analyzer.
+/// This structure holds information about data definitions and types for columns.
 struct CD					// column definition
 {
-	long lDef;				// data definition
-	long lTyp;				// data type
+	long lDef;				///< Data definition identifier.
+	long lTyp;				///< Data type identifier.
 };
 struct tokent
 {
@@ -113,9 +115,19 @@ namespace lex
 
 	void BreakExpression(int& iLoc, int& iEnd, int* aiTyp, int* aiTokLoc);
 	void ConvertStringToVal(int iTyp, long lDef, char* szVal, long* lDefReq, void* p);
-	void ConvertValToString(char*, CD*, char*, int*);
+	
+	/// <summary>
+	/// Converts a value to its string representation based on type.
+	/// </summary>
+	/// <param name="acVal">Pointer to the value data.</param>
+	/// <param name="arCD">Pointer to the value descriptor.</param>
+	/// <param name="acPic">Buffer to store the resulting string.</param>
+	/// <param name="picBufferSize">Size of the acPic buffer.</param>
+	/// <param name="aiLen">Output: length of the resulting string.</param>
+	void ConvertValToString(char*, CD*, char*, size_t picBufferSize, int*);
+	
 	void ConvertValTyp(int, int, long*, void*);		
-	void EvalTokenStream(char*, int*, long*, int*, void*);
+	void EvalTokenStream(char*, int*, long*, int*, void*, size_t bufferSize);
 	void Init();
 	void Parse(const char* pszLine);
 	void ParseStringOperand(const char* pszTok);
@@ -124,6 +136,6 @@ namespace lex
 	int Scan(char* aszTok, const char* pszLine, int& iLP);
 	LPSTR SkipWhiteSpace(LPSTR pszString);
 	int TokType(int);
-	void UnaryOp(int, int*, long*,	double*);
-	void UnaryOp(int, int*, long*, long*);
+	void UnaryOp(int, int*, long*,	double*, size_t bufferSize);
+	void UnaryOp(int, int*, long*, long*, size_t bufferSize);
 }

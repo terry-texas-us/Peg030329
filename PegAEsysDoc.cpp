@@ -69,7 +69,7 @@ void DoEditTrapCopy(CPegView* pView)
 		}
 		GLOBALHANDLE hGMem = GlobalAlloc(GHND, strBuf.GetLength() + 1);
 		LPSTR lpBuffer = (LPSTR) GlobalLock(hGMem);
-		strcpy(lpBuffer, strBuf);
+		strcpy_s(lpBuffer, strBuf.GetLength() + 1, strBuf);
 		GlobalUnlock(hGMem);
 		::SetClipboardData(CF_TEXT, hGMem);
 	}
@@ -210,7 +210,7 @@ BOOL CPegDoc::OnOpenDocument(LPCTSTR lpszPathName)
 void CPegDoc::Serialize(CArchive& ar)
 {
 	char szFileName[MAX_PATH];
-	strcpy(szFileName, ar.m_strFileName);
+	strcpy_s(szFileName, sizeof(szFileName), ar.m_strFileName.GetString());
 	
 	if (ar.IsStoring())
 	{
@@ -221,7 +221,7 @@ void CPegDoc::Serialize(CArchive& ar)
 			if (fod.Initialize(&nError))
 			{
 				char szName[MAX_PATH];
-				strcpy(szName, ar.m_strFileName);
+				strcpy_s(szName, sizeof(szName), ar.m_strFileName.GetString());
 				fod.Create(szName, m_wOpenFileType);
 			}
 		}
@@ -270,7 +270,7 @@ void CPegDoc::Serialize(CArchive& ar)
 			if (fod.Initialize(&nError))
 			{	
 				char szPathName[MAX_PATH];
-				strcpy(szPathName, ar.m_strFileName);
+				strcpy_s(szPathName, sizeof(szPathName), ar.m_strFileName.GetString());
 				fod.Load(szPathName);
 				SetOpenFile(wFileType, szPathName);
 				WorkLayerSet(LayersGetAt(0));
@@ -400,8 +400,9 @@ void CPegDoc::AddTextBlock(char* pszText)
 	pstate.GetCharCellDef(ccd);
 
 	CRefSys rs(ptPvt, ccd);
-	
-	char* pText = strtok(pszText, "\r");
+
+	char* context = nullptr;
+	char* pText = strtok_s(pszText, "\r", &context);
 	while (pText != 0)
 	{
 		if (strlen(pText) > 0)
@@ -411,7 +412,7 @@ void CPegDoc::AddTextBlock(char* pszText)
 			UpdateAllViews(NULL, HINT_SEG, pSeg);
 		}
 		rs.SetOrigin(text_GetNewLinePos(fd, rs, 1., 0));
-		pText = strtok(0, "\r");
+		pText = strtok_s(0, "\r", &context);
 		if (pText == 0)
 			break;
 		pText++;
@@ -733,7 +734,7 @@ bool CPegDoc::LayerMelt(CString& strName)
 	of.hInstance = app.GetInstance();
 	of.lpstrFilter = szFilter;
 	of.lpstrFile = new char[MAX_PATH];
-	strcpy(of.lpstrFile, strName);
+	strcpy_s(of.lpstrFile, MAX_PATH, strName);
 	of.nMaxFile = MAX_PATH;
 	of.lpstrTitle = "Melt As";
 	of.Flags = OFN_OVERWRITEPROMPT;
@@ -845,7 +846,7 @@ int CPegDoc::PenStyleGetRefCount(PENSTYLE nPenStyle) const
 ///<summary>Removes line types which have no references.</summary>
 void CPegDoc::PenStylesRemoveUnused()
 {
-#pragma tasMSG(TODO test new logic for PenStylesRemoveUnused
+#pragma tasMSG(TODO test new logic for PenStylesRemoveUnused)
 	int i = m_PenStyles.GetSize();
 	while (--i != 0)
 	{
@@ -1010,11 +1011,12 @@ void CPegDoc::TracingFuse(CString& strName)
 	CLayer* pLayer = LayersGet(strName);
 	if (pLayer != 0)
 	{
-		char* pTitle = new char[MAX_PATH];
-		GetFileTitle(strName, pTitle, MAX_PATH);
-		strtok(pTitle, ".");
-		strName = pTitle;
-		delete [] pTitle;	
+		char* title = new char[MAX_PATH];
+		GetFileTitle(strName, title, MAX_PATH);
+		char* context = nullptr;
+		strtok_s(title, ".", &context);
+		strName = title;
+		delete[] title;
 
 		pLayer->ClrTracingFlg();
 		pLayer->ClrStateFlg();
@@ -2136,8 +2138,9 @@ void CPegDoc::OnPensTranslate()
 		
 			while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0)
 			{
-				pCol[w] = PENCOLOR(atoi(strtok(pBuf, ",")));
-				pColNew[w++] = PENCOLOR(atoi(strtok(0, "\n")));
+				char* context = nullptr;
+				pCol[w] = PENCOLOR(atoi(strtok_s(pBuf, ",", &context)));
+				pColNew[w++] = PENCOLOR(atoi(strtok_s(0, "\n", &context)));
 			}
 			CPegDoc::GetDoc()->PenTranslation(wCols, pColNew, pCol);
 		
@@ -2175,22 +2178,22 @@ void CPegDoc::OnPrimExtractNum()
 	else
 		return;
 
-	double	dVal[32];
-	int 	iTyp;
-	long	lDef;
-				
-	int 	iTokId = 0;
+	int iTokId = 0;
+	long lDef;
+	int iTyp;
+	double dVal[32];
+	size_t bufferSize = sizeof(dVal);
 				
 	try
 	{
 		lex::Parse(strChr);
-		lex::EvalTokenStream((char*) 0, &iTokId, &lDef, &iTyp, (void*) dVal);
+		lex::EvalTokenStream((char*) 0, &iTokId, &lDef, &iTyp, (void*) dVal, bufferSize);
 		
 		char szBuf[64];
 		if (iTyp != lex::TOK_LENGTH_OPERAND)
 			lex::ConvertValTyp(iTyp, lex::TOK_REAL, &lDef, dVal);
 		sprintf(szBuf, "%10.4f ", dVal[0]);
-		strcat(szBuf, "was extracted from drawing");
+		strcat_s(szBuf, sizeof(szBuf), "was extracted from drawing");
 		msgInformation(szBuf);
 		gbl_dExtNum = dVal[0];
 		dde::PostAdvise(dde::ExtNumInfo);
@@ -2218,7 +2221,7 @@ void CPegDoc::OnPrimExtractStr()
 		else
 			return;
 		
-		strcpy(gbl_szExtStr, strChr);
+		strcpy_s(gbl_szExtStr, sizeof(gbl_szExtStr), strChr.GetString());
 
 		strChr += " was extracted from drawing";
 		msgInformation(strChr);

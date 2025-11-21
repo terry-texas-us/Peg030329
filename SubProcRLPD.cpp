@@ -85,7 +85,7 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 					iEndCapId = (wPrvKeyDwn == 0) ? 1 : - 1; // 1 (start) and -1 (end)
 					
 					CString strMes("Cross sectional dimension (Diameter) is ");
-					UnitsString_FormatLength(szLen, max(app.GetUnits(), Inches), dDiam[1], 12, 2);
+					UnitsString_FormatLength(szLen, sizeof(szLen), max(app.GetUnits(), Inches), dDiam[1], 12, 2);
 					
 					pszLen = szLen;
 					while (!isdigit(pszLen[0]))
@@ -1009,7 +1009,7 @@ void rlpd::GenSizeNote(CPnt arPt, double adAng, double adDiam)
 	char pSize[16];
 	char* p;
 
-	UnitsString_FormatLength(pSize, max(app.GetUnits(), Inches), adDiam, 8, 0);
+	UnitsString_FormatLength(pSize, sizeof(pSize), max(app.GetUnits(), Inches), adDiam, 8, 0);
 	p = string_TrimLeadingSpace(pSize);	
 	
 	int iPrimState = pstate.Save();

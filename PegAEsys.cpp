@@ -489,11 +489,11 @@ void CPegApp::PenWidthsLoad(const CString& strFileName)
 	if (fl.Open(strFileName, CFile::modeRead | CFile::typeText)) 
 	{
 		char pBuf[32];
-		
+		char* context = nullptr;
 		while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0)
 		{
-			int iId = atoi(strtok(pBuf, "="));
-			double dVal = atof(strtok(0, ",\n"));
+			int iId = atoi(strtok_s(pBuf, "=", &context));
+			double dVal = atof(strtok_s(0, ",\n", &context));
 			if (iId >= 0 && iId < sizeof(dPWids) / sizeof(dPWids[0]))
 				dPWids[iId] = dVal;
 		}
@@ -626,7 +626,8 @@ void CPegApp::HatchesLoad(const CString& strFileName)
 			iTblId += 2;
 			iNmbEnts = 0;
 			dTotStrsLen = 0.;
-			char* pTok = strtok(szLn, szValDel);
+			char* context = nullptr;
+			char* pTok = strtok_s(szLn, szValDel, &context);
 			while (pTok != 0) 
 			{
 				hatch::fTableValue[iTblId] = float(atof(pTok));
@@ -634,7 +635,7 @@ void CPegApp::HatchesLoad(const CString& strFileName)
 				if (iNmbEnts >= 6)
 					dTotStrsLen = dTotStrsLen + hatch::fTableValue[iTblId];
 				iTblId++;
-				pTok = strtok(0, szValDel);
+				pTok = strtok_s(0, szValDel, &context);
 			}
 			hatch::fTableValue[iNmbStrsId++] = float(iNmbEnts - 5);
 			hatch::fTableValue[iNmbStrsId] = float(dTotStrsLen);
@@ -729,15 +730,15 @@ void CPegApp::PenStylesLoad(const CString& strFileName)
 		
 		WORD wLensMax = 8;
 		double* pLen = new double[wLensMax];
-		
+		char* context = nullptr;
 		while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0)
 		{
-			int iId = atoi(strtok(pBuf, "="));
-			strName = strtok(0, ",");
-			strDescription = strtok(0, "\n");
+			int iId = atoi(strtok_s(pBuf, "=", &context));
+			strName = strtok_s(0, ",", &context);
+			strDescription = strtok_s(0, "\n", &context);
 			fl.ReadString(pBuf, sizeof(pBuf) - 1);
 			
-			WORD wLens = WORD(atoi(strtok(pBuf,",\n")));
+			WORD wLens = WORD(atoi(strtok_s(pBuf,",\n", &context)));
 			
 			if (wLens > wLensMax)
 			{
@@ -746,7 +747,7 @@ void CPegApp::PenStylesLoad(const CString& strFileName)
 				wLensMax = wLens;
 			}
 			for (WORD w = 0; w < wLens; w++)
-				pLen[w] = atof(strtok(0, ",\n"));
+				pLen[w] = atof(strtok_s(0, ",\n", &context));
 			
 			pDoc->PenStylesInsert(iId, new CPenStyle(strName, strDescription, wLens, pLen));
 		}
@@ -794,16 +795,17 @@ void CPegApp::PenColorsLoad(const CString& strFileName)
 		
 		while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0 && strnicmp(pBuf, "<Colors>", 8) != 0);
 		
+		char* context = nullptr;
 		while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0 && *pBuf != '<')
 		{
-			pId = strtok(pBuf, "=");
-			pRed = strtok(0, ",");
-			pGreen = strtok(0, ",");
-			pBlue = strtok(0, ",");
+			pId = strtok_s(pBuf, "=", &context);
+			pRed = strtok_s(0, ",", &context);
+			pGreen = strtok_s(0, ",", &context);
+			pBlue = strtok_s(0, ",", &context);
 			crHotCols[atoi(pId)] = RGB(atoi(pRed), atoi(pGreen), atoi(pBlue));
-			pRed = strtok(0, ",");
-			pGreen = strtok(0, ",");
-			pBlue = strtok(0, "\n");
+			pRed = strtok_s(0, ",", &context);
+			pGreen = strtok_s(0, ",", &context);
+			pBlue = strtok_s(0, "\n", &context);
 			crWarmCols[atoi(pId)] = RGB(atoi(pRed), atoi(pGreen), atoi(pBlue));
 		}
 	}
@@ -1113,7 +1115,7 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli)
 		if (sli == All || sli == DimLen)
 		{	// print DimLen
 			rc.SetRect(73 * tm.tmAveCharWidth, rcClient.top, 90 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);			  
-			UnitsString_FormatLength(szBuf, GetUnits(), GetDimLen(), 16, 4);
+			UnitsString_FormatLength(szBuf, sizeof(szBuf), GetUnits(), GetDimLen(), 16, 4);
 			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
 		}
 		if (sli == All || sli == DimAng)

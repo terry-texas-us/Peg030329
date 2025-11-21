@@ -3,8 +3,11 @@
 
 void Path_UnquoteSpaces(CString& strPathName)
 {
+	if (strPathName.IsEmpty())
+		return;
+
 	char* pPathName = new char[MAX_PATH];
-	strcpy(pPathName, strPathName);
+	strcpy_s(pPathName, MAX_PATH, strPathName);
 	int n = strlen(pPathName) - 1;
 	while (n != 0 && pPathName[n] != '\\')
 		n--;
@@ -35,14 +38,14 @@ void Directory_ExamineFile(char* oldfile, char* newfile)
 	{	// file has some degree of path designation
 		if (_access(oldfile, kExistenceOnly) == 0) 
 		{
-			strcpy(newfile, oldfile);
+			strcpy_s(newfile, sizeof(newfile), oldfile);
 			return;
 		}
 		// strip the path
 		char* pLast = strrchr(oldfile, pathchar);
-		strcpy(oldfile, ++pLast);
+		strcpy_s(oldfile, sizeof(oldfile), ++pLast);
 	}
-	strcpy(newfile, oldfile);
+	strcpy_s(newfile, sizeof(newfile), oldfile);
 
 	if (_access(oldfile, kExistenceOnly) == 0) 
 	{	// its in current diretory
@@ -67,8 +70,8 @@ void Directory_ExamineFile(char* oldfile, char* newfile)
 				cptr++;
 			}
 			holdch = *cptr;             /* grab terminating character */
-			*cptr = 0;                    /* null it out for strcpy */
-			strcpy(testpath, envptr);
+			*cptr = 0;
+			strcpy_s(testpath, sizeof(testpath), envptr);
 			*cptr = holdch;               /* put it back */
 			int iTest = (int) strlen(testpath);
 			if (testpath[iTest - 1] != pathchar) 
@@ -76,11 +79,11 @@ void Directory_ExamineFile(char* oldfile, char* newfile)
 				testpath[iTest] = pathchar;
 				testpath[iTest + 1] = 0;
 			}
-			strcat(testpath, oldfile);
+			strcat_s(testpath, sizeof(testpath), oldfile);
 
 			if (!_access(testpath, 0)) 
 			{  /* true if found */
-				strcpy(newfile, testpath);
+				strcpy_s(newfile, sizeof(newfile), testpath);
 				return;
 			}
 			cptr++;

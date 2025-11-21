@@ -9,8 +9,9 @@ int msgConfirm(UINT uiMsgId)
 
 	::LoadString(app.GetInstance(), uiMsgId, szMsg, sizeof(szMsg));
 	
-	char* pMsg = strtok(szMsg, "\t");
-	char* pCap = strtok(0, "\n");
+	char* context = nullptr;
+	char* pMsg = strtok_s(szMsg, "\t", &context);
+	char* pCap = strtok_s(0, "\n", &context);
 	
 	return (MessageBox(0, pMsg, pCap, MB_ICONINFORMATION | MB_YESNO | MB_DEFBUTTON2));
 }
@@ -24,8 +25,9 @@ int msgConfirm(UINT uiMsgId, const CString& strVal)
 	
 	sprintf(szMsg, szFmt, strVal);
 	
-	char* pMsg = strtok(szMsg, "\t");
-	char* pCap = strtok(0, "\n");
+	char* context = nullptr;
+	char* pMsg = strtok_s(szMsg, "\t", &context);
+	char* pCap = strtok_s(0, "\n", &context);
 	
 	return (MessageBox(0, pMsg, pCap, MB_ICONINFORMATION | MB_YESNOCANCEL | MB_DEFBUTTON2));
 }
@@ -35,9 +37,10 @@ void msgWarning(UINT uiMsgId)
 
 	::LoadString(app.GetInstance(), uiMsgId, szMsg, sizeof(szMsg));
 	
-	char* pMsg = strtok(szMsg, "\t");
-	char* pCap = strtok(0, "\n");
-	
+	char* context = nullptr;
+	char* pMsg = strtok_s(szMsg, "\t", &context);
+	char* pCap = strtok_s(0, "\n", &context);
+
 	MessageBox(0, pMsg, pCap, MB_ICONWARNING | MB_OK);
 }
 void msgWarning(UINT uiMsgId, const CString& strVal)
@@ -46,12 +49,13 @@ void msgWarning(UINT uiMsgId, const CString& strVal)
 	char szMsg[256];
 	
 	::LoadString(app.GetInstance(), uiMsgId, szFmt, sizeof(szFmt));
-	
+
 	sprintf(szMsg, szFmt, strVal);
-	
-	char* pMsg = strtok(szMsg, "\t");
-	char* pCap = strtok(0, "\n");
-	
+
+	char* context = nullptr;
+	char* pMsg = strtok_s(szMsg, "\t", &context);
+	char* pCap = strtok_s(0, "\n", &context);
+
 	MessageBox(0, pMsg, pCap, MB_ICONWARNING | MB_OK);
 }
 void msgInformation(const CString& strMes)
@@ -76,9 +80,10 @@ void msgInformation(UINT nId)
 	char szMsg[256];
 	if (nId == 0)
 	{
-		strcpy(szMsg, "PegAEsys");
+		strcpy_s(szMsg, sizeof(szMsg), "PegAEsys");
 		::LoadString(app.GetInstance(), app.m_iModeId, szMsg, sizeof(szMsg));
-		strtok(szMsg, "\n");
+		char* context = nullptr;
+		strtok_s(szMsg, "\n", &context);
 	}
 	else
 	{

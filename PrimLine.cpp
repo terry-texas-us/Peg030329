@@ -64,7 +64,7 @@ void CPrimLine::CutAt2Pts(CPnt* pt, CSegs* pSegs, CSegs* pSegsNew)
 		pLine = this;
 	}
 	else
-	{	// Something gets cut
+	{	// Something needs to get cut
 		pLine = new CPrimLine(*this);
 		if (dRel[0] > DBL_EPSILON && dRel[1] < 1. - DBL_EPSILON)
 		{	// Cut section out of middle
@@ -116,7 +116,7 @@ void CPrimLine::Display(CPegView* pView, CDC* pDC) const
 void CPrimLine::DisRep(const CPnt& pt) const
 {
 	char szLength[64];
-	UnitsString_FormatLength(szLength, app.GetUnits(), Length(), 16, 4);
+	UnitsString_FormatLength(szLength, sizeof(szLength), app.GetUnits(), Length(), 16, 4);
 
 	CString str;
 	str.Format("<Line> Color: %s Style: %s - %s @ %f", 
@@ -142,7 +142,7 @@ void CPrimLine::DisRep(const CPnt& pt) const
 void CPrimLine::FormatExtra(CString& str) const
 {
 	char szLength[64];
-	UnitsString_FormatLength(szLength, app.GetUnits(), Length(), 16, 4);
+	UnitsString_FormatLength(szLength, sizeof(szLength), app.GetUnits(), Length(), 16, 4);
 
 	str.Format("Color;%s\tStyle;%s\tLength;%s\tZ-Angle;%f", 
 		FormatPenColor(), FormatPenStyle(), szLength, GetAngAboutZAx() / RADIAN);
