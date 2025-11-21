@@ -286,7 +286,8 @@ void CFileOpenDWG::ReadBlockTable(AD_DB_HANDLE hdb)
 			if ((m_htb->blkh.flag & AD_BLOCK_ANONYMOUS) == AD_BLOCK_ANONYMOUS)
 			{
 				char szBuf[8];
-				strcat_s(m_htb->blkh.name, sizeof(m_htb->blkh.name), _itoa(lBlockHeader, szBuf, 10));
+				_itoa_s(lBlockHeader, szBuf, sizeof(szBuf), 10);
+				strcat_s(m_htb->blkh.name, sizeof(m_htb->blkh.name), szBuf);
 				adReplaceBlockheader(hdb, &m_htb->blkh);
 			}
 			if ((m_htb->blkh.flag & AD_BLOCK_XREF) == AD_BLOCK_XREF)
@@ -299,7 +300,8 @@ void CFileOpenDWG::ReadBlockTable(AD_DB_HANDLE hdb)
 			if (CPegDoc::GetDoc()->BlksLookup(m_htb->blkh.name, pBlock))
 			{
 				char szBuf[8];
-				strcat_s(m_htb->blkh.name, sizeof(m_htb->blkh.name), _itoa(lBlockHeader, szBuf, 10));
+				_itoa_s(lBlockHeader, szBuf, sizeof(szBuf), 10);
+				strcat_s(m_htb->blkh.name, sizeof(m_htb->blkh.name), szBuf);
 				adReplaceBlockheader(hdb, &m_htb->blkh);
 			}
 			CPnt ptBase(m_hen->block.base[0], m_hen->block.base[1], m_hen->block.base[2]);

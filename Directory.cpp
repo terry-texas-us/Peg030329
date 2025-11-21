@@ -9,9 +9,8 @@ void Path_UnquoteSpaces(CString& strPathName)
 
 	char* pPathName = new char[MAX_PATH];
 	strcpy_s(pPathName, MAX_PATH, strPathName);
-	int n = strlen(pPathName) - 1;
-	while (n != 0 && pPathName[n] != '\\')
-		n--;
+	size_t n = strlen(pPathName) - 1;
+	while (n != 0 && pPathName[n] != '\\') { n--; }
 	pPathName[n] = 0;
 	strPathName = &pPathName[1];
 	delete [] pPathName;

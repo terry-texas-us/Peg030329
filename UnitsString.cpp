@@ -27,16 +27,18 @@ void UnitsString_FormatAngle(char* buffer, size_t bufferSize, double angle, int 
 	char format[24];
 
 	strcpy_s(format, sizeof(format), "%");
-	strcat_s(format, sizeof(format), _itoa(precision, buffer, 10));
+	_itoa_s(precision, buffer, bufferSize, 10);
+	strcat_s(format, sizeof(format), buffer);
 	strcat_s(format, sizeof(format), ".");
-	strcat_s(format, sizeof(format), _itoa(scale, buffer, 10));
+	_itoa_s(scale, buffer, bufferSize, 10);
+	strcat_s(format, sizeof(format), buffer);
 	strcat_s(format, sizeof(format), "f");
 
 	strcat_s(format, sizeof(format), "d");
 	sprintf_s(buffer, bufferSize, format, angle / RADIAN);
 }
 
-void UnitsString_FormatLength(char* buffer, size_t bufferSize, EUnits units, double adVal, int aiPrec, int aiScal)
+void UnitsString_FormatLength(char* buffer, size_t bufferSize, EUnits units, double adVal, int precision, int aiScal)
 {
 	char numberBuffer[16];
 
@@ -69,10 +71,10 @@ void UnitsString_FormatLength(char* buffer, size_t bufferSize, EUnits units, dou
 			buffer[0] = '-';
 			buffer[1] = '\0';
 		}
-		_itoa(iNmbFt, numberBuffer, 10);
+		_itoa_s(iNmbFt, numberBuffer, sizeof(numberBuffer), 10);
 		strcat_s(buffer, bufferSize, numberBuffer);
 		strcat_s(buffer, bufferSize, "'");
-		_itoa(iNmbIn, numberBuffer, 10);
+		_itoa_s(iNmbIn, numberBuffer, sizeof(numberBuffer), 10);
 		strcat_s(buffer, bufferSize, numberBuffer);
 		if (iNum > 0)				// Significant decimal inch component
 		{
@@ -80,10 +82,10 @@ void UnitsString_FormatLength(char* buffer, size_t bufferSize, EUnits units, dou
 			int	iGrtComDivisor = UnitsString_GCD(iNum, iUnitsPrec);
 			iNum = iNum / iGrtComDivisor;
 			int iDen = iUnitsPrec / iGrtComDivisor; // Add fractional component of inches
-			_itoa(iNum, numberBuffer, 10);
+			_itoa_s(iNum, numberBuffer, sizeof(numberBuffer), 10);
 			strcat_s(buffer, bufferSize, numberBuffer);
 			strcat_s(buffer, bufferSize, "/");
-			_itoa(iDen, numberBuffer, 10);
+			_itoa_s(iDen, numberBuffer, sizeof(numberBuffer), 10);
 			strcat_s(buffer, bufferSize, numberBuffer);
 			strcat_s(buffer, bufferSize, "^");
 		}
@@ -92,8 +94,10 @@ void UnitsString_FormatLength(char* buffer, size_t bufferSize, EUnits units, dou
 	else if (units == Engineering)
 	{
 		int iScal = aiScal;
-		if (fabs(dLen) >= 1.)			 
+		if (fabs(dLen) >= 1.)
+		{
 			iScal = aiScal - int(log10(fabs(dLen))) - 1;
+		}
 		if (iScal >= 0)
 		{											 
 			double dScalFac = pow(10., (double) iScal);
@@ -101,17 +105,19 @@ void UnitsString_FormatLength(char* buffer, size_t bufferSize, EUnits units, dou
 			dLen = fabs(dLen) + .5 /  dScalFac; 				// Round it
 			buffer[0] = ' ';
 			buffer[1] = '\0';
-			_itoa(int(dLen / 12.), numberBuffer, 10);
+			_itoa_s(int(dLen / 12.), numberBuffer, sizeof(numberBuffer), 10);
 			strcat_s(buffer, bufferSize, numberBuffer);
 			dLen = fmod(dLen, 12.);
-			if (adVal < 0.) 
+			if (adVal < 0.)
+			{
 				buffer[0] = '-';
+			}
 			strcat_s(buffer, bufferSize, "'");
-			_itoa(int(dLen), numberBuffer, 10);
+			_itoa_s(int(dLen), numberBuffer, sizeof(numberBuffer), 10);
 			strcat_s(buffer, bufferSize, numberBuffer);
 			strcat_s(buffer, bufferSize, ".");
 			dLen = fmod(dLen, 1.) * dScalFac;
-			_itoa(int(dLen), numberBuffer, 10);
+			_itoa_s(int(dLen), numberBuffer, sizeof(numberBuffer), 10);
 			strcat_s(buffer, bufferSize, numberBuffer);
 			strcat_s(buffer, bufferSize, "\"");
 		}	
@@ -124,9 +130,11 @@ void UnitsString_FormatLength(char* buffer, size_t bufferSize, EUnits units, dou
 		char format[24];
 
 		strcpy_s(format, sizeof(format), "%");
-		strcat_s(format, sizeof(format), _itoa(aiPrec, numberBuffer, 10));
+		_itoa_s(precision, numberBuffer, sizeof(numberBuffer), 10);
+		strcat_s(format, sizeof(format), numberBuffer);
 		strcat_s(format, sizeof(format), ".");
-		strcat_s(format, sizeof(format), _itoa(aiScal, numberBuffer, 10));
+		_itoa_s(aiScal, numberBuffer, sizeof(numberBuffer), 10);
+		strcat_s(format, sizeof(format), numberBuffer);
 		strcat_s(format, sizeof(format), "f");
 
 		if (units == Feet)

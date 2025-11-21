@@ -547,7 +547,8 @@ void DlgProcFileManageInit(HWND hDlg)
 
 	for (int i = 0; i < sizeof(crHotCols) / sizeof(COLORREF); i++)
 	{
-		::SendDlgItemMessage(hDlg, IDC_COLOR_ID, CB_ADDSTRING, 0, (LPARAM)(LPCSTR)_itoa(i, szBuf, 10));
+		_itoa_s(i, szBuf, sizeof(szBuf), 10);
+		::SendDlgItemMessage(hDlg, IDC_COLOR_ID, CB_ADDSTRING, 0, (LPARAM)(LPCSTR) szBuf);
 	}
 	pDoc->PenStylesFillCB(::GetDlgItem(hDlg, IDC_PENSTYLE));
 				

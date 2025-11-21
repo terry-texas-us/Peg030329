@@ -14,13 +14,14 @@ CString CPrim::FormatPenColor() const
 {
 	CString str;	
 	if (m_nPenColor == PENCOLOR_BYLAYER)
+	{
 		str = "ByLayer";
-	else if (m_nPenColor == PENCOLOR_BYBLOCK) 
+	}
+	else if (m_nPenColor == PENCOLOR_BYBLOCK)
 		str = "ByBlock";
 	else 
 	{
-		char szBuf[16]; 
-		str = _itoa(m_nPenColor, szBuf, 10);
+		str.Format("%d", m_nPenColor);
 	}
 	return str;
 }	
@@ -33,8 +34,7 @@ CString CPrim::FormatPenStyle() const
 		str = "ByBlock";
 	else 
 	{
-		char szBuf[16];
-		str = _itoa(m_nPenStyle, szBuf, 10);
+		str.Format("%d", m_nPenStyle);
 	}
 	return str;
 }	

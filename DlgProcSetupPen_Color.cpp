@@ -19,7 +19,10 @@ BOOL CALLBACK DlgProcSetupPenColor(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM 
 	{
 		case WM_INITDIALOG:
 			for (i = 0; i < sizeof(crHotCols) / sizeof(COLORREF); i++)
-				::SendDlgItemMessage(hDlg, IDC_COL_LIST, CB_ADDSTRING, 0, (LPARAM) (LPCSTR) _itoa(i, szBuf, 10));
+			{
+				_itoa_s(i, szBuf, sizeof(szBuf), 10);
+				::SendDlgItemMessage(hDlg, IDC_COL_LIST, CB_ADDSTRING, 0, (LPARAM)(LPCSTR) szBuf);
+			}
 			nPenColor = pstate.PenColor();
 			::SendDlgItemMessage(hDlg, IDC_COL_LIST, CB_SETCURSEL, nPenColor, 0L);
 			return (TRUE);

@@ -110,8 +110,8 @@ void DlgProcEditTrap_CommandsQueryFillExtraList(HWND hDlg, CPrim* pPrim)
 	CString str;
 	pPrim->FormatExtra(str);
 
-	size_t nOff = 0;
-	for (size_t nDel = str.Mid(nOff).Find(';'); nDel != - 1;)
+	int nOff = 0;
+	for (int nDel = str.Mid(nOff).Find(';'); nDel != - 1;)
 	{
 		lvi.iItem = iItem; 
 		strcpy_s(szBuf, sizeof(szBuf), str.Mid(nOff, nDel));
@@ -119,7 +119,7 @@ void DlgProcEditTrap_CommandsQueryFillExtraList(HWND hDlg, CPrim* pPrim)
 		ListView_InsertItem (hWndExtra, &lvi);
 		nOff += nDel + 1;
 		nDel = str.Mid(nOff).Find('\t');
-		size_t nLen = min(nDel, sizeof(szBuf) - 1);
+		int nLen = min(nDel, sizeof(szBuf) - 1);
 		strcpy_s(szBuf, sizeof(szBuf), str.Mid(nOff, nLen));
 		ListView_SetItemText(hWndExtra, iItem++, 1, szBuf);
 		nOff += nDel + 1;
@@ -141,8 +141,8 @@ void DlgProcEditTrap_CommandsQueryFillGeometryList(HWND hDlg, CPrim* pPrim)
 	CString strBuf;
 	pPrim->FormatGeometry(strBuf);
 
-	size_t nOff = 0;
-	for (size_t nDel = strBuf.Mid(nOff).Find(';'); nDel != - 1;)
+	int nOff = 0;
+	for (int nDel = strBuf.Mid(nOff).Find(';'); nDel != - 1;)
 	{
 		lvi.iItem = iItem; 
 		strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
