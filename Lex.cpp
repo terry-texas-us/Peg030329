@@ -144,7 +144,7 @@ void lex::ConvertValToString(char* acVal, CD* arCD, char* acPic, size_t picBuffe
 			{
 				memcpy(lVal, &acVal[iValId], 4);
 				iValId += 4;
-				_ltoa(*lVal, &acPic[iLnLoc], 10);
+				_ltoa_s(*lVal, &acPic[iLnLoc], picBufferSize - iLnLoc, 10);
 				iVLen = (int) strlen(&acPic[iLnLoc]);
 				iLnLoc += iVLen;
 			}

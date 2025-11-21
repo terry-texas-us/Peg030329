@@ -23,6 +23,7 @@ public: // Methods
 	void		BreakSegRefs();
 	void		Display(CPegView* pView, CDC* pDC) const;
 	int			GetBlockRefCount(const CString& strName) const;
+	int         GetCount() const { return static_cast<int>(CObList::GetCount()); }
 	void		GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const;
 	int			GetPenStyleRefCount(PENSTYLE nPenStyle) const;
 	void		ModifyNotes(const CFontDef& cd, const CCharCellDef& ccd, int iAtt = 0);

@@ -3,7 +3,7 @@
 #pragma once
 
 #ifndef __AFXWIN_H__
-	#error include 'Stdafx.h' befor including this file for PCH
+	#error include 'stdafx.h' befor including this file for PCH
 #endif
 
 #include "resource.h"

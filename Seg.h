@@ -18,6 +18,7 @@ public:
 	POSITION	FindAndRemovePrim(CPrim*);
 	CPrim*		GetAt(POSITION pos) const {return (CPrim*) CObList::GetAt(pos);}
 	int			GetBlockRefCount(const CString& strName) const;
+	int         GetCount() const { return static_cast<int>(CObList::GetCount()); }
 	void		GetExtents(CPnt&, CPnt&, const CTMat&) const;
 	CPrim*		GetNext(POSITION& pos) const {return ((CPrim*) CObList::GetNext(pos));}
 	int			GetPenStyleRefCount(PENSTYLE nPenStyle) const;

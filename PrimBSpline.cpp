@@ -111,7 +111,7 @@ CPnt CPrimBSpline::GoToNxtCtrlPt() const
 {
 	CPnt pt;
 
-	int i = m_pts.GetSize() - 1;
+	int i = static_cast<int>(m_pts.GetSize()) - 1;
 	
 	if (mS_dRel <= DBL_EPSILON)
 		pt = m_pts[i];
@@ -233,14 +233,15 @@ int CPrimBSpline::GenPts(const int iOrder, const CPnts& pts) const
 		msgWarning(IDS_MSG_MEM_ALLOC_ERR); 
 		return 0;
 	}
-	int iPts = 8 * pts.GetSize();
+	int iPts = 8 * static_cast<int>(pts.GetSize());
 	double* dWght = &dKnot[65];
 	
 	int i, i2, i4;
 	
-	int iTMax = (pts.GetSize() - 1) - iOrder + 2;
-	int iKnotVecMax = (pts.GetSize() - 1) + iOrder;							// Maximum number of dKnot vectors
-	
+	int pointsArraySize = static_cast<int>(pts.GetSize());
+	int iTMax = (pointsArraySize - 1) - iOrder + 2;
+	int iKnotVecMax = (pointsArraySize - 1) + iOrder;							// Maximum number of dKnot vectors
+
 	for (i = 0; i < 65 * 65; i++)									// Set weighting value array with zeros
 		dWght[i] = 0.;
 			

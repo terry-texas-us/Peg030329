@@ -323,7 +323,7 @@ void CSeg::RemovePrims()
 void CSeg::SortTextOnY()
 {
 	int iT;
-	int iCount = (int) GetCount();
+	int iCount = GetCount();
 	
 	do
 	{

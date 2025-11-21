@@ -9,7 +9,7 @@
 // line 2: //
 // line 3 - end: <4 char key> // <var number of printable chars describing key>
 // The key identifies the .jb1 to use. The description becomes its .peg name.
-#pragma tasMSG(Need to test ffa read when open pass non peg files)
+#pragma tasMSG(TODO: Need to test ffa read when open pass non peg files)
 
 void ffaReadFile(const CString& strPathName)
 {

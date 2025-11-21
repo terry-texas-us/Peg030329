@@ -99,7 +99,7 @@ CPnt CPrimCSpline::GoToNxtCtrlPt() const
 {
 	CPnt pt;
 
-	int i = m_pts.GetSize() - 1;
+	int i = static_cast<int>(m_pts.GetSize()) - 1;
 	
 	if (mS_dRel <= DBL_EPSILON)
 		pt = m_pts[i];

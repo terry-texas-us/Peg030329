@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+#include "stdafx.h"
 
 #include "PegAEsys.h"
 #include "PegAEsysView.h"

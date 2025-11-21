@@ -18,4 +18,4 @@ void	DlgProcFileManageDoTracingView(HWND);
 void	DlgProcFileManageInit(HWND);
 
 LRESULT	GetCurSel(HWND hDlg, int iListId, CString& strName);
-LONG	pGetLayerName();
+INT_PTR	pGetLayerName();

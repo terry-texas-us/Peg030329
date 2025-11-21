@@ -185,7 +185,7 @@ BOOL CPegDoc::OnNewDocument()
 	if (!CDocument::OnNewDocument())
 		return FALSE;
 
-#pragma tasMSG(Need to reload fresh set of penstyles)
+#pragma tasMSG(TODO: Need to reload fresh set of penstyles)
 
 	m_pLayerWork = new CLayer("0");
 	LayersAdd(m_pLayerWork);
@@ -278,13 +278,13 @@ void CPegDoc::Serialize(CArchive& ar)
 		}
 		else if (wFileType == FILE_TYPE_FFA)
 		{	
-#pragma tasMSG(.ffa file type now retained. should out of ffa reproduce jb1 set for backwards compatability)
+#pragma tasMSG(TODO: .ffa file type now retained. should out of ffa reproduce jb1 set for backwards compatability)
 			ffaReadFile(szFileName);
 			SetOpenFile(FILE_TYPE_FFA, szFileName);
 		}
 		else if (wFileType == FILE_TYPE_PEG)
 		{
-#pragma tasMSG(was opening and retaining pFile for locking stuff. now using the pfile provided in ar which is released automatically)
+#pragma tasMSG(TODO: was opening and retaining pFile for locking stuff. now using the pfile provided in ar which is released automatically)
 			((CFilePeg*) ar.GetFile())->Load(this);
 			SetOpenFile(FILE_TYPE_PEG, szFileName);
 			UpdateAllViews(NULL, 0L, NULL);
@@ -475,7 +475,7 @@ void CPegDoc::BlksRemoveUnused()
 		m_blks.GetNextAssoc(pos, strKey, pBlock);
 		if (BlockGetRefCount(strKey) == 0)
 		{
-#pragma tasMSG(Deletion by key may cause loop problems)
+#pragma tasMSG(TODO: Deletion by key may cause loop problems)
 			m_blks.RemoveKey(strKey);
 			pBlock->RemovePrims();
 			delete pBlock;
@@ -566,7 +566,7 @@ int CPegDoc::PenStylesFillCB(HWND hwnd) const
 {
 	SendMessage(hwnd, CB_RESETCONTENT, 0, 0L);
 
-	int iSize = m_PenStyles.GetSize();
+	int iSize = static_cast<int>(m_PenStyles.GetSize());
 
 	for (int i = 0; i < iSize; i++)
 	{
@@ -599,7 +599,7 @@ PENSTYLE CPegDoc::PenStylesLookup(const CString& strName) const
 ///<summary>Gets indicated line type. If invalid returns the last line type</summary>
 CPenStyle* CPegDoc::PenStylesGetAtSafe(int i)
 {
-	int iType = m_PenStyles.GetSize() - 1;
+	int iType = static_cast<int>(m_PenStyles.GetSize()) - 1;
 	
 	if (iType < 0) {return 0;} // No line types defined
 
@@ -811,7 +811,7 @@ void CPegDoc::LayersRemoveAt(int i)
 }
 void CPegDoc::LayersRemoveEmpty()
 {
-	for (int i = m_layers.GetSize() - 1; i > 0; i--)
+	for (int i = static_cast<int>(m_layers.GetSize()) - 1; i > 0; i--)
 	{
 		CLayer* pLayer = m_layers.GetAt(i);
 		if (pLayer->IsEmpty())
@@ -847,7 +847,7 @@ int CPegDoc::PenStyleGetRefCount(PENSTYLE nPenStyle) const
 void CPegDoc::PenStylesRemoveUnused()
 {
 #pragma tasMSG(TODO test new logic for PenStylesRemoveUnused)
-	int i = m_PenStyles.GetSize();
+	int i = static_cast<int>(m_PenStyles.GetSize());
 	while (--i != 0)
 	{
 		CPenStyle* pPenStyle = m_PenStyles[i];
@@ -1236,7 +1236,7 @@ void CPegDoc::WriteShadowFile()
 void CPegDoc::OnClearActiveLayers()
 {
 	AppSetGinCur();
-	for (int i = m_layers.GetSize() - 1; i > 0; i--)
+	for (int i = static_cast<int>(m_layers.GetSize()) - 1; i > 0; i--)
 	{
 		CLayer* pLayer = m_layers.GetAt(i);
 
@@ -1250,8 +1250,8 @@ void CPegDoc::OnClearActiveLayers()
 void CPegDoc::OnClearAllLayers()
 {
 	AppSetGinCur();
-	
-	for (int i = m_layers.GetSize() - 1; i > 0; i--)
+
+	for (int i = static_cast<int>(m_layers.GetSize()) - 1; i > 0; i--)
 	{
 		CLayer* pLayer = m_layers.GetAt(i);
 
@@ -1270,8 +1270,8 @@ void CPegDoc::OnClearWorkingLayer()
 void CPegDoc::OnClearAllTracings()
 {
 	AppSetGinCur();
-	
-	for (int i = m_layers.GetSize() - 1; i > 0; i--)
+
+	for (int i = static_cast<int>(m_layers.GetSize()) - 1; i > 0; i--)
 	{
 		CLayer* pLayer = m_layers.GetAt(i);
 
@@ -1286,7 +1286,7 @@ void CPegDoc::OnClearAllTracings()
 void CPegDoc::OnClearMappedTracings()
 {
 	AppSetGinCur();
-	for (int i = m_layers.GetSize() - 1; i > 0; i--)
+	for (int i = static_cast<int>(m_layers.GetSize()) - 1; i > 0; i--)
 	{
 		CLayer* pLayer = m_layers.GetAt(i);
 
@@ -1307,7 +1307,7 @@ void CPegDoc::OnClearMappedTracings()
 void CPegDoc::OnClearViewedTracings()
 {
 	AppSetGinCur();
-	for (int i = m_layers.GetSize() - 1; i > 0; i--)
+	for (int i = static_cast<int>(m_layers.GetSize()) - 1; i > 0; i--)
 	{
 		CLayer* pLayer = m_layers.GetAt(i);
 
@@ -1795,7 +1795,7 @@ void CPegDoc::OnTrapCommandsExpand()
 }
 void CPegDoc::OnTrapCommandsInvert()
 {
-	int iTblSize = m_layers.GetSize();
+	int iTblSize = static_cast<int>(m_layers.GetSize());
 	for (int i = 0; i < iTblSize; i++)
 	{
 		CLayer* pLayer = m_layers.GetAt(i);

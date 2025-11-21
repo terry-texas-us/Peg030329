@@ -64,7 +64,7 @@ void AppSetGinCur(CSeg* pSeg, CPrim* pPrim)
 	pGinCurSeg = pSeg;
 	pGinCurPrim = pPrim;
 }
-LONG pGetLayerName()
+INT_PTR pGetLayerName()
 {
 	return ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_GET_LAYER_NAME), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcGetLayerName));
 }

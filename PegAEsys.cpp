@@ -367,7 +367,7 @@ void CPegApp::OnModeFixup()
 }
 void CPegApp::OnModeLetter()
 {
-#pragma tasMSG(OnModeLetter - Using app main window as parent of dialog)
+#pragma tasMSG(TODO: OnModeLetter - Using app main window as parent of dialog)
 	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_ADD_NOTE), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcModeLetter));
 }
 void CPegApp::OnModePipe()
@@ -409,7 +409,7 @@ void CPegApp::OnModeSegEdit()
 }
 void CPegApp::OnModeRevise()
 {
-#pragma tasMSG(OnModeRevise - Using app main window as parent of dialog)
+#pragma tasMSG(TODO: OnModeRevise - Using app main window as parent of dialog)
 	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_ADD_NOTE), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcModeRevise));
 }
 void CPegApp::OnModePrimMend()
@@ -474,7 +474,7 @@ void CPegApp::OnFileRun()
 	if (dlg.DoModal() == IDOK)
 	{
 		CString strFile = dlg.GetFileName();
-#pragma tasMSG(use of winexec should be replaced with createprocess)
+#pragma tasMSG(TODO: use of winexec should be replaced with createprocess)
 		WinExec(strFile, SW_SHOW);
 	}
 }
@@ -540,7 +540,7 @@ void CPegApp::SetShadowDir(const CString& strDir)
 	}
 	m_strShadowDir += "\\" + strDir + "\\";
 		
-	mkdir(m_strShadowDir);
+	_mkdir(m_strShadowDir);
 }
 CPnt CPegApp::CursorPosGet()
 {
@@ -710,7 +710,7 @@ void CPegApp::LineFontRelease()
 		m_pFontApp = NULL;
 	}
 }
-#pragma tasMSG(Move PenStylesLoad to CPegDoc)
+#pragma tasMSG(TODO: Move PenStylesLoad to CPegDoc)
 ///<summary>Loads the PenStyle table.</summary>
 void CPegApp::PenStylesLoad(const CString& strFileName)
 {	
@@ -1076,7 +1076,7 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli)
 		if (sli == All || sli == TrapCnt)
 		{	// print num in trap 
 			rc.SetRect(10 * tm.tmAveCharWidth, rcClient.top, 19 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-			sprintf_s(szBuf, sizeof(szBuf), " %zu  ", trapsegs.GetCount());
+			sprintf_s(szBuf, sizeof(szBuf), " %i  ", trapsegs.GetCount());
 			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE,  &rc, szBuf, (UINT) strlen(szBuf), 0);
 		}
 		if (sli == All || sli == Pen)

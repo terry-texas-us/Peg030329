@@ -8,7 +8,7 @@ CPoint	pnt;
 bool	bPtInRect = FALSE;
 
 void WndProcKeyPlanOnDraw(HWND);
-void WndProcKeyPlanOnMouseMove(HWND, UINT, LPARAM);
+void WndProcKeyPlanOnMouseMove(HWND, WPARAM, LPARAM);
 void WndProcKeyPlanOnNewRatio(HWND, LPARAM);
 
 LRESULT CALLBACK WndProcKeyPlan(HWND hwnd, UINT nMsg, WPARAM nParam, LPARAM lParam)
@@ -55,7 +55,7 @@ void WndProcKeyPlanOnDraw(HWND hwnd)
 	CBrush* pBrush = (CBrush*) dc.SelectStockObject(NULL_BRUSH);
 	dc.Rectangle(0, 0, bitmap.bmWidth, bitmap.bmHeight);
 
-#pragma tasMSG(Need to use the CWnd associated with Keyplan and not the active app view)
+#pragma tasMSG(TODO: Need to use the CWnd associated with Keyplan and not the active app view)
 
 	CPegView* pView = CPegView::GetActiveView();
 
@@ -97,9 +97,9 @@ void WndProcKeyPlanOnDraw(HWND hwnd)
 	::EndPaint(hwnd, &ps);
 }
 
-void WndProcKeyPlanOnMouseMove(HWND hwnd, UINT nParam, LPARAM lParam)
+void WndProcKeyPlanOnMouseMove(HWND hwnd, WPARAM wParam, LPARAM lParam)
 {
-	if (LOWORD(nParam) == MK_LBUTTON)
+	if (LOWORD(wParam) == MK_LBUTTON)
 	{			
 		CPoint pntCur;
 				
