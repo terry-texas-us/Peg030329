@@ -8,6 +8,10 @@ class CMainFrame : public CMDIFrameWnd
 public:
 	CMainFrame();
 
+	// Explicitly delete copy constructor and assignment operator to fix C4625 and C4626 warnings
+	CMainFrame(const CMainFrame&) = delete;
+	CMainFrame& operator=(const CMainFrame&) = delete;
+
 // Attributes
 public:
 

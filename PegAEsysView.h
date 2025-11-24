@@ -10,6 +10,10 @@ protected: // create from serialization only
 	CPegView();
 	DECLARE_DYNCREATE(CPegView)
 
+	// Explicitly delete copy constructor and assignment operator to fix C4625 and C4626 warnings
+	CPegView(const CPegView&) = delete;
+	CPegView& operator=(const CPegView&) = delete;
+
 // Attributes
 public:
 	bool		m_bViewPenWidths;

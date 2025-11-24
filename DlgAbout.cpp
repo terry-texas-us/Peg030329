@@ -8,6 +8,8 @@ class CDlgAbout : public CDialog
 {
 public:
 	CDlgAbout();
+	CDlgAbout(const CDlgAbout&) = delete; // Disable copy constructor
+	CDlgAbout& operator=(const CDlgAbout&) = delete; // Disable assignment operator
 
 // Dialog Data
 	enum { IDD = IDD_ABOUTBOX };

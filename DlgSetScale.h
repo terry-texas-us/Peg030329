@@ -10,6 +10,9 @@ public:
 	CDlgSetScale(CWnd* pParent = NULL);   // standard constructor
 	virtual ~CDlgSetScale();
 
+	CDlgSetScale(const CDlgSetScale&) = delete; // Prevent copying
+	CDlgSetScale& operator=(const CDlgSetScale&) = delete; // Prevent assignment
+
 // Dialog Data
 	enum { IDD = IDD_SET_SCALE };
 

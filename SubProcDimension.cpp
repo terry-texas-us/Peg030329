@@ -230,7 +230,6 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
 					}
 					else
 					{
-						char szNote[32];
 						double dAng;
 						
 						CVec vPlnNorm(CVec(ptCen, rProjPt[0]) ^ CVec(ptCen, ptCur));
@@ -270,8 +269,8 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
 							CPnt ptPvt = Pnt_ProjPtTo(ptCur, ptCen, - .25);
 							CharCellDef_EncdRefSys(ccd, vXAx, vYAx);
 							CRefSys rs(ptPvt, vXAx, vYAx);
-							UnitsString_FormatAngle(szNote, sizeof(szNote), dAng, 8, 3); 
-							pSeg->AddTail(new CPrimText(fd, rs, szNote));
+
+							pSeg->AddTail(new CPrimText(fd, rs, UnitsString_FormatAngle(dAng).c_str()));
 							pDoc->WorkLayerAddTail(pSeg); 
 							pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
 							pstate.Restore(pDC, iPrimState);
@@ -332,7 +331,7 @@ CPnt dimension::AddArrowHead(CPnt arPt)
 			{
 				CPnt pt;
 					
-				CSeg* pSeg = new CSeg;
+				pSeg = new CSeg;
 				if (*dRel <= .5) 
 				{
 					annotate::GenArrowHead(1, .1, ln[1], ln[0], pSeg);

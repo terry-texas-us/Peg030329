@@ -67,7 +67,9 @@ public:
 
 public:
 	CPegApp();
-	
+	CPegApp(const CPegApp&) = delete; // Disable copy constructor
+	CPegApp& operator=(const CPegApp&) = delete; // Disable assignment operator
+
 	CPnt		CursorPosGet();
 	void		CursorPosSet(const CPnt& pt);
 

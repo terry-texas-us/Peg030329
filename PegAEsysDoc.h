@@ -10,6 +10,10 @@ protected: // create from serialization only
 	CPegDoc();
 	DECLARE_DYNCREATE(CPegDoc)
 
+	// Explicitly delete copy constructor and assignment operator to fix C4625 and C4626 warnings
+	CPegDoc(const CPegDoc&) = delete;
+	CPegDoc& operator=(const CPegDoc&) = delete;
+
 public:
 	static const WORD FILE_TYPE_NONE	= 0;
 	static const WORD FILE_TYPE_PEG		= 1;
@@ -111,7 +115,7 @@ public:
 	void		LayersDisplayAll(CPegView* pView, CDC* pDC);
 	CLayer*		LayersGet(const CString& strName) const;
 	CLayer* 	LayersGetAt(int) const;
-	int 		LayersGetSize() const {return (int) m_layers.GetSize();}
+	int 		LayersGetSize() const {return static_cast<int>(m_layers.GetSize());}
 	int			LayersLookup(const CString& strName) const;
 	void		LayersRemove(const CString& strName);
 	void		LayersRemoveAll();

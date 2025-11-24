@@ -10,6 +10,9 @@ public:
 	CDlgSetLength(CWnd* pParent = NULL);   // standard constructor
 	virtual ~CDlgSetLength();
 
+	CDlgSetLength(const CDlgSetLength&) = delete; // Prevent copying
+	CDlgSetLength& operator=(const CDlgSetLength&) = delete; // Prevent assignment
+
 // Dialog Data
 	enum { IDD = IDD_SET_LENGTH };
 

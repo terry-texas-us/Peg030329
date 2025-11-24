@@ -6,6 +6,6 @@ namespace fixup
 {
 	extern double dAxTol;
 	extern double dSiz;
-	
-	bool SetOptions(double* dSiz, double* dAxTol);
+
+	bool SetOptions(double* size, double* influenceAngle);
 }

@@ -11,6 +11,10 @@ class CChildFrame : public CMDIChildWnd
 public:
 	CChildFrame();
 
+	// Explicitly delete copy constructor and assignment operator to fix C4625 and C4626 warnings
+	CChildFrame(const CChildFrame&) = delete;
+	CChildFrame& operator=(const CChildFrame&) = delete;
+
 // Attributes
 public:
 

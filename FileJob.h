@@ -10,6 +10,9 @@ public:
 	CFileJob() {m_PrimBuf = new char[CPrim::BUFFER_SIZE];}
 
 	virtual ~CFileJob() {delete [] m_PrimBuf;}
+
+	CFileJob(const CFileJob&) = delete;
+	CFileJob& operator=(const CFileJob&) = delete;
 	
 	bool	OpenForRead(const CString& strPathName);
 	bool	OpenForWrite(const CString& strPathName);

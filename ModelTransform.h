@@ -13,8 +13,11 @@ private:
 public:
 	
 	CModelTransform();
-	
 	~CModelTransform();
+
+	// Explicitly delete copy constructor and assignment operator to avoid C4625 and C4626
+	CModelTransform(const CModelTransform&) = delete;
+	CModelTransform& operator=(const CModelTransform&) = delete;
 
 	void	InvokeNew();
 	void	Return();

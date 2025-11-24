@@ -44,7 +44,6 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
 	}
 	else if (nMsg == WM_COMMAND)
 	{
-		CPnt ptInt;
 		CPnt ptCurPos = app.CursorPosGet();
 		switch (LOWORD(wParam)) 
 		{
@@ -413,15 +412,15 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
 	return (CallWindowProc(app.GetMainWndProc(), hwnd, nMsg, wParam, lParam));
 }
 
-bool fixup::SetOptions(double* dSiz, double* dAxTol)
+bool fixup::SetOptions(double* size, double* influenceAngle)
 {
-	fixup::dSiz = *dSiz;
-	fixup::dAxTol = *dAxTol;
-	
+	fixup::dSiz = *size;
+	fixup::dAxTol = *influenceAngle;
+
 	if (::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_FIXUP_OPTIONS), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcFixupOptions)) > 0)
 	{
-		*dSiz = Max(0., fixup::dSiz);
-		*dAxTol = Max(0., fixup::dAxTol);
+		*size = Max(0., fixup::dSiz);
+		*influenceAngle = Max(0., fixup::dAxTol);
 	}
 	return true;
 }

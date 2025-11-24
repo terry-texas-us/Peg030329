@@ -328,7 +328,7 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 				{
 				CSeg *pSeg;
 				CObject *pObj;
-				CPnt pt[2], ptCent[3];
+				CPnt pt[3], ptCent[4];
 
 				if (!detsegs.SelSegAndPrimUsingPoint(ptCur))
 					break;
@@ -438,7 +438,7 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 				double dDist = 0.125;
 				CSeg *pSeg;
 				CPnt ptBeg, ptEnd, ptMid;
-				CPnt pt[5], ptCent[3];
+				CPnt pt[6], ptCent[4];
 
 				if (!detsegs.SelSegAndPrimUsingPoint(ptCur))
 					break;
@@ -576,7 +576,7 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 					PENSTYLE nPenStyle;
 					
 					CPnt ptTemp, ptBeg, ptEnd, ptMid;
-					CPnt ptUpDn[3];
+					CPnt ptUpDn[4];
 					int i = 0;
 
 					ptPrv = pEndCapMark->GetPt();

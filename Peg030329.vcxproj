@@ -92,7 +92,12 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <DiagnosticsFormat>Classic</DiagnosticsFormat>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -114,7 +119,12 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <DiagnosticsFormat>Classic</DiagnosticsFormat>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -223,7 +233,10 @@
     <ClCompile Include="Segs.cpp" />
     <ClCompile Include="SegsDet.cpp" />
     <ClCompile Include="SegsTrap.cpp" />
-    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="StringExtra.cpp" />
     <ClCompile Include="SubProcAnnotate.cpp" />
     <ClCompile Include="SubProcCut.cpp" />
@@ -359,7 +372,14 @@
     <ResourceCompile Include="res\PegAEsys.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Peg &amp; Tra File Formats.docx" />
+    <None Include="Peg &amp; Tra File Formats.md" />
+    <None Include="Peg &amp; Tra File Formats.pdf" />
     <None Include="res\PegAEsys.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Peg &amp; Tra File Formats (extracted FilePeg comments).txt" />
+    <Text Include="Peg &amp; Tra File Formats.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

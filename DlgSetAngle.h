@@ -10,6 +10,9 @@ public:
 	CDlgSetAngle(CWnd* pParent = NULL);   // standard constructor
 	virtual ~CDlgSetAngle();
 
+	CDlgSetAngle(const CDlgSetAngle&) = delete; // Prevent copying
+	CDlgSetAngle& operator=(const CDlgSetAngle&) = delete; // Prevent assignment
+
 // Dialog Data
 	enum { IDD = IDD_SET_ANGLE };
 

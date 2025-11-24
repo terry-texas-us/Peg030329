@@ -41,7 +41,7 @@ void DoEditTrapPopupCommands(HWND hwnd)
 ///The current trap is copied to the clipboard. This is done with two independent clipboard formats. 
 ///The standard enhanced metafile and the private PegSegs which is read exclusively by Peg.
 ///</summary>
-void DoEditTrapCopy(CPegView* pView)
+void DoEditTrapCopy(CPegView* view)
 {
 	::OpenClipboard(NULL);
 	::EmptyClipboard();
@@ -78,7 +78,7 @@ void DoEditTrapCopy(CPegView* pView)
 		int iPrimState = pstate.Save();
 		
 		HDC hdcEMF = ::CreateEnhMetaFile(0, 0, 0, 0);
-		trapsegs.Display(pView, CDC::FromHandle(hdcEMF));
+		trapsegs.Display(view, CDC::FromHandle(hdcEMF));
 		HENHMETAFILE hemf = ::CloseEnhMetaFile(hdcEMF);
 		::SetClipboardData(CF_ENHMETAFILE, hemf);
 	
@@ -86,7 +86,7 @@ void DoEditTrapCopy(CPegView* pView)
 	}
 	if (app.GetEditCFSegments())
 	{
-		CPegView* pView = CPegView::GetActiveView();
+		CPegView* activeView = CPegView::GetActiveView();
 
 		CPnt ptMin(FLT_MAX, FLT_MAX, FLT_MAX);
 		CPnt ptMax(- FLT_MAX, - FLT_MAX, - FLT_MAX);
@@ -99,11 +99,11 @@ void DoEditTrapCopy(CPegView* pView)
 		char* pBuf = new char[CPrim::BUFFER_SIZE];
 			
 		trapsegs.Write(mf, pBuf);
-		trapsegs.GetExtents(ptMin, ptMax, pView->ModelViewGetMatrix());
+		trapsegs.GetExtents(ptMin, ptMax, activeView->ModelViewGetMatrix());
 
 		delete [] pBuf;
 	
-		ptMin = pView->ModelViewGetMatrixInverse() * ptMin;
+		ptMin = activeView->ModelViewGetMatrixInverse() * ptMin;
 	
 		ULONGLONG dwSizeOfBuffer = mf.GetLength();
 	
@@ -216,6 +216,7 @@ void CPegDoc::Serialize(CArchive& ar)
 	{
 		if (m_wOpenFileType == FILE_TYPE_DWG || m_wOpenFileType == FILE_TYPE_DXF)
 		{	
+#if ODA_FUNCTIONALITY
 			CFileOpenDWG fod;
 			short nError;
 			if (fod.Initialize(&nError))
@@ -224,6 +225,7 @@ void CPegDoc::Serialize(CArchive& ar)
 				strcpy_s(szName, sizeof(szName), ar.m_strFileName.GetString());
 				fod.Create(szName, m_wOpenFileType);
 			}
+#endif
 		}
 		else if (m_wOpenFileType == FILE_TYPE_PEG)
 		{
@@ -265,6 +267,7 @@ void CPegDoc::Serialize(CArchive& ar)
 
 		if (wFileType == FILE_TYPE_DWG || wFileType == FILE_TYPE_DXF)
 		{
+#if ODA_FUNCTIONALITY
 			CFileOpenDWG fod;
 			short nError;
 			if (fod.Initialize(&nError))
@@ -275,6 +278,7 @@ void CPegDoc::Serialize(CArchive& ar)
 				SetOpenFile(wFileType, szPathName);
 				WorkLayerSet(LayersGetAt(0));
 			}
+#endif
 		}
 		else if (wFileType == FILE_TYPE_FFA)
 		{	
@@ -422,9 +426,9 @@ int CPegDoc::BlockGetRefCount(const CString& strBlkNam) const
 {
 	int iCount = 0;
 
-	for (WORD w = 0; w < m_layers.GetSize(); w++)
+	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
-		CLayer* pLayer = m_layers.GetAt(w);
+		CLayer* pLayer = m_layers.GetAt(i);
 		iCount += pLayer->GetBlockRefCount(strBlkNam);
 	}
 	
@@ -542,10 +546,10 @@ void CPegDoc::GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const
 {
 	ptMin(FLT_MAX, FLT_MAX, FLT_MAX);
 	ptMax(- FLT_MAX, - FLT_MAX, - FLT_MAX);
-	
-	for (WORD w = 0; w < m_layers.GetSize(); w++)
+
+	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
-		CLayer* pLayer = m_layers.GetAt(w);
+		CLayer* pLayer = m_layers.GetAt(i);
 		if (pLayer->IsOn()) 
 			pLayer->GetExtents(ptMin, ptMax, tm);
 	}
@@ -554,9 +558,9 @@ int CPegDoc::GetHotCount() const
 {
 	int iCount = 0;
 
-	for (WORD w = 0; w < m_layers.GetSize(); w++)
+	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
-		CLayer* pLayer = m_layers.GetAt(w);
+		CLayer* pLayer = m_layers.GetAt(i);
 		if (pLayer->IsHot()) {iCount += pLayer->GetCount();}
 	}
 	return iCount;
@@ -612,9 +616,9 @@ int CPegDoc::GetWarmCount() const
 {
 	int iCount = 0;
 
-	for (WORD w = 0; w < m_layers.GetSize(); w++)
+	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
-		CLayer* pLayer = m_layers.GetAt(w);
+		CLayer* pLayer = m_layers.GetAt(i);
 		if (pLayer->IsWarm()) {iCount += pLayer->GetCount();}
 	}
 	return iCount;
@@ -674,8 +678,8 @@ void CPegDoc::LayersDisplayAll(CPegView* pView, CDC* pDC)
 			opengl::PolygonModeLine();
 		else
 			opengl::PolygonModeFill();
-		
-		for (int i = 0; i < m_layers.GetSize(); i++)
+
+		for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 		{
 			CLayer* pLayer = m_layers.GetAt(i);
 			pLayer->Display(pView, pDC, bIdentifyTrap);
@@ -686,10 +690,10 @@ void CPegDoc::LayersDisplayAll(CPegView* pView, CDC* pDC)
 	{
 		CPrim::SpecPolygonStyle() = pView->m_bViewWireframe ? POLYGON_HOLLOW : short(- 1);
 		int iPrimState = pstate.Save();
-		
-		for (WORD w = 0; w < m_layers.GetSize(); w++)
+
+		for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 		{
-			CLayer* pLayer = m_layers.GetAt(w);
+			CLayer* pLayer = m_layers.GetAt(i);
 			pLayer->Display(pView, pDC, bIdentifyTrap);
 		}
 		pstate.Restore(pDC, iPrimState);
@@ -707,10 +711,10 @@ CLayer* CPegDoc::LayersGetAt(int i) const
 }
 int CPegDoc::LayersLookup(const CString& strName) const
 {
-	for (WORD w = 0; w < m_layers.GetSize(); w++)
+	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
-		CLayer* pLayer = m_layers.GetAt(w);
-		if (strName.CompareNoCase(pLayer->GetName()) == 0) {return (w);}
+		CLayer* pLayer = m_layers.GetAt(i);
+		if (strName.CompareNoCase(pLayer->GetName()) == 0) {return (i);}
 	}
 	return (- 1);
 }
@@ -792,9 +796,9 @@ void CPegDoc::LayersRemove(const CString& strName)
 }
 void CPegDoc::LayersRemoveAll()
 {
-	for (WORD w = 0; w < m_layers.GetSize(); w++)
+	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
-		CLayer* pLayer = m_layers.GetAt(w);
+		CLayer* pLayer = m_layers.GetAt(i);
 		pLayer->RemoveSegs();
 		delete pLayer;
 	}
@@ -826,9 +830,9 @@ int CPegDoc::PenStyleGetRefCount(PENSTYLE nPenStyle) const
 {
 	int iCount = 0;
 
-	for (WORD w = 0; w < m_layers.GetSize(); w++)
+	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
-		CLayer* pLayer = m_layers.GetAt(w);
+		CLayer* pLayer = m_layers.GetAt(i);
 		iCount += pLayer->GetPenStyleRefCount(nPenStyle);
 	}
 	
@@ -862,9 +866,9 @@ void CPegDoc::PenStylesRemoveUnused()
 }
 void CPegDoc::PenTranslation(WORD wCols, PENCOLOR* pColNew, PENCOLOR* pCol)
 {
-	for (WORD w = 0; w < m_layers.GetSize(); w++)
+	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
-		CLayer* pLayer = m_layers.GetAt(w);
+		CLayer* pLayer = m_layers.GetAt(i);
 		pLayer->PenTranslation(wCols, pColNew, pCol);
 	}
 }
@@ -874,18 +878,18 @@ CLayer* CPegDoc::LayersSelUsingPoint(const CPnt& pt) const
 	
 	if (pSeg != 0)
 	{
-		for (WORD w = 0; w < m_layers.GetSize(); w++)
+		for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 		{
-			CLayer* pLayer = m_layers.GetAt(w);
+			CLayer* pLayer = m_layers.GetAt(i);
 			if (pLayer->Find(pSeg)) 
 			{
 				return (pLayer);
 			}
 		}
 	}	
-	for (WORD w = 0; w < m_layers.GetSize(); w++)
+	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
-		CLayer* pLayer = m_layers.GetAt(w);
+		CLayer* pLayer = m_layers.GetAt(i);
 
 		if (pLayer->SelSegUsingPoint(pt) != 0)
 		{
@@ -897,10 +901,10 @@ CLayer* CPegDoc::LayersSelUsingPoint(const CPnt& pt) const
 int CPegDoc::RemoveEmptyNotes()
 {
 	int iCount = 0;
-	
-	for (WORD w = 0; w < m_layers.GetSize(); w++)
+
+	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
-		CLayer* pLayer = m_layers.GetAt(w);
+		CLayer* pLayer = m_layers.GetAt(i);
 		iCount += pLayer->RemoveEmptyNotes();
 	}
 	
@@ -919,10 +923,10 @@ int CPegDoc::RemoveEmptyNotes()
 int CPegDoc::RemoveEmptySegs()
 {
 	int iCount = 0;
-	
-	for (WORD w = 0; w < m_layers.GetSize(); w++)
+
+	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
-		CLayer* pLayer = m_layers.GetAt(w);
+		CLayer* pLayer = m_layers.GetAt(i);
 		iCount += pLayer->RemoveEmptySegs();
 	}
 	
@@ -958,9 +962,9 @@ void CPegDoc::WorkLayerAddTail(CSegs* pSegs)
 // The segment itself is not deleted.
 CLayer* CPegDoc::AnyLayerRemove(CSeg* pSeg)
 {	
-	for (WORD w = 0; w < m_layers.GetSize(); w++)
+	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
-		CLayer* pLayer = m_layers.GetAt(w);
+		CLayer* pLayer = m_layers.GetAt(i);
 		if (pLayer->IsHot() || pLayer->IsWarm())
 		{	
 			if (pLayer->Remove(pSeg) != 0)
@@ -1540,9 +1544,9 @@ void CPegDoc::OnTracingOpen()
 ///</summary>
 void CPegDoc::OnLayersActiveAll()
 {
-	for (WORD w = 0; w < m_layers.GetSize(); w++)
+	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
-		CLayer* pLayer = m_layers.GetAt(w);
+		CLayer* pLayer = m_layers.GetAt(i);
 		if (!pLayer->IsHot())
 			pLayer->SetStateWarm();
 	}
@@ -1550,9 +1554,9 @@ void CPegDoc::OnLayersActiveAll()
 }
 void CPegDoc::OnLayersStaticAll()
 {
-	for (WORD w = 0; w < m_layers.GetSize(); w++)
+	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
-		CLayer* pLayer = m_layers.GetAt(w);
+		CLayer* pLayer = m_layers.GetAt(i);
 		if (!pLayer->IsHot())
 			pLayer->SetStateCold();
 	}
@@ -1763,8 +1767,8 @@ void CPegDoc::OnEditTrapWork()
 void CPegDoc::OnEditTrapWorkAndActive()
 {
 	trapsegs.RemoveAll();
-	
-	for (int i = 0; i < m_layers.GetSize(); i++)
+
+	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
 		CLayer* pLayer = m_layers.GetAt(i);
 		if (pLayer->IsHot() || pLayer->IsWarm())

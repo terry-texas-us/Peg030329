@@ -1,0 +1,156 @@
+// SECTION_HEADER sentinel						WORD 0x0101
+//		{0 or more key-value pairs}
+// SECTION_END sentinel							WORD 0x01ff
+// SECTION_TABLES sentinel						WORD 0x0102
+//		TABLE_VPORT sentinel					WORD 0x0201
+//			{0 or more viewport definitions}	WORD
+//		TABLE_END sentinel						WORD 0x02ff
+//		TABLE_LTYPE sentinel					WORD 0x0202
+//			Number of linetypes					WORD
+//			{0 or more linetype definitions}
+//		TABLE_END sentinel						WORD 0x02ff
+//		TABLE_LAYER sentinel					WORD 0x0203
+//			Number of layers (resident only)	WORD
+//			{0 or more layer definitions}
+//		TABLE_END sentinel						WORD 0x02ff
+// SECTION_END sentinel							WORD 0x01ff
+// SECTION_BLOCKS sentinel						WORD 0x0103
+//		Number of blocks						WORD
+//		{0 or more block definitions}
+// SECTION_END sentinel							WORD 0x01ff
+// SECTION_SEGMENTS sentinel					WORD 0x0104
+//		Number of segments						WORD
+//		{0 or more segment definitions}
+// SECTION_END sentinel							WORD 0x01ff
+
+// Layer definition
+//		Layers
+//			Name								string
+//			Tracing flags						WORD
+//			State								WORD
+//			Layer pen color						WORD
+//			Layer pen style						string
+//		Tracings
+//			?? nothing
+
+// Line style definition
+//		Name									string
+//		Flags (always 0)						WORD
+//		Description								string
+//		Definition length						WORD		
+//		Pattern length							double
+//		if (definition length > 0)
+//			1 or more dash length				double...
+
+// Block definition
+//		Number of primitives					WORD
+//		Name									string
+//		Flags									WORD
+//		Base point								Pnt
+//		{0 or more primitive definitions}
+
+// Segment definition
+//		Number of primitives					WORD
+//		{0 or more primitive definitions}
+
+// Primitive definition
+//		Mark primitive
+//			PRIM_MARK type code					WORD 0x0100
+//			Pen color							WORD
+//			Mark style							WORD
+//			Point								Pnt
+//			Number of data values				WORD
+//			{0 or more data values}
+//		Insert primitive
+//			PRIM_INSERT type code				WORD 0x0101
+//			Pen color							WORD
+//			Pen style							WORD
+//			Insertion point						Pnt
+//			Local reference x-axis				Vec
+//			Local reference y-axis				Vec
+//			Local reference z-axis				Vec
+//			Number of columns					WORD
+//			Number of rows						WORD
+//			Column spacing						double
+//			Row spacing							double
+//		SegRef primitive
+//			PRIM_SEGR type code					WORD 0x0102
+//			Pen color							WORD
+//			Pen style							WORD
+//			Segment name						string
+//			Insertion point						Pnt
+//			Local normal vector					Vec
+//			Scale factors(x, y, z)				Vec
+//			Rotatation							double
+//			Number of columns					WORD
+//			Number of rows						WORD
+//			Column spacing						double
+//			Row spacing							double
+//		Line primitive
+//			PRIM_LINE type code					WORD 0x0200
+//			Pen color							WORD
+//			Pen style							WORD
+//			Line								Ln
+//		Polygon primitive
+//			PRIM_POLYGON type code				WORD 0x0400
+//			Pen color							WORD
+//			Polygon style						WORD
+//			Polygon Style Index					WORD
+//			Number of verticies					WORD
+//			Hatch origin						Pnt
+//			Hatch/pattern reference x-axis		Vec
+//			Hatch/pattern reference y-axis		Vec
+//			{0 or more points}	
+//		Arc primitive
+//			PRIM_ARC type code					WORD 0x1003
+//			Pen color							WORD
+//			Pen style							WORD
+//			Center point						Pnt
+//			Major axis							Vec
+//			Minor axis							Vec
+//			Sweep angle							double
+//		BSpline primitive
+//			PRIM_BSPLINE type code				WORD 0x2000
+//			Pen color							WORD
+//			Pen style							WORD
+//			Number of control points			WORD
+//			{0 or more control points}
+//		CSpline primitive
+//			PRIM_CSPLINE type code				WORD 0x2001
+//			Pen color							WORD
+//			Pen style							WORD
+//			m_wPtsS								WORD
+//			Number of control points			WORD
+//			End condition Type					WORD
+//			Begin point tangent vector			Vec
+//			End point tangent vector			Vec
+//			{0 or more control points}
+//		Polyline primitive (not ready for io)
+//			PRIM_POLYLINE type code				WORD 0x2002
+//			Pen color							WORD
+//			Pen style							WORD
+//			Number of points					WORD
+//			{0 or more points}			
+//		Text primitive
+//			PRIM_TEXT type code					WORD 0x4000
+//			Pen color							WORD
+//			Pen style							WORD
+//			Text precision						WORD
+//			Text font name						string
+//			Text path							WORD
+//			Horizontal alignment				WORD
+//			Vertical alignment					WORD
+//			Character spacing					double
+//			Insertion point						Pnt
+//			Local reference x-axis				Vec
+//			Local reference y-axis				Vec
+//			Text								string
+//		Tag primitive
+//			PRIM_TAG type code					WORD 0x4100
+//			Pen color							WORD
+//			Pen style							WORD
+//			Point								Pnt
+//		Dim primitive 
+//			(could be a problem. primdim not overloaded. 
+//			 only its base primtext data has been streamed.
+//			 has this always been so on tra/peg files.)

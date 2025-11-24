@@ -60,8 +60,7 @@ public: // Methods
 	/// @param precision Formatting precision (default 6). Typically controls the number of digits after the decimal point for floating-point values or the general formatting precision.
 	/// @param minWidth Minimum field width (default 0). If the formatted result is shorter than this width, it will be padded (commonly with spaces) to reach minWidth.
 	/// @return A std::string containing the formatted representation of the vector.
-	std::string	ToStdString(int precision, int minWidth) const;
-	CString	ToString() const;
+	std::string	ToStdString(int precision = 6, int minWidth = 0) const;
 	bool	Identical(const CVec& v, double tol = DBL_EPSILON) const;
 	bool	IsNull(double dTol = DBL_EPSILON) const;
 	double	Length() const {return (sqrt(SquaredLength()));}

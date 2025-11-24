@@ -30,7 +30,6 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
 	CSeg*	pSeg;
 	CPrimText*	pText;
 	double	dD12;
-	int 	i;
 	CVec	vPlnNorm, vXAx, vYAx;
 
 	CPegDoc* pDoc = CPegDoc::GetDoc();
@@ -412,6 +411,8 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
 						{
 							pt[0] = ptsBox1[0];
 							pt[2] = ptsBox1[0];
+							int i;
+
 							for (i = 1; i < 4; i++) 
 							{
 								pt[0][0] = Min(pt[0][0], ptsBox1[i][0]);
@@ -433,9 +434,10 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
 							
 							pSeg = new CSeg;
 					
-							for (int i = 0; i < 4; i++)
+							for (i = 0; i < 4; i++)
+							{
 								pSeg->AddTail(new CPrimLine(1, 1, pt[i], pt[(i + 1) % 4]));
-							
+							}
 							pDoc->WorkLayerAddTail(pSeg); 
 							pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
 						}
@@ -448,7 +450,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
 				{
 					pt[1] = app.CursorPosGet();
 										
-					CSeg* pSeg = detsegs.SelLineUsingPoint(pView, pt[1]);
+					pSeg = detsegs.SelLineUsingPoint(pView, pt[1]);
 					if (pSeg != 0)
 					{
 						CPrimLine* pLine = static_cast<CPrimLine*>(detsegs.DetPrim());
@@ -495,7 +497,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
 							ccd.TextRotAngSet(0.);
 							pstate.SetCharCellDef(ccd);
 							
-							CPrimText* pText = new CPrimText(fd, rs, annotate::szCurTxt); 
+							pText = new CPrimText(fd, rs, annotate::szCurTxt); 
 							pstate.SetPenColor(nPenColor);
 
 							pSeg->AddTail(pText);

@@ -1259,14 +1259,12 @@ void CPegView::DisplayOdometer()
 		
 			double dLen = ln.Length();
 			double dAng = line::GetAngAboutZAx(ln);
+			
 			UnitsString_FormatLength(szBuf, sizeof(szBuf), max(app.GetUnits(), Engineering), dLen, 16, 4);
-
-			CString strRep;
-			strRep += szBuf;
-			UnitsString_FormatAngle(szBuf, sizeof(szBuf), dAng);
-			strRep += szBuf;	
-	
-			msgInformation(strRep);
+			std::string message = szBuf;
+			message += UnitsString_FormatAngle(dAng, 0, 5);
+			
+			msgInformation(message.c_str());
 		}
 		CDC* pDC = GetDC();
 	

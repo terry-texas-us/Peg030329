@@ -23,7 +23,7 @@ int msgConfirm(UINT uiMsgId, const CString& strVal)
 
 	::LoadString(app.GetInstance(), uiMsgId, szFmt, sizeof(szFmt));
 	
-	sprintf_s(szMsg, sizeof(szMsg), szFmt, strVal);
+	sprintf_s(szMsg, sizeof(szMsg), szFmt, strVal.GetString());
 	
 	char* context = nullptr;
 	char* pMsg = strtok_s(szMsg, "\t", &context);
@@ -50,7 +50,7 @@ void msgWarning(UINT uiMsgId, const CString& strVal)
 	
 	::LoadString(app.GetInstance(), uiMsgId, szFmt, sizeof(szFmt));
 
-	sprintf_s(szMsg, sizeof(szMsg), szFmt, strVal);
+	sprintf_s(szMsg, sizeof(szMsg), szFmt, strVal.GetString());
 
 	char* context = nullptr;
 	char* pMsg = strtok_s(szMsg, "\t", &context);
@@ -68,7 +68,7 @@ void msgInformation(const CString& strMes)
 	}
 	szMsg[n] = 0;
 
-	CMainFrame* pFrame = (CMainFrame*) (AfxGetApp()->m_pMainWnd);
+	CMainFrame* pFrame = (CMainFrame*)(AfxGetApp()->m_pMainWnd);
 
 	//pFrame->SetWindowText(szMsg);
 
@@ -98,7 +98,7 @@ void msgInformation(UINT nId, const CString& strVal)
 
 	::LoadString(app.GetInstance(), nId, szFmt, sizeof(szFmt));
 	
-	sprintf_s(szMsg, sizeof(szMsg), szFmt, strVal);
+	sprintf_s(szMsg, sizeof(szMsg), szFmt, strVal.GetString());
 	
 	msgInformation(szMsg);
 }

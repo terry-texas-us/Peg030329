@@ -20,6 +20,10 @@ public:
 public:
 	CFilePeg() {};
 	
+	// Explicitly delete copy constructor and assignment operator to fix C4625 and C4626 warnings
+	CFilePeg(const CFilePeg&) = delete;
+	CFilePeg& operator=(const CFilePeg&) = delete;
+
 	virtual ~CFilePeg() {}
 
 	void	Load(CPegDoc* pDoc);

@@ -102,7 +102,7 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
 
 						pSegSav->RemoveTail();
 						POSITION pos = pSegSav->GetTailPosition();
-						CPrimLine* pLine = static_cast<CPrimLine*>(pSegSav->GetPrev(pos));
+						pLine = static_cast<CPrimLine*>(pSegSav->GetPrev(pos));
 						pLine->SetPt1(lnPar[1][1]);
 						pLine = static_cast<CPrimLine*>(pSegSav->GetPrev(pos));
 						pLine->SetPt1(lnPar[0][1]);
@@ -196,7 +196,7 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
 
 							POSITION pos = pSegSav->GetTailPosition();
 							
-							CPrimLine* pLine = static_cast<CPrimLine*>(pSegSav->GetPrev(pos));
+							pLine = static_cast<CPrimLine*>(pSegSav->GetPrev(pos));
 							pLine->SetPt1(lnPar[1][1]);
 							pLine = static_cast<CPrimLine*>(pSegSav->GetPrev(pos));
 							pLine->SetPt1(lnPar[0][1]);

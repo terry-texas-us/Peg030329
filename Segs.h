@@ -6,6 +6,10 @@ public: // Constructors and destructor
 	CSegs() {};
 
 	virtual ~CSegs() {}
+
+	// Explicitly delete copy constructor and assignment operator to fix C4625 and C4626 warnings
+	CSegs(const CSegs&) = delete;
+	CSegs& operator=(const CSegs&) = delete;
 	
 public:	// Base class wrappers
 	POSITION	AddHead(CSeg* pSeg) {return (CObList::AddHead((CObject*) pSeg));}

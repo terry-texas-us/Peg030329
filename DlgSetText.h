@@ -10,6 +10,9 @@ public:
 	CDlgSetText(CWnd* pParent = NULL);   // standard constructor
 	virtual ~CDlgSetText();
 
+	CDlgSetText(const CDlgSetText&) = delete; // Prevent copying
+	CDlgSetText& operator=(const CDlgSetText&) = delete; // Prevent assignment
+
 // Dialog Data
 	enum { IDD = IDD_SET_TEXT };
 

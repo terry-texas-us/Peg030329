@@ -6,7 +6,7 @@
 
 #include "Hatch.h"
 
-#include "Polyline.h"
+#include "PrimPolyline.h"
 #include "SubProcDraw.h"
 #include "UserAxis.h"
 
@@ -312,8 +312,7 @@ LRESULT CALLBACK SubProcDraw(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 
 			case ID_SHIFT_RETURN:
 				app.RubberBandingDisable();
-				if (wPrvOp == ID_OP3)
-					draw::EndPolylineDef(wPts, pt);
+				if (wPrvOp == ID_OP3) { draw::EndPolylineDef(wPts, pt); }
 
 				app.ModeLineUnhighlightOp(wPrvOp);
 				wPts = 0;
@@ -418,28 +417,32 @@ WORD draw::EndFillAreaDef(WORD wPts, CPnt* pt)
 	}
 	return (wPts);
 }
-WORD draw::EndPolylineDef(WORD wPts, CPnt* pt)
+
+CSeg* draw::EndPolylineDef(int numberOfPoints, CPnt* points)
 {
-	CPegDoc* pDoc = CPegDoc::GetDoc();
+	CPegDoc* document = CPegDoc::GetDoc();
 
-	CSeg* pSeg = new CSeg(new CPrimPolyline(wPts, pt));
-	pDoc->WorkLayerAddTail(pSeg); 
-	pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+	CSeg* newSegment = new CSeg(new CPrimPolyline(static_cast<WORD>(numberOfPoints), points));
+	document->WorkLayerAddTail(newSegment); 
+	document->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, newSegment);
 
-	return (wPts);
+	return (newSegment);
 }
-int draw::EndSplineDef(ESplnGen eSplnGenId, int iPts, CPnt* pt)
-{
-	CPegDoc* pDoc = CPegDoc::GetDoc();
 
-	if (iPts > 2) 
+CSeg* draw::EndSplineDef(ESplnGen splineType, int numberOfControlPoints, CPnt* controlPoints)
+{
+	CPegDoc* document = CPegDoc::GetDoc();
+
+	CSeg* newSegment = nullptr;
+
+	if (numberOfControlPoints > 2) 
 	{
-		if (eSplnGenId == draw::BSpline) 
+		if (splineType == draw::BSpline) 
 		{
-			CSeg* pSeg = new CSeg(new CPrimBSpline(WORD(iPts), pt));
-			pDoc->WorkLayerAddTail(pSeg); 
-			pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+			newSegment = new CSeg(new CPrimBSpline(static_cast<WORD>(numberOfControlPoints), controlPoints));
+			document->WorkLayerAddTail(newSegment); 
+			document->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, newSegment);
 		}
 	}
-	return (iPts);
+	return (newSegment);
 }

@@ -33,7 +33,7 @@ void CFileBlock::ReadBlocks(CBlocks& blks)
 	
 		CBlock* pBlock = new CBlock(wBlkTypFlgs, ORIGIN);
 
-		for (int i = 0; i < iPrims; i++)
+		for (int j = 0; j < iPrims; j++)
 		{
 			FilePeg_ReadPrim(*this, pPrim);
 			pBlock->AddTail(pPrim); 
