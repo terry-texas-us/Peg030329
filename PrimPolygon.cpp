@@ -239,14 +239,16 @@ void CPrimPolygon::DisRep(const CPnt& ptPic) const
 }
 void CPrimPolygon::FormatGeometry(CString& str) const
 {
-	str += "Hatch Origin;" + m_ptOrig.ToString();
-	str += "X Axis;" + m_vPosXAx.ToString();
-	str += "Y Axis;" + m_vPosYAx.ToString();
-	
+	std::stringstream ss;
+	ss << "Hatch Origin;" << m_ptOrig.ToStdString() << "\n"
+		<< "X Axis;" << m_vPosXAx.ToStdString() << "\n"
+		<< "Y Axis;" << m_vPosYAx.ToStdString() << "\n";
+
 	for (WORD w = 0; w < m_wPts; w++)
 	{
-		str += "Vertex Point;" + m_Pt[w].ToString();
+		ss << "Vertex;" << m_Pt[w].ToStdString() << "\n";
 	}
+	str = ss.str().c_str();
 }
 
 CString CPrimPolygon::FormatIntStyle() const
@@ -259,7 +261,9 @@ CString CPrimPolygon::FormatIntStyle() const
 }
 void CPrimPolygon::FormatExtra(CString& str) const
 {
-	str.Format("Color;%s\tStyle;%s\tPoints;%d", FormatPenColor(), FormatPenStyle(), m_wPts);
+	std::stringstream ss;
+	ss << "Color;" << StdFormatPenColor() << "\t" << "Style;" << StdFormatPenStyle() << "\t" << "Points;" << m_wPts;
+	str = ss.str().c_str();
 }
 CPnt CPrimPolygon::GetCtrlPt() const 
 {

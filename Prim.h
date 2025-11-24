@@ -9,7 +9,7 @@ class CPegView;
 class CSegs;
 class CSeg;
 
-class CPrim : public CObject
+class CPrim: public CObject
 {
 public:
 	static const WORD BUFFER_SIZE = 2048;
@@ -46,14 +46,14 @@ protected:
 	static	double		mS_dPicApertSiz;
 
 public: // Constructors and destructor
-	CPrim() {m_nPenColor = 0; m_nPenStyle = 0;}
-	
-	virtual ~CPrim() {}
-	
+	CPrim() { m_nPenColor = 0; m_nPenStyle = 0; }
+
+	virtual ~CPrim() { }
+
 public: // Methods - absolute virtuals
 	virtual void	AddToTreeViewControl(HWND, HTREEITEM) const = 0;
 	virtual void	Assign(CPrim*) = 0;
-	virtual CPrim*&	Copy(CPrim*&) const = 0; 
+	virtual CPrim*& Copy(CPrim*&) const = 0;
 	virtual void	Display(CPegView* pView, CDC* pDC) const = 0;
 	virtual void	DisRep(const CPnt&) const = 0;
 	virtual void	FormatExtra(CString& str) const = 0;
@@ -81,33 +81,33 @@ public: // Methods - absolute virtuals
 
 public: // Methods - virtuals
 
-	virtual void	CutAt2Pts(CPnt*, CSegs*, CSegs*) {}
-	virtual void	CutAtPt(const CPnt&, CSeg*) {}
-	virtual int 	IsWithinArea(const CPnt&, const CPnt&, CPnt*) {return 0;}
+	virtual void	CutAt2Pts(CPnt*, CSegs*, CSegs*) { }
+	virtual void	CutAtPt(const CPnt&, CSeg*) { }
+	virtual int 	IsWithinArea(const CPnt&, const CPnt&, CPnt*) { return 0; }
 	virtual void	ModifyState();
-	virtual bool	PvtOnCtrlPt(CPegView*, const CPnt4&) const {return false;}
-	
+	virtual bool	PvtOnCtrlPt(CPegView*, const CPnt4&) const { return false; }
+
 public: // Methods
-	CString		FormatPenColor() const;
-	CString		FormatPenStyle() const;
+	std::string StdFormatPenColor() const;
+	std::string StdFormatPenStyle() const;
 	PENCOLOR	LogicalPenColor() const;
 	PENSTYLE	LogicalPenStyle() const;
-	PENCOLOR&	PenColor() {return m_nPenColor;}
-	PENSTYLE&	PenStyle() {return m_nPenStyle;}
+	PENCOLOR& PenColor() { return m_nPenColor; }
+	PENSTYLE& PenStyle() { return m_nPenStyle; }
 
 public:	// Methods - static 
-	static WORD&		CtrlPt() {return mS_wCtrlPt;}
-	static bool			IsSupportedTyp(int iTyp) {return (iTyp <= 7 && iTyp != 4 && iTyp != 5);}
-	static PENCOLOR&	LayerPenColor() {return mS_nLayerPenColor;}
-	static PENSTYLE&	LayerPenStyle() {return mS_nLayerPenStyle;}
-	static double&		PicApertSiz() {return mS_dPicApertSiz;}
-	static double&		Rel() {return mS_dRel;}
-	static PENSTYLE&	SpecPenStyle() {return mS_nSpecPenStyle;}
-	static PENCOLOR&	SpecPenColor() {return mS_nSpecPenColor;}
-	static short&		SpecPolygonStyle() {return mS_nSpecPolygonStyle;}
+	static WORD& CtrlPt() { return mS_wCtrlPt; }
+	static bool			IsSupportedTyp(int iTyp) { return (iTyp <= 7 && iTyp != 4 && iTyp != 5); }
+	static PENCOLOR& LayerPenColor() { return mS_nLayerPenColor; }
+	static PENSTYLE& LayerPenStyle() { return mS_nLayerPenStyle; }
+	static double& PicApertSiz() { return mS_dPicApertSiz; }
+	static double& Rel() { return mS_dRel; }
+	static PENSTYLE& SpecPenStyle() { return mS_nSpecPenStyle; }
+	static PENCOLOR& SpecPenColor() { return mS_nSpecPenColor; }
+	static short& SpecPolygonStyle() { return mS_nSpecPolygonStyle; }
 };
 
 CVec Prim_ComputeArbitraryAxis(const CVec& vNorm);
 
-inline bool Prim_IsByBlockPenStyle(const char* sName) {return (_stricmp(sName, "ByBlock") == 0 ? true : false);}
-inline bool Prim_IsByLayerPenStyle(const char* sName) {return (_stricmp(sName, "ByLayer") == 0 ? true : false);}
+inline bool Prim_IsByBlockPenStyle(const char* sName) { return (_stricmp(sName, "ByBlock") == 0 ? true : false); }
+inline bool Prim_IsByLayerPenStyle(const char* sName) { return (_stricmp(sName, "ByLayer") == 0 ? true : false); }

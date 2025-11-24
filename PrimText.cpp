@@ -5,6 +5,7 @@
 
 #include "DlgProcTrapModify.h"
 #include "Text.h"
+#include "Messages.h"
 
 CPrimText::CPrimText(const CFontDef& fd, const CRefSys& rs, const char* pszText)
 {
@@ -60,22 +61,34 @@ void CPrimText::Display(CPegView* pView, CDC* pDC) const
 }
 void CPrimText::DisRep(const CPnt&) const
 {
-	CString str;
-	str.Format("Color: %s Font: %s Precision: %s Path: %s Alignment: (%s,%s)",
-		FormatPenColor(), m_fd.TextFont(), m_fd.FormatTextPrec(), m_fd.FormatTextPath(), m_fd.FormatTextHorAlign());
-	msgInformation(str);
+	std::string str = "<Text>";
+	str += " Color: " + StdFormatPenColor();
+	str += " Font: " + m_fd.TextFont();
+	str += " Precision: " + m_fd.FormatTextPrec();
+	str += " Path: " + m_fd.FormatTextPath();
+	str += " Alignment: (" + m_fd.FormatTextHorAlign() + ", " + m_fd.FormatTextVerAlign() + ")";
+	msgInformation(str.c_str());
 }
 void CPrimText::FormatExtra(CString& str) const
 {
-	str.Format("Color;%s\tFont;%s\tPrecision;%s\tPath;%s\tAlignment;(%s,%s)\tSpacing;%f\tLength;%d\tText;%s",
-		FormatPenColor(), m_fd.TextFont(), m_fd.FormatTextPrec(), m_fd.FormatTextPath(), m_fd.FormatTextHorAlign(), 
-		m_fd.FormatTextVerAlign(), m_fd.ChrSpac(), m_strText.GetLength(), m_strText);
+	std::stringstream ss;
+	ss << "Color;" << StdFormatPenColor().c_str() << "\t"
+		<< "Font;" << m_fd.TextFont().GetString() << "\t"
+		<< "Precision;" << m_fd.FormatTextPrec().GetString() << "\t"
+		<< "Path;" << m_fd.FormatTextPath().GetString() << "\t"
+		<< "Alignment;(" << m_fd.FormatTextHorAlign().GetString() << ", " << m_fd.FormatTextVerAlign().GetString() << ")\t"
+		<< "Spacing;" << m_fd.ChrSpac() << "\t"
+		<< "Length;" << m_strText.GetLength() << "\t"
+		<< "Text;" << m_strText.GetString();
+	str = ss.str().c_str();
 }
 void CPrimText::FormatGeometry(CString& str) const
 {
-	str += "Origin;" + m_rs.Origin().ToString();
-	str += "X Axis;" + m_rs.DirX().ToString();
-	str += "Y Axis;" + m_rs.DirY().ToString();
+	std::stringstream ss;
+	ss << "Origin;" << m_rs.Origin().ToStdString();
+	ss << "X Axis;" << m_rs.DirX().ToStdString();
+	ss << "Y Axis;" << m_rs.DirY().ToStdString();
+	str = ss.str().c_str();
 }
 ///<summary>Get the bounding box of text.</summary>
 void CPrimText::GetBoundingBox(CPnts& ptsBox, double dSpacFac) const

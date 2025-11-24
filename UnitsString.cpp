@@ -22,20 +22,19 @@ int UnitsString_GCD(int aiNmb1, int aiNmb2)
 	return (iRetVal);
 }
 
-void UnitsString_FormatAngle(char* buffer, size_t bufferSize, double angle, int precision, int scale)
+std::string UnitsString_FormatAngle(const double angle, int minWidth, int precision)
 {
-	char format[24];
+	if (!std::isfinite(angle)) 
+	{ // Angle is NaN or infinite
+		return "Invalid angle";
+	}
+	if (precision < 0) { precision = 0; }
+	if (minWidth < 0) { minWidth = 0; }
 
-	strcpy_s(format, sizeof(format), "%");
-	_itoa_s(precision, buffer, bufferSize, 10);
-	strcat_s(format, sizeof(format), buffer);
-	strcat_s(format, sizeof(format), ".");
-	_itoa_s(scale, buffer, bufferSize, 10);
-	strcat_s(format, sizeof(format), buffer);
-	strcat_s(format, sizeof(format), "f");
-
-	strcat_s(format, sizeof(format), "d");
-	sprintf_s(buffer, bufferSize, format, angle / RADIAN);
+	std::stringstream ss;
+	ss << std::left << std::setprecision(precision) << std::setw(0);
+	ss << (angle / RADIAN);
+	return ss.str();
 }
 
 void UnitsString_FormatLength(char* buffer, size_t bufferSize, EUnits units, double adVal, int precision, int aiScal)

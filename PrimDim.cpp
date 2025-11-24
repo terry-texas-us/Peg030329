@@ -7,6 +7,7 @@
 #include "Polyline.h"
 #include "Text.h"
 #include "UnitsString.h"
+#include "Messages.h"
 
 WORD CPrimDim::mS_wFlags = 0;
 
@@ -146,9 +147,10 @@ void CPrimDim::Display(CPegView* pView, CDC* pDC) const
 }
 void CPrimDim::DisRep(const CPnt& pt) const
 {
-	CString str;
-	str.Format("<Dim> Color: %s Style: %s", FormatPenColor(), FormatPenStyle());
-	msgInformation(str);
+	std::string str = "<Dim>";
+	str += " Color: " + StdFormatPenColor();
+	str += " Style: " + StdFormatPenStyle();
+	msgInformation(str.c_str());
 
 	double dLen = Length();
 	double dAng = m_ln.GetAngAboutZAx();
@@ -168,12 +170,17 @@ void CPrimDim::DisRep(const CPnt& pt) const
 }
 void CPrimDim::FormatExtra(CString& str) const
 {
-	str.Format("Color;%s\tStyle;%s", FormatPenColor(), FormatPenStyle());
+	std::string extra;
+	extra = "Color;" + StdFormatPenColor() + "\t";
+	extra += "Style;" + StdFormatPenStyle();
+	str += extra.c_str();
 }
 void CPrimDim::FormatGeometry(CString& str) const
 {
-	str += "Begin Point;" + m_ln[0].ToString();
-	str += "End Point;" + m_ln[1].ToString();
+	std::string geometry;
+	geometry = "Begin Point;" + m_ln[0].ToStdString();
+	geometry += "End Point;" + m_ln[1].ToStdString();
+	str = geometry.c_str();
 }
 void CPrimDim::GetAllPts(CPnts& pts)
 {

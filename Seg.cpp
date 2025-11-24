@@ -269,7 +269,6 @@ int CSeg::RemoveEmptyNotes()
 	}
 	return (iCount);
 }
-///<summary>Picks a prim if close enough to point.  Working in view space.</summary>
 CPrim* CSeg::SelPrimUsingPoint(CPegView* pView, const CPnt4& pt, double& dPicApert, CPnt& pDetPt)
 {
 	POSITION pos = GetHeadPosition();
@@ -287,29 +286,29 @@ CPrim* CSeg::SelPrimUsingPoint(CPegView* pView, const CPnt4& pt, double& dPicApe
 }	
 CPrim* CSeg::SelPrimAtCtrlPt(CPegView* pView, const CPnt4& ptView, CPnt* ptCtrl) const
 {
-	CPrim*	pDetPrim = 0;
-	
+	CPrim* primitiveSelected = nullptr;
+
 	POSITION pos = GetHeadPosition();
 	while (pos != 0)
 	{
-		CPrim* pPrim = GetNext(pos);
+		CPrim* primitive = GetNext(pos);
 
-		if (pPrim == mS_pPrimIgnore)
-			continue;
-		
-		CPnt pt = pPrim->SelAtCtrlPt(pView, ptView);
-		
+		if (primitive == mS_pPrimIgnore) { continue; }
+
+		CPnt pt = primitive->SelAtCtrlPt(pView, ptView);
+
 		if (CPrim::CtrlPt() != USHRT_MAX)
 		{
-			pDetPrim = pPrim;
-		
-			CPnt4 ptView(pt, 1.);
-			pView->ModelViewTransform(ptView);
-			*ptCtrl = ptView;
+			primitiveSelected = primitive;
+
+			CPnt4 pointInModelView(pt, 1.);
+			pView->ModelViewTransform(pointInModelView);
+			*ptCtrl = pointInModelView;
 		}
 	}
-	return (pDetPrim);
+	return (primitiveSelected);
 }
+
 void CSeg::RemovePrims()
 {
 	POSITION pos = GetHeadPosition();

@@ -6,6 +6,7 @@
 #include "ddeGItms.h"
 #include "Polyline.h"
 #include "UnitsString.h"
+#include "Messages.h"
 
 CPrimArc::CPrimArc(const CPrimArc& src)
 {
@@ -91,7 +92,7 @@ CPrimArc::CPrimArc(const CPnt& ptBeg, const CPnt& ptInt, const CPnt& ptEnd)
 	
 		// None of the points coincide with center point
 
-		CTMat tm(m_ptCenter, vPlnNorm);
+		tm = CTMat(m_ptCenter, vPlnNorm);
 
 		double dAng[3];
 
@@ -313,10 +314,13 @@ void CPrimArc::Display(CPegView* pView, CDC* pDC) const
 }
 void CPrimArc::DisRep(const CPnt&) const
 {
-	CString str;
-	str.Format("<Arc> Color: %s Style: %s SweepAngle %f MajorAxisLength: %f", 
-		FormatPenColor(), FormatPenStyle(), m_dSwpAng, m_vMajAx.Length());
-	msgInformation(str);
+	std::string str = "<Arc>";
+
+	str += " Color: " + StdFormatPenColor();
+	str += " Style: " + StdFormatPenStyle();
+	str += " SweepAngle: " + UnitsString_FormatAngle(m_dSwpAng, 0, 5);
+	str += " MajorAxisLength: " + std::to_string(m_vMajAx.Length());
+	msgInformation(str.c_str());
 }
 ///<summary>
 ///Generates a set of points which may be used to represent a arc using
@@ -346,15 +350,21 @@ void CPrimArc::GenPts(const CPnt& ptCent, const CVec& vMajAx, const CVec& vMinAx
 }
 void CPrimArc::FormatGeometry(CString& str) const
 {
-	str += "Center Point;" + m_ptCenter.ToString();
-	str += "Major Axis;" + m_vMajAx.ToString();
-	str += "Minor Axis;" + m_vMinAx.ToString();
-	str += "Plane Normal;" + (m_vMajAx ^ m_vMinAx).ToString();
+	std::string geometry;
+	geometry = "Center Point;" + m_ptCenter.ToStdString();
+	geometry += "Major Axis;" + m_vMajAx.ToStdString();
+	geometry += "Minor Axis;" + m_vMinAx.ToStdString();
+	geometry += "Plane Normal;" + (m_vMajAx ^ m_vMinAx).ToStdString();
+	str = geometry.c_str();
 }
 void CPrimArc::FormatExtra(CString& str) const
 {
-	str.Format("Color;%s\tStyle;%s\tSweep Angle;%f\tMajor Axis Length;%f", 
-		FormatPenColor(), FormatPenStyle(), m_dSwpAng, m_vMajAx.Length());
+	std::string extra;
+	extra = "Color;" + StdFormatPenColor() + "\t";
+	extra += "Style;" + StdFormatPenStyle() + "\t";
+	extra += "Sweep Angle;" + UnitsString_FormatAngle(m_dSwpAng) + "\t";
+	extra += "MajorAxisLength;" + std::to_string(m_vMajAx.Length());
+	str = extra.c_str();
 }
 CPnt CPrimArc::GetBegPt() const
 {

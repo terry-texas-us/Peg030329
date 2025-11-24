@@ -56,7 +56,7 @@ void text_Display0(CPegView* pView, CDC* pDC, const CFontDef& fd, const CRefSys&
 						{
 							if (nNumEndDel < nCmdEndDel)
 							{
-								int nLen = nEnd - nOff - 1;
+								nLen = nEnd - nOff - 1;
 								if (bTrueType)	
 									text_Display(pView, pDC, fd, rs, strText.Mid(nOff, nLen));
 								else

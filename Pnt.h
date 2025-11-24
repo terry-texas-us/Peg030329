@@ -43,7 +43,12 @@ public: // Operators
 public: // Methods
 
 	void	Get(Vecd vd) const {vd[0] = m_d[0]; vd[1] = m_d[1]; vd[2] = m_d[2];}
-	CString	ToString() const;
+	
+	/// @brief Converts the point's three-dimensional coordinates (x, y, z stored in m_d[0], m_d[1], and m_d[2]) into a formatted string using fixed-point notation with the specified decimal precision (defaulting to 6), applies the minimum field width (defaulting to 0), separates the coordinates with semicolons, and appends a tab character at the end for output.
+	/// @param precision Formatting precision (default 6). Typically controls the number of digits after the decimal point for floating-point values or the general formatting precision.
+	/// @param minWidth Minimum field width (default 0). If the formatted result is shorter than this width, it will be padded (commonly with spaces) to reach minWidth.
+	/// @return A std::string containing the formatted representation of the point.
+	std::string ToStdString(int precision = 6, int minWidth = 0) const;
 	void	Read(CFile&);
 	void	Write(CFile&) const;
 

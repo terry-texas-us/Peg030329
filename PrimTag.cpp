@@ -2,6 +2,7 @@
 
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
+#include "Messages.h"
 
 CPrimTag::CPrimTag(const CPrimTag& src)
 {
@@ -41,17 +42,25 @@ void CPrimTag::Display(CPegView*, CDC* pDC) const
 }
 void CPrimTag::DisRep(const CPnt&) const
 {
-	CString str;
-	str.Format("<Tag> Color: %s Style: %s", FormatPenColor(), FormatPenStyle());
-	msgInformation(str);
+	std::string str = "<Tag>";
+	str += " Color: " + StdFormatPenColor();
+	str += " Style: " + StdFormatPenStyle();
+	msgInformation(str.c_str());
 }
 void CPrimTag::FormatExtra(CString& str) const
 {
-	str.Format("Color;%s\tStyle;%s", FormatPenColor(), FormatPenStyle());
+	std::stringstream ss;
+
+	ss << "Color;" << StdFormatPenColor() << "\t"
+		<< "Style;" << StdFormatPenStyle();
+
+	str = ss.str().c_str();
 }
 void CPrimTag::FormatGeometry(CString& str) const
 {
-	str += "Point;" + m_Pt.ToString();
+	std::stringstream ss;
+	ss << "Point; " << m_Pt.ToStdString();
+	str = ss.str().c_str();
 }
 CPnt CPrimTag::GetCtrlPt() const
 {

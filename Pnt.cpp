@@ -18,11 +18,14 @@ void CPnt::Read(CFile& fl)
 {
 	fl.Read(m_d, 3 * sizeof(double));
 }
-CString CPnt::ToString() const
+std::string CPnt::ToStdString(int precision, int minWidth) const
 {
-	CString str;
-	str.Format("%f;%f;%f\t", m_d[0], m_d[1], m_d[2]);	
-	return (str);
+	std::ostringstream oss;
+	oss << std::fixed << std::setprecision(precision)
+		<< std::setw(minWidth) << m_d[0] << ";" 
+		<< std::setw(minWidth) << m_d[1] << ";" 
+		<< std::setw(minWidth) << m_d[2] << "\t";
+	return oss.str();
 }
 void CPnt::Write(CFile& fl) const
 {

@@ -35,6 +35,13 @@
 #include <shlwapi.h>
 #include <commdlg.h>
 
+#include <string>
+#include <sstream>
+#include <iomanip>
+#include <cctype>
+
+#include <algorithm>
+
 #include <cfloat>
 #include <cmath>
 

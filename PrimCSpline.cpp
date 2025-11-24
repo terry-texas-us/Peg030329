@@ -65,15 +65,20 @@ void CPrimCSpline::Display(CPegView*, CDC* pDC) const
 }
 void CPrimCSpline::FormatGeometry(CString& str) const
 {
+	std::string geometry;
 	for (WORD w = 0; w < m_pts.GetSize(); w++)
 	{
-		str += "Control Point;" + m_pts[w].ToString();
+		geometry += "Control Point;" + m_pts[w].ToStdString();
 	}
+	str = geometry.c_str();
 }
 void CPrimCSpline::FormatExtra(CString& str) const
 {
-	str.Format("Color;%s\tStyle;%s\tControl Points;%d",
-		FormatPenColor(), FormatPenStyle(), m_pts.GetSize());
+	std::string extra;
+	extra = "Color;" + StdFormatPenColor() + "\t";
+	extra += "Style;" + StdFormatPenStyle() + "\t";
+	extra += "Control Points;" + std::to_string(m_pts.GetSize());
+	str = extra.c_str();
 }
 CPnt CPrimCSpline::GetCtrlPt() const
 {

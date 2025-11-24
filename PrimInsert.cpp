@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "PegAEsysDoc.h"
+#include "Messages.h"
 
 CPrimInsert::CPrimInsert()
 {
@@ -88,22 +89,27 @@ void CPrimInsert::Display(CPegView* pView, CDC* pDC) const
 }
 void CPrimInsert::DisRep(const CPnt&) const 
 {
-	CString str;
-	str.Format("<Insert> Color: %s Style: %s", FormatPenColor(), FormatPenStyle());
-	msgInformation(str);
+	std::string str = "<Insert>";
+	str += " Color: " + StdFormatPenColor();
+	str += " Style: " + StdFormatPenStyle();
+	msgInformation(str.c_str());
 }
 void CPrimInsert::FormatExtra(CString& str) const
 {
-	str.Format("Color;%s\tStyle;%s", FormatPenColor(), FormatPenStyle());
+	std::string extra;
+	extra = "Color;" + StdFormatPenColor() + "\t";
+	extra += "Style;" + StdFormatPenStyle();
+	str = extra.c_str();
 }
 void CPrimInsert::FormatGeometry(CString& str) const
 {
-	str += "Insertion Point;" + m_pt.ToString();
-	str += "X Axis;" + m_vX.ToString();
-	str += "Y Axis;" + m_vY.ToString();
-	str += "Z Axis;" + m_vZ.ToString();
+	std::string geometry;
+	geometry = "Insertion Point;" + m_pt.ToStdString();
+	geometry += "X Axis;" + m_vX.ToStdString();
+	geometry += "Y Axis;" + m_vY.ToStdString();
+	geometry += "Z Axis;" + m_vZ.ToStdString();
+	str = geometry.c_str();
 }
-
 CPnt CPrimInsert::GetCtrlPt() const 
 {
 	CPnt pt;

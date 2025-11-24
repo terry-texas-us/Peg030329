@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "PegAEsysDoc.h"
+#include "Messages.h"
 
 CPrimSegRef::CPrimSegRef()
 {
@@ -97,24 +98,35 @@ void CPrimSegRef::Display(CPegView* pView, CDC* pDC) const
 	
 	mspace.Return();
 }
-void CPrimSegRef::DisRep(const CPnt&) const 
+void CPrimSegRef::DisRep(const CPnt&) const
 {
-	CString str;
-	str.Format("<SegRef> Color: %s Style: %s SegmentName %s", 
-		FormatPenColor(), FormatPenStyle(), m_strName);
-	msgInformation(str);
+	std::string str = "<SegRef>";
+	str += " Color: " + StdFormatPenColor();
+	str += " Style: " + StdFormatPenStyle();
+	str += " Segment Name: " + m_strName;
+	msgInformation(str.c_str());
 }
 void CPrimSegRef::FormatExtra(CString& str) const
 {
-	str.Format("Color;%s\tStyle;%s\tSegment Name;%s\tRotation Angle;%f",
-		FormatPenColor(), FormatPenStyle(), m_strName, m_dRotation);
+	std::stringstream ss;
+
+	ss << "Color;" << StdFormatPenColor() << "\t"
+		<< "Style;" << StdFormatPenStyle() << "\t"
+		<< "Segment Name;" << m_strName.GetString() << "\t"
+		<< "Rotation Angle;" << m_dRotation;
+
+	str = ss.str().c_str();
 }
 
 void CPrimSegRef::FormatGeometry(CString& str) const
 {
-	str += "Insertion Point;" + m_pt.ToString();
-	str += "Normal;" + m_vZ.ToString();
-	str += "Scale;" + m_vScale.ToString();
+	std::stringstream ss;
+
+	ss << "Insertion Point;" << m_pt.ToStdString() << "\t"
+		<< "Normal;" << m_vZ.ToStdString() << "\t"
+		<< "Scale;" << m_vScale.ToStdString();
+
+	str = ss.str().c_str();
 }
 
 CPnt CPrimSegRef::GetCtrlPt() const 

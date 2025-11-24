@@ -4,6 +4,7 @@
 #include "PegAEsysView.h"
 
 #include "Polyline.h"
+#include "Messages.h"
 
 CPrimBSpline::CPrimBSpline(WORD wPts, CPnt* pt)
 {
@@ -68,22 +69,26 @@ void CPrimBSpline::Display(CPegView* pView, CDC* pDC) const
 }
 void CPrimBSpline::DisRep(const CPnt&) const
 {
-	CString str;
-	str.Format("<BSpline> Color: %s Style: %s", FormatPenColor(), FormatPenStyle());
-	msgInformation(str);
+	std::string str = "<BSpline> Color: " + StdFormatPenColor() + " Style: " + StdFormatPenStyle();
+	msgInformation(str.c_str());
 }
 void CPrimBSpline::FormatGeometry(CString& str) const
 {
+	std::string geometry;
 	for (WORD w = 0; w < m_pts.GetSize(); w++)
 	{
-		str += "Control Point;" + m_pts[w].ToString();
+		geometry += "Control Point;" + m_pts[w].ToStdString();
 	}
+	str = geometry.c_str();
 }
 
 void CPrimBSpline::FormatExtra(CString& str) const
 {
-	str.Format("Color;%s\tStyle;%s\tControl Points;%d",
-		FormatPenColor(), FormatPenStyle(), m_pts.GetSize());
+	std::string extra;
+	extra = "Color;" + StdFormatPenColor() + "\t";
+	extra += "Style;" + StdFormatPenStyle() + "\t";
+	extra += "Control Points;" + std::to_string(m_pts.GetSize());
+	str = extra.c_str();
 }
 
 CPnt CPrimBSpline::GetCtrlPt() const 

@@ -8,6 +8,7 @@
 #include "Polyline.h"
 #include "UserAxis.h"
 #include "UnitsString.h"
+#include "Messages.h"
 
 CPrimLine::CPrimLine(const CPnt& ptBeg, const CPnt& ptEnd)
 {
@@ -118,10 +119,12 @@ void CPrimLine::DisRep(const CPnt& pt) const
 	char szLength[64];
 	UnitsString_FormatLength(szLength, sizeof(szLength), app.GetUnits(), Length(), 16, 4);
 
-	CString str;
-	str.Format("<Line> Color: %s Style: %s - %s @ %f", 
-		FormatPenColor(), FormatPenStyle(), szLength, GetAngAboutZAx() / RADIAN);
-	msgInformation(str);
+	std::string str = "<Line>";
+	str += " Color: " + StdFormatPenColor();
+	str += " Style: " + StdFormatPenStyle();
+	str += " - " + std::string(szLength);
+	str += " @ " + UnitsString_FormatAngle(GetAngAboutZAx(), 0, 5);
+	msgInformation(str.c_str());
 
 	double dLen = Length();
 	double dAng = GetAngAboutZAx();
@@ -144,13 +147,19 @@ void CPrimLine::FormatExtra(CString& str) const
 	char szLength[64];
 	UnitsString_FormatLength(szLength, sizeof(szLength), app.GetUnits(), Length(), 16, 4);
 
-	str.Format("Color;%s\tStyle;%s\tLength;%s\tZ-Angle;%f", 
-		FormatPenColor(), FormatPenStyle(), szLength, GetAngAboutZAx() / RADIAN);
+	std::string extra;
+	extra = "Color;" + StdFormatPenColor() + "\t";
+	extra += "Style;" + StdFormatPenStyle() + "\t";
+	extra += "Length;" + std::string(szLength) + "\t";
+	extra += "Z-Angle;" + UnitsString_FormatAngle(GetAngAboutZAx(), 0, 5);
+	str = extra.c_str();
 }
 void CPrimLine::FormatGeometry(CString& str) const
 {
-	str += "Begin Point;" + m_ln[0].ToString();
-	str += "End Point;" + m_ln[1].ToString();
+	std::string geometry;
+	geometry = "Begin Point;" + m_ln[0].ToStdString();
+	geometry += "End Point;" + m_ln[1].ToStdString();
+	str = geometry.c_str();
 }
 void CPrimLine::GetAllPts(CPnts& pts)
 {

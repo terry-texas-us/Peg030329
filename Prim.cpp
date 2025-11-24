@@ -10,9 +10,9 @@ WORD		CPrim::mS_wCtrlPt = USHRT_MAX;
 double		CPrim::mS_dRel = 0.;
 double		CPrim::mS_dPicApertSiz = .02;
 
-CString CPrim::FormatPenColor() const
+std::string CPrim::StdFormatPenColor() const
 {
-	CString str;	
+	std::string str;	
 	if (m_nPenColor == PENCOLOR_BYLAYER)
 	{
 		str = "ByLayer";
@@ -21,23 +21,30 @@ CString CPrim::FormatPenColor() const
 		str = "ByBlock";
 	else 
 	{
-		str.Format("%d", m_nPenColor);
+		str = std::to_string(m_nPenColor);
 	}
 	return str;
-}	
-CString CPrim::FormatPenStyle() const
+}
+
+std::string CPrim::StdFormatPenStyle() const
 {
-	CString str;
-	if (m_nPenStyle == PENSTYLE_BYLAYER) 
-		str = "ByLayer";
-	else if (m_nPenStyle == PENSTYLE_BYBLOCK) 
-		str = "ByBlock";
-	else 
+	std::string str;
+	if (m_nPenStyle == PENSTYLE_BYLAYER)
 	{
-		str.Format("%d", m_nPenStyle);
+		str = "ByLayer";
+	}
+
+	else if (m_nPenStyle == PENSTYLE_BYBLOCK)
+	{
+		str = "ByBlock";
+	}
+	else
+	{
+		str = std::to_string(m_nPenStyle);
 	}
 	return str;
-}	
+}
+
 PENCOLOR CPrim::LogicalPenColor() const
 {
 	PENCOLOR nPenColor = mS_nSpecPenColor == 0 ? m_nPenColor : mS_nSpecPenColor;

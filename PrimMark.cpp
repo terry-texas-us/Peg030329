@@ -2,6 +2,7 @@
 
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
+#include "Messages.h"
 
 CPrimMark::CPrimMark()
 {
@@ -118,17 +119,22 @@ void CPrimMark::Display(CPegView* pView, CDC* pDC) const
 }
 void CPrimMark::DisRep(const CPnt&) const
 {
-	CString str;
-	str.Format("<Mark> Color: %s Style: %s", FormatPenColor(), FormatPenStyle());
-	msgInformation(str);
+	std::stringstream ss;
+	ss << "<Mark>" << " Color: " << StdFormatPenColor() << " Style: " << std::setw(3) << std::setfill('0') << m_nMarkStyle;
+	std::string str = ss.str();
+	msgInformation(str.c_str());
 }
 void CPrimMark::FormatExtra(CString& str) const
 {
-	str.Format("Color;%s\tStyle;%d", FormatPenColor(), m_nMarkStyle);
+	std::stringstream ss;
+	ss << "Color;" << StdFormatPenColor() << "\t" << "Style;" << std::setw(3) << std::setfill('0') << m_nMarkStyle;
+	str = ss.str().c_str();
 }
 void CPrimMark::FormatGeometry(CString& str) const
 {
-	str += "Point;" + m_pt.ToString();
+	std::stringstream ss;
+	ss << "Point;" << m_pt.ToStdString();
+	str = ss.str().c_str();
 }
 CPnt CPrimMark::GetCtrlPt() const 
 {

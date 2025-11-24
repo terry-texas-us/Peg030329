@@ -131,14 +131,22 @@ void CPrimPolyline::DisRep(const CPnt& ptPic) const
 }
 void CPrimPolyline::FormatGeometry(CString& str) const
 {
+	std::stringstream ss;
+
 	for (WORD w = 0; w < m_pts.GetSize(); w++)
 	{
-		str += "Point;" + m_pts[w].ToString();
+		ss << "Point;" << m_pts[w].ToStdString() << "\n";
 	}
+	str = ss.str().c_str();
 }
 void CPrimPolyline::FormatExtra(CString& str) const
 {
-	str.Format("Color;%s\tStyle;%s\tPoints;%d", FormatPenColor(), FormatPenStyle(), m_pts.GetSize());
+	std::stringstream ss;
+	ss << "Color;" << StdFormatPenColor() << "\t"
+		<< "Style;" << StdFormatPenStyle() << "\t"
+		<< "Points;" << m_pts.GetSize();
+
+	str = ss.str().c_str();
 }
 CPnt CPrimPolyline::GetCtrlPt() const 
 {

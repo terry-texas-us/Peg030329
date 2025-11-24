@@ -55,6 +55,12 @@ public: // Methods
 	
 	bool	Collinear(const CVec& v, double dTol = FLT_EPSILON) const;
 	void	Get(Vecd vd) const {vd[0] = m_d[0]; vd[1] = m_d[1]; vd[2] = m_d[2];}
+	
+	/// @brief Converts the vector's three-dimensional coordinates (x, y, z stored in m_d[0], m_d[1], and m_d[2]) into a formatted string using fixed-point notation with the specified decimal precision (defaulting to 6), applies the minimum field width (defaulting to 0), separates the coordinates with semicolons, and appends a tab character at the end for output.
+	/// @param precision Formatting precision (default 6). Typically controls the number of digits after the decimal point for floating-point values or the general formatting precision.
+	/// @param minWidth Minimum field width (default 0). If the formatted result is shorter than this width, it will be padded (commonly with spaces) to reach minWidth.
+	/// @return A std::string containing the formatted representation of the vector.
+	std::string	ToStdString(int precision, int minWidth) const;
 	CString	ToString() const;
 	bool	Identical(const CVec& v, double tol = DBL_EPSILON) const;
 	bool	IsNull(double dTol = DBL_EPSILON) const;
