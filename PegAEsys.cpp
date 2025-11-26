@@ -13,7 +13,9 @@
 #include "Grid.h"
 #include "ddeGItms.h"
 #include "DlgProcEditOps.h"
+#if ODA_FUNCTIONALITY
 #include "FileOpenDWG.h"
+#endif
 #include "Hatch.h"
 #include "SubProcAnnotate.h"
 #include "SubProcCut.h"
@@ -1070,59 +1072,67 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli)
 		if (sli == All || sli == WorkCnt)
 		{	// print num in work 
 			rc.SetRect(0, rcClient.top, 8 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-			sprintf_s(szBuf, sizeof(szBuf), "%i  ", CPegDoc::GetDoc()->GetHotCount() + CPegDoc::GetDoc()->GetWarmCount());
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED  | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
+			std::string str = std::to_string(CPegDoc::GetDoc()->GetHotCount() + CPegDoc::GetDoc()->GetWarmCount()) + "  ";
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED  | ETO_OPAQUE, &rc, str.c_str(), (UINT) str.length(), 0);
 		}
 		if (sli == All || sli == TrapCnt)
 		{	// print num in trap 
 			rc.SetRect(10 * tm.tmAveCharWidth, rcClient.top, 19 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-			sprintf_s(szBuf, sizeof(szBuf), " %i  ", trapsegs.GetCount());
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE,  &rc, szBuf, (UINT) strlen(szBuf), 0);
+			std::string str = " " + std::to_string(trapsegs.GetCount()) + "  ";
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE,  &rc, str.c_str(), (UINT) str.length(), 0);
 		}
 		if (sli == All || sli == Pen)
 		{	// print pen  info
 			rc.SetRect(21 * tm.tmAveCharWidth, rcClient.top, 27 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-			sprintf_s(szBuf, sizeof(szBuf), "P %i ", pstate.PenColor());
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
+			std::string str = "P " + std::to_string(pstate.PenColor()) + " ";
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT) str.length(), 0);
 		}
 		if (sli == All || sli == Line)
 		{	// print line info
 			rc.SetRect(29 * tm.tmAveCharWidth, rcClient.top, 35 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-			sprintf_s(szBuf, sizeof(szBuf), "L %i", pstate.PenStyle());
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
+			std::string str = "L " + std::to_string(pstate.PenStyle());
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT) str.length(), 0);
 		}
 		if (sli == All || sli == TextHeight)
 		{	// print text height
 			CCharCellDef ccd;
 			pstate.GetCharCellDef(ccd);
 			rc.SetRect(37 * tm.tmAveCharWidth, rcClient.top, 47 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-			sprintf_s(szBuf, sizeof(szBuf), "T %6.2f", ccd.ChrHgtGet());
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
+			std::stringstream ss;
+			ss << "T " << std::fixed << std::setprecision(2) << ccd.ChrHgtGet();
+			std::string str = ss.str();
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT) str.length(), 0);
 		}
 		if (sli == All || sli == Scale)
 		{	//print scale
 			rc.SetRect(49 * tm.tmAveCharWidth, rcClient.top, 59 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-			sprintf_s(szBuf, sizeof(szBuf), "1: %6.2f", GetScale());
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
+			std::stringstream ss;
+			ss << "1: " << std::fixed << std::setprecision(2) << GetScale();
+			std::string str = ss.str();
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT) str.length(), 0);
 		}
 		if (sli == All || sli == WndRatio)
 		{	//print zoom
 			rc.SetRect(61 * tm.tmAveCharWidth, rcClient.top, 71 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight); 
 			double dRatio = pView->GetWidthInInches() / pView->ModelViewGetUExt();
-			sprintf_s(szBuf, sizeof(szBuf), "@ %6.3f", dRatio);
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
+			std::stringstream ss;
+			ss << "@ " << std::fixed << std::setprecision(3) << dRatio;
+			std::string str = ss.str();
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT) str.length(), 0);
 		}
 		if (sli == All || sli == DimLen)
 		{	// print DimLen
 			rc.SetRect(73 * tm.tmAveCharWidth, rcClient.top, 90 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);			  
-			UnitsString_FormatLength(szBuf, sizeof(szBuf), GetUnits(), GetDimLen(), 16, 4);
+			UnitsString_FormatLength(szBuf, sizeof(szBuf), GetUnits(), GetDimLen());
 			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
 		}
 		if (sli == All || sli == DimAng)
 		{	// print DimAngle
 			rc.SetRect(92 * tm.tmAveCharWidth, rcClient.top, 107 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight); 
-			sprintf_s(szBuf, sizeof(szBuf), ">> %8.4f", GetDimAngZ());
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
+			std::stringstream ss;
+			ss << ">> " << std::fixed << std::setprecision(4) << GetDimAngZ();
+			std::string str = ss.str();
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT) str.length(), 0);
 		}
 		// restore Device Context to its original state
 		pDC->SetBkColor(crBk);

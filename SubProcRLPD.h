@@ -22,6 +22,11 @@ namespace rlpd
 	bool	GenTap(CPegView* pView, CPnt, CPnt, double, CLine*);
 	int		GenTransition(ETransition, int*, double*, double*, double*, CLine*);	
 	bool	SelEndCapUsingPoint(CPegView* pView, const CPnt&, CSeg*&, CPrimMark*&);
-	void	SetOptions(double*);
+	
+	/// @brief This function acts as a bridge between the application's state and user input.
+	/// It initializes a global diameter value, displays a dialog box for user configuration (e.g., allowing the user to input or adjust the duct diameter),
+	/// and updates the caller's diameter variable if the dialog completes successfully. 
+	/// @param section_diameter the diameter of the duct section to be set or modified.
+	void	SetOptions(double* section_diameter);
 	double	TransitionLen(int aiJus, double adSlo, double* adWid, double* adDep, double* adWidChg, double* adDepChg);
 }

@@ -70,7 +70,7 @@ void CPrimBSpline::Display(CPegView* pView, CDC* pDC) const
 void CPrimBSpline::DisRep(const CPnt&) const
 {
 	std::string str = "<BSpline> Color: " + StdFormatPenColor() + " Style: " + StdFormatPenStyle();
-	msgInformation(str.c_str());
+	msgSetPaneText(str);
 }
 void CPrimBSpline::FormatGeometry(CString& str) const
 {

@@ -38,7 +38,7 @@ void DlgBoxSetItemDouble(HWND hDlg, int iCtrlId, double dVal)
 void DlgBoxSetItemUnitsText(HWND hDlg, int iCtrlId, double dVal)
 {
 	char szBuf[32];
-	UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), dVal, 16, 4);
+	UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), dVal);
 	SetDlgItemText(hDlg, iCtrlId, szBuf);
 }
 bool AppGetGinCur(CPrim*& pPrim)

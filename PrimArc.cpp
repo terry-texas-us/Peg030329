@@ -320,7 +320,7 @@ void CPrimArc::DisRep(const CPnt&) const
 	str += " Style: " + StdFormatPenStyle();
 	str += " SweepAngle: " + UnitsString_FormatAngle(m_dSwpAng, 0, 5);
 	str += " MajorAxisLength: " + std::to_string(m_vMajAx.Length());
-	msgInformation(str.c_str());
+	msgSetPaneText(str);
 }
 ///<summary>
 ///Generates a set of points which may be used to represent a arc using

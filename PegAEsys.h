@@ -11,8 +11,13 @@
 class CSeg;
 class CPrim;
 
+/// @brief Defines an enumeration of measurement units: Architectural, Engineering, Feet, Inches, Meters, Millimeters, Centimeters, Decimeters, and Kilometers.
 enum EUnits {Architectural, Engineering, Feet, Inches, Meters, Millimeters, Centimeters, Decimeters, Kilometers};
+
+/// @brief Enumeration that identifies a set of shape or primitive types.
 enum ERubs {Lines = 1, Rectangles, Circles, Quads};
+
+/// @brief Used to specify which items should be displayed or updated on the status line (at the bottom of the main window). This enum is part of the broader CPegApp class, which manages the application's state and UI interactions.
 enum EStatusLineItem {WorkCnt, TrapCnt, Pen, Line, TextHeight, Scale, WndRatio, DimLen, DimAng, All};
 
 extern COLORREF crHotCols[256];

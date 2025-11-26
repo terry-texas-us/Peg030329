@@ -1260,11 +1260,11 @@ void CPegView::DisplayOdometer()
 			double dLen = ln.Length();
 			double dAng = line::GetAngAboutZAx(ln);
 			
-			UnitsString_FormatLength(szBuf, sizeof(szBuf), max(app.GetUnits(), Engineering), dLen, 16, 4);
+			UnitsString_FormatLength(szBuf, sizeof(szBuf), max(app.GetUnits(), Engineering), dLen);
 			std::string message = szBuf;
 			message += UnitsString_FormatAngle(dAng, 0, 5);
 			
-			msgInformation(message.c_str());
+			msgSetPaneText(message);
 		}
 		CDC* pDC = GetDC();
 	
@@ -1281,15 +1281,15 @@ void CPegView::DisplayOdometer()
 		int iLeft = rcClient.right - 16 * tm.tmAveCharWidth; 
 		
 		CRect rc(iLeft, rcClient.top, rcClient.right, rcClient.top + tm.tmHeight);
-		UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), m_vRelPos[0], 16, 8);
+		UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), m_vRelPos[0]);
 		pDC->ExtTextOut(rc.left, rc.top, fuOptions, &rc, szBuf, (UINT) strlen(szBuf), 0);
 		
 		rc.SetRect(iLeft, rcClient.top + 1 * tm.tmHeight, rcClient.right, rcClient.top + 2 * tm.tmHeight);
-		UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), m_vRelPos[1], 16, 8);
+		UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), m_vRelPos[1]);
 		pDC->ExtTextOut(rc.left, rc.top, fuOptions, &rc, szBuf, (UINT) strlen(szBuf), 0);
 		
 		rc.SetRect(iLeft, rcClient.top + 2 * tm.tmHeight, rcClient.right, rcClient.top + 3 * tm.tmHeight);
-		UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), m_vRelPos[2], 16, 8);
+		UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), m_vRelPos[2]);
 		pDC->ExtTextOut(rc.left, rc.top, fuOptions, &rc, szBuf, (UINT) strlen(szBuf), 0);
 
 		pDC->SetBkColor(crBk);

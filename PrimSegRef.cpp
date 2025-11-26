@@ -104,7 +104,7 @@ void CPrimSegRef::DisRep(const CPnt&) const
 	str += " Color: " + StdFormatPenColor();
 	str += " Style: " + StdFormatPenStyle();
 	str += " Segment Name: " + m_strName;
-	msgInformation(str.c_str());
+	msgSetPaneText(str);
 }
 void CPrimSegRef::FormatExtra(CString& str) const
 {

@@ -8,12 +8,11 @@
 #include "PegAEsysView.h"
 
 #include "ddeGItms.h"
-#include "Directory.h"
-#include "FileBitmap.h"
 #include "FileBlock.h"
 #include "FileJob.h"
+#if ODA_FUNCTIONALITY
 #include "FileOpenDWG.h"
-#include "StringExtra.h"
+#endif
 #include "Text.h"
 #include "lex.h"
 
@@ -719,7 +718,7 @@ int CPegDoc::LayersLookup(const CString& strName) const
 	return (- 1);
 }
 ///<summary>A layer is converted to a tracing or a job file</summary>
-bool CPegDoc::LayerMelt(CString& strName)
+bool CPegDoc::LayerMelt(CString& strName) const
 {
 	CLayer* pLayer = LayersGet(strName);
 	if (pLayer == 0)
@@ -1004,33 +1003,28 @@ void CPegDoc::SetOpenFile(WORD wFileType, const CString& strFileName)
 
     m_wOpenFileType = wFileType;
 }
-///<summary>Tracing is converted to a static layer.</summary>
-///<remarks>
-///This is a cold state meaning the layer is displayed using warm color set,
-///is not detectable, and may not have its segments modified or deleted.
-/// No new segments may be added to the layer.
-///</remarks>
-void CPegDoc::TracingFuse(CString& strName)
+
+void CPegDoc::TracingFuse(CString& layerName) const
 {
-	CLayer* pLayer = LayersGet(strName);
-	if (pLayer != 0)
+	CLayer* layer = LayersGet(layerName);
+	if (layer != 0)
 	{
 		char* title = new char[MAX_PATH];
-		GetFileTitle(strName, title, MAX_PATH);
+		GetFileTitle(layerName, title, MAX_PATH);
 		char* context = nullptr;
 		strtok_s(title, ".", &context);
-		strName = title;
+		layerName = title;
 		delete[] title;
 
-		pLayer->ClrTracingFlg();
-		pLayer->ClrStateFlg();
-		pLayer->SetStateFlg(CLayer::STATE_FLG_RESIDENT | CLayer::STATE_FLG_INTERNAL);
-		pLayer->SetStateCold();
+		layer->ClrTracingFlg();
+		layer->ClrStateFlg();
+		layer->SetStateFlg(CLayer::STATE_FLG_RESIDENT | CLayer::STATE_FLG_INTERNAL);
+		layer->SetStateCold();
 
-		pLayer->SetName(strName);
+		layer->SetName(layerName);
 	}
 }
-bool CPegDoc::TracingLoadLayer(const CString& strPathName, CLayer* pLayer)
+bool CPegDoc::TracingLoadLayer(const CString& strPathName, CLayer* pLayer) const
 {
 	WORD wFileType = CPegApp::GetFileTypeFromPath(strPathName);
 	if (!FileTypeIsTracing(wFileType))
@@ -1835,36 +1829,37 @@ void CPegDoc::OnTrapCommandsFilter()
 }
 void CPegDoc::OnTrapCommandsBlock()
 {
-	if (trapsegs.GetCount() == 0)
-		return;
-	
-	CBlock* pBlock;
+	if (trapsegs.GetCount() == 0) { return; }
+
+	CBlock* block;
 	WORD w = BlksSize();
-	char szBlkNam[16];
-	
+	std::string blockName;
+
 	do
 	{
-		sprintf_s(szBlkNam, sizeof(szBlkNam), "_%.3i", ++w);
+		std::stringstream ss;
+		ss << "_" << std::setfill('0') << std::setw(3) << ++w;
+		blockName = ss.str();
 	}
-	while (BlksLookup(szBlkNam, pBlock));
-	
-	pBlock = new CBlock;
-	
+	while (BlksLookup(blockName.c_str(), block));
+
+	block = new CBlock;
+
 	POSITION pos = trapsegs.GetHeadPosition();
 	while (pos != 0)
 	{
-		CSeg* pSeg = trapsegs.GetNext(pos);
-		
-		CSeg* pSeg2 = new CSeg(*pSeg);
+		CSeg* segment = trapsegs.GetNext(pos);
 
-		pBlock->AddTail(pSeg2);
-		
+		CSeg* pSeg2 = new CSeg(*segment);
+
+		block->AddTail(pSeg2);
+
 		pSeg2->RemoveAll();
 
 		delete pSeg2;
 	}
-	pBlock->SetBasePt(trapsegs.PvtPt());
-	BlksSetAt(CString(szBlkNam), pBlock);
+	block->SetBasePt(trapsegs.PvtPt());
+	BlksSetAt(CString(blockName.c_str()), block);
 }
 void CPegDoc::OnTrapCommandsUnblock()
 {
@@ -2070,18 +2065,16 @@ void CPegDoc::OnFileTracing()
 }
 void CPegDoc::OnMaintenanceRemoveEmptyNotes()
 {
-	int iNotes = RemoveEmptyNotes();
-	int iSegs = RemoveEmptySegs();
-	CString str;
-	str.Format("%d notes were removed resulting in %d empty segments which were also removed.", iNotes, iSegs);
-	msgInformation(str);
+	int numOfNotesRemoved = RemoveEmptyNotes();
+	int numOfSegmentsRemoved = RemoveEmptySegs();
+	std::string paneText = std::to_string(numOfNotesRemoved) + " notes were removed resulting in " + std::to_string(numOfSegmentsRemoved) + " empty segments which were also removed.";
+	msgSetPaneText(paneText);
 }
 void CPegDoc::OnMaintenanceRemoveEmptySegments()
 {
-	int iSegs = RemoveEmptySegs();
-	CString str;
-	str.Format("%d were removed.", iSegs);
-	msgInformation(str);
+	int numOfSegmentsRemoved = RemoveEmptySegs();
+	std::string paneText = std::to_string(numOfSegmentsRemoved) + " were removed.";
+	msgSetPaneText(paneText);
 }
 void CPegDoc::OnPensEditColors()
 {
@@ -2193,14 +2186,14 @@ void CPegDoc::OnPrimExtractNum()
 		lex::Parse(strChr);
 		lex::EvalTokenStream((char*) 0, &iTokId, &lDef, &iTyp, (void*) dVal, bufferSize);
 		
-		char szBuf[64];
 		if (iTyp != lex::TOK_LENGTH_OPERAND)
 		{
 			lex::ConvertValTyp(iTyp, lex::TOK_REAL, &lDef, dVal);
 		}
-		sprintf_s(szBuf, sizeof(szBuf), "%10.4f ", dVal[0]);
-		strcat_s(szBuf, sizeof(szBuf), "was extracted from drawing");
-		msgInformation(szBuf);
+		std::stringstream ss;
+		ss << std::fixed << std::setprecision(4) << std::setw(10) << dVal[0] << " was extracted from drawing";
+		std::string str = ss.str();
+		msgSetPaneText(str);
 		gbl_dExtNum = dVal[0];
 		dde::PostAdvise(dde::ExtNumInfo);
 	}
@@ -2221,12 +2214,17 @@ void CPegDoc::OnPrimExtractStr()
 		CString strChr;
 		
 		if (pPrim->Is(CPrim::PRIM_TEXT))
-			strChr = static_cast<CPrimText*>(pPrim)->Text();
+		{ 
+			strChr = static_cast<CPrimText*>(pPrim)->Text(); 
+		}
 		else if (pPrim->Is(CPrim::PRIM_DIM))
+		{
 			strChr = static_cast<CPrimDim*>(pPrim)->Text();
+		}
 		else
+		{
 			return;
-
+		}
 		strcpy_s(gbl_szExtStr, sizeof(gbl_szExtStr), strChr.GetString());
 
 		strChr += " was extracted from drawing";

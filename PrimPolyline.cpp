@@ -94,7 +94,7 @@ void CPrimPolyline::Display(CPegView* pView, CDC* pDC) const
 }
 void CPrimPolyline::DisRep(const CPnt& ptPic) const
 {
-	CString strRep = "<Polyline Edge> ";
+	std::string strRep = "<Polyline Edge> ";
 
 	WORD wPts = WORD(m_pts.GetSize());
 
@@ -117,11 +117,11 @@ void CPrimPolyline::DisRep(const CPnt& ptPic) const
 			dAng = line::GetAngAboutZAx(CLine(ptBeg, ptEnd));
 		
 		char szBuf[24];
-		UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), dLen, 16, 4);
+		UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), dLen);
 		strRep += szBuf;
 		sprintf_s(szBuf, sizeof(szBuf), " @ %6.2f degrees", dAng / RADIAN);
 		strRep += szBuf;	
-		msgInformation(strRep);
+		msgSetPaneText(strRep);
 		
 		app.SetEngLen(dLen);
 		app.SetEngAngZ(dAng);

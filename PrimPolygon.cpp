@@ -204,7 +204,7 @@ void CPrimPolygon::Display(CPegView* pView, CDC* pDC) const
 }
 void CPrimPolygon::DisRep(const CPnt& ptPic) const
 {
-	CString strRep("<Polygon Edge> ");
+	std::string strRep("<Polygon Edge> ");
 
 	if (mS_wEdge > 0 && mS_wEdge <= m_wPts)
 	{
@@ -225,11 +225,12 @@ void CPrimPolygon::DisRep(const CPnt& ptPic) const
 			dAng = line::GetAngAboutZAx(CLine(*pBegPt, *pEndPt));
 		
 		char szBuf[24];
-		UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), dLen, 16, 4);
+		UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), dLen);
 		strRep += szBuf;
-		sprintf_s(szBuf, sizeof(szBuf), " @ %6.2f degrees", dAng / RADIAN);
-		strRep += szBuf;	
-		msgInformation(strRep);
+		std::stringstream ss;
+		ss << " @ " << std::fixed << std::setprecision(2) << std::setw(6) << dAng / RADIAN << " degrees";
+		strRep += ss.str();
+		msgSetPaneText(strRep);
 		
 		app.SetEngLen(dLen);
 		app.SetEngAngZ(dAng);

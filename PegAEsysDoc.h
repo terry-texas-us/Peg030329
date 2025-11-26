@@ -109,7 +109,7 @@ public:
 	bool		FileTypeIsTracing(WORD wType) const;
 
 	void		LayerBlank(const CString& strName);
-	bool		LayerMelt(CString& strName);
+	bool		LayerMelt(CString& strName) const;
 
 	void		LayersAdd(CLayer* pLayer) {m_layers.Add(pLayer);}
 	void		LayersDisplayAll(CPegView* pView, CDC* pDC);
@@ -142,8 +142,11 @@ public:
 	
 	void		SetOpenFile(WORD wFileType, const CString& strFileName);
 
-	void		TracingFuse(CString& strPathName);
-	bool		TracingLoadLayer(const CString& strPathName, CLayer* pLayer);
+	/// @brief Tracing is converted to a static layer.
+	/// @param layerName The name of the layer to be converted. The name is modified to remove any file extension. 
+	/// @remarks This is a cold state meaning the layer is displayed using warm color set, is not detectable, and may not have its segments modified or deleted. No new segments may be added to the layer.
+	void		TracingFuse(CString& layerName) const;
+	bool		TracingLoadLayer(const CString& strPathName, CLayer* pLayer) const;
 	bool		TracingMap(const CString& strPathName);
 	bool		TracingOpen(const CString& strPathName);
 	bool		TracingView(const CString& strPathName);
@@ -229,6 +232,10 @@ public:
 	afx_msg void OnTracingMap();
 	afx_msg void OnTracingOpen();
 	afx_msg void OnTracingView();
+	
+	/// @brief This function aims to encapsulate the segments in the trap into a new, named block for reuse.
+	/// It generates a unique block name, creates the block, populates it with copies of the trap's segments,
+	/// sets a base point, and stores the block in a global collection (m_blks, a map of blocks keyed by name).
 	afx_msg void OnTrapCommandsBlock();
 	afx_msg void OnTrapCommandsCompress();
 	afx_msg void OnTrapCommandsExpand();

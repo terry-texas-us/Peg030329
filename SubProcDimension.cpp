@@ -208,7 +208,7 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
 						rProjPt[0] = detsegs.DetPt();
 						pLine->GetLine(ln);
 						wPrvOp = app.ModeLineHighlightOp(ID_OP8);
-						msgInformation("Select the second line.");				
+						msgSetPaneText("Select the second line.");				
 						iLns = 1;
 					}
 				}
@@ -224,7 +224,7 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
 							if (line::Intersection(ln, pLine->Ln(), ptCen)) 
 							{
 								iLns++;
-								msgInformation("Specify the location for the dimension arc.");				
+								msgSetPaneText("Specify the location for the dimension arc.");				
 							}
 						}
 					}

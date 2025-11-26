@@ -67,7 +67,7 @@ void CPrimText::DisRep(const CPnt&) const
 	str += " Precision: " + m_fd.FormatTextPrec();
 	str += " Path: " + m_fd.FormatTextPath();
 	str += " Alignment: (" + m_fd.FormatTextHorAlign() + ", " + m_fd.FormatTextVerAlign() + ")";
-	msgInformation(str.c_str());
+	msgSetPaneText(str);
 }
 void CPrimText::FormatExtra(CString& str) const
 {

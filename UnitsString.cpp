@@ -3,12 +3,8 @@
 #include "PegAEsys.h"
 
 #include "Lex.h"
+#include "UnitsString.h"
 
-///<summary>Finds the greatest common divisor of arbitrary integers.</summary>
-// Returns: First number if second number is zero, greatest 
-//			common divisor otherwise.
-// Parameters:	aiNmb1	first number
-//				aiNmb2	second number
 int UnitsString_GCD(int aiNmb1, int aiNmb2)	   
 {
 	int iRetVal = abs(aiNmb1);
@@ -37,148 +33,127 @@ std::string UnitsString_FormatAngle(const double angle, int minWidth, int precis
 	return ss.str();
 }
 
-void UnitsString_FormatLength(char* buffer, size_t bufferSize, EUnits units, double adVal, int precision, int aiScal)
+void UnitsString_FormatLength(char* buffer, size_t bufferSize, EUnits units, double length, int minWidth, int precision)
 {
-	char numberBuffer[16];
-
-	// Reduce length to number of scaled inches
-	double dLen = adVal * app.GetScale();			
-	
 	if (units == Architectural)
 	{
-		// Determine how many whole feet and inches
-		int iNmbFt = int(dLen / 12.);
-		int iNmbIn = abs(int(fmod(dLen, 12.)));
-		int iUnitsPrec = app.GetUnitsPrec();
-		int iNum = int(fabs(fmod(dLen, 1.)) * (double) (iUnitsPrec) + .5);	// Numerator of fractional component of inches
-		
-		if (iNum == iUnitsPrec)
-		{	// Tricky wholes
-			if (iNmbIn == 11)
-			{
-				iNmbFt++;
-				iNmbIn = 0;
-			}
-			else
-				iNmbIn++;
-			
-			iNum = 0;
-		}
-		buffer[0] = '\0';
-		if (iNmbFt == 0 && dLen < 0.)
-		{
-			buffer[0] = '-';
-			buffer[1] = '\0';
-		}
-		_itoa_s(iNmbFt, numberBuffer, sizeof(numberBuffer), 10);
-		strcat_s(buffer, bufferSize, numberBuffer);
-		strcat_s(buffer, bufferSize, "'");
-		_itoa_s(iNmbIn, numberBuffer, sizeof(numberBuffer), 10);
-		strcat_s(buffer, bufferSize, numberBuffer);
-		if (iNum > 0)				// Significant decimal inch component
-		{
-			strcat_s(buffer, bufferSize, "^/");
-			int	iGrtComDivisor = UnitsString_GCD(iNum, iUnitsPrec);
-			iNum = iNum / iGrtComDivisor;
-			int iDen = iUnitsPrec / iGrtComDivisor; // Add fractional component of inches
-			_itoa_s(iNum, numberBuffer, sizeof(numberBuffer), 10);
-			strcat_s(buffer, bufferSize, numberBuffer);
-			strcat_s(buffer, bufferSize, "/");
-			_itoa_s(iDen, numberBuffer, sizeof(numberBuffer), 10);
-			strcat_s(buffer, bufferSize, numberBuffer);
-			strcat_s(buffer, bufferSize, "^");
-		}
-		strcat_s(buffer, bufferSize, "\"");
+		strcpy_s(buffer, bufferSize, UnitsString_FormatAsArchitectural(length).c_str());
 	}
 	else if (units == Engineering)
 	{
-		int iScal = aiScal;
-		if (fabs(dLen) >= 1.)
-		{
-			iScal = aiScal - int(log10(fabs(dLen))) - 1;
-		}
-		if (iScal >= 0)
-		{											 
-			double dScalFac = pow(10., (double) iScal);
-			
-			dLen = fabs(dLen) + .5 /  dScalFac; 				// Round it
-			buffer[0] = ' ';
-			buffer[1] = '\0';
-			_itoa_s(int(dLen / 12.), numberBuffer, sizeof(numberBuffer), 10);
-			strcat_s(buffer, bufferSize, numberBuffer);
-			dLen = fmod(dLen, 12.);
-			if (adVal < 0.)
-			{
-				buffer[0] = '-';
-			}
-			strcat_s(buffer, bufferSize, "'");
-			_itoa_s(int(dLen), numberBuffer, sizeof(numberBuffer), 10);
-			strcat_s(buffer, bufferSize, numberBuffer);
-			strcat_s(buffer, bufferSize, ".");
-			dLen = fmod(dLen, 1.) * dScalFac;
-			_itoa_s(int(dLen), numberBuffer, sizeof(numberBuffer), 10);
-			strcat_s(buffer, bufferSize, numberBuffer);
-			strcat_s(buffer, bufferSize, "\"");
-		}	
-		else
-			buffer[0] = '\0';
-
+		strcpy_s(buffer, bufferSize, UnitsString_FormatAsEngineering(length, precision).c_str());
 	}
 	else
 	{
-		char format[24];
+		strcpy_s(buffer, bufferSize, UnitsString_FormatAsSimple(length, minWidth, precision, units).c_str());
+	}
+}
 
-		strcpy_s(format, sizeof(format), "%");
-		_itoa_s(precision, numberBuffer, sizeof(numberBuffer), 10);
-		strcat_s(format, sizeof(format), numberBuffer);
-		strcat_s(format, sizeof(format), ".");
-		_itoa_s(aiScal, numberBuffer, sizeof(numberBuffer), 10);
-		strcat_s(format, sizeof(format), numberBuffer);
-		strcat_s(format, sizeof(format), "f");
+std::string UnitsString_FormatAsArchitectural(double length)
+{
+	length *= app.GetScale();
 
-		if (units == Feet)
-		{
-			strcat_s(format, sizeof(format), "'");
-			sprintf_s(buffer, bufferSize, format, dLen / 12.);
-		}
-		else if (units == Inches)
-		{
-			strcat_s(format, sizeof(format), "\"");
-			sprintf_s(buffer, bufferSize, format, dLen);
-		}
-		else if (units == Meters)
-		{
-			strcat_s(format, sizeof(format), "m");
-			sprintf_s(buffer, bufferSize, format, dLen * 0.0254);
-		}
-		else if (units == Millimeters)
-		{
-			strcat_s(format, sizeof(format), "mm");
-			sprintf_s(buffer, bufferSize, format, dLen * 25.4);
-		}
-		else if (units == Centimeters)
-		{
-			strcat_s(format, sizeof(format), "cm");
-			sprintf_s(buffer, bufferSize, format, dLen * 2.54);
-		}
-		else if (units == Decimeters)
-		{
-			strcat_s(format, sizeof(format), "dm");
-			sprintf_s(buffer, bufferSize, format, dLen * 0.254);
-		}
-		else if (units == Kilometers)
-		{
-			strcat_s(format, sizeof(format), "km");
-			sprintf_s(buffer, bufferSize, format, dLen * 0.0000254);
+	// Determine how many whole feet and inches
+	int feet = int(length / 12.);
+	int inches = abs(int(fmod(length, 12.)));
+	int unitsPrecision = app.GetUnitsPrec();
+	int fractionNumerator = int(fabs(fmod(length, 1.)) * static_cast<double>(unitsPrecision) + 0.5);	// Numerator of fractional component of inches
+
+	if (fractionNumerator == unitsPrecision)
+	{
+		if (inches == 11)
+		{  // Rounding up the fractional part rolls over to next inch
+			feet++;
+			inches = 0;
 		}
 		else
-			buffer[0] = '\0';
+		{ 
+			inches++; 
+		}
+		fractionNumerator = 0;
 	}
+	std::stringstream ss;
+	if (feet == 0 && length < 0.) { ss << '-'; }
+	ss << feet << "'" << inches;
+	if (fractionNumerator > 0)				
+	{ //
+		int greatestCommonDivisor = UnitsString_GCD(fractionNumerator, unitsPrecision);
+		fractionNumerator = fractionNumerator / greatestCommonDivisor;
+		int fractionDenominator = unitsPrecision / greatestCommonDivisor; // Add fractional component of inches
+		ss << "^/" << fractionNumerator << "/" << fractionDenominator << "^";
+	}
+	ss << "\"";
+	return ss.str();
+}
+
+std::string UnitsString_FormatAsEngineering(double length, int precision)
+{
+	length *= app.GetScale();
+
+	std::stringstream ss;
+	if (fabs(length) >= 1.) { precision = precision - int(log10(fabs(length))) - 1; }
+	if (precision >= 0)
+	{
+		double scaleFactor = pow(10., static_cast<double>(precision));
+
+		length = fabs(length) + 0.5 / scaleFactor; // Round it
+		if (length < 0.) { ss << '-'; }
+
+		ss << int(length / 12.) << "'";
+		length = fmod(length, 12.);
+		ss << int(length) << ".";
+		length = fmod(length, 1.) * scaleFactor;
+		ss << int(length) << "\"";
+
+	}
+	return ss.str();
+}
+
+std::string UnitsString_FormatAsSimple(double length, int minWidth, int precision, EUnits units)
+{
+	length *= app.GetScale();
+
+	std::stringstream ss;
+	ss << std::fixed << std::left << std::setprecision(precision) << std::setw(minWidth);
+
+	if (units == Feet)
+	{
+		ss << (length / 12.) << "'";
+	}
+	else if (units == Inches)
+	{
+		ss << length << "\"";
+	}
+	else if (units == Meters)
+	{
+		ss << (length * 0.0254) << "m";
+	}
+	else if (units == Millimeters)
+	{
+		ss << (length * 25.4) << "mm";
+	}
+	else if (units == Centimeters)
+	{
+		ss << (length * 2.54) << "cm";
+	}
+	else if (units == Decimeters)
+	{
+		ss << (length * 0.254) << "dm";
+	}
+	else if (units == Kilometers)
+	{
+		ss << (length * 0.0000254) << "km";
+	}
+	else
+	{
+		ss << length;
+	}
+	return ss.str();
 }
 
 double UnitsString_ParseLength(char* aszLen)
 {
-	char*	szEndPtr;
+	char* szEndPtr;
 	
 	double dRetVal = strtod(aszLen, &szEndPtr);
 	
@@ -191,13 +166,13 @@ double UnitsString_ParseLength(char* aszLen)
 	
 		case 'M': 
 			if (toupper((int) szEndPtr[1]) == 'M')
-				dRetVal *= .03937007874015748;
+				dRetVal *= 0.03937007874015748;
 			else
 				dRetVal *= 39.37007874015748;
 			break;
 	
 		case 'C':
-			dRetVal *= .3937007874015748;
+			dRetVal *= 0.3937007874015748;
 			break;
 			 
 		case 'D':
@@ -237,23 +212,20 @@ double UnitsString_ParseLength(EUnits eUnits, char* aszLen)
 				case Feet:
 					dVal[0] *= 12.;
 					break;
-
+				case Inches:
+					break;
 				case Meters:
 					dVal[0] *= 39.37007874015748;
 					break;
-
 				case Millimeters:
-					dVal[0] *= .03937007874015748;
+					dVal[0] *= 0.03937007874015748;
 					break;
-
 				case Centimeters:
-					dVal[0] *= .3937007874015748;
+					dVal[0] *= 0.3937007874015748;
 					break;
-				
 				case Decimeters:
 					dVal[0] *= 3.937007874015748;
 					break;
-
 				case Kilometers:
 					dVal[0] *= 39370.07874015748;
 			}				

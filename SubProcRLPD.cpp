@@ -10,6 +10,7 @@
 #include "ParLines.h"
 #include "UnitsString.h"
 #include "UserAxis.h"
+#include "StringExtra.h"
 
 namespace rlpd
 {
@@ -85,7 +86,7 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 					iEndCapId = (wPrvKeyDwn == 0) ? 1 : - 1; // 1 (start) and -1 (end)
 					
 					CString strMes("Cross sectional dimension (Diameter) is ");
-					UnitsString_FormatLength(szLen, sizeof(szLen), max(app.GetUnits(), Inches), dDiam[1], 12, 2);
+					UnitsString_FormatLength(szLen, sizeof(szLen), max(app.GetUnits(), Inches), dDiam[1], 0, 2);
 					
 					pszLen = szLen;
 					while (!isdigit(pszLen[0]))
@@ -736,14 +737,14 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 	}
 	return(CallWindowProc(app.GetMainWndProc(), hwnd, anMsg, wParam, lParam));
 }	
-///<summary>Sets the diameter of round ductwork.</summary>
-void rlpd::SetOptions(double* dSecDiam)
+
+void rlpd::SetOptions(double* section_diameter)
 {	
-	rlpd::dSecDiam = *dSecDiam;
+	rlpd::dSecDiam = *section_diameter;
 	
 	if (::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_DLGPROC_RLPD_OPTIONS), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcRLPDOptions)) > 0)
 	{
-		*dSecDiam = Max(0., rlpd::dSecDiam);
+		*section_diameter = Max(0., rlpd::dSecDiam);
 	}
 }
 
@@ -1009,7 +1010,7 @@ void rlpd::GenSizeNote(CPnt arPt, double adAng, double adDiam)
 	char pSize[16];
 	char* p;
 
-	UnitsString_FormatLength(pSize, sizeof(pSize), max(app.GetUnits(), Inches), adDiam, 8, 0);
+	UnitsString_FormatLength(pSize, sizeof(pSize), max(app.GetUnits(), Inches), adDiam, 0, 2);
 	p = string_TrimLeadingSpace(pSize);	
 	
 	int iPrimState = pstate.Save();
@@ -1042,39 +1043,38 @@ void rlpd::GenSizeNote(CPnt arPt, double adAng, double adDiam)
 //							 transition dimensions
 //						(out) set of parallel lines produced using after
 //							  transition dimensions
-bool rlpd::GenSection(double dSecDiam, CLine* pLns) 
+bool rlpd::GenSection(double section_diameter, CLine* lines) 
 {
-	CPegDoc* pDoc = CPegDoc::GetDoc();
+	CPegDoc* document = CPegDoc::GetDoc();
 
-	double dSecLen = pLns[0].Length();
+	double dSecLen = lines[0].Length();
 
-	if (dSecLen <= DBL_EPSILON) 
-		return false;
+	if (dSecLen <= DBL_EPSILON) { return false; }
 
-	CPnt ptLeftBeg(pLns[0][0]);
-	CPnt ptLeftEnd(pLns[0][1]);
-	CPnt ptRightBeg(pLns[1][0]);
-	CPnt ptRightEnd(pLns[1][1]);
-	
+	CPnt ptLeftBeg(lines[0][0]);
+	CPnt ptLeftEnd(lines[0][1]);
+	CPnt ptRightBeg(lines[1][0]);
+	CPnt ptRightEnd(lines[1][1]);
+
 	CSeg* pSeg = new CSeg;
-	
-	rlpd::GenEndCap(ptLeftBeg, ptRightBeg, dSecDiam, dSecDiam, pSeg);
-	pSeg->AddTail(new CPrimLine(pstate.PenColor(), pstate.PenStyle(), pLns[0]));
-	rlpd::GenEndCap(ptLeftEnd, ptRightEnd, dSecDiam, dSecDiam, pSeg);
-	pSeg->AddTail(new CPrimLine(pstate.PenColor(), pstate.PenStyle(), pLns[1]));
+
+	rlpd::GenEndCap(ptLeftBeg, ptRightBeg, section_diameter, section_diameter, pSeg);
+	pSeg->AddTail(new CPrimLine(pstate.PenColor(), pstate.PenStyle(), lines[0]));
+	rlpd::GenEndCap(ptLeftEnd, ptRightEnd, section_diameter, section_diameter, pSeg);
+	pSeg->AddTail(new CPrimLine(pstate.PenColor(), pstate.PenStyle(), lines[1]));
 	if (rlpd::bGenCenterline)
 	{
-		ptRightBeg = Pnt_ProjPtTo(ptRightBeg, ptLeftBeg, dSecDiam / 2);		//		find points
-		ptRightEnd = Pnt_ProjPtTo(ptRightEnd, ptLeftEnd, dSecDiam / 2);
+		ptRightBeg = Pnt_ProjPtTo(ptRightBeg, ptLeftBeg, section_diameter / 2);		//		find points
+		ptRightEnd = Pnt_ProjPtTo(ptRightEnd, ptLeftEnd, section_diameter / 2);
 		
-		ptRightBeg = Pnt_ProjPtTo(ptRightBeg, ptRightEnd, -dSecDiam / 2);
-		ptRightEnd = Pnt_ProjPtTo(ptRightEnd, ptRightBeg, -dSecDiam / 2);
+		ptRightBeg = Pnt_ProjPtTo(ptRightBeg, ptRightEnd, -section_diameter / 2);
+		ptRightEnd = Pnt_ProjPtTo(ptRightEnd, ptRightBeg, -section_diameter / 2);
 		
 		pSeg->AddTail(new CPrimLine(1, 10, ptRightBeg, ptRightEnd));
 	}
-	pDoc->WorkLayerAddTail(pSeg);
-	pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
-	
+	document->WorkLayerAddTail(pSeg);
+	document->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+
 	return true;
 }
 ///<summary>Picks an end-cap if within specified pick aperture.</summary>

@@ -92,7 +92,7 @@ void CPrimInsert::DisRep(const CPnt&) const
 	std::string str = "<Insert>";
 	str += " Color: " + StdFormatPenColor();
 	str += " Style: " + StdFormatPenStyle();
-	msgInformation(str.c_str());
+	msgSetPaneText(str);
 }
 void CPrimInsert::FormatExtra(CString& str) const
 {

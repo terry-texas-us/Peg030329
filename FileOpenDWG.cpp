@@ -5,7 +5,9 @@
 #include "PegAEsysView.h"
 
 #include "Directory.h"
+#if ODA_FUNCTIONALITY
 #include "FileOpenDWG.h"
+#endif
 #include "StringExtra.h"
 #include "Text.h"
 

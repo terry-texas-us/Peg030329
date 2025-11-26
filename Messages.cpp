@@ -3,102 +3,117 @@
 #include "Mainfrm.h"
 #include "PegAEsys.h"
 
-int msgConfirm(UINT uiMsgId)
+/// @brief Loads a string resource from the string table and returns it as a std::string.
+/// @param resourceIdentifier The resource identifier of the string to load.
+/// @return A std::string containing the loaded resource text. The returned string may be empty if loading fails, and may be truncated if the resource exceeds the internal 256-byte buffer.
+std::string msgLoadStringResource(UINT resourceIdentifier)
 {
-	char szMsg[256];
-
-	::LoadString(app.GetInstance(), uiMsgId, szMsg, sizeof(szMsg));
-	
-	char* context = nullptr;
-	char* pMsg = strtok_s(szMsg, "\t", &context);
-	char* pCap = strtok_s(0, "\n", &context);
-	
-	return (MessageBox(0, pMsg, pCap, MB_ICONINFORMATION | MB_YESNO | MB_DEFBUTTON2));
+	char resourceString[256];
+	::LoadString(app.GetInstance(), resourceIdentifier, resourceString, sizeof(resourceString));
+	return std::string(resourceString);
 }
 
-int msgConfirm(UINT uiMsgId, const CString& strVal)
+int msgConfirm(UINT messageIdentifier, const CString& additionalText)
 {
-	char szFmt[256];
-	char szMsg[256];
+	std::string confirm = msgLoadStringResource(messageIdentifier);
+	
+	size_t pos = confirm.find("%s");
+	if (pos != std::string::npos)
+	{
+		confirm.replace(pos, 2, additionalText.GetString());
+	}
+	size_t tabPos = confirm.find("\t");
+	std::string message = (tabPos != std::string::npos) ? confirm.substr(0, tabPos) : confirm;
+	std::string caption = (tabPos != std::string::npos) ? confirm.substr(tabPos + 1) : "";
 
-	::LoadString(app.GetInstance(), uiMsgId, szFmt, sizeof(szFmt));
-	
-	sprintf_s(szMsg, sizeof(szMsg), szFmt, strVal.GetString());
-	
-	char* context = nullptr;
-	char* pMsg = strtok_s(szMsg, "\t", &context);
-	char* pCap = strtok_s(0, "\n", &context);
-	
-	return (MessageBox(0, pMsg, pCap, MB_ICONINFORMATION | MB_YESNOCANCEL | MB_DEFBUTTON2));
+	return (MessageBox(0, message.c_str(), caption.c_str(), MB_ICONINFORMATION | MB_YESNOCANCEL | MB_DEFBUTTON2));
 }
-void msgWarning(UINT uiMsgId)
+
+void msgWarning(UINT messageIdentifier)
 {
-	char szMsg[256];
+	std::string warning = msgLoadStringResource(messageIdentifier);
 
-	::LoadString(app.GetInstance(), uiMsgId, szMsg, sizeof(szMsg));
-	
-	char* context = nullptr;
-	char* pMsg = strtok_s(szMsg, "\t", &context);
-	char* pCap = strtok_s(0, "\n", &context);
+	size_t tabPos = warning.find("\t");
+	std::string message = (tabPos != std::string::npos) ? warning.substr(0, tabPos) : warning;
+	std::string caption = (tabPos != std::string::npos) ? warning.substr(tabPos + 1) : "";
 
-	MessageBox(0, pMsg, pCap, MB_ICONWARNING | MB_OK);
+	MessageBox(0, message.c_str(), caption.c_str(), MB_ICONWARNING | MB_OK);
 }
-void msgWarning(UINT uiMsgId, const CString& strVal)
+
+void msgWarning(UINT messageIdentifier, const CString& additionalText)
 {
-	char szFmt[256];
-	char szMsg[256];
-	
-	::LoadString(app.GetInstance(), uiMsgId, szFmt, sizeof(szFmt));
+	std::string warning = msgLoadStringResource(messageIdentifier);
 
-	sprintf_s(szMsg, sizeof(szMsg), szFmt, strVal.GetString());
-
-	char* context = nullptr;
-	char* pMsg = strtok_s(szMsg, "\t", &context);
-	char* pCap = strtok_s(0, "\n", &context);
-
-	MessageBox(0, pMsg, pCap, MB_ICONWARNING | MB_OK);
+	size_t pos = warning.find("%s");
+	if (pos != std::string::npos)
+	{
+		warning.replace(pos, 2, additionalText.GetString());
+	}
+	size_t tabPos = warning.find("\t");
+	std::string message = (tabPos != std::string::npos) ? warning.substr(0, tabPos) : warning;
+	std::string caption = (tabPos != std::string::npos) ? warning.substr(tabPos + 1) : "";
+		
+	MessageBox(0, message.c_str(), caption.c_str(), MB_ICONWARNING | MB_OK);
 }
+
 void msgInformation(const CString& strMes)
 {
-	char szMsg[256];
+	char information[256] = {};
 	int n = 0;
 	for (; n < strMes.GetLength(); n++)
 	{
-		szMsg[n] = isprint(strMes.GetAt(n)) ? strMes.GetAt(n) : '.';
+		information[n] = isprint(strMes.GetAt(n)) ? strMes.GetAt(n) : '.';
 	}
-	szMsg[n] = 0;
+	information[n] = 0;
 
 	CMainFrame* pFrame = (CMainFrame*)(AfxGetApp()->m_pMainWnd);
 
-	//pFrame->SetWindowText(szMsg);
-
-	pFrame->SetPaneText(0, szMsg);
+	pFrame->SetPaneText(0, information);
 }
 
-void msgInformation(UINT nId)
+void msgSetPaneText(const std::string& paneText)
 {
-	char szMsg[256];
-	if (nId == 0)
+	char paneTextBuffer[256] = {};
+	int n = 0;
+	for (; n < paneText.length(); n++)
 	{
-		strcpy_s(szMsg, sizeof(szMsg), "PegAEsys");
-		::LoadString(app.GetInstance(), app.m_iModeId, szMsg, sizeof(szMsg));
-		char* context = nullptr;
-		strtok_s(szMsg, "\n", &context);
+		paneTextBuffer[n] = isprint(paneText[n]) ? paneText[n] : '.';
+	}
+	paneTextBuffer[n] = 0;
+
+	CMainFrame* mainFrame = (CMainFrame*)(AfxGetApp()->m_pMainWnd);
+
+	mainFrame->SetPaneText(0, paneTextBuffer);
+}
+
+void msgInformation(UINT messageIdentifier)
+{
+	std::string information;
+
+	if (messageIdentifier == 0)
+	{   // Use current mode indentifier.
+		information = msgLoadStringResource(app.m_iModeId);
+		
+		size_t pos = information.find("\n");
+		if (pos != std::string::npos)
+		{	// Truncate at the newline, keeping only the mode name.
+			information = information.substr(0, pos);
+		}
 	}
 	else
 	{
-		::LoadString(app.GetInstance(), nId, szMsg, sizeof(szMsg));
+		information = msgLoadStringResource(messageIdentifier);
 	}
-	msgInformation(szMsg);
+	msgSetPaneText(information);
 }
-void msgInformation(UINT nId, const CString& strVal)
-{
-	char szFmt[256];
-	char szMsg[256];
 
-	::LoadString(app.GetInstance(), nId, szFmt, sizeof(szFmt));
-	
-	sprintf_s(szMsg, sizeof(szMsg), szFmt, strVal.GetString());
-	
-	msgInformation(szMsg);
+void msgInformation(UINT messageIdentifier, const CString& additionalText)
+{
+	std::string information = msgLoadStringResource(messageIdentifier);
+	size_t pos = information.find("%s");
+	if (pos != std::string::npos)
+	{
+		information.replace(pos, 2, additionalText.GetString());
+	}
+	msgSetPaneText(information);
 }

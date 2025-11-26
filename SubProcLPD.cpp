@@ -8,6 +8,7 @@
 #include "SubProcLPD.h"
 #include "UnitsString.h"
 #include "UserAxis.h"
+#include "StringExtra.h"
 
 namespace lpd
 {
@@ -87,13 +88,13 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
 					
 					iEndCapId = (wPrvKeyDwn == 0) ? 1 : - 1; // 1 (start) and -1 (end)
 
-					CString strMes("Cross sectional dimension (Width by Depth) is ");
-					UnitsString_FormatLength(szLen, sizeof(szLen), max(app.GetUnits(), Inches), dWid[1], 12, 2);
+					std::string strMes("Cross sectional dimension (Width by Depth) is ");
+					UnitsString_FormatLength(szLen, sizeof(szLen), max(app.GetUnits(), Inches), dWid[1], 0, 2);
 					strMes += szLen;
-					UnitsString_FormatLength(szWid, sizeof(szWid), max(app.GetUnits(), Inches), dDep[1], 12, 2);
+					UnitsString_FormatLength(szWid, sizeof(szWid), max(app.GetUnits(), Inches), dDep[1], 0, 2);
 					strMes += " by ";
 					strMes += szWid;
-					msgInformation(strMes);
+					msgSetPaneText(strMes);
 					app.CursorPosSet(ptPrv);
 				}
 				break;
@@ -528,21 +529,21 @@ int lpd::GenElbow(double adWid, double adDep, CLine* pLns)
 		// No turn indicated
 		return 0;
 	
-	CPnt* pt = new CPnt[6];
+	CPnt* points = new CPnt[6];
 
 	double	dDepIn;
 	double	dDepOut;
-	double	dRel[2];
-	double	dSecDep;
-	double	dSecWid;
+	double	dRel[2] = { };
+	double	section_depth = 0.0;
+	double	section_width = 0.0;
 	double	dTanAng;
-	
+
 	CPnt	ptIn[2];
 	CPnt	ptOut[2];
-	
+
 	int 	iIn[2];
-	int 	iOut[2];
-	
+	int 	iOut[2] = { };
+
 	if (iDir == 1)
 	{	// Turn to left
 		iIn[0] = 0;
@@ -560,8 +561,8 @@ int lpd::GenElbow(double adWid, double adDep, CLine* pLns)
 	if (lpd::pEndCapSeg != 0) 
 	{
 		CPrimMark* pMark = static_cast<CPrimMark*>(lpd::pEndCapSeg->GetHead());
-		dSecWid = pMark->GetDat(0);
-		dSecDep = pMark->GetDat(1);
+		section_width = pMark->GetDat(0);
+		section_depth = pMark->GetDat(1);
 		
 		pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, lpd::pEndCapSeg);
 		pDoc->AnyLayerRemove(lpd::pEndCapSeg);
@@ -575,11 +576,11 @@ int lpd::GenElbow(double adWid, double adDep, CLine* pLns)
 	}
 	else
 	{
-		dSecWid = adWid;
-		dSecDep = adDep;
+		section_width = adWid;
+		section_depth = adDep;
 	}
-	double dMinWid = Min(dSecWid, adWid) * (lpd::dInsRadElFac - .5);
-	double dMaxWid = Max(dSecWid, adWid);
+	double dMinWid = Min(section_width, adWid) * (lpd::dInsRadElFac - 0.5);
+	double dMaxWid = Max(section_width, adWid);
 	
 	double dAng = line::AngleBetweenLn_xy(pLns[iIn[0]], pLns[iIn[1]]);
 	
@@ -600,39 +601,39 @@ int lpd::GenElbow(double adWid, double adDep, CLine* pLns)
 	ptOut[0] = pLns[iOut[0]].ProjToBegPt(dDepOut);
 	ptOut[1] = pLns[iOut[1]].ProjToEndPt(dDepOut);
 
-	pt[0] = pLns[iIn[0]].ProjPt(ptOut[0]);
+	points[0] = pLns[iIn[0]].ProjPt(ptOut[0]);
 	
-	line::RelOfPtToEndPts(pLns[iIn[0]], pt[0], dRel[0]);
+	line::RelOfPtToEndPts(pLns[iIn[0]], points[0], dRel[0]);
 	line::RelOfPtToEndPts(pLns[iIn[0]], ptIn[0], dRel[1]);
 	
 	if (dRel[1] < dRel[0]) 
-		pt[0] = ptIn[0];
+		points[0] = ptIn[0];
 	
-	pt[1] = pLns[iIn[1]].ProjPt(ptOut[1]);
+	points[1] = pLns[iIn[1]].ProjPt(ptOut[1]);
 	
-	line::RelOfPtToEndPts(pLns[iIn[1]], pt[1], dRel[0]);
+	line::RelOfPtToEndPts(pLns[iIn[1]], points[1], dRel[0]);
 	line::RelOfPtToEndPts(pLns[iIn[1]], ptIn[1], dRel[1]);
 	
 	if (dRel[1] > dRel[0]) 
-		pt[1] = ptIn[1];
+		points[1] = ptIn[1];
 	
-	pt[2] = pLns[iOut[0]].ProjPt(pt[0]);
-	pt[3] = pLns[iOut[1]].ProjPt(pt[1]);
+	points[2] = pLns[iOut[0]].ProjPt(points[0]);
+	points[3] = pLns[iOut[1]].ProjPt(points[1]);
 	
-	pLns[iIn[0]][1] = pt[0];
-	pLns[iOut[0]][1] = pt[2];
+	pLns[iIn[0]][1] = points[0];
+	pLns[iOut[0]][1] = points[2];
 	
-	lpd::GenSection(dSecWid, dSecDep, &pLns[0]);
+	lpd::GenSection(section_width, section_depth, &pLns[0]);
 	
 	CSeg* pSeg = new CSeg;
 	
 	if (lpd::eElbow == Mittered)
 	{	// Mitered elobw
-		lpd::GenEndCap(pt[0], pt[2], dSecWid, dSecDep, pSeg);
-		pSeg->AddTail(new CPrimLine(pt[0], pLns[iIn[1]][0]));
-		pSeg->AddTail(new CPrimLine(pLns[iIn[1]][0], pt[1]));
-		pSeg->AddTail(new CPrimLine(pt[2], pLns[iOut[1]][0]));
-		pSeg->AddTail(new CPrimLine(pLns[iOut[1]][0], pt[3]));
+		lpd::GenEndCap(points[0], points[2], section_width, section_depth, pSeg);
+		pSeg->AddTail(new CPrimLine(points[0], pLns[iIn[1]][0]));
+		pSeg->AddTail(new CPrimLine(pLns[iIn[1]][0], points[1]));
+		pSeg->AddTail(new CPrimLine(points[2], pLns[iOut[1]][0]));
+		pSeg->AddTail(new CPrimLine(pLns[iOut[1]][0], points[3]));
 		if (lpd::bGenTurnVanes) 
 		{
 			pSeg->AddTail(new CPrimLine(2, 1, pLns[iIn[1]][0], pLns[iOut[1]][0]));
@@ -648,12 +649,12 @@ int lpd::GenElbow(double adWid, double adDep, CLine* pLns)
 		line::ProjPtFrom_xy(CLine(ptIn[0], pLns[iIn[1]][0]), 0., (double) iDir * dMinWid, &ptCentIn);
 		line::ProjPtFrom_xy(CLine(ptOut[0], pLns[iOut[1]][0]), 0., (double) iDir * (dMinWid + dMaxWid), &ptCentOut);
 		
-		lpd::GenEndCap(pt[0], pt[2], dSecWid, dSecDep, pSeg);
+		lpd::GenEndCap(points[0], points[2], section_width, section_depth, pSeg);
 		
-		if (pt[0] != ptIn[0]) 
-			pSeg->AddTail(new CPrimLine(pt[0], ptIn[0]));
-		if (pt[2] != ptOut[0]) 
-			pSeg->AddTail(new CPrimLine(pt[2], ptOut[0]));
+		if (points[0] != ptIn[0]) 
+			pSeg->AddTail(new CPrimLine(points[0], ptIn[0]));
+		if (points[2] != ptOut[0]) 
+			pSeg->AddTail(new CPrimLine(points[2], ptOut[0]));
 		if (iDir == - 1) 
 		{
 			ptIn[0] = ptIn[1];
@@ -670,19 +671,19 @@ int lpd::GenElbow(double adWid, double adDep, CLine* pLns)
 		vMinAx = CVec(ptCentOut, Pnt_RotAboutArbPtAndAx(ptOut[0], ptCentOut, ZDIR, HALF_PI));
 		pSeg->AddTail(new CPrimArc(ptCentOut, vMajAx, vMinAx, dAng));
 
-		if (pt[1] != ptIn[1]) 
-			pSeg->AddTail(new CPrimLine(ptIn[1], pt[1]));
-		if (pt[3] != ptOut[1]) 
-			pSeg->AddTail(new CPrimLine(ptOut[1], pt[3]));
+		if (points[1] != ptIn[1]) 
+			pSeg->AddTail(new CPrimLine(ptIn[1], points[1]));
+		if (points[3] != ptOut[1]) 
+			pSeg->AddTail(new CPrimLine(ptOut[1], points[3]));
 	}
-	lpd::GenEndCap(pt[1], pt[3], adWid, adDep, pSeg);
+	lpd::GenEndCap(points[1], points[3], adWid, adDep, pSeg);
 	
 	pDoc->WorkLayerAddTail(pSeg); 
 	pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
-	pLns[iIn[1]][0] = pt[1];
-	pLns[iOut[1]][0] = pt[3];
+	pLns[iIn[1]][0] = points[1];
+	pLns[iOut[1]][0] = points[3];
 	
-	delete [] pt;
+	delete [] points;
 
 	return (iDir);
 }
@@ -729,34 +730,34 @@ int lpd::GenRiseDrop(char acRisDrop, double adWid, double adDep, CLine* pLns)
 	CPegDoc* pDoc = CPegDoc::GetDoc();
 
 	int iResult = 1;
-	double dSecWid = adWid;
-	double dSecDep = adDep;
+	double section_width = adWid;
+	double section_depth = adDep;
 	double dSSiz = 3. / app.GetScale();
 	double dSecLen = Pnt_DistanceTo_xy(pLns[2][0], pLns[2][1]);
 	
 	CLine ln(pLns[2][1], pLns[3][1]);
-	
-	if (dSecLen <= dSecDep * .5 + dSSiz) 
+
+	if (dSecLen <= section_depth * 0.5 + dSSiz) 
 	{
-		if (dSecLen < dSecDep * .5) 
+		if (dSecLen < section_depth * 0.5) 
 		{
-			ln[0] = pLns[2].ProjToEndPt(dSecDep * .5);
+			ln[0] = pLns[2].ProjToEndPt(section_depth * 0.5);
 			ln[1] = pLns[3].ProjPt(ln[0]);
 		}
 	}
 	else
 	{
-		pLns[2][1] = pLns[2].ProjToBegPt(dSecDep * .5 + dSSiz);
+		pLns[2][1] = pLns[2].ProjToBegPt(section_depth * 0.5 + dSSiz);
 		pLns[3][1] = pLns[3].ProjPt(pLns[2][1]);
-		lpd::GenSection(dSecWid, dSecDep, &pLns[2]);
+		lpd::GenSection(section_width, section_depth, &pLns[2]);
 		iResult = 3;
 	}
-	ParLines_GenPts(.5, dSecDep, ln, &pLns[0]);
-	lpd::GenSection(dSecDep, dSecWid, &pLns[0]);
+	ParLines_GenPts(0.5, section_depth, ln, &pLns[0]);
+	lpd::GenSection(section_depth, section_width, &pLns[0]);
 	ln(pLns[2][1], pLns[3][1]);
 	pLns[2](pLns[1][0], pLns[0][0]);
 	pLns[3](pLns[1][1], pLns[0][1]);
-	lpd::GenSection(dSecWid, dSecDep, &pLns[2]);
+	lpd::GenSection(section_width, section_depth, &pLns[2]);
 	
 	CSeg* pSeg = new CSeg;
 					
@@ -773,31 +774,21 @@ int lpd::GenRiseDrop(char acRisDrop, double adWid, double adDep, CLine* pLns)
 	
 	return (iResult);
 }
-///<summary>Generates rectangular section using a set of parallel lines.</summary>
-// Parameters:	pDC
-//				dSecWid width of section
-//				dSecDep depth of sections
-//				pLns	(in) set of parallel lines produced using before
-//							 transition dimensions
-//						(out) set of parallel lines produced using after
-//							  transition dimensions
-bool lpd::GenSection(double dSecWid, double dSecDep, CLine* pLns) 
+
+bool lpd::GenSection(double section_width, double section_depth, CLine* lines)
 {
-	CPegDoc* pDoc = CPegDoc::GetDoc();
+	CPegDoc* document = CPegDoc::GetDoc();
 
-	double dSecLen = pLns[0].Length();
+	if (lines[0].Length() <= DBL_EPSILON) { return false; }
 
-	if (dSecLen <= DBL_EPSILON) 
-		return false;
+	CSeg* section_segment = new CSeg;
 
-	CSeg* pSeg = new CSeg;
-	
-	lpd::GenEndCap(pLns[0][0], pLns[1][0], dSecWid, dSecDep, pSeg);
-	pSeg->AddTail(new CPrimLine(pstate.PenColor(), pstate.PenStyle(), pLns[0]));
-	lpd::GenEndCap(pLns[0][1], pLns[1][1], dSecWid, dSecDep, pSeg);
-	pSeg->AddTail(new CPrimLine(pstate.PenColor(), pstate.PenStyle(), pLns[1]));
-	pDoc->WorkLayerAddTail(pSeg);
-	pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+	lpd::GenEndCap(lines[0][0], lines[1][0], section_width, section_depth, section_segment);
+	section_segment->AddTail(new CPrimLine(pstate.PenColor(), pstate.PenStyle(), lines[0]));
+	lpd::GenEndCap(lines[0][1], lines[1][1], section_width, section_depth, section_segment);
+	section_segment->AddTail(new CPrimLine(pstate.PenColor(), pstate.PenStyle(), lines[1]));
+	document->WorkLayerAddTail(section_segment);
+	document->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, section_segment);
 
 	return true;
 }
@@ -819,11 +810,11 @@ void lpd::GenSizeNote(CPnt arPt, double adAng, double adWid, double adDep)
 	char pNote[48];
 	char pSize[16];
 	
-	UnitsString_FormatLength(pSize, sizeof(pSize), max(app.GetUnits(), Inches), adWid, 8, 0);
+	UnitsString_FormatLength(pSize, sizeof(pSize), max(app.GetUnits(), Inches), adWid, 0, 2);
 	strcpy_s(pNote, sizeof(pNote), string_TrimLeadingSpace(pSize));
 	strcat_s(pNote, sizeof(pNote), "/");
 
-	UnitsString_FormatLength(pSize, sizeof(pSize), max(app.GetUnits(), Inches), adDep, 8, 0);
+	UnitsString_FormatLength(pSize, sizeof(pSize), max(app.GetUnits(), Inches), adDep, 0, 2);
 	strcat_s(pNote, sizeof(pNote), string_TrimLeadingSpace(pSize));
 
 	CPegView* pView = CPegView::GetActiveView();
@@ -853,8 +844,8 @@ CPnt lpd::GenTakeoff(CPegView* pView, CPnt arPrvPt, CPnt arCurPt, double* adWid,
 {	// Generates a full elbow takeoff fitting.
 	// Returns: Center point of end cap of exit transition.
 
-	CSeg*	pEndCapSeg;
-	CPrimMark* pEndCapMark;
+	CSeg*	end_cap_segment = nullptr;
+	CPrimMark* pEndCapMark = nullptr;
 	CPrim*	pPrimLn1;
 	CPrim*	pPrimLn2;
 
@@ -865,14 +856,14 @@ CPnt lpd::GenTakeoff(CPegView* pView, CPnt arPrvPt, CPnt arCurPt, double* adWid,
 	CLine	lnLead;
 	
 	int 	iJus[1];
-	double	dDep[2];
+	double	dDep[2] = { };
 	double	dDepChg;
 	double	dDSiz;
 	double	dScal;
 	double	dSlo[1];
 	double	dSSiz;
 	double	dTransLen;
-	double	dWid[2];
+	double	dWid[2] = { };
 	double	dWidChg;
 	double	dX;
 	double	dY;
@@ -882,7 +873,7 @@ CPnt lpd::GenTakeoff(CPegView* pView, CPnt arPrvPt, CPnt arCurPt, double* adWid,
 	
 	dWid[0] = *adWid;
 	dDep[0] = *adDep;
-	if (!lpd::SelEndCapUsingPoint(pView, arCurPt, pEndCapSeg, pEndCapMark)) 
+	if (!lpd::SelEndCapUsingPoint(pView, arCurPt, end_cap_segment, pEndCapMark)) 
 	{
 		msgInformation(IDS_MSG_LPD_NO_END_CAP_LOC); 	
 		return (arPrvPt);
@@ -890,9 +881,9 @@ CPnt lpd::GenTakeoff(CPegView* pView, CPnt arPrvPt, CPnt arCurPt, double* adWid,
 	dWid[1] = pEndCapMark->GetDat(0);										// Save end-cap width
 	dDep[1] = pEndCapMark->GetDat(1);										// Save end-cap depth
 	
-	POSITION pos = pEndCapSeg->Find(pEndCapMark);
-	pEndCapSeg->GetNext(pos);
-	CPrimLine* pPrimCapLn = static_cast<CPrimLine*>(pEndCapSeg->GetAt(pos));							// Get end-cap line
+	POSITION pos = end_cap_segment->Find(pEndCapMark);
+	end_cap_segment->GetNext(pos);
+	CPrimLine* pPrimCapLn = static_cast<CPrimLine*>(end_cap_segment->GetAt(pos));							// Get end-cap line
 	pPrimCapLn->GetLine(lnCap);
 	if (!lpd::Fnd2LnsGivLn(pPrimCapLn, RADIAN, pPrimLn1, &rPar[0], pPrimLn2, &rPar[1])) 
 	{
@@ -927,18 +918,18 @@ CPnt lpd::GenTakeoff(CPegView* pView, CPnt arPrvPt, CPnt arCurPt, double* adWid,
 	lnLead[1] = lnLead[0] + v;
 	if ((ParLines_GenPtsAndClean(dEcc1, dWid[0], lnLead, pLns, true) & 1) == 1) 
 	{
-		lpd::pEndCapSeg = 0;
+		lpd::pEndCapSeg = nullptr;
 		lpd::GenElbow(dWid[0], dDep[0], pLns);
 	}
-	pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pEndCapSeg);
-	pDoc->AnyLayerRemove(pEndCapSeg);
-	detsegs.Remove(pEndCapSeg);
-	if (trapsegs.Remove(pEndCapSeg) != 0)
+	pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, end_cap_segment);
+	pDoc->AnyLayerRemove(end_cap_segment);
+	detsegs.Remove(end_cap_segment);
+	if (trapsegs.Remove(end_cap_segment) != 0)
 	{
 		app.StatusLineDisplay(TrapCnt);
 	}
-	pEndCapSeg->RemovePrims();
-	delete pEndCapSeg;
+	end_cap_segment->RemovePrims();
+	delete end_cap_segment;
 
 	rPar[0][1] = CLine(pLns[2][0], pLns[3][0]).ProjPt(rPar[0][0]);
 	rPar[1][1] = CLine(pLns[2][0], pLns[3][0]).ProjPt(rPar[1][0]);
@@ -986,7 +977,9 @@ bool lpd::GenTap(CPegView* pView, CPnt arPrvPt, CPnt arCurPos, double adWid, dou
 	CPegDoc* pDoc = CPegDoc::GetDoc();
 
 	int 	iJus;
-	double	dDep[2], dTSiz, dWid[2];
+	double	dDep[2] = { };
+	double	dTSiz = 0.;
+	double	dWid[2] = { };
 	int 	iOut;
 	CPnt	rProjPt;
 	CLine	lnLead;
@@ -1045,7 +1038,7 @@ CPnt lpd::GenTee(CPegView* pView, CPnt arPrvPt, CPnt arCurPt, double* adWid, dou
 	int 	iJus;
 	double	dD1, dD2, dDep[2], dDepChg, dDir, dDSiz, dEcc, dEcc1, dEcc2, dScal, dSlo[1], dSSiz, dTransLen, dWid[2], dWidChg;
 	int 	iIn, iOut;
-	CSeg*	pEndCapSeg;
+	CSeg*	end_cap_segment = nullptr;
 	CPrimMark*	pEndCapMark;
 	CPrim*	pPrimLn1;
 	CPrim*	pPrimLn2;
@@ -1058,7 +1051,7 @@ CPnt lpd::GenTee(CPegView* pView, CPnt arPrvPt, CPnt arCurPt, double* adWid, dou
 	
 	CPegDoc* pDoc = CPegDoc::GetDoc();
 
-	if (!lpd::SelEndCapUsingPoint(pView, arCurPt, pEndCapSeg, pEndCapMark)) 
+	if (!lpd::SelEndCapUsingPoint(pView, arCurPt, end_cap_segment, pEndCapMark)) 
 	{
 		msgInformation(IDS_MSG_LPD_NO_END_CAP_LOC); 	
 		return (arPrvPt);
@@ -1066,10 +1059,10 @@ CPnt lpd::GenTee(CPegView* pView, CPnt arPrvPt, CPnt arCurPt, double* adWid, dou
 	ptCapMrk = pEndCapMark->GetPt();
 	dWid[1] = pEndCapMark->GetDat(0);								// End-cap width data
 	dDep[1] = pEndCapMark->GetDat(1);								// End-cap depth data
-	
-	POSITION pos = pEndCapSeg->Find(pEndCapMark);
-	pEndCapSeg->GetNext(pos);
-	CPrimLine* pPrimCapLn = static_cast<CPrimLine*>(pEndCapSeg->GetAt(pos));							// Get end-cap line
+
+	POSITION pos = end_cap_segment->Find(pEndCapMark);
+	end_cap_segment->GetNext(pos);
+	CPrimLine* pPrimCapLn = static_cast<CPrimLine*>(end_cap_segment	->GetAt(pos));							// Get end-cap line
 	pPrimCapLn->GetLine(lnCap);
 	
 	if (!lpd::Fnd2LnsGivLn(pPrimCapLn, RADIAN, pPrimLn2, &rPar[1], pPrimLn1, &rPar[0])) 
@@ -1101,12 +1094,12 @@ CPnt lpd::GenTee(CPegView* pView, CPnt arPrvPt, CPnt arCurPt, double* adWid, dou
 	lnLead[1] = lnLead[0] + v;
 	if ((ParLines_GenPtsAndClean(dEcc, dWid[0], lnLead, pLns, true) & 1) == 1) 
 	{
-		lpd::pEndCapSeg = 0;
+		lpd::pEndCapSeg = nullptr;
 		lpd::GenElbow(dWid[0], dDep[0], pLns);
 	}
 	rTmpLns[0] = pLns[2];
 	rTmpLns[1] = pLns[3];
-	lpd::pEndCapSeg = pEndCapSeg;
+	lpd::pEndCapSeg = end_cap_segment;
 	pLns[2] = rPar[1];
 	pLns[3] = rPar[0];
 	ParLines_GenPtsAndClean(dEcc1, dWid[1], lnLead, pLns, true);
@@ -1182,14 +1175,14 @@ CPnt lpd::GenTee(CPegView* pView, CPnt arPrvPt, CPnt arCurPt, double* adWid, dou
 //							 transition dimensions
 //						(out) set of parallel lines produced using after
 //							  transition dimensions
-int lpd::GenTransition(ETransition eEnd, int* aiJus, double* adSlo, double* adWid, double* adDep, CLine* pLns) 
+int lpd::GenTransition(ETransition eEnd, int* aiJus, double* adSlo, double* adWid, double* adDep, CLine* lines) 
 {
 	CPegDoc* pDoc = CPegDoc::GetDoc();
     	
-	CPnt ptLeftBeg(pLns[0][0]);
-	CPnt ptLeftEnd(pLns[0][1]);
-	CPnt ptRightBeg(pLns[1][0]);
-	CPnt ptRightEnd(pLns[1][1]);
+	CPnt ptLeftBeg(lines[0][0]);
+	CPnt ptLeftEnd(lines[0][1]);
+	CPnt ptRightBeg(lines[1][0]);
+	CPnt ptRightEnd(lines[1][1]);
 	
 	double dDepChg;
 	double dTransLen;
@@ -1198,10 +1191,9 @@ int lpd::GenTransition(ETransition eEnd, int* aiJus, double* adSlo, double* adWi
 	int iResult = 1;
 	int I0 = 0;
 
-	double dSecLen = pLns[0].Length();
+	double dSecLen = lines[0].Length();
 
-	if (dSecLen <= DBL_EPSILON) 
-		return false;
+	if (dSecLen <= DBL_EPSILON) { return false; }
 
 	CSeg* pSeg = new CSeg;
 	
@@ -1226,24 +1218,24 @@ int lpd::GenTransition(ETransition eEnd, int* aiJus, double* adSlo, double* adWi
 			line::ProjPtFrom_xy(CLine(ptLeftBeg, ptLeftEnd), dTransLen, dWidChg, &ptLeftBeg);
 			ptRightBeg = Pnt_ProjPtTo_xy(ptRightBeg, ptRightEnd, dTransLen);
 		}
-		lpd::GenEndCap(pLns[0][0], pLns[1][0], adWid[0], adDep[0], pSeg);
-		pSeg->AddTail(new CPrimLine(pLns[1][0], ptRightBeg));
+		lpd::GenEndCap(lines[0][0], lines[1][0], adWid[0], adDep[0], pSeg);
+		pSeg->AddTail(new CPrimLine(lines[1][0], ptRightBeg));
 		lpd::GenEndCap(ptRightBeg, ptLeftBeg, adWid[1], adDep[1], pSeg);
-		pSeg->AddTail(new CPrimLine(ptLeftBeg, pLns[0][0]));
-		
-		pLns[0][0] = ptLeftBeg;
-		pLns[1][0] = ptRightBeg;
+		pSeg->AddTail(new CPrimLine(ptLeftBeg, lines[0][0]));
+
+		lines[0][0] = ptLeftBeg;
+		lines[1][0] = ptRightBeg;
 		ptLeftEnd = CLine(ptLeftEnd, ptRightEnd).ProjPt(ptLeftBeg);
 		ptRightEnd = CLine(ptLeftEnd, ptRightEnd).ProjPt(ptRightBeg);
-		pLns[0][1] = ptLeftEnd;
-		pLns[1][1] = ptRightEnd;
+		lines[0][1] = ptLeftEnd;
+		lines[1][1] = ptRightEnd;
 		if (dSecLen <= DBL_EPSILON) 
 			eEnd = None;
 		I0 = 1;
 	}
 	if (eEnd == End || eEnd == Both)										
 	{	// Transition occurs at end
-		CPnt pt;
+		CPnt projected_point;
 		dTransLen = lpd::TransitionLen(aiJus[I0], adSlo[I0], &adWid[I0], &adDep[I0], &dWidChg, &dDepChg);
 		if (dSecLen < dTransLen) 
 		{
@@ -1254,23 +1246,23 @@ int lpd::GenTransition(ETransition eEnd, int* aiJus, double* adSlo, double* adWi
 		ptRightEnd = Pnt_ProjPtTo_xy(ptRightEnd, ptRightBeg, dTransLen);
 		if (aiJus[I0] == 0) 
 		{
-			line::ProjPtFrom_xy(CLine(ptLeftBeg, ptLeftEnd), dSecLen, dWidChg, &pt);
-			pLns[0][1] = pt;
-			line::ProjPtFrom_xy(CLine(ptRightBeg, ptRightEnd), dSecLen, - dWidChg, &pt);
-			pLns[1][1] = pt;
+			line::ProjPtFrom_xy(CLine(ptLeftBeg, ptLeftEnd), dSecLen, dWidChg, &projected_point);
+			lines[0][1] = projected_point;
+			line::ProjPtFrom_xy(CLine(ptRightBeg, ptRightEnd), dSecLen, - dWidChg, &projected_point);
+			lines[1][1] = projected_point;
 		}
 		else if (aiJus[I0] > 0) 
 		{
-			line::ProjPtFrom_xy(CLine(ptRightBeg, ptRightEnd), dSecLen, - dWidChg, &pt);
-			pLns[1][1] = pt;
+			line::ProjPtFrom_xy(CLine(ptRightBeg, ptRightEnd), dSecLen, - dWidChg, &projected_point);
+			lines[1][1] = projected_point;
 		}
 		else
 		{
-			line::ProjPtFrom_xy(CLine(ptLeftBeg, ptLeftEnd), dSecLen, dWidChg, &pt);
-			pLns[0][1] = pt;
+			line::ProjPtFrom_xy(CLine(ptLeftBeg, ptLeftEnd), dSecLen, dWidChg, &projected_point);
+			lines[0][1] = projected_point;
 		}
-		pLns[0][0] = CLine(ptLeftEnd, ptRightEnd).ProjPt(pLns[0][1]);
-		pLns[1][0] = CLine(ptLeftEnd, ptRightEnd).ProjPt(pLns[1][1]);
+		lines[0][0] = CLine(ptLeftEnd, ptRightEnd).ProjPt(lines[0][1]);
+		lines[1][0] = CLine(ptLeftEnd, ptRightEnd).ProjPt(lines[1][1]);
 		dSecLen = dSecLen - dTransLen;
 	}
 	if (dSecLen > DBL_EPSILON)											// Produce straight section
@@ -1283,9 +1275,9 @@ int lpd::GenTransition(ETransition eEnd, int* aiJus, double* adSlo, double* adWi
 	if (eEnd == End || eEnd == Both)			 // Produce end transition
 	{
 		lpd::GenEndCap(ptLeftEnd, ptRightEnd, adWid[I0], adDep[I0], pSeg);
-		pSeg->AddTail(new CPrimLine(ptRightEnd, pLns[1][1]));
-		lpd::GenEndCap(pLns[1][1], pLns[0][1], adWid[I0 + 1], adDep[I0 + 1], pSeg);
-		pSeg->AddTail(new CPrimLine(pLns[0][1], ptLeftEnd));
+		pSeg->AddTail(new CPrimLine(ptRightEnd, lines[1][1]));
+		lpd::GenEndCap(lines[1][1], lines[0][1], adWid[I0 + 1], adDep[I0 + 1], pSeg);
+		pSeg->AddTail(new CPrimLine(lines[0][1], ptLeftEnd));
 	}
 	if (pSeg->IsEmpty())
 		delete pSeg;
@@ -1297,36 +1289,31 @@ int lpd::GenTransition(ETransition eEnd, int* aiJus, double* adSlo, double* adWi
 	return (iResult);
 }
 
-///<summary>Picks an end-cap if within specified pick aperture.</summary>
-// Notes:	Only check for actual end-cap marker is by attributes.
-//			No error processing for invalid width or depth values.
-//			Segment data contains whatever primative follows marker 
-//			(hopefully this is associated end-cap line).
-bool lpd::SelEndCapUsingPoint(CPegView* pView, const CPnt& pt, CSeg*& pSeg, CPrimMark*& pMark)
+bool lpd::SelEndCapUsingPoint(CPegView* view, const CPnt& model_point, CSeg*& segment, CPrimMark*& mark_primitive)
 {	
 	CPnt ptProj;
 
-	CPnt4 ptView(pt, 1.);
-	pView->ModelViewTransform(ptView);
+	CPnt4 view_point(model_point, 1.);
+	view->ModelViewTransform(view_point);
 	
-	double dTol = detsegs.PicApertSiz();
+	double pick_aperature = detsegs.PicApertSiz();
 	
 	POSITION pos = detsegs.GetHeadPosition();
 	while (pos != 0)
 	{
-		pSeg = detsegs.GetNext(pos);
+		segment = detsegs.GetNext(pos);
 
-		POSITION posPrim = pSeg->GetHeadPosition();
+		POSITION posPrim = segment->GetHeadPosition();
 		while (posPrim != 0)
 		{
-			CPrim* pPrim = pSeg->GetNext(posPrim);
+			CPrim* pPrim = segment->GetNext(posPrim);
 			
 			if (pPrim->Is(CPrim::PRIM_MARK))
 			{
-				pMark = static_cast<CPrimMark*>(pPrim);
-				if (pMark->PenColor() == 15 && pMark->MarkStyle() == 8)
+				mark_primitive = static_cast<CPrimMark*>(pPrim);
+				if (mark_primitive->PenColor() == 15 && mark_primitive->MarkStyle() == 8)
 				{
-					if (pMark->SelUsingPoint(pView, ptView, dTol, ptProj))
+					if (mark_primitive->SelUsingPoint(view, view_point, pick_aperature, ptProj))
 					{
 						return true;
 					}
@@ -1334,20 +1321,20 @@ bool lpd::SelEndCapUsingPoint(CPegView* pView, const CPnt& pt, CSeg*& pSeg, CPri
 			}
 		}
 	}
-	pSeg = 0;
-	pMark = 0;
+	segment = nullptr;
+	mark_primitive = nullptr;
 	return false;
 }
 ///<summary>Sets the width and depth of ductwork.</summary>
-void lpd::SetOptions(double* dSecWid, double* dSecDep)
+void lpd::SetOptions(double* section_width, double* section_depth)
 {	
-	lpd::dSecWid = *dSecWid;
-	lpd::dSecDep = *dSecDep;
+	lpd::dSecWid = *section_width;
+	lpd::dSecDep = *section_depth;
 	
 	if (::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_DLGPROC_LPD_OPTIONS), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcLPDOptions)) > 0)
 	{
-		*dSecWid = Max(0., lpd::dSecWid);
-		*dSecDep = Max(0., lpd::dSecDep);
+		*section_width = Max(0., lpd::dSecWid);
+		*section_depth = Max(0., lpd::dSecDep);
 	}
 }
 

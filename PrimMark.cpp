@@ -122,7 +122,7 @@ void CPrimMark::DisRep(const CPnt&) const
 	std::stringstream ss;
 	ss << "<Mark>" << " Color: " << StdFormatPenColor() << " Style: " << std::setw(3) << std::setfill('0') << m_nMarkStyle;
 	std::string str = ss.str();
-	msgInformation(str.c_str());
+	msgSetPaneText(str);
 }
 void CPrimMark::FormatExtra(CString& str) const
 {

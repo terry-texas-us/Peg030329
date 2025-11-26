@@ -117,14 +117,14 @@ void CPrimLine::Display(CPegView* pView, CDC* pDC) const
 void CPrimLine::DisRep(const CPnt& pt) const
 {
 	char szLength[64];
-	UnitsString_FormatLength(szLength, sizeof(szLength), app.GetUnits(), Length(), 16, 4);
+	UnitsString_FormatLength(szLength, sizeof(szLength), app.GetUnits(), Length());
 
 	std::string str = "<Line>";
 	str += " Color: " + StdFormatPenColor();
 	str += " Style: " + StdFormatPenStyle();
 	str += " - " + std::string(szLength);
 	str += " @ " + UnitsString_FormatAngle(GetAngAboutZAx(), 0, 5);
-	msgInformation(str.c_str());
+	msgSetPaneText(str);
 
 	double dLen = Length();
 	double dAng = GetAngAboutZAx();
@@ -145,7 +145,7 @@ void CPrimLine::DisRep(const CPnt& pt) const
 void CPrimLine::FormatExtra(CString& str) const
 {
 	char szLength[64];
-	UnitsString_FormatLength(szLength, sizeof(szLength), app.GetUnits(), Length(), 16, 4);
+	UnitsString_FormatLength(szLength, sizeof(szLength), app.GetUnits(), Length());
 
 	std::string extra;
 	extra = "Color;" + StdFormatPenColor() + "\t";

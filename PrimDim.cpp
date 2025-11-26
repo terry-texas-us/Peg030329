@@ -150,7 +150,7 @@ void CPrimDim::DisRep(const CPnt& pt) const
 	std::string str = "<Dim>";
 	str += " Color: " + StdFormatPenColor();
 	str += " Style: " + StdFormatPenStyle();
-	msgInformation(str.c_str());
+	msgSetPaneText(str);
 
 	double dLen = Length();
 	double dAng = m_ln.GetAngAboutZAx();
@@ -391,7 +391,7 @@ void CPrimDim::SetDefaultNote()
 	m_rs.SetDirY(vRefYAx);
 
 	char szBuf[64];
-	UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), m_ln.Length(), 16, 4);
+	UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), m_ln.Length());
 	m_strText = szBuf;
 	m_strText.TrimLeft();
 	if (cText0 == 'R' || cText0 == 'D')

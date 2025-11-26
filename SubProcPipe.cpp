@@ -571,8 +571,8 @@ FoundIt:
 	pipe::GenTicMark(ptIns, ptEnd, dTicDis[pipe::wCurSymId]);
 	
 	pstate.SetPen(pDC, nPenColor, nPenStyle);
-	
-	double dTicSize = pipe::dTicSize;
+
+	double tick_size = pipe::dTicSize;
 
 	pSeg = new CSeg;
 
@@ -836,7 +836,7 @@ FoundIt:
 			break;
 	}
 	
-	pipe::dTicSize = dTicSize;
+	pipe::dTicSize = tick_size;
 
 	pDoc->WorkLayerAddTail(pSeg);
 	pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
