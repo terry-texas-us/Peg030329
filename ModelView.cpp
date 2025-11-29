@@ -1,5 +1,9 @@
 #include "stdafx.h"
 
+#include "ModelTransform.h"
+#include "ModelView.h"
+#include "OpenGL.h"
+
 CModelView::CModelView()
 {
 	m_dUMin = - 1.;

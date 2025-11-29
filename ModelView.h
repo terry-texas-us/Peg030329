@@ -1,5 +1,13 @@
 #pragma once
 
+#include <afxcoll.h> // for CList
+
+#include "AbstractView.h"
+#include "Pnt4.h" // for CPnt4 and CPnt4s (CArray typedef)
+#include "TMat.h" // for CTMat
+#include "Vec.h"   // for CVec
+#include "Vec4.h" // for CVec4
+
 class CModelView : public CAbstractView
 {
 private:

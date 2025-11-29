@@ -1,7 +1,7 @@
-// DlgSetText.cpp : implementation file
-
 #include "stdafx.h"
+
 #include "PegAEsys.h"
+
 #include "DlgSetText.h"
 
 // CDlgSetText dialog

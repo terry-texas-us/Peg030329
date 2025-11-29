@@ -1,5 +1,11 @@
 #pragma once
 
+#include <afxwin.h> // for MFC HWND, UINT, WPARAM, LPARAM, LRESULT, CALLBACK
+
+#include "Pnt.h" // for CPnt
+
+class CSeg;
+
 LRESULT CALLBACK SubProcAnnotate(HWND, UINT, WPARAM, LPARAM);
 
 namespace annotate

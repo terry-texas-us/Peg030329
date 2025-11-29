@@ -5,6 +5,7 @@
 #include "PegAEsysView.h"
 
 #include "Preview.h"
+#include "PrimState.h"
 
 CBitmap* WndProcPreview_pBitmap = NULL;
 

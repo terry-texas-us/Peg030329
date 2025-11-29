@@ -1,6 +1,6 @@
-// MainFrm.h : interface of the CMainFrame class
-
 #pragma once
+
+#include <afxext.h>
 
 class CMainFrame : public CMDIFrameWnd
 {

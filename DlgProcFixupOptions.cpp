@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "ExpProcs.h"
+#include "resource.h"
 #include "SubProcFixup.h"
 #include "UserAxis.h"
 

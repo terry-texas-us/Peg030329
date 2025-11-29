@@ -4,7 +4,12 @@
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
-void	DoEditTrapPopupCommands(HWND hwnd);
+#include "ExpProcs.h"
+#include "Line.h"
+#include "Messages.h"
+#include "SegsTrap.h"
+
+void DoEditTrapPopupCommands(HWND hwnd);
 void pTrapRemByArea(CPegView* pView, CPnt, CPnt);
 void pTrapRemByLn(CPegView* pView, CPnt, CPnt);
 

@@ -5,8 +5,9 @@
 
 #include "Block.h"
 #include "DlgProcFileManage.h"
-#include "Preview.h"
 #include "FileJob.h"
+#include "Messages.h"
+#include "Preview.h"
 
 void DlgProcFileManageDoLayerColor(HWND hDlg);
 

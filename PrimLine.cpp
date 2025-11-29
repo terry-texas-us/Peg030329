@@ -4,11 +4,19 @@
 #include "PegAEsysView.h"
 
 #include "ddeGItms.h"
+#include "FilePeg.h"
 #include "Grid.h"
-#include "Polyline.h"
-#include "UserAxis.h"
-#include "UnitsString.h"
 #include "Messages.h"
+#include "ModelTransform.h"
+#include "OpenGL.h"
+#include "Polyline.h"
+#include "PrimLine.h"
+#include "PrimState.h"
+#include "SafeMath.h"
+#include "Seg.h"
+#include "Segs.h"
+#include "UnitsString.h"
+#include "UserAxis.h"
 
 CPrimLine::CPrimLine(const CPnt& ptBeg, const CPnt& ptEnd)
 {
@@ -22,11 +30,11 @@ CPrimLine::CPrimLine(PENCOLOR nPenColor, PENSTYLE nPenStyle, const CLine& ln) : 
 	m_nPenStyle = nPenStyle;
 }
 CPrimLine::CPrimLine(PENCOLOR nPenColor, PENSTYLE nPenStyle, const CPnt& ptBeg, const CPnt& ptEnd)
-{	
+{
 	m_nPenColor = nPenColor;
 	m_nPenStyle = nPenStyle;
 	m_ln(ptBeg, ptEnd);
-} 
+}
 CPrimLine::CPrimLine(const CPrimLine& src)
 {
 	m_nPenColor = src.m_nPenColor;
@@ -38,12 +46,12 @@ const CPrimLine& CPrimLine::operator=(const CPrimLine& src)
 	m_nPenColor = src.m_nPenColor;
 	m_nPenStyle = src.m_nPenStyle;
 	m_ln = src.m_ln;
-	
+
 	return (*this);
 }
 void CPrimLine::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const
 {
-	tvAddItem(hTree, hParent, "<Line>", (CObject*) this);
+	tvAddItem(hTree, hParent, "<Line>", (CObject*)this);
 }
 CPrim*& CPrimLine::Copy(CPrim*& pPrim) const
 {
@@ -53,10 +61,10 @@ CPrim*& CPrimLine::Copy(CPrim*& pPrim) const
 ///<summary>Cuts a line at two points.</summary>
 // Notes:	Line segment between to points goes in pSegs.
 void CPrimLine::CutAt2Pts(CPnt* pt, CSegs* pSegs, CSegs* pSegsNew)
-{ 
-	CPrimLine*	pLine;
+{
+	CPrimLine* pLine;
 	double	dRel[2];
-		
+
 	line::RelOfPtToEndPts(m_ln, pt[0], dRel[0]);
 	line::RelOfPtToEndPts(m_ln, pt[1], dRel[1]);
 
@@ -71,7 +79,7 @@ void CPrimLine::CutAt2Pts(CPnt* pt, CSegs* pSegs, CSegs* pSegsNew)
 		{	// Cut section out of middle
 			pLine->SetPt0(pt[1]);
 			pSegs->AddTail(new CSeg(pLine));
-			
+
 			pLine = new CPrimLine(*this);
 			pLine->SetPt0(pt[0]);
 			pLine->SetPt1(pt[1]);
@@ -97,13 +105,13 @@ void CPrimLine::CutAtPt(const CPnt& pt, CSeg* pSeg)
 	CLine ln;
 
 	if (m_ln.CutAtPt(pt, ln) != 0)
-		pSeg->AddTail(new CPrimLine(m_nPenColor, m_nPenStyle, ln)); 
+		pSeg->AddTail(new CPrimLine(m_nPenColor, m_nPenStyle, ln));
 }
 void CPrimLine::Display(CPegView* pView, CDC* pDC) const
 {
 	PENCOLOR nPenColor = LogicalPenColor();
 	PENSTYLE nPenStyle = LogicalPenStyle();
-		
+
 	if (pDC == 0)
 		opengl::SetCurrentColor(app.PenColorsGetHot(nPenColor));
 	else
@@ -128,14 +136,14 @@ void CPrimLine::DisRep(const CPnt& pt) const
 
 	double dLen = Length();
 	double dAng = GetAngAboutZAx();
-	
+
 	double dRel;
 	line::RelOfPtToEndPts(m_ln, pt, dRel);
-	
+
 	if (dRel > .5)
 		// Normalize line prior to angle determination
 		dAng += PI;
-	
+
 	dAng = fmod(dAng, TWOPI);
 	app.SetEngLen(dLen);
 	app.SetEngAngZ(dAng);
@@ -169,9 +177,9 @@ void CPrimLine::GetAllPts(CPnts& pts)
 }
 ///<summary>Determines the extent.</summary>
 void CPrimLine::GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const
-{	
+{
 	CPnt pt[2];
-	
+
 	GetPts(pt[0], pt[1]);
 
 	for (WORD w = 0; w < 2; w++)
@@ -192,8 +200,8 @@ CPnt CPrimLine::GoToNxtCtrlPt() const
 	{	// Initial rock .. jump to point at lower left or down if vertical
 		CPnt ptBeg = Pt0();
 		CPnt ptEnd = Pt1();
-		
-		if (ptEnd[0] > ptBeg[0])				
+
+		if (ptEnd[0] > ptBeg[0])
 			mS_wCtrlPt = 0;
 		else if (ptEnd[0] < ptBeg[0])
 			mS_wCtrlPt = 1;
@@ -203,12 +211,12 @@ CPnt CPrimLine::GoToNxtCtrlPt() const
 			mS_wCtrlPt = 1;
 	}
 	return (mS_wCtrlPt == 0 ? Pt0() : Pt1());
-}	
+}
 bool CPrimLine::IsInView(CPegView* pView) const
 {
 	// Test whether a line is wholly or partially within the current view volume.
-	
-	CPnt4 pt[] = {CPnt4(m_ln[0], 1.), CPnt4(m_ln[1], 1.)};
+
+	CPnt4 pt [] = {CPnt4(m_ln[0], 1.), CPnt4(m_ln[1], 1.)};
 	pView->ModelViewTransform(2, &pt[0]);
 
 	return (Pnt4_ClipLine(pt[0], pt[1]));
@@ -217,12 +225,12 @@ bool CPrimLine::IsInView(CPegView* pView) const
 bool CPrimLine::IsPtACtrlPt(CPegView* pView, const CPnt4& ptPic) const
 {
 	CPnt4 pt;
-	
+
 	for (WORD w = 0; w < 2; w++)
 	{
 		pt = CPnt4(m_ln[w], 1.);
 		pView->ModelViewTransform(pt);
-	
+
 		if (Pnt4_DistanceTo_xy(ptPic, pt) < mS_dPicApertSiz)
 			return true;
 	}
@@ -241,11 +249,11 @@ int CPrimLine::IsWithinArea(const CPnt& ptLL, const CPnt& ptUR, CPnt* ptInt)
 	}
 	while (iLoc[0] != 0 || iLoc[1] != 0)
 	{
-		if ((iLoc[0] & iLoc[1]) != 0) 
+		if ((iLoc[0] & iLoc[1]) != 0)
 			return 0;
-		
+
 		i = (iLoc[0] != 0) ? 0 : 1;
-		if ((iLoc[i] & 1) != 0) 								
+		if ((iLoc[i] & 1) != 0)
 		{	// Clip against top
 			ptInt[i][0] = ptInt[i][0] + (ptInt[1][0] - ptInt[0][0]) * (ptUR[1] - ptInt[i][1]) / (ptInt[1][1] - ptInt[0][1]);
 			ptInt[i][1] = ptUR[1];
@@ -275,7 +283,7 @@ void CPrimLine::Read(CFile& fl)
 
 	m_ln.Read(fl);
 }
-double CPrimLine::RelOfPt(const CPnt& pt) const 
+double CPrimLine::RelOfPt(const CPnt& pt) const
 {
 	double dRel;
 	line::RelOfPtToEndPts(m_ln, pt, dRel);
@@ -291,33 +299,33 @@ CPnt CPrimLine::SelAtCtrlPt(CPegView* pView, const CPnt4& ptPic) const
 	{
 		CPnt4 pt(m_ln[w], 1.);
 		pView->ModelViewTransform(pt);
-	
+
 		double dDis = Pnt4_DistanceTo_xy(ptPic, pt);
-	
-		if (dDis < dApert) 
+
+		if (dDis < dApert)
 		{
 			mS_wCtrlPt = w;
 			dApert = dDis;
 		}
 	}
 	return (mS_wCtrlPt == USHRT_MAX) ? ORIGIN : m_ln[mS_wCtrlPt];
-}	
+}
 ///<summary>Evaluates whether a line intersects line.</summary>
 bool CPrimLine::SelUsingLine(CPegView* pView, const CLine& ln, CPnts& ptsInt)
-{	
+{
 	polyline::BeginLineStrip();
 	polyline::SetVertex(m_ln[0]);
 	polyline::SetVertex(m_ln[1]);
 	return polyline::SelUsingLine(pView, ln, ptsInt);
-}			
+}
 ///<summary>Evaluates whether a point lies within tolerance specified of line.</summary>
 bool CPrimLine::SelUsingPoint(CPegView* pView, const CPnt4& pt0, double dTol, CPnt& ptProj)
-{	
+{
 	polyline::BeginLineStrip();
 	polyline::SetVertex(m_ln[0]);
 	polyline::SetVertex(m_ln[1]);
 	return polyline::SelUsingPoint(pView, pt0, dTol, mS_dRel, ptProj);
-}	 
+}
 ///<summary>
 ///Determines whether a line is partially or wholly within the area defined by the two points passed.
 ///</summary>
@@ -332,7 +340,7 @@ void CPrimLine::Square()
 {
 	CPnt ptBeg = grid::UserSnapPt(Pt0());
 	CPnt ptEnd = grid::UserSnapPt(Pt1());
-	
+
 	CPnt pt = CLine(ptBeg, ptEnd).ProjPtAlong(.5);
 	double dLen = CVec(ptBeg, ptEnd).Length();
 	ptEnd = UserAxisSnapLn(pt, ptEnd);
@@ -343,7 +351,7 @@ void CPrimLine::TranslateUsingMask(const CVec& v, const DWORD dwMask)
 {
 	if ((dwMask & 1) == 1)
 		SetPt0(Pt0() + v);
-	
+
 	if ((dwMask & 2) == 2)
 		SetPt1(Pt1() + v);
 }

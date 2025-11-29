@@ -1,5 +1,15 @@
 #pragma once
 
+#include <afxwin.h> // for CDC
+
+#include "Pnt.h" // for CPnt
+#include "Pnt4.h" // for CPnt4s
+#include "TMat.h" // for CTMat
+#include "Vec.h" // for CVec
+#include "Vec4.h" // for CVec4
+
+class CPegView;
+
 const short POLYGON_HOLLOW = 0;
 const short POLYGON_SOLID = 1;
 const short POLYGON_PATTERN = 2;

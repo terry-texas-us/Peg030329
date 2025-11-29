@@ -1,5 +1,8 @@
 #pragma once
 
+class CPrimLine;
+class CPrimMark;
+
 LRESULT CALLBACK SubProcRLPD(HWND, UINT, WPARAM, LPARAM);
 
 namespace rlpd

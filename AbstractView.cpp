@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "AbstractView.h"
+
 CAbstractView::CAbstractView()
 {
 	m_nViewMode = 0;

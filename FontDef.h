@@ -1,5 +1,7 @@
 #pragma once
 
+#include <afxwin.h> // for MFC CObject (base class), CString, WORD, CDC, CFile
+
 class CFontDef : public CObject
 {
 public:
@@ -14,7 +16,7 @@ public:
 	static const WORD HOR_ALIGN_LEFT = 1;
 	static const WORD HOR_ALIGN_CENTER = 2;
 	static const WORD HOR_ALIGN_RIGHT = 3;
- 
+
 	static const WORD VER_ALIGN_TOP = 2;
 	static const WORD VER_ALIGN_MIDDLE = 3;
 	static const WORD VER_ALIGN_BOTTOM = 4;
@@ -28,15 +30,15 @@ private:
 	double		m_dChrSpac;		// spacing between character cells
 
 public:
-	
+
 	CFontDef();
-	
+
 	CFontDef(const CFontDef& fd);
 
 	CFontDef& operator=(const CFontDef& fd);
 
-	double		ChrSpac() const {return (m_dChrSpac);}
-	void		ChrSpacSet(double d) {m_dChrSpac = d;}
+	double		ChrSpac() const { return (m_dChrSpac); }
+	void		ChrSpacSet(double d) { m_dChrSpac = d; }
 
 	void		Read(CFile& fl);
 	void		Set(WORD wPrec, const CString& strFont, WORD wPath, WORD wHorAlign, WORD wVerAlign, double dChrSpac);
@@ -45,16 +47,16 @@ public:
 	CString		FormatTextPath() const;
 	CString		FormatTextPrec() const;
 	CString		FormatTextVerAlign() const;
-	WORD		TextHorAlign() const {return (m_wTextHorAlign);}
-	void		TextHorAlignSet(WORD w) {m_wTextHorAlign = w;}
-	CString		TextFont() const {return (m_strTextFont);}
-	void		TextFontSet(const CString& str) {m_strTextFont = str;}
-	WORD		TextPrec() const {return (m_wTextPrec);}
-	void		TextPrecSet(WORD w) {m_wTextPrec = w;}
-	WORD		TextPath() const {return (m_wTextPath);}
-	void		TextPathSet(WORD w) {m_wTextPath = w;}
-	WORD		TextVerAlign() const {return (m_wTextVerAlign);}
-	void		TextVerAlignSet(WORD w) {m_wTextVerAlign = w;}
+	WORD		TextHorAlign() const { return (m_wTextHorAlign); }
+	void		TextHorAlignSet(WORD w) { m_wTextHorAlign = w; }
+	CString		TextFont() const { return (m_strTextFont); }
+	void		TextFontSet(const CString& str) { m_strTextFont = str; }
+	WORD		TextPrec() const { return (m_wTextPrec); }
+	void		TextPrecSet(WORD w) { m_wTextPrec = w; }
+	WORD		TextPath() const { return (m_wTextPath); }
+	void		TextPathSet(WORD w) { m_wTextPath = w; }
+	WORD		TextVerAlign() const { return (m_wTextVerAlign); }
+	void		TextVerAlignSet(WORD w) { m_wTextVerAlign = w; }
 
 	void		Write(CFile& fl) const;
 };

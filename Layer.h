@@ -1,5 +1,13 @@
 #pragma once
 
+#include <afxtempl.h> // For CTypedPtrArray, CObArray
+#include <afxwin.h>  // For CString, CDC, WORD, and other MFC types
+
+#include "Prim.h"   // For PENCOLOR and PENSTYLE typedefs
+#include "Segs.h"    // For CSegs base class
+
+class CPegView;
+
 class CLayer : public CSegs
 {
 public:

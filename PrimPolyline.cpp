@@ -1,10 +1,19 @@
 #include "stdafx.h"
 
+#include <sstream>
+
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
 
 #include "ddeGItms.h"
+#include "FilePeg.h"
+#include "Messages.h"
+#include "ModelTransform.h"
+#include "OpenGL.h"
 #include "Polyline.h"
+#include "PrimPolyline.h"
+#include "PrimState.h"
+#include "SafeMath.h"
 #include "UnitsString.h"
 
 WORD CPrimPolyline::mS_wEdgeToEvaluate = 0;
@@ -19,15 +28,15 @@ CPrimPolyline::CPrimPolyline(CPnts& pts)
 {
 	m_nPenColor = pstate.PenColor();
 	m_nPenStyle = pstate.PenStyle();
-	
+
 	m_wFlags = 0;
 	m_pts.Copy(pts);
-}	
+}
 CPrimPolyline::CPrimPolyline(WORD wPts, CPnt* pPts)
 {
 	m_nPenColor = pstate.PenColor();
 	m_nPenStyle = pstate.PenStyle();
-	
+
 	m_pts.SetSize(wPts);
 
 	m_wFlags = 0;
@@ -35,7 +44,7 @@ CPrimPolyline::CPrimPolyline(WORD wPts, CPnt* pPts)
 	{
 		m_pts[w] = pPts[w];
 	}
-}	
+}
 CPrimPolyline::CPrimPolyline(const CPrimPolyline& src)
 {
 	m_nPenColor = src.m_nPenColor;
@@ -55,7 +64,7 @@ const CPrimPolyline& CPrimPolyline::operator=(const CPrimPolyline& src)
 
 void CPrimPolyline::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const
 {
-	tvAddItem(hTree, hParent, "<Polyline>", (CObject*) this);
+	tvAddItem(hTree, hParent, "<Polyline>", (CObject*)this);
 }
 
 CPrim*& CPrimPolyline::Copy(CPrim*& pPrim) const
@@ -75,7 +84,7 @@ void CPrimPolyline::Display(CPegView* pView, CDC* pDC) const
 			opengl::BeginLineLoop();
 		else
 			opengl::BeginLineStrip();
-		
+
 		for (WORD w = 0; w < m_pts.GetSize(); w++)
 		{
 			opengl::SetVertex(m_pts[w]);
@@ -85,7 +94,7 @@ void CPrimPolyline::Display(CPegView* pView, CDC* pDC) const
 	else
 	{
 		pstate.SetPen(pDC, m_nPenColor, m_nPenStyle);
-		
+
 		if (IsLooped())
 			polyline::DisplayLoop(pView, pDC, m_pts);
 		else
@@ -110,19 +119,19 @@ void CPrimPolyline::DisRep(const CPnt& ptPic) const
 		}
 		double dAng;
 		double dLen = CVec(ptBeg, ptEnd).Length();						// Length of edge
-		
+
 		if (CVec(ptPic, ptBeg).Length() > dLen * .5)
 			dAng = line::GetAngAboutZAx(CLine(ptEnd, ptBeg));
 		else
 			dAng = line::GetAngAboutZAx(CLine(ptBeg, ptEnd));
-		
+
 		char szBuf[24];
 		UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), dLen);
 		strRep += szBuf;
 		sprintf_s(szBuf, sizeof(szBuf), " @ %6.2f degrees", dAng / RADIAN);
-		strRep += szBuf;	
+		strRep += szBuf;
 		msgSetPaneText(strRep);
-		
+
 		app.SetEngLen(dLen);
 		app.SetEngAngZ(dAng);
 		dde::PostAdvise(dde::EngLenInfo);
@@ -148,7 +157,7 @@ void CPrimPolyline::FormatExtra(CString& str) const
 
 	str = ss.str().c_str();
 }
-CPnt CPrimPolyline::GetCtrlPt() const 
+CPnt CPrimPolyline::GetCtrlPt() const
 {
 	WORD wPts = WORD(m_pts.GetSize());
 	WORD wBeg = WORD(mS_wEdge - 1);
@@ -178,14 +187,14 @@ CPnt CPrimPolyline::GoToNxtCtrlPt() const
 	{	// have not yet rocked to a vertex
 		WORD wBeg = WORD(mS_wEdge - 1);
 		WORD wEnd = WORD(mS_wEdge % wPts);
-	
+
 		if (m_pts[wEnd][0] > m_pts[wBeg][0])
 			mS_wPivotVertex = wBeg;
 		else if (m_pts[wEnd][0] < m_pts[wBeg][0])
 			mS_wPivotVertex = wEnd;
 		else if (m_pts[wEnd][1] > m_pts[wBeg][1])
 			mS_wPivotVertex = wBeg;
-	else
+		else
 			mS_wPivotVertex = wEnd;
 	}
 	else if (mS_wPivotVertex == 0)
@@ -195,7 +204,7 @@ CPnt CPrimPolyline::GoToNxtCtrlPt() const
 		else
 			mS_wPivotVertex = wPts - 1;
 	}
-	else if (mS_wPivotVertex == wPts - 1)										
+	else if (mS_wPivotVertex == wPts - 1)
 	{
 		if (mS_wEdge == wPts)
 			mS_wPivotVertex = 0;
@@ -206,7 +215,7 @@ CPnt CPrimPolyline::GoToNxtCtrlPt() const
 	{
 		if (mS_wEdge == mS_wPivotVertex)
 			mS_wPivotVertex--;
-	else
+		else
 			mS_wPivotVertex++;
 	}
 	return (m_pts[mS_wPivotVertex]);
@@ -214,18 +223,18 @@ CPnt CPrimPolyline::GoToNxtCtrlPt() const
 bool CPrimPolyline::IsInView(CPegView* pView) const
 {
 	CPnt4	pt[2];
-	
+
 	pt[0] = m_pts[0];
 	pView->ModelViewTransform(pt[0]);
-	
-	for (WORD w = 1; w < m_pts.GetSize(); w++) 
+
+	for (WORD w = 1; w < m_pts.GetSize(); w++)
 	{
 		pt[1] = m_pts[w];
 		pView->ModelViewTransform(pt[1]);
-	
+
 		if (Pnt4_ClipLine(pt[0], pt[1]))
 			return true;
-		
+
 		pt[0] = pt[1];
 	}
 	return false;
@@ -233,51 +242,51 @@ bool CPrimPolyline::IsInView(CPegView* pView) const
 bool CPrimPolyline::PvtOnCtrlPt(CPegView* pView, const CPnt4& ptView) const
 {
 	WORD wPts = WORD(m_pts.GetSize());
-	
+
 	if (mS_wPivotVertex >= wPts)
 		// Not engaged at a vertex
 		return false;
-	
+
 	CPnt4 ptCtrl(m_pts[mS_wPivotVertex], 1.);
 	pView->ModelViewTransform(ptCtrl);
-	
-	if (Pnt4_DistanceTo_xy(ptCtrl, ptView) >= mS_dPicApertSiz)		
+
+	if (Pnt4_DistanceTo_xy(ptCtrl, ptView) >= mS_dPicApertSiz)
 		// Not on proper vertex
 		return false;
 
-	if (mS_wPivotVertex == 0)					
-		mS_wEdge = WORD(mS_wEdge == 1 ? wPts : 1); 
+	if (mS_wPivotVertex == 0)
+		mS_wEdge = WORD(mS_wEdge == 1 ? wPts : 1);
 	else if (mS_wPivotVertex == wPts - 1)
 		mS_wEdge = WORD(mS_wEdge == wPts ? mS_wEdge - 1 : wPts);
-	else if (mS_wPivotVertex == mS_wEdge) 
+	else if (mS_wPivotVertex == mS_wEdge)
 		mS_wEdge++;
-	else 
+	else
 		mS_wEdge--;
-	
+
 	return true;
-}	
+}
 CPnt CPrimPolyline::SelAtCtrlPt(CPegView* pView, const CPnt4& ptPic) const
 {
 	WORD wPts = WORD(m_pts.GetSize());
-	
+
 	mS_wCtrlPt = USHRT_MAX;
 	double dApert = mS_dPicApertSiz;
-	
+
 	mS_wPivotVertex = wPts;
 
-	for (WORD w = 0; w < wPts; w++) 
+	for (WORD w = 0; w < wPts; w++)
 	{
 		CPnt4 pt(m_pts[w], 1.);
 		pView->ModelViewTransform(pt);
-		
+
 		double dDis = Pnt4_DistanceTo_xy(ptPic, pt);
-		
-		if (dDis < dApert) 
+
+		if (dDis < dApert)
 		{
 			mS_wCtrlPt = w;
 			dApert = dDis;
-	
-			mS_wEdge = WORD(w + 1); 
+
+			mS_wEdge = WORD(w + 1);
 			mS_wPivotVertex = w;
 		}
 	}
@@ -286,7 +295,7 @@ CPnt CPrimPolyline::SelAtCtrlPt(CPegView* pView, const CPnt4& ptPic) const
 bool CPrimPolyline::SelUsingPoint(CPegView* pView, const CPnt4& pt, double dTol, CPnt& ptProj)
 {
 	double dProjDis;
-	
+
 	WORD wPts = WORD(m_pts.GetSize());
 	if (mS_wEdgeToEvaluate > 0 && mS_wEdgeToEvaluate <= wPts)
 	{	// Evaluate specified edge of polyline
@@ -296,7 +305,7 @@ bool CPrimPolyline::SelUsingPoint(CPegView* pView, const CPnt4& pt, double dTol,
 		pView->ModelViewTransform(ptBeg);
 		pView->ModelViewTransform(ptEnd);
 
-		if (line::EvalPtProx_xy(CLine(ptBeg, ptEnd), pt, dTol, ptProj, &mS_dRel, &dProjDis)) 
+		if (line::EvalPtProx_xy(CLine(ptBeg, ptEnd), pt, dTol, ptProj, &mS_dRel, &dProjDis))
 		{
 			ptProj[2] = ptBeg[2] + mS_dRel * (ptEnd[2] - ptBeg[2]);
 			return true;
@@ -304,27 +313,27 @@ bool CPrimPolyline::SelUsingPoint(CPegView* pView, const CPnt4& pt, double dTol,
 	}
 	else
 	{	// Evaluate entire polyline
-	WORD wEdges = (WORD) m_pts.GetSize();
-	if (!IsLooped())
-		wEdges--;
+		WORD wEdges = (WORD)m_pts.GetSize();
+		if (!IsLooped())
+			wEdges--;
 
-	CPnt4 ptBeg(m_pts[0], 1.);
-	pView->ModelViewTransform(ptBeg);
+		CPnt4 ptBeg(m_pts[0], 1.);
+		pView->ModelViewTransform(ptBeg);
 
-	for (WORD w = 1; w <= wEdges; w++) 
-	{
-		CPnt4 ptEnd(m_pts[w % wPts], 1.);
-		pView->ModelViewTransform(ptEnd);
-			
-			if (line::EvalPtProx_xy(CLine(ptBeg, ptEnd), pt, dTol, ptProj, &mS_dRel, &dProjDis)) 
+		for (WORD w = 1; w <= wEdges; w++)
 		{
-			ptProj[2] = ptBeg[2] + mS_dRel * (ptEnd[2] - ptBeg[2]);
+			CPnt4 ptEnd(m_pts[w % wPts], 1.);
+			pView->ModelViewTransform(ptEnd);
+
+			if (line::EvalPtProx_xy(CLine(ptBeg, ptEnd), pt, dTol, ptProj, &mS_dRel, &dProjDis))
+			{
+				ptProj[2] = ptBeg[2] + mS_dRel * (ptEnd[2] - ptBeg[2]);
 				mS_wEdge = w;
 				mS_wPivotVertex = wPts;
 				return true;
+			}
+			ptBeg = ptEnd;
 		}
-		ptBeg = ptEnd;
-	}
 	}
 	return false;
 }
@@ -337,7 +346,7 @@ void CPrimPolyline::Read(CFile& fl)
 	CPrim::Read(fl);
 	WORD wPts;
 	FilePeg_ReadWord(fl, wPts);
-	
+
 	CPnt pt;
 	for (WORD w = 0; w < wPts; w++)
 	{
@@ -352,12 +361,12 @@ void CPrimPolyline::Transform(const CTMat& tm)
 }
 void CPrimPolyline::Translate(const CVec& v)
 {
-	for (WORD w = 0; w < m_pts.GetSize(); w++) 
+	for (WORD w = 0; w < m_pts.GetSize(); w++)
 		m_pts[w] += v;
 }
 void CPrimPolyline::TranslateUsingMask(const CVec& v, const DWORD dwMask)
 {
-	for (WORD w = 0; w < m_pts.GetSize(); w++) 
+	for (WORD w = 0; w < m_pts.GetSize(); w++)
 		if (((dwMask >> w) & 1UL) == 1)
 			m_pts[w] += v;
 }
@@ -366,7 +375,7 @@ bool CPrimPolyline::Write(CFile& fl) const
 	FilePeg_WriteWord(fl, PRIM_POLYLINE);
 	FilePeg_WriteWord(fl, m_nPenColor);
 	FilePeg_WriteWord(fl, m_nPenStyle);
-	FilePeg_WriteWord(fl, (WORD) m_pts.GetSize());
+	FilePeg_WriteWord(fl, (WORD)m_pts.GetSize());
 
 	for (WORD w = 0; w < m_pts.GetSize(); w++)
 		m_pts[w].Write(fl);
@@ -376,15 +385,15 @@ bool CPrimPolyline::Write(CFile& fl) const
 WORD CPrimPolyline::SwingVertex() const
 {
 	WORD wPts = WORD(m_pts.GetSize());
-	
+
 	WORD wSwingVertex;
-	
+
 	if (mS_wPivotVertex == 0)
-		wSwingVertex = WORD(mS_wEdge == 1 ? 1 : wPts - 1); 
-	else if (mS_wPivotVertex == WORD(wPts - 1))										
+		wSwingVertex = WORD(mS_wEdge == 1 ? 1 : wPts - 1);
+	else if (mS_wPivotVertex == WORD(wPts - 1))
 		wSwingVertex = WORD(mS_wEdge == wPts ? 0 : mS_wPivotVertex - 1);
 	else
 		wSwingVertex = WORD(mS_wEdge == mS_wPivotVertex ? mS_wPivotVertex - 1 : mS_wPivotVertex + 1);
-	
+
 	return (wSwingVertex);
 }

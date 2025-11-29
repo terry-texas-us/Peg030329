@@ -5,6 +5,9 @@
 #include "PegAEsysView.h"
 
 #include "FileJob.h"
+#include "Layer.h"
+#include "SegsDet.h"
+#include "SegsTrap.h"
 
 CLayer::CLayer(const CString& strName, WORD wStateFlgs)
 {

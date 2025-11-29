@@ -1,5 +1,11 @@
 #pragma once
 
+#include <afxwin.h>  // For CDC, WORD, and other MFC types
+
+#include "CharCellDef.h"  // For CCharCellDef member
+#include "FontDef.h"  // For CFontDef member
+#include "Prim.h"  // for PENCOLOR and PENSTYLE typedefs
+
 class CPrimState
 {
 

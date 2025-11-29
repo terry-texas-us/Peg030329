@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+#include "ModelTransform.h"
+#include "OpenGL.h"
+
 CModelTransform::CModelTransform()
 {
 	m_wDepth = 0;

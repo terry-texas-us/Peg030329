@@ -1,10 +1,14 @@
 #pragma once
 
+#include <afxwin.h>
+
+#include "Pnt.h" // for CPnt
+
 LRESULT CALLBACK SubProcPipe(HWND, UINT, WPARAM, LPARAM);
 
 namespace pipe
 {
-	enum EJoin {Begin, End, No};
+	enum EJoin { Begin, End, No };
 
 	extern double dTicSize;
 	extern double dCSize;

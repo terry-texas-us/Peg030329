@@ -1,5 +1,15 @@
 #pragma once
 
+#include <afxwin.h> // for MFC CString, WORD, DWORD, HWND, HTREEITEM, CDC, CFile
+
+#include "Pnt.h" // for member CPnt
+#include "Pnt4.h" // for CPnt4
+#include "Prim.h" // for CPrim base class
+#include "TMat.h" // for CTMat
+#include "Vec.h" // for member CVec
+
+class CPegView;
+
 class CPrimSegRef : public CPrim
 {
 private:

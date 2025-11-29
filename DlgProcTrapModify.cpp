@@ -5,6 +5,9 @@
 
 #include "DlgProcTrapModify.h"
 #include "Hatch.h"
+#include "PrimPolygon.h"
+#include "PrimState.h"
+#include "SegsTrap.h"
 
 ///<summary>Modifies attributes of all segment primatives in current trap tocurrent settings.</summary>
 ///<remarks>Trap color index is not modified.</remarks>

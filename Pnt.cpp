@@ -1,18 +1,37 @@
 #include "stdafx.h"
+#include <algorithm>
 
-CPnt::CPnt(const CPnt4& pt) 
+#include <iomanip>
+#include <sstream>
+
+#include "TMat.h"
+#include "Vec.h"
+
+CPnt::CPnt(const CPnt4& pt)
 {
 	m_d[0] = pt[0] / pt[3];
 	m_d[1] = pt[1] / pt[3];
 	m_d[2] = pt[2] / pt[3];
 }
-CPnt& CPnt::operator=(const CPnt& pt) 
+CPnt& CPnt::operator=(const CPnt& pt)
 {
 	m_d[0] = pt.m_d[0];
 	m_d[1] = pt.m_d[1];
 	m_d[2] = pt.m_d[2];
-	
+
 	return *this;
+}
+void CPnt::operator+=(const CVec& v)
+{
+	m_d[0] += v[0];
+	m_d[1] += v[1];
+	m_d[2] += v[2];
+}
+void CPnt::operator-=(const CVec& v)
+{
+	m_d[0] -= v[0];
+	m_d[1] -= v[1];
+	m_d[2] -= v[2];
 }
 void CPnt::Read(CFile& fl)
 {
@@ -22,15 +41,15 @@ std::string CPnt::ToStdString(int precision, int minWidth) const
 {
 	std::ostringstream oss;
 	oss << std::fixed << std::setprecision(precision)
-		<< std::setw(minWidth) << m_d[0] << ";" 
-		<< std::setw(minWidth) << m_d[1] << ";" 
+		<< std::setw(minWidth) << m_d[0] << ";"
+		<< std::setw(minWidth) << m_d[1] << ";"
 		<< std::setw(minWidth) << m_d[2] << "\t";
 	return oss.str();
 }
 void CPnt::Write(CFile& fl) const
 {
 	fl.Write(m_d, 3 * sizeof(double));
-}					 
+}
 CPnt operator+(const CPnt& pt, const CVec& v)
 {
 	return CPnt(pt.m_d[0] + v.m_d[0], pt.m_d[1] + v.m_d[1], pt.m_d[2] + v.m_d[2]);
@@ -38,34 +57,34 @@ CPnt operator+(const CPnt& pt, const CVec& v)
 CVec operator-(const CPnt& ptA, const CPnt& ptB)
 {
 	return CVec(ptA.m_d[0] - ptB.m_d[0], ptA.m_d[1] - ptB.m_d[1], ptA.m_d[2] - ptB.m_d[2]);
-}	
+}
 CPnt operator-(const CPnt& pt, const CVec& v)
 {
 	return CPnt(pt.m_d[0] - v.m_d[0], pt.m_d[1] - v.m_d[1], pt.m_d[2] - v.m_d[2]);
 }
 bool operator==(const CPnt& ptA, const CPnt& ptB)
-{ 
-	return (ptA.m_d[0] == ptB.m_d[0]) && (ptA.m_d[1] == ptB.m_d[1]) && (ptA.m_d[2] == ptB.m_d[2]); 
+{
+	return (ptA.m_d[0] == ptB.m_d[0]) && (ptA.m_d[1] == ptB.m_d[1]) && (ptA.m_d[2] == ptB.m_d[2]);
 }
 bool operator!=(const CPnt& ptA, const CPnt& ptB)
-{ 
+{
 	return !(ptA == ptB);
 }
 CPnt Max(const CPnt& ptA, const CPnt& ptB)
 {
-	return CPnt(Max(ptA.m_d[0], ptB.m_d[0]), Max(ptA.m_d[1], ptB.m_d[1]), Max(ptA.m_d[2], ptB.m_d[2]));
+	return CPnt(std::max(ptA.m_d[0], ptB.m_d[0]), std::max(ptA.m_d[1], ptB.m_d[1]), std::max(ptA.m_d[2], ptB.m_d[2]));
 }
-CPnt Mid(const CPnt& ptA, const CPnt& ptB)		
+CPnt Mid(const CPnt& ptA, const CPnt& ptB)
 {
 	return ptA + .5 * (ptB - ptA);
 }
 CPnt Min(const CPnt& ptA, const CPnt& ptB)
 {
-	return CPnt(Min(ptA.m_d[0], ptB.m_d[0]), Min(ptA.m_d[1], ptB.m_d[1]), Min(ptA.m_d[2], ptB.m_d[2]));
+	return CPnt(std::min(ptA.m_d[0], ptB.m_d[0]), std::min(ptA.m_d[1], ptB.m_d[1]), std::min(ptA.m_d[2], ptB.m_d[2]));
 }
 ///<summary>Determines the distance between two points.</summary>
 double Pnt_DistanceTo_xy(const CPnt& pt1, const CPnt& pt2)
-{	
+{
 	CVec v(pt1, pt2); v[2] = 0.;
 	return (v.Length());
 }
@@ -74,12 +93,12 @@ double Pnt_DistanceTo_xy(const CPnt& pt1, const CPnt& pt2)
 // Parameters:	pt		point
 //				ptTo	point defining direction vector
 //				dDis	magnitude of projection
-CPnt Pnt_ProjPtTo(const CPnt& pt, const CPnt& ptTo, const double dDis)		
+CPnt Pnt_ProjPtTo(const CPnt& pt, const CPnt& ptTo, const double dDis)
 {
 	CVec v(pt, ptTo);
-	
+
 	double dLen = v.Length();
-	if (dLen > DBL_EPSILON) 
+	if (dLen > DBL_EPSILON)
 	{
 		v *= dDis / dLen;
 		return (pt + v);
@@ -91,9 +110,9 @@ CPnt Pnt_ProjPtTo(const CPnt& pt, const CPnt& ptTo, const double dDis)
 CPnt Pnt_ProjPtTo_xy(const CPnt& pt, const CPnt& ptTo, const double dDis)
 {
 	CVec v(pt, ptTo); v[2] = 0.;
-	
+
 	double dLen = v.Length();
-	
+
 	if (dLen > DBL_EPSILON)
 	{
 		v *= dDis / dLen;
@@ -121,14 +140,14 @@ CPnt Pnt_RotateAboutPt_xy(CPnt pt, const CPnt& ptPvt, const double dAng)
 bool p2DPtInWnd(const CPnt& pt, CPnt* ptWnd)
 {
 	double dReps = DBL_EPSILON + fabs(DBL_EPSILON * pt[0]);
-	
+
 	if (ptWnd[0][0] > pt[0] + dReps || ptWnd[1][0] < pt[0] - dReps)
 		return false;
-	
+
 	dReps = DBL_EPSILON + fabs(DBL_EPSILON * pt[1]);
 	if (ptWnd[0][1] > pt[1] + dReps || ptWnd[1][1] < pt[1] - dReps)
 		return false;
-	
+
 	return true;
 }
 ///<summary>Determines relationship of a point to a window.</summary>
@@ -141,20 +160,20 @@ bool p2DPtInWnd(const CPnt& pt, CPnt* ptWnd)
 int p2DRelOfPtToWnd(const CPnt& pt, const CPnt& ptLL, const CPnt& ptUR)
 {
 	int iRetVal = 0;
-	
-	if (pt[1] > ptUR[1] + DBL_EPSILON) 
+
+	if (pt[1] > ptUR[1] + DBL_EPSILON)
 	{
 		iRetVal = 1;
 	}
-	else if (pt[1] < ptLL[1] - DBL_EPSILON) 
+	else if (pt[1] < ptLL[1] - DBL_EPSILON)
 	{
 		iRetVal = 2;
 	}
-	if (pt[0] > ptUR[0] + DBL_EPSILON) 
+	if (pt[0] > ptUR[0] + DBL_EPSILON)
 	{
 		iRetVal |= 4;
 	}
-	else if (pt[0] < ptLL[0] - DBL_EPSILON) 
+	else if (pt[0] < ptLL[0] - DBL_EPSILON)
 	{
 		iRetVal |= 8;
 	}
@@ -166,7 +185,7 @@ int p2DRelOfPtToWnd(const CPnt& pt, const CPnt& ptLL, const CPnt& ptUR)
 //				ptRef	point about which rotation will occur
 //				vRef	unit vector defining rotation axis
 //				adAng	rotation angle (ccw positive) in radians
-CPnt Pnt_RotAboutArbPtAndAx(const CPnt& pt, const CPnt& ptRef, const CVec& vRef, double adAng)	
+CPnt Pnt_RotAboutArbPtAndAx(const CPnt& pt, const CPnt& ptRef, const CVec& vRef, double adAng)
 {
 	CTMat tm(ptRef, vRef, adAng);
 
@@ -193,35 +212,35 @@ bool pFndCPGivRadAnd4Pts(double adRad, CPnt arLn1Beg, CPnt arLn1End, CPnt arLn2B
 	dV1Mag = v1.Length();									// Determine length of first vector
 	if (dV1Mag <= DBL_EPSILON)											// Endpoints of first line coincide
 		return false;
-	
+
 	CVec v2(arLn2Beg, arLn2End);					// Determine vector defined by endpoints of second line
 	dV2Mag = v2.Length();									// Determine length of second vector
 	if (dV2Mag <= DBL_EPSILON)											// Endpoints of second line coincide
 		return false;
-	
+
 	vPlnNorm = v1 ^ v2; 						// Determine vector normal to tangent vectors
 	vPlnNorm.Normalize();
 	if (vPlnNorm.IsNull())										// Two lines are parallel
 		return false;
-	
+
 	if (fabs((vPlnNorm * CVec(arLn1Beg, arLn2Beg))) > DBL_EPSILON) // Four points are not coplanar
 		return false;
-	
+
 	CTMat tm(arLn1Beg, vPlnNorm);
-	
+
 	arLn1End = tm * arLn1End;							// Transform points to z0 plane
 	arLn2Beg = tm * arLn2Beg;
 	arLn2End = tm * arLn2End;
-	dA1 = - arLn1End[1] / dV1Mag;									// Determine normalized coefficients of line perpendicular to first line
+	dA1 = -arLn1End[1] / dV1Mag;									// Determine normalized coefficients of line perpendicular to first line
 	dB1 = arLn1End[0] / dV1Mag;
 	v2[0] = arLn2End[0] - arLn2Beg[0]; 						// Determine vector defined by transformed endpoints of second line
 	v2[1] = arLn2End[1] - arLn2Beg[1];
-	dA2 = - v2[1] / dV2Mag; 									// Determine normalized coefficients of line perpendicular to second line
+	dA2 = -v2[1] / dV2Mag; 									// Determine normalized coefficients of line perpendicular to second line
 	dB2 = v2[0] / dV2Mag;
 	dDet = dA2 * dB1 - dA1 * dB2;								// Determine the determinant
-	
-	dSgnRad = (arLn1End[0] * arLn2End[1] - arLn2End[0] * arLn1End[1]) >= 0. ? - fabs(adRad) : fabs(adRad);
-	
+
+	dSgnRad = (arLn1End[0] * arLn2End[1] - arLn2End[0] * arLn1End[1]) >= 0. ? -fabs(adRad) : fabs(adRad);
+
 	dC1RAB1 = dSgnRad;
 	dC2RAB2 = (arLn2Beg[0] * arLn2End[1] - arLn2End[0] * arLn2Beg[1]) / dV2Mag + dSgnRad;
 	(*ptCP)[0] = (dB2 * dC1RAB1 - dB1 * dC2RAB2) / dDet;

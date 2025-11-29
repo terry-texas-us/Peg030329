@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "Block.h"
+
 CBlock::CBlock(WORD wBlkTypFlgs, const CPnt& ptBase)
 {
 	m_wBlkTypFlgs = wBlkTypFlgs;

@@ -6,6 +6,10 @@
 
 #include "ddeCmds.h"
 #include "FileJob.h"
+#include "PrimState.h"
+#include "PrimText.h"
+#include "SegsDet.h"
+#include "SegsTrap.h"
 #include "Text.h"
 #include "UnitsString.h"
 

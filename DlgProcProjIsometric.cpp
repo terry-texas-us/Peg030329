@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "resource.h"
+
 #include "PegAEsysView.h"
 
 BOOL CALLBACK DlgProcProjIsometric(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM  )

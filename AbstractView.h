@@ -1,5 +1,10 @@
 #pragma once
 
+#include <afxwin.h> // for CObject
+
+#include "Pnt.h" // for CPnt
+#include "Vec.h" // for CVec
+
 /*
 The view target and the direction create a display coordinate system (DCS).
 The z-direction equals the direction from target to camera (points toward viewer)

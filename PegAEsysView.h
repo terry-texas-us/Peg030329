@@ -1,6 +1,7 @@
-// PegAEsysView.h : interface of the CPegView class
-
 #pragma once
+
+#include "ModelView.h"
+#include "Viewport.h"
 
 class CPegDoc;
 

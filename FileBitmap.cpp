@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <afxwin.h>
+
 #include "FileBitmap.h"
 
 CFileBitmap::CFileBitmap(const CString& strFileName)
@@ -11,11 +13,11 @@ CFileBitmap::CFileBitmap(const CString& strFileName)
 }
 
 bool CFileBitmap::Load(const CString& strFileName, CBitmap& bmReference, CPalette& palReference)
-{	
+{
 	HBITMAP hBitmap = (HBITMAP) ::LoadImage(0, strFileName, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
-	if (hBitmap == NULL) 
+	if (hBitmap == NULL)
 		return false;
-	
+
 	bmReference.Attach(hBitmap);
 
 	// Return now if device does not support palettes
@@ -28,35 +30,35 @@ bool CFileBitmap::Load(const CString& strFileName, CBitmap& bmReference, CPalett
 	bmReference.GetObject(sizeof(DIBSECTION), &ds);
 
 	int nColors;
-	
+
 	if (ds.dsBmih.biClrUsed != 0)
 		nColors = ds.dsBmih.biClrUsed;
 	else
 		nColors = 1 << ds.dsBmih.biBitCount;
-	
+
 	// Create a halftone palette if the DIB section contains more than 256 colors
 	if (nColors > 256)
 	{
 		palReference.CreateHalftonePalette(&dc);
-	}		
+	}
 	else
 	{	// Create a custom palette from the DIB section's color table
 		RGBQUAD* pRGB = new RGBQUAD[nColors];
-		
+
 		CDC dcMem;
 		dcMem.CreateCompatibleDC(&dc);
 
 		CBitmap* pBitmap = dcMem.SelectObject(&bmReference);
-		::GetDIBColorTable((HDC) dcMem, 0, nColors, pRGB);
+		::GetDIBColorTable((HDC)dcMem, 0, nColors, pRGB);
 		dcMem.SelectObject(pBitmap);
 
 		UINT nSize = sizeof(LOGPALETTE) + (sizeof(PALETTEENTRY) * (nColors - 1));
-		
+
 		LOGPALETTE* pLogPal = (LOGPALETTE*) new BYTE[nSize];
-		
+
 		pLogPal->palVersion = 0x300;
-		pLogPal->palNumEntries = (WORD) nColors;
-		
+		pLogPal->palNumEntries = (WORD)nColors;
+
 		for (int i = 0; i < nColors; i++)
 		{
 			pLogPal->palPalEntry[i].peRed = pRGB[i].rgbRed;
@@ -70,6 +72,6 @@ bool CFileBitmap::Load(const CString& strFileName, CBitmap& bmReference, CPalett
 		delete [] pRGB;
 	}
 	Close();
-	
+
 	return true;
 }

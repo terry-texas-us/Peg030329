@@ -1,6 +1,12 @@
 #pragma once
 
-class CCharCellDef;
+#include <afxwin.h> // for CFile
+
+#include "CharCellDef.h"
+#include "Pnt.h" // for CPnt, ORIGIN
+#include "TMat.h" // for CTMat
+#include "Vec.h" // for CVec, XDIR, YDIR
+
 class CRefSys
 {
 protected:

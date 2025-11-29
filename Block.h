@@ -1,5 +1,11 @@
 #pragma once
 
+#include <afxtempl.h> // For CTypedPtrMap, CMapStringToOb
+#include <afxwin.h>   // For CString, CObject, WORD (includes afx.h and windows.h implicitly)
+
+#include "Pnt.h" // for CPnt member
+#include "Seg.h" // for CSeg base class
+
 class CBlock : public CSeg
 {
 private:

@@ -3,8 +3,11 @@
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
 
+#include "ExpProcs.h"
 #include "Grid.h"
 #include "Polyline.h"
+#include "Prim.h"
+#include "PrimState.h"
 
 using namespace grid;
 

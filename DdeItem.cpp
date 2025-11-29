@@ -5,7 +5,7 @@
 using namespace dde;
 
 // Add a new item.
-PITEMINFO dde::ItemAdd(LPSTR lpszTopic, LPSTR lpszItem, LPWORD lpFormatList, PREQUESTFN lpReqFn, PPOKEFN lpPokeFn)
+PITEMINFO dde::ItemAdd(const char* lpszTopic, const char* lpszItem, LPWORD lpFormatList, PREQUESTFN lpReqFn, PPOKEFN lpPokeFn)
 {
 	PITEMINFO pItem = 0;
 	PTOPICINFO pTopic = TopicFind(lpszTopic);
@@ -14,28 +14,28 @@ PITEMINFO dde::ItemAdd(LPSTR lpszTopic, LPSTR lpszItem, LPWORD lpFormatList, PRE
 		pTopic = TopicAdd(lpszTopic, 0, 0, 0);
 
 	if (!pTopic) return 0;				// failed
-	
-	pItem = ItemFind(pTopic, lpszItem);
+
+	pItem = ItemFind(pTopic, const_cast<LPSTR>(lpszItem));
 
 	if (pItem)
 	{	 // Already have this item.  Just update the info in it.
 		pItem->pfnRequest = lpReqFn;
 		pItem->pfnPoke = lpPokeFn;
 		pItem->pFormatList = lpFormatList;
-	} 
-	else														
+	}
+	else
 	{	// Create a new item
 		pItem = (PITEMINFO) new char[sizeof(ITEMINFO)];
 		if (!pItem) return 0;
 
 		::ZeroMemory(pItem, sizeof(ITEMINFO));
-		pItem->pszItemName = lpszItem;
+		pItem->pszItemName = const_cast<LPSTR>(lpszItem);
 		pItem->hszItemName = DdeCreateStringHandle(ServerInfo.dwInstance, lpszItem, CP_WINANSI);
 		pItem->pTopic = pTopic;
 		pItem->pfnRequest = lpReqFn;
 		pItem->pfnPoke = lpPokeFn;
 		pItem->pFormatList = lpFormatList;
-		
+
 		// Add it to the existing item list for this topic
 		pItem->pNext = pTopic->pItemList;
 		pTopic->pItemList = pItem;
@@ -43,14 +43,14 @@ PITEMINFO dde::ItemAdd(LPSTR lpszTopic, LPSTR lpszItem, LPWORD lpFormatList, PRE
 	return pItem;
 }
 ///<summary>Find an item by its name in a topic </summary>
-PITEMINFO dde::ItemFind(PTOPICINFO pTopic, LPSTR lpszItem)
+PITEMINFO dde::ItemFind(PTOPICINFO pTopic, const char* lpszItem)
 {
 	PITEMINFO pItem = pTopic->pItemList;
-	while (pItem) 
+	while (pItem)
 	{
-		if (lstrcmpi(pItem->pszItemName, lpszItem) == 0) 
+		if (lstrcmpi(pItem->pszItemName, lpszItem) == 0)
 			break;
-		
+
 		pItem = pItem->pNext;
 	}
 	return pItem;
@@ -59,11 +59,11 @@ PITEMINFO dde::ItemFind(PTOPICINFO pTopic, LPSTR lpszItem)
 PITEMINFO dde::ItemFind(PTOPICINFO pTopic, HSZ hszItem)
 {
 	PITEMINFO pItem = pTopic->pItemList;
-	while (pItem) 
+	while (pItem)
 	{
-		if (DdeCmpStringHandles(pItem->hszItemName, hszItem) == 0) 
+		if (DdeCmpStringHandles(pItem->hszItemName, hszItem) == 0)
 			break;
-		
+
 		pItem = pItem->pNext;
 	}
 	return pItem;
@@ -73,24 +73,24 @@ bool dde::ItemRemove(LPSTR lpszTopic, LPSTR lpszItem)
 {
 	PTOPICINFO pTopic = TopicFind(lpszTopic);
 	PITEMINFO pItem, pPrevItem;
-	
+
 	// See if we have this topic
-	if (!pTopic) 
+	if (!pTopic)
 		return false;
-	
+
 	// Walk the topic item list looking for this item.
-	
+
 	pPrevItem = 0;
 	pItem = pTopic->pItemList;
-	while (pItem) 
+	while (pItem)
 	{
 		if (lstrcmpi(pItem->pszItemName, lpszItem) == 0)		// Found it.  Unlink it from the list.
 		{
-			if (pPrevItem) 
+			if (pPrevItem)
 				pPrevItem->pNext = pItem->pNext;
-			else 
+			else
 				pTopic->pItemList = pItem->pNext;
-			
+
 			// Release its string handle
 			DdeFreeStringHandle(ServerInfo.dwInstance, pItem->hszItemName);
 

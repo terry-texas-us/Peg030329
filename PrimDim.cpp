@@ -4,10 +4,18 @@
 #include "PegAEsysView.h"
 
 #include "ddeGItms.h"
+#include "FilePeg.h"
+#include "Messages.h"
+#include "ModelTransform.h"
+#include "OpenGL.h"
 #include "Polyline.h"
+#include "PrimDim.h"
+#include "PrimState.h"
+#include "SafeMath.h"
+#include "Seg.h"
+#include "Segs.h"
 #include "Text.h"
 #include "UnitsString.h"
-#include "Messages.h"
 
 WORD CPrimDim::mS_wFlags = 0;
 
@@ -15,17 +23,17 @@ CPrimDim::CPrimDim(PENCOLOR nPenColor, PENSTYLE nPenStyle, const CLine& ln) : m_
 {
 	m_nPenColor = nPenColor;
 	m_nPenStyle = nPenStyle;
-	
+
 	m_nTextPenColor = 5;
 	pstate.GetFontDef(m_fd);
 	SetDefaultNote();
 }
-CPrimDim::CPrimDim(const CPrimDim& src) 
+CPrimDim::CPrimDim(const CPrimDim& src)
 {
 	m_nPenColor = src.m_nPenColor;
 	m_nPenStyle = src.m_nPenStyle;
 	m_ln = src.m_ln;
-    
+
 	m_nTextPenColor = src.m_nTextPenColor;
 	m_fd = src.m_fd;
 	m_rs = src.m_rs;
@@ -36,17 +44,17 @@ const CPrimDim& CPrimDim::operator=(const CPrimDim& src)
 	m_nPenColor = src.m_nPenColor;
 	m_nPenStyle = src.m_nPenStyle;
 	m_ln = src.m_ln;
-	
+
 	m_nTextPenColor = src.m_nTextPenColor;
-    m_fd = src.m_fd;
+	m_fd = src.m_fd;
 	m_rs = src.m_rs;
 	m_strText = src.m_strText;
-	
+
 	return (*this);
 }
 void CPrimDim::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const
 {
-	tvAddItem(hTree, hParent, "<Dim>", (CObject*) this);
+	tvAddItem(hTree, hParent, "<Dim>", (CObject*)this);
 }
 CPrim*& CPrimDim::Copy(CPrim*& pPrim) const
 {
@@ -59,10 +67,10 @@ CPrim*& CPrimDim::Copy(CPrim*& pPrim) const
 //						points
 //				pSegNew segment to place line defined by the cut points
 void CPrimDim::CutAt2Pts(CPnt* pt, CSegs* pSegs, CSegs* pSegsNew)
-{ 
-	CPrimDim*	pDim;
+{
+	CPrimDim* pDim;
 	double	dRel[2];
-		
+
 	line::RelOfPtToEndPts(m_ln, pt[0], dRel[0]);
 	line::RelOfPtToEndPts(m_ln, pt[1], dRel[1]);
 
@@ -76,9 +84,9 @@ void CPrimDim::CutAt2Pts(CPnt* pt, CSegs* pSegs, CSegs* pSegsNew)
 		{	// Cut section out of middle
 			pDim->SetPt0(pt[1]);
 			pDim->SetDefaultNote();
-			
+
 			pSegs->AddTail(new CSeg(pDim));
-			
+
 			pDim = new CPrimDim(*this);
 			pDim->SetPt0(pt[0]);
 			pDim->SetPt1(pt[1]);
@@ -115,7 +123,7 @@ void CPrimDim::CutAtPt(const CPnt& pt, CSeg* pSeg)
 		pSeg->AddTail(pDim);
 	}
 	SetDefaultNote();
-}	 
+}
 void CPrimDim::Display(CPegView* pView, CDC* pDC) const
 {
 	PENCOLOR nPenColor = LogicalPenColor();
@@ -123,8 +131,8 @@ void CPrimDim::Display(CPegView* pView, CDC* pDC) const
 	{
 		opengl::SetCurrentColor(app.PenColorsGetHot(nPenColor));
 		opengl::BeginLineStrip();
-			opengl::SetVertex(m_ln[0]);
-			opengl::SetVertex(m_ln[1]);
+		opengl::SetVertex(m_ln[0]);
+		opengl::SetVertex(m_ln[1]);
 		opengl::End();
 
 		opengl::SetCurrentColor(app.PenColorsGetHot(m_nTextPenColor));
@@ -136,10 +144,10 @@ void CPrimDim::Display(CPegView* pView, CDC* pDC) const
 		m_ln.Display(pView, pDC);
 
 		pstate.SetPenColor(m_nTextPenColor);
-			
+
 		PENSTYLE nPenStyle = pstate.PenStyle();
 		pstate.SetPenStyle(1);
-			
+
 		text_Display0(pView, pDC, m_fd, m_rs, m_strText);
 
 		pstate.SetPenStyle(nPenStyle);
@@ -157,11 +165,11 @@ void CPrimDim::DisRep(const CPnt& pt) const
 
 	double dRel;
 	line::RelOfPtToEndPts(m_ln, pt, dRel);
-	
+
 	if (dRel > .5)
 		// Normalize line prior to angle determination
 		dAng += PI;
-	
+
 	dAng = fmod(dAng, TWOPI);
 	app.SetEngLen(dLen);
 	app.SetEngAngZ(dAng);
@@ -195,9 +203,9 @@ void CPrimDim::GetBoundingBox(CPnts& ptsBox, double dSpacFac) const
 }
 ///<summary>Determines the extent.</summary>
 void CPrimDim::GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const
-{	
+{
 	CPnt pt[2] = {m_ln[0], m_ln[1]};
-	
+
 	for (WORD w = 0; w < 2; w++)
 	{
 		mspace.Transform(pt[w]);
@@ -216,8 +224,8 @@ CPnt CPrimDim::GoToNxtCtrlPt() const
 	{	// Initial rock .. jump to point at lower left or down if vertical
 		CPnt ptBeg = m_ln[0];
 		CPnt ptEnd = m_ln[1];
-		
-		if (ptEnd[0] > ptBeg[0])				
+
+		if (ptEnd[0] > ptBeg[0])
 			mS_wCtrlPt = 0;
 		else if (ptEnd[0] < ptBeg[0])
 			mS_wCtrlPt = 1;
@@ -227,11 +235,11 @@ CPnt CPrimDim::GoToNxtCtrlPt() const
 			mS_wCtrlPt = 1;
 	}
 	return (mS_wCtrlPt == 0 ? m_ln[0] : m_ln[1]);
-}	
+}
 bool CPrimDim::IsInView(CPegView* pView) const
 {
-	CPnt4 pt[] = {CPnt4(m_ln[0], 1.), CPnt4(m_ln[1], 1.)};
-		
+	CPnt4 pt [] = {CPnt4(m_ln[0], 1.), CPnt4(m_ln[1], 1.)};
+
 	pView->ModelViewTransform(2, &pt[0]);
 
 	return (Pnt4_ClipLine(pt[0], pt[1]));
@@ -239,12 +247,12 @@ bool CPrimDim::IsInView(CPegView* pView) const
 bool CPrimDim::IsPtACtrlPt(CPegView* pView, const CPnt4& ptPic) const
 {
 	CPnt4 pt;
-	
+
 	for (WORD w = 0; w < 2; w++)
 	{
 		pt = CPnt4(m_ln[w], 1.);
 		pView->ModelViewTransform(pt);
-		
+
 		if (Pnt4_DistanceTo_xy(ptPic, pt) < mS_dPicApertSiz)
 			return true;
 	}
@@ -254,11 +262,11 @@ void CPrimDim::ModifyState()
 {
 	if ((mS_wFlags & 0x0001) != 0)
 		CPrim::ModifyState();
-	
+
 	if ((mS_wFlags & 0x0002) != 0)
 		pstate.GetFontDef(m_fd);
 }
-void CPrimDim::Read(CFile& fl) 
+void CPrimDim::Read(CFile& fl)
 {
 	CPrim::Read(fl);
 	m_ln.Read(fl);
@@ -268,7 +276,7 @@ void CPrimDim::Read(CFile& fl)
 	m_rs.Read(fl);
 	FilePeg_ReadString(fl, m_strText);
 }
-double CPrimDim::RelOfPt(const CPnt& pt) const 
+double CPrimDim::RelOfPt(const CPnt& pt) const
 {
 	double dRel;
 	line::RelOfPtToEndPts(m_ln, pt, dRel);
@@ -284,10 +292,10 @@ CPnt CPrimDim::SelAtCtrlPt(CPegView* pView, const CPnt4& ptPic) const
 	{
 		CPnt4 pt(m_ln[w], 1.);
 		pView->ModelViewTransform(pt);
-	
+
 		double dDis = Pnt4_DistanceTo_xy(ptPic, pt);
-	
-		if (dDis < dAPert) 
+
+		if (dDis < dAPert)
 		{
 			mS_wCtrlPt = w;
 			dAPert = dDis;
@@ -304,11 +312,11 @@ bool CPrimDim::SelUsingPoint(CPegView* pView, const CPnt4& pt0, double dTol, CPn
 	pt[1] = CPnt4(m_ln[1], 1.);
 	pView->ModelViewTransform(2, &pt[0]);
 
-	CLine ln; 
-	ln[0] = pt[0]; 
+	CLine ln;
+	ln[0] = pt[0];
 	ln[1] = pt[1];
 	double	dProjDis;
-	if (line::EvalPtProx_xy(ln, pt0, dTol, ptProj, &mS_dRel, &dProjDis)) 
+	if (line::EvalPtProx_xy(ln, pt0, dTol, ptProj, &mS_dRel, &dProjDis))
 	{
 		ptProj[2] = ln[0][2] + mS_dRel * (ln[1][2] - ln[0][2]);
 		mS_wFlags |= 0x0001;
@@ -316,7 +324,7 @@ bool CPrimDim::SelUsingPoint(CPegView* pView, const CPnt4& pt0, double dTol, CPn
 	}
 	CPnts ptsExt;
 	GetBoundingBox(ptsExt, 0.);
-	
+
 	pt[0] = CPnt4(ptsExt[0], 1.);
 	pt[1] = CPnt4(ptsExt[1], 1.);
 	pt[2] = CPnt4(ptsExt[2], 1.);
@@ -331,7 +339,7 @@ bool CPrimDim::SelUsingPoint(CPegView* pView, const CPnt4& pt0, double dTol, CPn
 	ptProj = pt0;
 	mS_wFlags |= 0x0002;
 	return true;
-}	 
+}
 ///<summary>Evaluates whether a line intersects a dimension line.</summary>
 bool CPrimDim::SelUsingLine(CPegView* pView, const CLine& ln, CPnts& ptsInt)
 {
@@ -340,7 +348,7 @@ bool CPrimDim::SelUsingLine(CPegView* pView, const CLine& ln, CPnts& ptsInt)
 	polyline::SetVertex(m_ln[1]);
 
 	return polyline::SelUsingLine(pView, ln, ptsInt);
-}			
+}
 bool CPrimDim::SelUsingRect(CPegView* pView, const CPnt& pt1, const CPnt& pt2)
 {
 	polyline::BeginLineStrip();
@@ -358,25 +366,25 @@ bool CPrimDim::SelUsingRect(CPegView* pView, const CPnt& pt1, const CPnt& pt2)
 void CPrimDim::SetDefaultNote()
 {
 	CPegView* pView = CPegView::GetActiveView();
-	
+
 	m_rs.SetOrigin(m_ln.ProjPtAlong(.5));
-	double dAng = 0.;	
+	double dAng = 0.;
 	char cText0 = m_strText[0];
 	if (cText0 != 'R' && cText0 != 'D')
 	{
-        dAng = m_ln.GetAngAboutZAx();
+		dAng = m_ln.GetAngAboutZAx();
 		double dDis = .075;
-		if (dAng > HALF_PI + RADIAN && dAng < TWOPI - HALF_PI + RADIAN) 
+		if (dAng > HALF_PI + RADIAN && dAng < TWOPI - HALF_PI + RADIAN)
 		{
-			dAng -= PI; 
-			dDis = - dDis;
+			dAng -= PI;
+			dDis = -dDis;
 		}
 		CPnt ptOrigin;
 		line::ProjPtFrom_xy(CLine(m_rs.Origin(), m_ln[1]), 0., dDis, &ptOrigin);
 		m_rs.SetOrigin(ptOrigin);
 	}
 	CVec vPlnNorm = pView->ModelViewGetDirection();
-	
+
 	CVec vRefXAx;
 	CVec vRefYAx;
 
@@ -384,9 +392,9 @@ void CPrimDim::SetDefaultNote()
 	vRefYAx.RotAboutArbAx(vPlnNorm, dAng);
 	vRefYAx *= .1;
 	vRefXAx = vRefYAx;
-	vRefXAx.RotAboutArbAx(vPlnNorm, - HALF_PI);
+	vRefXAx.RotAboutArbAx(vPlnNorm, -HALF_PI);
 	vRefXAx *= .6;
-	
+
 	m_rs.SetDirX(vRefXAx);
 	m_rs.SetDirY(vRefYAx);
 
@@ -396,12 +404,12 @@ void CPrimDim::SetDefaultNote()
 	m_strText.TrimLeft();
 	if (cText0 == 'R' || cText0 == 'D')
 		m_strText = cText0 + m_strText;
-}			
+}
 void CPrimDim::Transform(const CTMat& tm)
 {
 	if ((mS_wFlags & 0x0001) != 0)
 	{
-		m_ln[0] = tm * m_ln[0]; 
+		m_ln[0] = tm * m_ln[0];
 		m_ln[1] = tm * m_ln[1];
 	}
 	if ((mS_wFlags & 0x0002) != 0)
@@ -418,13 +426,13 @@ void CPrimDim::TranslateUsingMask(const CVec& v, const DWORD dwMask)
 {
 	if ((dwMask & 1) == 1)
 		m_ln[0] += v;
-	
+
 	if ((dwMask & 2) == 2)
 		m_ln[1] += v;
 
 	SetDefaultNote();
 }
-bool CPrimDim::Write(CFile& fl) const 
+bool CPrimDim::Write(CFile& fl) const
 {
 	FilePeg_WriteWord(fl, PRIM_DIM);
 

@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+#include "FilePeg.h"
+#include "PrimState.h"
+
 PENCOLOR	CPrim::mS_nLayerPenColor = 1;
 PENSTYLE	CPrim::mS_nLayerPenStyle = 1;
 PENSTYLE	CPrim::mS_nSpecPenStyle = 0;

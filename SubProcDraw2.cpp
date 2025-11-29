@@ -5,7 +5,9 @@
 #include "PegAEsysView.h"
 
 #include "DlgSetLength.h"
-
+#include "PrimLine.h"
+#include "PrimState.h"
+#include "SegsDet.h"
 #include "UserAxis.h"
 
 double	p2LNdDisBetLns = 6.;		// Distance between parallel line (user units)

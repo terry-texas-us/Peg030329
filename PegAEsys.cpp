@@ -1,22 +1,43 @@
-// PegAEsys.cpp : Defines the class behaviors for the application.
-
 #include "stdafx.h"
 
-#include "MainFrm.h"
+#include <afxdisp.h>
+#include <afxdlgs.h>
+#include <direct.h>
+#include <iomanip>
+#include <sstream>
+#include <string>
+
 #include "ChildFrm.h"
+#include "MainFrm.h"
 #include "PegAEsys.h"
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
+#include "CharCellDef.h"
+#include "Dde.h"
 #include "Directory.h"
-#include "FileBitmap.h"
-#include "Grid.h"
-#include "ddeGItms.h"
 #include "DlgProcEditOps.h"
+#include "ExpProcs.h"
+#include "FontDef.h"
 #if ODA_FUNCTIONALITY
 #include "FileOpenDWG.h"
 #endif
-#include "Hatch.h"
+#include "Grid.h"
+#include "Messages.h"
+#include "ModelTransform.h"
+#include "OpenGL.h"
+#include "PenStyle.h"
+#include "Pnt.h"
+#include "Pnt4.h"
+#include "Polygon.h"
+#include "Prim.h"
+#include "PrimPolygon.h"
+#include "PrimState.h"
+#include "resource.h"
+#include "Seg.h"
+#include "Segs.h"
+#include "SegsDet.h"
+#include "SegsTrap.h"
 #include "SubProcAnnotate.h"
 #include "SubProcCut.h"
 #include "SubProcDimension.h"
@@ -34,9 +55,10 @@
 #include "SubProcRLPD.h"
 #include "SubProcTrapAdd.h"
 #include "SubProcTrapRemove.h"
+#include "TMat.h"
 #include "UnitsString.h"
 #include "UserAxis.h"
-#include "Dde.h"
+
 
 LRESULT CALLBACK WndProcKeyPlan(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WndProcPreview(HWND, UINT, WPARAM, LPARAM);
@@ -52,7 +74,7 @@ namespace hatch
 double gbl_dExtNum = 0.;
 char gbl_szExtStr[128];
 
-double dPWids[] = 
+double dPWids [] =
 {
 	0., .0075, .015, .02, .03, .0075, .015, .0225, .03, .0075, .015, .0225, .03, .0075, .015, .0225
 };
@@ -68,8 +90,8 @@ CSegsDet detsegs;
 CTMat tmEditSeg;
 
 extern DWORD	dwMendPrimPtId;
-extern CPrim*	pPrimToMend;
-extern CPrim*	pPrimToMendCopy;
+extern CPrim* pPrimToMend;
+extern CPrim* pPrimToMendCopy;
 extern CPnt	ptMendPrimBeg;
 
 #ifdef _DEBUG
@@ -83,7 +105,7 @@ extern CPnt	ptMendPrimBeg;
 CPegApp::CPegApp()
 {
 	SetShadowDir("PegAEsys Shadow Files");
-	
+
 	m_bEditCFImage = false;
 	m_bEditCFSegments = true;
 	m_bEditCFText = true;
@@ -161,38 +183,38 @@ BOOL CPegApp::InitInstance()
 	Path_UnquoteSpaces(m_strAppPath);
 
 	m_hMenu = ::LoadMenu(m_hInstance, MAKEINTRESOURCE(IDR_MAINFRAME));
-#if !defined(GL_FUNCTIONALITY)
-	::EnableMenuItem(m_hMenu, ID_VIEW_LIGHTING, MF_BYCOMMAND | MF_GRAYED); 
-	::EnableMenuItem(m_hMenu, ID_VIEW_RENDERED, MF_BYCOMMAND | MF_GRAYED); 
-	::EnableMenuItem(m_hMenu, ID_VIEW_WIREFRAME, MF_BYCOMMAND | MF_GRAYED); 
-#endif // GL_FUNCTIONALITY
+#if !GL_FUNCTIONALITY
+	::EnableMenuItem(m_hMenu, ID_VIEW_LIGHTING, MF_BYCOMMAND | MF_GRAYED);
+	::EnableMenuItem(m_hMenu, ID_VIEW_RENDERED, MF_BYCOMMAND | MF_GRAYED);
+	::EnableMenuItem(m_hMenu, ID_VIEW_WIREFRAME, MF_BYCOMMAND | MF_GRAYED);
+#endif
 
-	WNDCLASS  wc;
+	WNDCLASS wc { };
 
-	wc.style			= CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc		= WndProcKeyPlan;
-	wc.cbClsExtra		= 0;
-	wc.cbWndExtra		= 0;
-	wc.hInstance		= m_hInstance;
-	wc.hIcon			= 0;
-	wc.hCursor			= ::LoadCursor(0, IDC_CROSS);
-	wc.hbrBackground	= (HBRUSH) ::GetStockObject(BLACK_BRUSH);
-	wc.lpszMenuName 	= 0; 
-	wc.lpszClassName	= "View";
+	wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc = WndProcKeyPlan;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = m_hInstance;
+	wc.hIcon = 0;
+	wc.hCursor = ::LoadCursor(0, IDC_CROSS);
+	wc.hbrBackground = (HBRUSH) ::GetStockObject(BLACK_BRUSH);
+	wc.lpszMenuName = 0;
+	wc.lpszClassName = "View";
 
 	if (!::RegisterClass(&wc))
 		return (FALSE);
 
-	wc.style			= CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc		= WndProcPreview;
-	wc.cbClsExtra		= 0;
-	wc.cbWndExtra		= 0;
-	wc.hInstance		= m_hInstance;
-	wc.hIcon			= 0;
-	wc.hCursor			= ::LoadCursor(0, IDC_CROSS);
-	wc.hbrBackground	= (HBRUSH) ::GetStockObject(BLACK_BRUSH);
-	wc.lpszMenuName 	= 0; 
-	wc.lpszClassName	= "Preview";
+	wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc = WndProcPreview;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = m_hInstance;
+	wc.hIcon = 0;
+	wc.hCursor = ::LoadCursor(0, IDC_CROSS);
+	wc.hbrBackground = (HBRUSH) ::GetStockObject(BLACK_BRUSH);
+	wc.lpszMenuName = 0;
+	wc.lpszClassName = "Preview";
 
 	if (!::RegisterClass(&wc))
 		return (FALSE);
@@ -202,19 +224,19 @@ BOOL CPegApp::InitInstance()
 	PenColorsLoad(m_strAppPath + "\\Pens\\Colors\\Default.txt");
 	PenStylesLoad(m_strAppPath + "\\Pens\\LineTypes.txt");
 	StrokeFontLoad("");
-	
+
 	CPegView* pView = CPegView::GetActiveView();
 	CDC* pDC = pView->GetDC();
 
 	InitGbls(m_pMainWnd->GetDC());
-	
+
 	SetBackGround(crHotCols[0]);
 
 	pView->SetDeviceWidthInPixels(pDC->GetDeviceCaps(HORZRES));
 	pView->SetDeviceHeightInPixels(pDC->GetDeviceCaps(VERTRES));
 	pView->SetDeviceWidthInInches(double(pDC->GetDeviceCaps(HORZSIZE)) / 25.4);
 	pView->SetDeviceHeightInInches(double(pDC->GetDeviceCaps(VERTSIZE)) / 25.4);
-	
+
 	opengl::Initialize(pDC);
 
 	app.LineFontCreate();
@@ -224,13 +246,13 @@ BOOL CPegApp::InitInstance()
 	// The main window has been initialized, so show and update it
 	m_pMainWnd->ShowWindow(m_nCmdShow);
 	m_pMainWnd->UpdateWindow();
-	
+
 	// Initialize for using DDEML
-	dde::Setup(m_hInstance);											
+	dde::Setup(m_hInstance);
 
 	// This is the private data format used to pass segs from one instance of peg to another
 	m_nClipboardFormatPegSegs = RegisterClipboardFormat("PegSegs");
-	
+
 	return TRUE;
 }
 
@@ -332,7 +354,6 @@ void CPegApp::OnModeCut()
 {
 	SetWindowMode(ID_MODE_CUT);
 }
-#pragma tasMSG(TODO: OnModeNodal - has dwg refs)
 void CPegApp::OnModeNodal()
 {
 	CPegDoc* pDoc = CPegDoc::GetDoc();
@@ -345,12 +366,12 @@ void CPegApp::OnModeNodal()
 	CPnts pts;
 	short nMarkStyle = pstate.MarkStyle();
 	pstate.SetMarkStyle(11);
-	
+
 	POSITION pos = pDoc->WorkLayerGetHeadPosition();
 	while (pos != 0)
 	{
 		CSeg* pSeg = pDoc->WorkLayerGetNext(pos);
-		
+
 		POSITION posPrim = pSeg->GetHeadPosition();
 		while (posPrim != 0)
 		{
@@ -390,7 +411,7 @@ void CPegApp::OnModePrimEdit()
 	app.SetEditSegBeg(app.CursorPosGet());
 
 	CSeg* pSeg = detsegs.SelSegAndPrimUsingPoint(app.GetEditSegBeg());
-	
+
 	if (pSeg != 0)
 	{
 		SetWindowMode(ID_MODE_PRIM_EDIT);
@@ -400,11 +421,11 @@ void CPegApp::OnModePrimEdit()
 void CPegApp::OnModeSegEdit()
 {
 	app.SetEditSegBeg(app.CursorPosGet());
-	
+
 	CSeg* pSeg = detsegs.SelSegAndPrimUsingPoint(app.GetEditSegBeg());
 
 	if (pSeg != 0)
-	{		
+	{
 		SetWindowMode(ID_MODE_SEG_EDIT);
 		AppSetGinCur(pSeg);
 	}
@@ -421,17 +442,17 @@ void CPegApp::OnModePrimMend()
 	CPnt pt = app.CursorPosGet();
 	CPnt4 ptView(pt, 1.);
 	pView->ModelViewTransform(ptView);
-	
+
 	pPrimToMend = 0;
 
 	if (detsegs.IsSegEngaged())
 	{	// Segment is currently engaged, see if cursor is on a control point
 		CPnt ptDet;
-		
+
 		CPrim* pPrim = detsegs.DetPrim();
-		
+
 		CPrimPolygon::EdgeToEvaluate() = CPrimPolygon::Edge();
-		
+
 		if (pPrim->SelUsingPoint(pView, ptView, detsegs.PicApertSiz(), ptDet))
 		{	// Cursor is close enough to engaged primitive to use it first
 			pPrimToMend = pPrim;
@@ -451,7 +472,7 @@ void CPegApp::OnModePrimMend()
 		pPrimToMend->Copy(pPrimToMendCopy);
 		ptMendPrimBeg = pPrimToMend->SelAtCtrlPt(pView, ptView);
 		dwMendPrimPtId = 1 << CPrim::CtrlPt();
-		
+
 		SetWindowMode(ID_MODE_PRIM_MEND);
 	}
 }
@@ -469,7 +490,7 @@ void CPegApp::OnFileRun()
 {
 	char szFilter[256];
 	::LoadString(app.GetInstance(), IDS_OPENFILE_FILTER_APPS, szFilter, sizeof(szFilter));
-	
+
 	CFileDialog dlg(TRUE, "exe", "*.exe", OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, szFilter);
 	dlg.m_ofn.lpstrTitle = "Run Application";
 
@@ -485,10 +506,10 @@ void CPegApp::OnHelpContents()
 	::WinHelp(app.GetSafeHwnd(), "peg.hlp", HELP_CONTENTS, 0L);
 }
 void CPegApp::PenWidthsLoad(const CString& strFileName)
-{	
+{
 	CStdioFile fl;
-	
-	if (fl.Open(strFileName, CFile::modeRead | CFile::typeText)) 
+
+	if (fl.Open(strFileName, CFile::modeRead | CFile::typeText))
 	{
 		char pBuf[32];
 		char* context = nullptr;
@@ -504,11 +525,11 @@ void CPegApp::PenWidthsLoad(const CString& strFileName)
 WORD CPegApp::GetFileTypeFromPath(const CString& strPathName)
 {
 	int nExt = strPathName.ReverseFind('.');
-	
-	if (nExt != - 1)
+
+	if (nExt != -1)
 	{
 		CString strExt = strPathName.Mid(nExt);
-		
+
 		if (strExt.CompareNoCase(".blk") == 0)
 			return (CPegDoc::FILE_TYPE_BLOCK);
 		else if (strExt.CompareNoCase(".dwg") == 0)
@@ -528,11 +549,11 @@ WORD CPegApp::GetFileTypeFromPath(const CString& strPathName)
 	}
 	return (CPegDoc::FILE_TYPE_NONE);
 }
-void CPegApp::SetShadowDir(const CString& strDir) 
+void CPegApp::SetShadowDir(const CString& strDir)
 {
 	TCHAR szPath[MAX_PATH];
 
-	if (SUCCEEDED(SHGetSpecialFolderPath(m_pMainWnd->GetSafeHwnd(), szPath, CSIDL_PERSONAL, TRUE))) 
+	if (SUCCEEDED(SHGetSpecialFolderPath(m_pMainWnd->GetSafeHwnd(), szPath, CSIDL_PERSONAL, TRUE)))
 	{
 		m_strShadowDir = szPath;
 	}
@@ -541,7 +562,7 @@ void CPegApp::SetShadowDir(const CString& strDir)
 		m_strShadowDir.Empty();
 	}
 	m_strShadowDir += "\\" + strDir + "\\";
-		
+
 	_mkdir(m_strShadowDir);
 }
 CPnt CPegApp::CursorPosGet()
@@ -551,18 +572,18 @@ CPnt CPegApp::CursorPosGet()
 		return ORIGIN;
 
 	CPoint pntCurPos;
-	
+
 	::GetCursorPos(&pntCurPos);
 	pView->ScreenToClient(&pntCurPos);
-	
+
 	CPnt pt(double(pntCurPos.x), double(pntCurPos.y), m_ptCursorPosDev[2]);
-	if (pt != m_ptCursorPosDev) 
+	if (pt != m_ptCursorPosDev)
 	{
 		m_ptCursorPosDev = pt;
 		m_ptCursorPosWorld = m_ptCursorPosDev;
-		
+
 		pView->DoProjectionInverse(m_ptCursorPosWorld);
-		
+
 		m_ptCursorPosWorld = pView->ModelViewGetMatrixInverse() * m_ptCursorPosWorld;
 		m_ptCursorPosWorld = grid::UserSnapPt(m_ptCursorPosWorld);
 	}
@@ -570,20 +591,20 @@ CPnt CPegApp::CursorPosGet()
 }
 ///<summary> Positions cursor at targeted position.</summary>
 void CPegApp::CursorPosSet(const CPnt& pt)
-{	
+{
 	CPegView* pView = CPegView::GetActiveView();
-	
+
 	CPnt4 ptView(pt, 1);
-	
+
 	pView->ModelViewTransform(ptView);
-	
+
 	if (!Pnt4_IsInView(ptView))
 	{	// Redefine the view so targeted position becomes center
 		pView->ModelViewSetTarget(pt);
 		pView->ModelViewSetEye(pView->ModelViewGetDirection());
-		
+
 		m_pMainWnd->InvalidateRect(NULL, TRUE);
-		
+
 		ptView = pt;
 		pView->ModelViewTransform(ptView);
 	}
@@ -591,29 +612,29 @@ void CPegApp::CursorPosSet(const CPnt& pt)
 	CPoint pntCurPos = pView->DoProjection(ptView);
 	m_ptCursorPosDev(pntCurPos.x, pntCurPos.y, ptView[2] / ptView[3]);
 	m_ptCursorPosWorld = pt;
-	
+
 	pView->ClientToScreen(&pntCurPos);
 	::SetCursorPos(pntCurPos.x, pntCurPos.y);
 }
 // Loads the hatch table.
 void CPegApp::HatchesLoad(const CString& strFileName)
-{	
+{
 	CFileException e;
 	CStdioFile fl;
-	
+
 	if (!fl.Open(strFileName, CFile::modeRead | CFile::typeText, &e))
 		return;
 
 	char	szLn[128];
 	double	dTotStrsLen;
 	int 	iNmbEnts, iNmbStrsId;
-	
-	char szValDel[] = ",\0";
+
+	char szValDel [] = ",\0";
 	int iHatId = 0;
 	int iNmbHatLns = 0;
 	int iTblId = 0;
-	
-	while (fl.ReadString(szLn, sizeof(szLn) - 1) != 0) 
+
+	while (fl.ReadString(szLn, sizeof(szLn) - 1) != 0)
 	{
 		if (*szLn == '!')								// New Hatch index
 		{
@@ -622,7 +643,7 @@ void CPegApp::HatchesLoad(const CString& strFileName)
 			hatch::iTableOffset[++iHatId] = iTblId++;
 			iNmbHatLns = 0;
 		}
-		else 
+		else
 		{
 			iNmbStrsId = iTblId;
 			iTblId += 2;
@@ -630,7 +651,7 @@ void CPegApp::HatchesLoad(const CString& strFileName)
 			dTotStrsLen = 0.;
 			char* context = nullptr;
 			char* pTok = strtok_s(szLn, szValDel, &context);
-			while (pTok != 0) 
+			while (pTok != 0)
 			{
 				hatch::fTableValue[iTblId] = float(atof(pTok));
 				iNmbEnts++;
@@ -649,7 +670,7 @@ CPnt CPegApp::HomePointGet(int i) const
 {
 	if (i >= 0 && i < 9)
 		return (m_ptHomePoint[i]);
-	
+
 	return (ORIGIN);
 }
 void CPegApp::HomePointSave(int i, const CPnt& pt)
@@ -667,8 +688,8 @@ void CPegApp::InitGbls(CDC* pDC)
 	hatch::dYAxRefVecScal = .1;
 	hatch::dOffAng = 0.;
 
-	dlgproceditops::SetMirrorScale(- 1, 1., 1.);
-	
+	dlgproceditops::SetMirrorScale(-1, 1., 1.);
+
 	dlgproceditops::SetRotOrd(0, 1, 2);
 	dlgproceditops::SetRotAng(0., 0., 45.);
 	dlgproceditops::SetScale(2., 2., 2.);
@@ -678,7 +699,7 @@ void CPegApp::InitGbls(CDC* pDC)
 
 	CFontDef fd;
 	pstate.SetFontDef(pDC, fd);
-	
+
 	app.SetScale(96.);
 	app.SetUnits(Engineering);
 	app.SetUnitsPrec(8);
@@ -696,9 +717,9 @@ void CPegApp::InitGbls(CDC* pDC)
 // This is primarily the mode line and status line. 
 // Should be called at start-up and every time window is resized.
 void CPegApp::LineFontCreate()
-{	
+{
 	LineFontRelease();
-	
+
 	m_pFontApp = new CFont;
 	m_pFontApp->CreateStockObject(ANSI_VAR_FONT);
 }
@@ -715,21 +736,21 @@ void CPegApp::LineFontRelease()
 #pragma tasMSG(TODO: Move PenStylesLoad to CPegDoc)
 ///<summary>Loads the PenStyle table.</summary>
 void CPegApp::PenStylesLoad(const CString& strFileName)
-{	
+{
 	CPegDoc* pDoc = CPegDoc::GetDoc();
 	if (pDoc == NULL)
 		return;
 
 	CStdioFile fl;
-	
+
 	// TODO check for existance of table  - crashes on 99 otherwise ands no pen dlg box.
-		
-	if (fl.Open(strFileName, CFile::modeRead | CFile::typeText)) 
+
+	if (fl.Open(strFileName, CFile::modeRead | CFile::typeText))
 	{
 		CString strDescription;
 		CString strName;
 		char pBuf[128];
-		
+
 		WORD wLensMax = 8;
 		double* pLen = new double[wLensMax];
 		char* context = nullptr;
@@ -740,7 +761,7 @@ void CPegApp::PenStylesLoad(const CString& strFileName)
 			strDescription = strtok_s(0, "\n", &context);
 			fl.ReadString(pBuf, sizeof(pBuf) - 1);
 
-			WORD wLens = WORD(atoi(strtok_s(pBuf,",\n", &context)));
+			WORD wLens = WORD(atoi(strtok_s(pBuf, ",\n", &context)));
 
 			if (wLens > wLensMax)
 			{
@@ -750,7 +771,7 @@ void CPegApp::PenStylesLoad(const CString& strFileName)
 			}
 			for (WORD w = 0; w < wLens; w++)
 				pLen[w] = atof(strtok_s(0, ",\n", &context));
-			
+
 			pDoc->PenStylesInsert(iId, new CPenStyle(strName, strDescription, wLens, pLen));
 		}
 		delete [] pLen;
@@ -762,7 +783,7 @@ void CPegApp::ModifyMenu(UINT uPos, LPCTSTR lpNewItem)
 	{
 		HMENU hMenu = ::GetSubMenu(m_hMenu, uPos);
 		::ModifyMenu(m_hMenu, uPos, MF_BYPOSITION | MF_STRING | MF_POPUP, UINT_PTR(hMenu), lpNewItem);
-		
+
 		m_pMainWnd->DrawMenuBar();
 	}
 }
@@ -772,7 +793,7 @@ void CPegApp::PenColorsChoose()
 
 	::ZeroMemory(&cc, sizeof(CHOOSECOLOR));
 	cc.lStructSize = sizeof(CHOOSECOLOR);
-	
+
 	cc.rgbResult = crHotCols[pstate.PenColor()];
 	cc.lpCustColors = crHotCols;
 	cc.Flags = CC_FULLOPEN | CC_RGBINIT | CC_SOLIDCOLOR;
@@ -782,21 +803,21 @@ void CPegApp::PenColorsChoose()
 	cc.lpCustColors = crWarmCols;
 	::ChooseColor(&cc);
 	SetBackGround(crHotCols[0]);
-	
+
 	CPegDoc::GetDoc()->UpdateAllViews(NULL, 0L, NULL);
 }
 // Loads the color table.
 void CPegApp::PenColorsLoad(const CString& strFileName)
-{	
+{
 	CStdioFile fl;
 
-	if (fl.Open(strFileName, CFile::modeRead | CFile::typeText)) 
+	if (fl.Open(strFileName, CFile::modeRead | CFile::typeText))
 	{
 		char	pBuf[128];
 		LPSTR	pId, pRed, pGreen, pBlue;
-		
+
 		while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0 && _strnicmp(pBuf, "<Colors>", 8) != 0);
-		
+
 		char* context = nullptr;
 		while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0 && *pBuf != '<')
 		{
@@ -814,19 +835,19 @@ void CPegApp::PenColorsLoad(const CString& strFileName)
 }
 // Disables rubberbanding.
 void CPegApp::RubberBandingDisable()
-{	
+{
 	CPegView* pView = CPegView::GetActiveView();
 	CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
 
-	if (m_iGinRubTyp == 0) 
+	if (m_iGinRubTyp == 0)
 		return;
 
 	int iDrawMode = pstate.SetROP2(pDC, R2_XORPEN);
-	
-	if (m_iGinRubTyp == Lines) 
+
+	if (m_iGinRubTyp == Lines)
 	{
 		CPoint pnt[2];
-		
+
 		pnt[0] = m_pntGinStart;
 		pnt[1] = m_pntGinEnd;
 		pDC->Polyline(pnt, 2);
@@ -835,33 +856,33 @@ void CPegApp::RubberBandingDisable()
 	{
 		CPoint pnt[5];
 		int iPts = 1;
-		
+
 		pnt[0] = m_pntGinStart;
 		pnt[1].x = m_pntGinStart.x + (m_pntGinCur.x - m_pntGinEnd.x);
 		pnt[1].y = m_pntGinStart.y + (m_pntGinCur.y - m_pntGinEnd.y);
-		
+
 		if (pnt[1].x != m_pntGinStart.x || pnt[1].y != m_pntGinStart.y)
 		{
 			pnt[2] = m_pntGinCur;
 			pnt[3] = m_pntGinEnd;
 			iPts = 4;
-		}				 
+		}
 		pnt[iPts++] = m_pntGinStart;
 		pDC->Polyline(pnt, iPts);
 	}
-	else if (m_iGinRubTyp == Circles) 
+	else if (m_iGinRubTyp == Circles)
 	{
-		CBrush* pBrushOld = (CBrush*) pDC->SelectStockObject(NULL_BRUSH);
+		CBrush* pBrushOld = (CBrush*)pDC->SelectStockObject(NULL_BRUSH);
 		int iRadiusX = abs(m_pntGinEnd.x - m_pntGinStart.x);
 		int iRadiusY = abs(m_pntGinEnd.y - m_pntGinStart.y);
-		int iRadius = (int) sqrt((double) (iRadiusX * iRadiusX + iRadiusY * iRadiusY) + .5);
+		int iRadius = (int)sqrt((double)(iRadiusX * iRadiusX + iRadiusY * iRadiusY) + .5);
 		pDC->Ellipse(m_pntGinStart.x - iRadius, m_pntGinStart.y + iRadius,
 			m_pntGinStart.x + iRadius, m_pntGinStart.y - iRadius);
 		pDC->SelectObject(pBrushOld);
 	}
-	else if (m_iGinRubTyp == Rectangles) 
+	else if (m_iGinRubTyp == Rectangles)
 	{
-		CBrush* pBrushOld = (CBrush*) pDC->SelectStockObject(NULL_BRUSH);
+		CBrush* pBrushOld = (CBrush*)pDC->SelectStockObject(NULL_BRUSH);
 		pDC->Rectangle(m_pntGinStart.x, m_pntGinStart.y, m_pntGinEnd.x, m_pntGinEnd.y);
 		pDC->SelectObject(pBrushOld);
 	}
@@ -869,11 +890,11 @@ void CPegApp::RubberBandingDisable()
 	m_iGinRubTyp = 0;
 }
 void CPegApp::RubberBandingEnable(ERubs aiRubOp)
-{	
+{
 	// Enables rubberbanding.
-	
+
 	m_iGinRubTyp = aiRubOp;
-	
+
 	if (aiRubOp == Quads)
 		m_pntGinCur = m_pntGinEnd;
 }
@@ -882,9 +903,9 @@ void CPegApp::RubberBandingStartAtEnable(const CPnt& pt, ERubs eRub)
 	CPegView* pView = CPegView::GetActiveView();
 
 	CPnt4 ptView(pt, 1);
-	
+
 	pView->ModelViewTransform(ptView);
-	
+
 	if (Pnt4_IsInView(ptView))
 	{
 		m_ptRubStart = pt;
@@ -911,48 +932,48 @@ void CPegApp::SetModeCursor(int iModeId)
 
 	switch (iModeId)
 	{
-		case ID_MODE_ANNOTATE:
-			wResourceId = ID_MODE_ANNOTATE; break;
-							
-		case ID_MODE_CUT:
-			wResourceId = ID_MODE_CUT; break;
-							
-		case ID_MODE_DIMENSION:
-			wResourceId = ID_MODE_DIMENSION; break;
-	
-		case ID_MODE_DRAW:
-			wResourceId = ID_MODE_DRAW; break;
+	case ID_MODE_ANNOTATE:
+		wResourceId = ID_MODE_ANNOTATE; break;
 
-		case ID_MODE_LPD:
-		case ID_MODE_PIPE:
-		case ID_MODE_POWER:
-		case ID_MODE_RLPD:
-			wResourceId = IDC_APPS; break;
-			
-		case ID_MODE_DRAW2:
-			wResourceId = ID_MODE_DRAW2; break;
-							
-		case ID_MODE_EDIT:
-			wResourceId = ID_MODE_EDIT; break;
-				
-		case ID_MODE_FIXUP:
-			wResourceId = ID_MODE_FIXUP; break;
-							
-		case ID_MODE_NODAL:
-			wResourceId = ID_MODE_NODAL; break;
-		
-		case ID_MODE_NODALR:
-			wResourceId = ID_MODE_NODALR; break;
-							
-		case ID_MODE_TRAP:
-			wResourceId = ID_MODE_TRAP; break;
-		
-		case ID_MODE_TRAPR:
-			wResourceId = ID_MODE_TRAPR; break;
-							
-		default:
-			SetCursor(LoadCursor(IDC_CROSS));
-			return;
+	case ID_MODE_CUT:
+		wResourceId = ID_MODE_CUT; break;
+
+	case ID_MODE_DIMENSION:
+		wResourceId = ID_MODE_DIMENSION; break;
+
+	case ID_MODE_DRAW:
+		wResourceId = ID_MODE_DRAW; break;
+
+	case ID_MODE_LPD:
+	case ID_MODE_PIPE:
+	case ID_MODE_POWER:
+	case ID_MODE_RLPD:
+		wResourceId = IDC_APPS; break;
+
+	case ID_MODE_DRAW2:
+		wResourceId = ID_MODE_DRAW2; break;
+
+	case ID_MODE_EDIT:
+		wResourceId = ID_MODE_EDIT; break;
+
+	case ID_MODE_FIXUP:
+		wResourceId = ID_MODE_FIXUP; break;
+
+	case ID_MODE_NODAL:
+		wResourceId = ID_MODE_NODAL; break;
+
+	case ID_MODE_NODALR:
+		wResourceId = ID_MODE_NODALR; break;
+
+	case ID_MODE_TRAP:
+		wResourceId = ID_MODE_TRAP; break;
+
+	case ID_MODE_TRAPR:
+		wResourceId = ID_MODE_TRAPR; break;
+
+	default:
+		SetCursor(LoadCursor(IDC_CROSS));
+		return;
 	}
 	HCURSOR hCursor = LoadCursor(MAKEINTRESOURCE(wResourceId));
 
@@ -961,83 +982,83 @@ void CPegApp::SetModeCursor(int iModeId)
 }
 void CPegApp::SetWindowMode(int aiModeId)
 {
-	CFrameWnd* pFrame = (CFrameWnd*) m_pMainWnd;
+	CFrameWnd* pFrame = (CFrameWnd*)m_pMainWnd;
 	HWND hwnd = pFrame->GetSafeHwnd();
-	
+
 	switch (aiModeId)
 	{
-		case ID_MODE_DRAW2:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcDraw2));
-			break;
+	case ID_MODE_DRAW2:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcDraw2));
+		break;
 
-		case ID_MODE_ANNOTATE:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcAnnotate));
-			m_iPrimModeId = ID_MODE_ANNOTATE;
-			break;
+	case ID_MODE_ANNOTATE:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcAnnotate));
+		m_iPrimModeId = ID_MODE_ANNOTATE;
+		break;
 
-		case ID_MODE_CUT:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcCut));
-			break;
+	case ID_MODE_CUT:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcCut));
+		break;
 
-		case ID_MODE_DIMENSION:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcDimension));
-			break;
+	case ID_MODE_DIMENSION:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcDimension));
+		break;
 
-		case ID_MODE_DRAW:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcDraw));
-			m_iPrimModeId = ID_MODE_DRAW;
-			break;
+	case ID_MODE_DRAW:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcDraw));
+		m_iPrimModeId = ID_MODE_DRAW;
+		break;
 
-		case ID_MODE_EDIT:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcEdit));
-			break;
+	case ID_MODE_EDIT:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcEdit));
+		break;
 
-		case ID_MODE_FIXUP:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcFixup));
-			break;
+	case ID_MODE_FIXUP:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcFixup));
+		break;
 
-		case ID_MODE_LPD:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcLPD));
-			break;
+	case ID_MODE_LPD:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcLPD));
+		break;
 
-		case ID_MODE_RLPD:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcRLPD));
-			break;
+	case ID_MODE_RLPD:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcRLPD));
+		break;
 
-		case ID_MODE_NODAL:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcNodal));
-			break;
+	case ID_MODE_NODAL:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcNodal));
+		break;
 
-		case ID_MODE_PIPE:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcPipe));
-			break;
-		
-		case ID_MODE_POWER:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcPower));
-			break;
+	case ID_MODE_PIPE:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcPipe));
+		break;
 
-		case ID_MODE_PRIM_EDIT:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcEditPrimitive));
-			break;
+	case ID_MODE_POWER:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcPower));
+		break;
 
-		case ID_MODE_SEG_EDIT:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcEditSegment));
-			break;
+	case ID_MODE_PRIM_EDIT:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcEditPrimitive));
+		break;
 
-		case ID_MODE_PRIM_MEND:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcMendPrim));
-			break;
+	case ID_MODE_SEG_EDIT:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcEditSegment));
+		break;
 
-		case ID_MODE_TRAP:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcTrapAdd));
-			break;
+	case ID_MODE_PRIM_MEND:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcMendPrim));
+		break;
 
-		case ID_MODE_TRAPR:
-			::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcTrapRemove));
+	case ID_MODE_TRAP:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcTrapAdd));
+		break;
+
+	case ID_MODE_TRAPR:
+		::SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(SubProcTrapRemove));
 	}
-	
+
 	RubberBandingDisable();
-	
+
 	m_iModeId = aiModeId;
 	msgInformation(0);
 	SetModeCursor(aiModeId);
@@ -1046,52 +1067,52 @@ void CPegApp::SetWindowMode(int aiModeId)
 }
 void CPegApp::StatusLineDisplay(EStatusLineItem sli)
 {
-	if (m_bViewStateInfo)	
-	{	
+	if (m_bViewStateInfo)
+	{
 		CPegView* pView = CPegView::GetActiveView();
-		
+
 		if (pView == NULL)
 			return;
 
 		CDC* pDC = pView->GetDC();
-		
+
 		CRect rc;
 		char szBuf[128];
-		
+
 		CFont* pFont = pDC->SelectObject(m_pFontApp);
 		UINT nTextAlign = pDC->SetTextAlign(TA_LEFT | TA_TOP);
-		COLORREF crText = pDC->SetTextColor(AppGetTextCol()); 
+		COLORREF crText = pDC->SetTextColor(AppGetTextCol());
 		COLORREF crBk = pDC->SetBkColor(~AppGetTextCol());
 
-		TEXTMETRIC tm;		 
+		TEXTMETRIC tm;
 		pDC->GetTextMetrics(&tm);
-	
+
 		CRect rcClient;
 		pView->GetClientRect(&rcClient);
-		
+
 		if (sli == All || sli == WorkCnt)
 		{	// print num in work 
 			rc.SetRect(0, rcClient.top, 8 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
 			std::string str = std::to_string(CPegDoc::GetDoc()->GetHotCount() + CPegDoc::GetDoc()->GetWarmCount()) + "  ";
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED  | ETO_OPAQUE, &rc, str.c_str(), (UINT) str.length(), 0);
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
 		}
 		if (sli == All || sli == TrapCnt)
 		{	// print num in trap 
 			rc.SetRect(10 * tm.tmAveCharWidth, rcClient.top, 19 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
 			std::string str = " " + std::to_string(trapsegs.GetCount()) + "  ";
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE,  &rc, str.c_str(), (UINT) str.length(), 0);
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
 		}
 		if (sli == All || sli == Pen)
 		{	// print pen  info
 			rc.SetRect(21 * tm.tmAveCharWidth, rcClient.top, 27 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
 			std::string str = "P " + std::to_string(pstate.PenColor()) + " ";
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT) str.length(), 0);
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
 		}
 		if (sli == All || sli == Line)
 		{	// print line info
 			rc.SetRect(29 * tm.tmAveCharWidth, rcClient.top, 35 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
 			std::string str = "L " + std::to_string(pstate.PenStyle());
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT) str.length(), 0);
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
 		}
 		if (sli == All || sli == TextHeight)
 		{	// print text height
@@ -1101,7 +1122,7 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli)
 			std::stringstream ss;
 			ss << "T " << std::fixed << std::setprecision(2) << ccd.ChrHgtGet();
 			std::string str = ss.str();
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT) str.length(), 0);
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
 		}
 		if (sli == All || sli == Scale)
 		{	//print scale
@@ -1109,30 +1130,30 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli)
 			std::stringstream ss;
 			ss << "1: " << std::fixed << std::setprecision(2) << GetScale();
 			std::string str = ss.str();
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT) str.length(), 0);
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
 		}
 		if (sli == All || sli == WndRatio)
 		{	//print zoom
-			rc.SetRect(61 * tm.tmAveCharWidth, rcClient.top, 71 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight); 
+			rc.SetRect(61 * tm.tmAveCharWidth, rcClient.top, 71 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
 			double dRatio = pView->GetWidthInInches() / pView->ModelViewGetUExt();
 			std::stringstream ss;
 			ss << "@ " << std::fixed << std::setprecision(3) << dRatio;
 			std::string str = ss.str();
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT) str.length(), 0);
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
 		}
 		if (sli == All || sli == DimLen)
 		{	// print DimLen
-			rc.SetRect(73 * tm.tmAveCharWidth, rcClient.top, 90 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);			  
+			rc.SetRect(73 * tm.tmAveCharWidth, rcClient.top, 90 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
 			UnitsString_FormatLength(szBuf, sizeof(szBuf), GetUnits(), GetDimLen());
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT) strlen(szBuf), 0);
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT)strlen(szBuf), 0);
 		}
 		if (sli == All || sli == DimAng)
 		{	// print DimAngle
-			rc.SetRect(92 * tm.tmAveCharWidth, rcClient.top, 107 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight); 
+			rc.SetRect(92 * tm.tmAveCharWidth, rcClient.top, 107 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
 			std::stringstream ss;
 			ss << ">> " << std::fixed << std::setprecision(4) << GetDimAngZ();
 			std::string str = ss.str();
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT) str.length(), 0);
+			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
 		}
 		// restore Device Context to its original state
 		pDC->SetBkColor(crBk);
@@ -1144,36 +1165,36 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli)
 // size (16384) of object for 96 character
 // font set with a maximum of 4096 stokes
 void CPegApp::StrokeFontLoad(const CString& strPathName)
-{	
+{
 	if (strPathName.GetLength() < 1)
 	{
-        int    fontlen;
-        HRSRC  hrsrc;
+		int    fontlen;
+		HRSRC  hrsrc;
 		LPVOID fontptr;
 
-        // Open binary resources
-        hrsrc   = FindResource(NULL, MAKEINTRESOURCE(IDR_PEGSTROKEFONT), "STROKEFONT");
-        fontlen = SizeofResource(NULL, hrsrc);
-        m_pStrokeFontDef = new char[fontlen];
+		// Open binary resources
+		hrsrc = FindResource(NULL, MAKEINTRESOURCE(IDR_PEGSTROKEFONT), "STROKEFONT");
+		fontlen = SizeofResource(NULL, hrsrc);
+		m_pStrokeFontDef = new char[fontlen];
 
-        fontptr = LockResource(LoadResource(NULL, hrsrc));
+		fontptr = LockResource(LoadResource(NULL, hrsrc));
 		memcpy(m_pStrokeFontDef, fontptr, fontlen);
 
-    } 
-    else 
-    {
+	}
+	else
+	{
 		HANDLE hFile = CreateFile(
-			strPathName, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0); 
-		if (hFile != ((HANDLE) - 1)) 
-		{ 
-			if (SetFilePointer (hFile, 0, 0, FILE_BEGIN) != (DWORD) - 1)
+			strPathName, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+		if (hFile != ((HANDLE)-1))
+		{
+			if (SetFilePointer(hFile, 0, 0, FILE_BEGIN) != (DWORD)-1)
 			{
 				if (m_pStrokeFontDef == 0)
 					m_pStrokeFontDef = new char[16384];
-			
+
 				DWORD nBytesRead;
-				ReadFile(hFile, m_pStrokeFontDef, 16384U, &nBytesRead, 0); 
-			} 
+				ReadFile(hFile, m_pStrokeFontDef, 16384U, &nBytesRead, 0);
+			}
 			CloseHandle(hFile);
 		}
 	}
@@ -1181,7 +1202,7 @@ void CPegApp::StrokeFontLoad(const CString& strPathName)
 void CPegApp::StrokeFontRelease()
 {
 	// Releases a large character array loaded for stroke fonts.
-	
+
 	if (m_pStrokeFontDef != 0)
 		delete [] m_pStrokeFontDef;
 }
@@ -1189,67 +1210,67 @@ COLORREF AppGetTextCol()
 {
 	return (~(crHotCols[0] | 0xff000000));
 }
-void CPegApp::OnUpdateModeDraw(CCmdUI *pCmdUI)
+void CPegApp::OnUpdateModeDraw(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_iModeId == ID_MODE_DRAW);
 }
 
-void CPegApp::OnUpdateModeAnnotate(CCmdUI *pCmdUI)
+void CPegApp::OnUpdateModeAnnotate(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_iModeId == ID_MODE_ANNOTATE);
 }
 
-void CPegApp::OnUpdateModeTrap(CCmdUI *pCmdUI)
+void CPegApp::OnUpdateModeTrap(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_iModeId == ID_MODE_TRAP);
 }
 
-void CPegApp::OnUpdateModeEdit(CCmdUI *pCmdUI)
+void CPegApp::OnUpdateModeEdit(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_iModeId == ID_MODE_EDIT);
 }
 
-void CPegApp::OnUpdateModeDraw2(CCmdUI *pCmdUI)
+void CPegApp::OnUpdateModeDraw2(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_iModeId == ID_MODE_DRAW2);
 }
 
-void CPegApp::OnUpdateModeDimension(CCmdUI *pCmdUI)
+void CPegApp::OnUpdateModeDimension(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_iModeId == ID_MODE_DIMENSION);
 }
 
-void CPegApp::OnUpdateModeCut(CCmdUI *pCmdUI)
+void CPegApp::OnUpdateModeCut(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_iModeId == ID_MODE_CUT);
 }
 
-void CPegApp::OnUpdateModeNodal(CCmdUI *pCmdUI)
+void CPegApp::OnUpdateModeNodal(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_iModeId == ID_MODE_NODAL);
 }
 
-void CPegApp::OnUpdateModeFixup(CCmdUI *pCmdUI)
+void CPegApp::OnUpdateModeFixup(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_iModeId == ID_MODE_FIXUP);
 }
 
-void CPegApp::OnUpdateModeLpd(CCmdUI *pCmdUI)
+void CPegApp::OnUpdateModeLpd(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_iModeId == ID_MODE_LPD);
 }
 
-void CPegApp::OnUpdateModePower(CCmdUI *pCmdUI)
+void CPegApp::OnUpdateModePower(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_iModeId == ID_MODE_POWER);
 }
 
-void CPegApp::OnUpdateModePipe(CCmdUI *pCmdUI)
+void CPegApp::OnUpdateModePipe(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_iModeId == ID_MODE_PIPE);
 }
 
-void CPegApp::OnUpdateModeRlpd(CCmdUI *pCmdUI)
+void CPegApp::OnUpdateModeRlpd(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_iModeId == ID_MODE_RLPD);
 }
@@ -1259,7 +1280,7 @@ void CPegApp::OnViewModeInformation()
 	m_bViewModeInfo = !m_bViewModeInfo;
 	CPegDoc::GetDoc()->UpdateAllViews(NULL, 0L, NULL);
 }
-void CPegApp::OnUpdateViewModeinformation(CCmdUI *pCmdUI)
+void CPegApp::OnUpdateViewModeinformation(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_bViewModeInfo);
 }
@@ -1268,7 +1289,7 @@ void CPegApp::OnViewStateInformation()
 	m_bViewStateInfo = !m_bViewStateInfo;
 	CPegDoc::GetDoc()->UpdateAllViews(NULL, 0L, NULL);
 }
-void CPegApp::OnUpdateViewStateinformation(CCmdUI *pCmdUI)
+void CPegApp::OnUpdateViewStateinformation(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(m_bViewStateInfo);
 }

@@ -3,6 +3,8 @@
 #include "PegAEsys.h"
 #include "PegAEsysDoc.h"
 
+#include "PrimState.h"
+#include "PrimText.h"
 #include "Text.h"
 
 BOOL CALLBACK DlgProcModeLetter(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam)

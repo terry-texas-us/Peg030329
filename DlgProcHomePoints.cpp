@@ -3,7 +3,9 @@
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
 
+#include "ExpProcs.h"
 #include "Grid.h"
+#include "SegsTrap.h"
 
 BOOL CALLBACK DlgProcHomePointGo(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {

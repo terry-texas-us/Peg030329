@@ -1,8 +1,7 @@
-//
-
 #include "stdafx.h"
 
 #include "PegAEsys.h"
+
 #include "DlgSetLength.h"
 #include "UnitsString.h"
 

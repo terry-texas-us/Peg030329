@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "ExpProcs.h"
+#include "resource.h"
 #include "SubProcPipe.h"
 
 BOOL CALLBACK DlgProcPipeOptions(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM)

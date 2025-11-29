@@ -1,7 +1,13 @@
 #include "stdafx.h"
 
+#include <sstream>
+
 #include "PegAEsysDoc.h"
+
+#include "FilePeg.h"
 #include "Messages.h"
+#include "ModelTransform.h"
+#include "PrimSegRef.h"
 
 CPrimSegRef::CPrimSegRef()
 {

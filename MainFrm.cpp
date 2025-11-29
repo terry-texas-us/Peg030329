@@ -1,6 +1,6 @@
-// MainFrm.cpp : implementation of the CMainFrame class
-
 #include "stdafx.h"
+
+#include <afxext.h>
 
 #include "MainFrm.h"
 #include "PegAEsys.h"
@@ -10,6 +10,7 @@
 #include "dde.h"
 #include "FileJob.h"
 #include "Lex.h"
+#include "OpenGL.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW

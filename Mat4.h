@@ -1,5 +1,7 @@
 #pragma once
 
+#include <afxwin.h> // For CObject (base class)
+
 #include "Vec4.h"
 
 class CMat4 : public CObject

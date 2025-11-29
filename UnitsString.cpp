@@ -1,11 +1,15 @@
 #include "stdafx.h"
 
+#include <iomanip>
+#include <sstream>
+
 #include "PegAEsys.h"
 
 #include "Lex.h"
+#include "SafeMath.h"
 #include "UnitsString.h"
 
-int UnitsString_GCD(int aiNmb1, int aiNmb2)	   
+int UnitsString_GCD(int aiNmb1, int aiNmb2)
 {
 	int iRetVal = abs(aiNmb1);
 	int iNmb = abs(aiNmb2);
@@ -20,7 +24,7 @@ int UnitsString_GCD(int aiNmb1, int aiNmb2)
 
 std::string UnitsString_FormatAngle(const double angle, int minWidth, int precision)
 {
-	if (!std::isfinite(angle)) 
+	if (!std::isfinite(angle))
 	{ // Angle is NaN or infinite
 		return "Invalid angle";
 	}
@@ -67,15 +71,15 @@ std::string UnitsString_FormatAsArchitectural(double length)
 			inches = 0;
 		}
 		else
-		{ 
-			inches++; 
+		{
+			inches++;
 		}
 		fractionNumerator = 0;
 	}
 	std::stringstream ss;
 	if (feet == 0 && length < 0.) { ss << '-'; }
 	ss << feet << "'" << inches;
-	if (fractionNumerator > 0)				
+	if (fractionNumerator > 0)
 	{ //
 		int greatestCommonDivisor = UnitsString_GCD(fractionNumerator, unitsPrecision);
 		fractionNumerator = fractionNumerator / greatestCommonDivisor;
@@ -154,34 +158,34 @@ std::string UnitsString_FormatAsSimple(double length, int minWidth, int precisio
 double UnitsString_ParseLength(char* aszLen)
 {
 	char* szEndPtr;
-	
+
 	double dRetVal = strtod(aszLen, &szEndPtr);
-	
-	switch (toupper((int) szEndPtr[0]))
+
+	switch (toupper((int)szEndPtr[0]))
 	{
-		case '\'':												// Feet and maybe inches
-			dRetVal *= 12.; 										// Reduce to inches
-			dRetVal += strtod(&szEndPtr[1], &szEndPtr); 			// Begin scan for inches at character following foot delimeter
-			break;
-	
-		case 'M': 
-			if (toupper((int) szEndPtr[1]) == 'M')
-				dRetVal *= 0.03937007874015748;
-			else
-				dRetVal *= 39.37007874015748;
-			break;
-	
-		case 'C':
-			dRetVal *= 0.3937007874015748;
-			break;
-			 
-		case 'D':
-			dRetVal *= 3.937007874015748;
-			break;
-		
-		case 'K':
-			dRetVal *= 39370.07874015748;
-	
+	case '\'':												// Feet and maybe inches
+		dRetVal *= 12.; 										// Reduce to inches
+		dRetVal += strtod(&szEndPtr[1], &szEndPtr); 			// Begin scan for inches at character following foot delimeter
+		break;
+
+	case 'M':
+		if (toupper((int)szEndPtr[1]) == 'M')
+			dRetVal *= 0.03937007874015748;
+		else
+			dRetVal *= 39.37007874015748;
+		break;
+
+	case 'C':
+		dRetVal *= 0.3937007874015748;
+		break;
+
+	case 'D':
+		dRetVal *= 3.937007874015748;
+		break;
+
+	case 'K':
+		dRetVal *= 39370.07874015748;
+
 	}
 	return (dRetVal / app.GetScale());
 }
@@ -197,43 +201,43 @@ double UnitsString_ParseLength(EUnits eUnits, char* aszLen)
 		size_t bufferSize = sizeof(dVal);
 
 		lex::Parse(aszLen);
-		lex::EvalTokenStream((char*) 0, &iTokId, &lDef, &iTyp, (void*) dVal, bufferSize);
-		
+		lex::EvalTokenStream((char*)0, &iTokId, &lDef, &iTyp, (void*)dVal, bufferSize);
+
 		if (iTyp == lex::TOK_LENGTH_OPERAND)
 			return (dVal[0]);
 		else
 		{
 			lex::ConvertValTyp(iTyp, lex::TOK_REAL, &lDef, dVal);
-			
+
 			switch (eUnits)
 			{
-				case Architectural:
-				case Engineering:
-				case Feet:
-					dVal[0] *= 12.;
-					break;
-				case Inches:
-					break;
-				case Meters:
-					dVal[0] *= 39.37007874015748;
-					break;
-				case Millimeters:
-					dVal[0] *= 0.03937007874015748;
-					break;
-				case Centimeters:
-					dVal[0] *= 0.3937007874015748;
-					break;
-				case Decimeters:
-					dVal[0] *= 3.937007874015748;
-					break;
-				case Kilometers:
-					dVal[0] *= 39370.07874015748;
-			}				
+			case Architectural:
+			case Engineering:
+			case Feet:
+				dVal[0] *= 12.;
+				break;
+			case Inches:
+				break;
+			case Meters:
+				dVal[0] *= 39.37007874015748;
+				break;
+			case Millimeters:
+				dVal[0] *= 0.03937007874015748;
+				break;
+			case Centimeters:
+				dVal[0] *= 0.3937007874015748;
+				break;
+			case Decimeters:
+				dVal[0] *= 3.937007874015748;
+				break;
+			case Kilometers:
+				dVal[0] *= 39370.07874015748;
+			}
 			dVal[0] /= app.GetScale();
 		}
 		return (dVal[0]);
 	}
-	catch(char* szMessage)
+	catch (char* szMessage)
 	{
 		::MessageBox(0, szMessage, 0, MB_ICONWARNING | MB_OK);
 		return (0.);

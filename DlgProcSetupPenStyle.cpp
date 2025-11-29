@@ -6,6 +6,7 @@
 
 #include "OwnerDraw.h"
 #include "Polyline.h"
+#include "PrimState.h"
 
 void SetupPenStyle_DrawEntire(LPDRAWITEMSTRUCT lpDIS, int inflate);
 void SetupPenStyle_Init(HWND);

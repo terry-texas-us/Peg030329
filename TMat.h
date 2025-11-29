@@ -1,5 +1,10 @@
 #pragma once
 
+#include "Mat4.h" // for CMat4 (base class)
+#include "Pnt.h"  // for CPnt
+#include "Pnt4.h" // for CPnt4
+#include "Vec.h"  // for CVec
+
 class CTMat : public CMat4
 {
 

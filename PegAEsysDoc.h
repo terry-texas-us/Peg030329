@@ -1,6 +1,19 @@
-// PegAEsysDoc.h : interface of the CPegDoc class
-
 #pragma once
+
+#include <afxwin.h>   // For CDocument, CString.
+
+#include <afxtempl.h> // For CTypedPtrArray, CTypedPtrMap, CMapStringToOb, CObArray
+
+#include "Block.h"    // For CBlocks
+#include "FontDef.h"  // For CFontDef, CCharCellDef
+#include "Layer.h"    // For CLayer, CLayers
+#include "PegAEsysView.h"  // For CPegView
+#include "PenStyle.h"
+#include "Pnt.h"      // For CPnt
+#include "Prim.h"     // For PENSTYLE, PENCOLOR, CPenStyles
+#include "Segs.h"     // For CSegs
+#include "TMat.h"   // For CTMat
+#include "Vec.h"   // For CVec
 
 const PENSTYLE PENSTYLE_LookupErr = SHRT_MAX;
 

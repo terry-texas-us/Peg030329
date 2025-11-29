@@ -3,7 +3,12 @@
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
 
+#include "FilePeg.h"
+#include "ModelTransform.h"
+#include "OpenGL.h"
 #include "Polyline.h"
+#include "PrimCSpline.h"
+#include "PrimState.h"
 
 CPrimCSpline::CPrimCSpline(WORD nPtsS, WORD nEndCndId, CVec* vTan, const CPnts& pts)
 {

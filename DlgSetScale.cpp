@@ -1,8 +1,7 @@
-// DlgSetScale.cpp : implementation file
-
 #include "stdafx.h"
 
 #include "PegAEsys.h"
+
 #include "DlgSetScale.h"
 
 // CDlgSetScale dialog

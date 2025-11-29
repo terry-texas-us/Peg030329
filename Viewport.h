@@ -1,5 +1,10 @@
 #pragma once
 
+#include <afxwin.h> // for CObject, CPoint
+
+#include "Pnt.h" // for CPnt
+#include "Pnt4.h" // for CPnt4, CPnt4s
+
 class CViewport : public CObject
 {
 private:

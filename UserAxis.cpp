@@ -1,5 +1,9 @@
 #include "stdafx.h"
 
+#include "ExpProcs.h"
+#include "Line.h"
+#include "resource.h"
+
 double	UserAxis_dInfAng;
 double	UserAxis_dAxOffAng;
 

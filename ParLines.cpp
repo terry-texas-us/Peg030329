@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "Line.h"
+
 ///<summary>Cleans up the corners of two sets of parallel lines.</summary>
 // Returns: false	parallel lines
 //			true otherwise (success)

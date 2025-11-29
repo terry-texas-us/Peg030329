@@ -1,5 +1,12 @@
 #include "stdafx.h"
 
+#include "FilePeg.h"
+#include "FileTracing.h"
+#include "Layer.h"
+#include "Messages.h"
+#include "resource.h"
+#include "Seg.h"
+
 // SECTION_HEADER sentinel						WORD 0x0101
 //		{0 or more key-value pairs}
 // SECTION_END sentinel							WORD 0x01ff

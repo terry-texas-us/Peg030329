@@ -1,18 +1,35 @@
-// PegAEsysDoc.cpp : implementation of the CPegDoc class
-//
-
 #include "stdafx.h"
 
+#include <afxext.h>
+#include <iomanip>
+#include <sstream>
+
+#include "Messages.h"
 #include "PegAEsys.h"
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
 #include "ddeGItms.h"
+#include "ExpProcs.h"
 #include "FileBlock.h"
 #include "FileJob.h"
 #if ODA_FUNCTIONALITY
 #include "FileOpenDWG.h"
 #endif
+#include "FilePeg.h"
+#include "FileTracing.h"
+#include "Layer.h"
+#include "OpenGL.h"
+#include "PenStyle.h"
+#include "PrimDim.h"
+#include "Polygon.h"
+#include "PrimLine.h"
+#include "PrimPolyline.h"
+#include "PrimSegRef.h"
+#include "PrimText.h"
+#include "SegsDet.h"
+#include "SegsTrap.h"
+#include "PrimState.h"
 #include "Text.h"
 #include "lex.h"
 

@@ -5,6 +5,7 @@
 #include "PegAEsysView.h"
 
 #include "OwnerDraw.h"
+#include "PrimState.h"
 
 void SetupPenColor_DrawEntire(LPDRAWITEMSTRUCT, int);
 

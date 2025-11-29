@@ -4,6 +4,10 @@
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
+#include "PrimPolygon.h"
+#include "SegsDet.h"
+#include "SegsTrap.h"
+
 CSegsTrap::CSegsTrap()
 {
 	m_bIdentify = true;

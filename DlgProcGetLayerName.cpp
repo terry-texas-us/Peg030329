@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "resource.h"
+
 extern char	szLayerName[64];
 
 BOOL CALLBACK DlgProcGetLayerName(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM  )

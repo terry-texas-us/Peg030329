@@ -1,21 +1,24 @@
 #include "stdafx.h"
+#include <algorithm>
 
 #include "PegAEsysView.h"
 
 #include "Line.h"
 #include "Polyline.h"
+#include "PrimState.h"
+#include "SafeMath.h"
 
 CLine CLine::operator-(const CVec& v) const
 {
 	return (CLine(m_pt[0] - v, m_pt[1] - v));
-} 
+}
 CLine CLine::operator+(const CVec& v) const
 {
 	return (CLine(m_pt[0] + v, m_pt[1] + v));
 }
 ///<summary>Determines if lines are parallel.</summary>
 bool CLine::operator||(const CLine& r) const
-{	
+{
 	CVec vBeg1End1(m_pt[0], m_pt[1]);
 	CVec vBeg2End2(r.m_pt[0], r.m_pt[1]);
 
@@ -27,14 +30,14 @@ bool CLine::operator||(const CLine& r) const
 WORD CLine::CutAtPt(const CPnt& pt, CLine& ln)
 {
 	WORD wRet = 0;
-	
+
 	ln = *this;
 
 	if (pt != m_pt[0] && pt != m_pt[1])
 	{
 		ln.m_pt[1] = pt;
 		m_pt[0] = pt;
-		
+
 		wRet++;
 	}
 	return (wRet);
@@ -47,25 +50,25 @@ WORD CLine::CutAtPt(const CPnt& pt, CLine& ln)
 //			- 1 point is to right of line
 int CLine::DirRelOfPt(const CPnt& pt) const
 {
-	double dDet = m_pt[0][0] * (m_pt[1][1] - pt[1]) - 
-				  m_pt[1][0] * (m_pt[0][1] - pt[1]) + 
-				  pt[0] * (m_pt[0][1] - m_pt[1][1]);
-	
+	double dDet = m_pt[0][0] * (m_pt[1][1] - pt[1]) -
+		m_pt[1][0] * (m_pt[0][1] - pt[1]) +
+		pt[0] * (m_pt[0][1] - m_pt[1][1]);
+
 	if (dDet > DBL_EPSILON)
 		return (1);
-	else if (dDet < - DBL_EPSILON)
-		return (- 1);
+	else if (dDet < -DBL_EPSILON)
+		return (-1);
 	else
 		return 0;
 }
-void CLine::Display(CPegView* pView, CDC* pDC) const	
+void CLine::Display(CPegView* pView, CDC* pDC) const
 {
 	PENSTYLE nPenStyle = pstate.PenStyle();
-	
+
 	if (CPrim::IsSupportedTyp(nPenStyle))
 	{
-		CPnt4 pt[] = {CPnt4(m_pt[0], 1.), CPnt4(m_pt[1], 1.)};
-	
+		CPnt4 pt [] = {CPnt4(m_pt[0], 1.), CPnt4(m_pt[1], 1.)};
+
 		pView->ModelViewTransform(2, pt);
 
 		if (Pnt4_ClipLine(pt[0], pt[1]))
@@ -97,18 +100,18 @@ bool CLine::GetParallels(double dDis, double dEcc, CLine& lnLeft, CLine& lnRight
 {
 	lnLeft = *this;
 	lnRight = *this;
-	
+
 	double dLen = Length();
-	
+
 	if (dLen > DBL_EPSILON)
 	{
 		double dX = (m_pt[1][1] - m_pt[0][1]) * dDis / dLen;
 		double dY = (m_pt[1][0] - m_pt[0][0]) * dDis / dLen;
-	
+
 		dEcc += .5;
-	
-		lnLeft += CVec(- dX * dEcc, dY * dEcc, 0.);
-		lnRight += CVec(dX * (1. - dEcc),  - dY * (1. - dEcc), 0.);
+
+		lnLeft += CVec(-dX * dEcc, dY * dEcc, 0.);
+		lnRight += CVec(dX * (1. - dEcc), -dY * (1. - dEcc), 0.);
 
 		return true;
 	}
@@ -124,7 +127,7 @@ CPnt CLine::ProjPt(const CPnt& pt) const
 	CVec vBegEnd(m_pt[0], m_pt[1]);
 
 	double dSum = vBegEnd.SquaredLength();
-	
+
 	if (dSum > DBL_EPSILON)
 	{
 		CVec vBegPt(m_pt[0], pt);
@@ -136,36 +139,36 @@ CPnt CLine::ProjPt(const CPnt& pt) const
 	return (m_pt[0] + vBegEnd);
 }
 CPnt CLine::ProjPtAlong(double dT) const
-{	
+{
 	// Determines the coordinates of point projected along a line.
 	// t = 0 point is the begin point
 	// t = 1 point is the end point
 	// The range of values for t is not clamped to this interval
 
 	return m_pt[0] + (m_pt[1] - m_pt[0]) * dT;
-}	 
+}
 ///<summary>Projects end point toward or beyond the begin point of line.</summary>
 CPnt CLine::ProjToBegPt(double dDis) const
 {
 	CVec vEndBeg(m_pt[1], m_pt[0]);
-	
+
 	double dLen = vEndBeg.Length();
-	
-	if (dLen > DBL_EPSILON) 
+
+	if (dLen > DBL_EPSILON)
 		vEndBeg *= dDis / dLen;
-	
+
 	return (m_pt[1] + vEndBeg);
 }
 // Effect: Projects begin point toward or beyond the end point of line.
 CPnt CLine::ProjToEndPt(double dDis) const
 {
 	CVec vBegEnd(m_pt[0], m_pt[1]);
-	
+
 	double dLen = vBegEnd.Length();
-	
-	if (dLen > DBL_EPSILON) 
+
+	if (dLen > DBL_EPSILON)
 		vBegEnd *= dDis / dLen;
-	
+
 	return (m_pt[0] + vBegEnd);
 }
 void CLine::Read(CFile& fl)
@@ -177,7 +180,7 @@ void CLine::Write(CFile& fl) const
 {
 	m_pt[0].Write(fl);
 	m_pt[1].Write(fl);
-}					 
+}
 
 ///<summary>Determines the angle between two lines.</summary>
 // Notes:  Angle is found using the inner product.
@@ -192,19 +195,19 @@ void CLine::Write(CFile& fl) const
 // Parameters:	ln1		first line
 //				ptBeg2	begin point of second line
 //				ptEnd2	end point of second line
-double line::AngleBetweenLn_xy(const CLine& ln1, const CLine& ln2)	
+double line::AngleBetweenLn_xy(const CLine& ln1, const CLine& ln2)
 {
 	CVec v1(ln1); v1[2] = 0.;
 	CVec v2(ln2); v2[2] = 0.;
 
 	double dSumProd = v1.SquaredLength() * v2.SquaredLength();
 
-	if (dSumProd > DBL_EPSILON) 
+	if (dSumProd > DBL_EPSILON)
 	{
 		double dVal = (v1 * v2) / sqrt(dSumProd);
-		
-		dVal = Max(- 1., Min(1., dVal));
-		
+
+		dVal = std::max(-1., std::min(1., dVal));
+
 		return (acos(dVal));
 	}
 	return (0.);
@@ -213,15 +216,15 @@ double line::AngleBetweenLn_xy(const CLine& ln1, const CLine& ln2)
 // Notes:	Offset angle only support about z-axis
 // Returns: Point after snap
 CPnt line::ConstrainToAx(const CLine& ln, double dInfAng, double dAxOffAng)
-{	
+{
 	CTMat tm;
 	tm.Translate(ORIGIN - ln[0]);
-	
+
 	CTMat tmZRot;
-	tm *= tmZRot.RotateZ(- sin(dAxOffAng * RADIAN), cos(dAxOffAng * RADIAN));
-	
+	tm *= tmZRot.RotateZ(-sin(dAxOffAng * RADIAN), cos(dAxOffAng * RADIAN));
+
 	CPnt pt = ln[1];
-	
+
 	pt = tm * pt;
 
 	double dX = pt[0] * pt[0];
@@ -229,36 +232,36 @@ CPnt line::ConstrainToAx(const CLine& ln, double dInfAng, double dAxOffAng)
 	double dZ = pt[2] * pt[2];
 
 	double dLen = sqrt(dX + dY + dZ);
-	
+
 	if (dLen > DBL_EPSILON)
 	{	// Not a zero length line
-		if (dX >= Max(dY, dZ))
+		if (dX >= std::max(dY, dZ))
 		{	// Major component of line is along x-axis
 			dLen = sqrt(dY + dZ);
 			if (dLen > DBL_EPSILON) 				// Not already on the x-axis
-				if (dLen / fabs(pt[0]) < tan(dInfAng * RADIAN)) 
+				if (dLen / fabs(pt[0]) < tan(dInfAng * RADIAN))
 				{	// Within cone of influence .. snap to x-axis
-					pt[1] = 0.; 
+					pt[1] = 0.;
 					pt[2] = 0.;
 				}
 		}
-		else if (dY >= dZ)							
+		else if (dY >= dZ)
 		{	// Major component of line is along y-axis
 			dLen = sqrt(dX + dZ);
 			if (dLen > DBL_EPSILON)					// Not already on the y-axis
-				if (dLen / fabs(pt[1]) < tan(dInfAng * RADIAN)) 
+				if (dLen / fabs(pt[1]) < tan(dInfAng * RADIAN))
 				{	// Within cone of influence .. snap to y-axis
-					pt[0] = 0.; 
+					pt[0] = 0.;
 					pt[2] = 0.;
 				}
 		}
-		else 
+		else
 		{
 			dLen = sqrt(dX + dY);
 			if (dLen > DBL_EPSILON)					// Not already on the z-axis
-				if (dLen / fabs(pt[2]) < tan(dInfAng * RADIAN)) 
+				if (dLen / fabs(pt[2]) < tan(dInfAng * RADIAN))
 				{	// Within cone of influence .. snap to z-axis
-					pt[0] = 0.; 
+					pt[0] = 0.;
 					pt[1] = 0.;
 				}
 		}
@@ -291,34 +294,34 @@ bool line::EvalPtProx_xy(const CLine& ln, const CPnt& pt, const double adApert, 
 {
 	double dApert = adApert;
 
-	if (pt[0] < Min(ln.m_pt[0][0], ln.m_pt[1][0]) - dApert) return false;
-	if (pt[0] > Max(ln.m_pt[0][0], ln.m_pt[1][0]) + dApert) return false;
-	if (pt[1] < Min(ln.m_pt[0][1], ln.m_pt[1][1]) - dApert) return false;
-	if (pt[1] > Max(ln.m_pt[0][1], ln.m_pt[1][1]) + dApert) return false;
+	if (pt[0] < std::min(ln.m_pt[0][0], ln.m_pt[1][0]) - dApert) return false;
+	if (pt[0] > std::max(ln.m_pt[0][0], ln.m_pt[1][0]) + dApert) return false;
+	if (pt[1] < std::min(ln.m_pt[0][1], ln.m_pt[1][1]) - dApert) return false;
+	if (pt[1] > std::max(ln.m_pt[0][1], ln.m_pt[1][1]) + dApert) return false;
 
 	double dPBegX = ln.m_pt[0][0] - pt[0];
 	double dPBegY = ln.m_pt[0][1] - pt[1];
-	
+
 	double dBegEndX = ln.m_pt[1][0] - ln.m_pt[0][0];
 	double dBegEndY = ln.m_pt[1][1] - ln.m_pt[0][1];
 
 	double dDivr = dBegEndX * dBegEndX + dBegEndY * dBegEndY;
-	if (dDivr <= DBL_EPSILON) 
+	if (dDivr <= DBL_EPSILON)
 	{
 		*adRel = 0.;
 		*adDis = dPBegX * dPBegX + dPBegY * dPBegY;
 	}
-	else 
+	else
 	{
-		*adRel = - (dPBegX * dBegEndX + dPBegY * dBegEndY) / dDivr;
-		*adRel = Max(0., Min(1., *adRel));
+		*adRel = -(dPBegX * dBegEndX + dPBegY * dBegEndY) / dDivr;
+		*adRel = std::max(0., std::min(1., *adRel));
 		double dx = dPBegX + *adRel * dBegEndX;
 		double dy = dPBegY + *adRel * dBegEndY;
 		*adDis = dx * dx + dy * dy;
 	}
-	if (*adDis > adApert * adApert) 
+	if (*adDis > adApert * adApert)
 		return false;
-	
+
 	*adDis = sqrt(*adDis);
 	ptProj[0] = ln[0][0] + (*adRel * dBegEndX);
 	ptProj[1] = ln[0][1] + (*adRel * dBegEndY);
@@ -328,11 +331,11 @@ bool line::EvalPtProx_xy(const CLine& ln, const CPnt& pt, const double adApert, 
 ///<summary>Determines the xy extent of a line.</summary>
 void line::Extents_xy(const CLine& ln, CPnt& arLo, CPnt& arHi)
 {
-	arLo[0] = Min(ln[0][0], ln[1][0]);
-	arLo[1] = Min(ln[0][1], ln[1][1]);
-	
-	arHi[0] = Max(ln[0][0], ln[1][0]);
-	arHi[1] = Max(ln[0][1], ln[1][1]);
+	arLo[0] = std::min(ln[0][0], ln[1][0]);
+	arLo[1] = std::min(ln[0][1], ln[1][1]);
+
+	arHi[0] = std::max(ln[0][0], ln[1][0]);
+	arHi[1] = std::max(ln[0][1], ln[1][1]);
 }
 ///<summary>Determines the angle of a line defined by 2 points.</summary>
 // Notes: If null length or parallel to z-axis, angle is 0.
@@ -342,14 +345,14 @@ double line::GetAngAboutZAx(const CLine& ln)
 	CVec vBegEnd(ln);
 
 	double dAng = 0.;
-	
+
 	if (fabs(vBegEnd[0]) > DBL_EPSILON || fabs(vBegEnd[1]) > DBL_EPSILON)
 	{
 		dAng = atan2(vBegEnd[1], vBegEnd[0]);
-		
+
 		if (dAng < 0.)
 			dAng += TWOPI;
-	}	
+	}
 	return (dAng);
 }
 ///<summary> Finds intersection of two lines in space.</summary>
@@ -384,8 +387,8 @@ int line::Intersection(const CLine& ln1, const CLine& ln2, CPnt& ptInt)
 	rL2P1 = tm * rL2P1;
 	CPnt rL2P2(ln2[1]);
 	rL2P2 = tm * rL2P2;
-	
-	if (line::Intersection_xy(CLine(rL1P1, rL1P2), CLine(rL2P1, rL2P2), ptInt)) 
+
+	if (line::Intersection_xy(CLine(rL1P1, rL1P2), CLine(rL2P1, rL2P2), ptInt))
 	{
 		ptInt[2] = 0.;
 		tm.Inverse();
@@ -399,18 +402,18 @@ int line::Intersection(const CLine& ln1, const CLine& ln2, CPnt& ptInt)
 // Returns: true successful completion
 //			false ohterwise (parallel lines)
 bool line::Intersection_xy(const CLine& ln1, const CLine& ln2, CPnt& ptInt)
-{	
+{
 	CVec vBeg1End1 = ln1.GetVector();
 	CVec vBeg2End2 = ln2.GetVector();
 
 	double dDet = vBeg1End1[0] * vBeg2End2[1] - vBeg2End2[0] * vBeg1End1[1];
-	
-	if (fabs(dDet) > DBL_EPSILON) 
+
+	if (fabs(dDet) > DBL_EPSILON)
 	{
 		CVec vBeg1Beg2(ln1[0], ln2[0]);
-		
+
 		double dT = (vBeg1Beg2[1] * vBeg2End2[0] - vBeg2End2[1] * vBeg1Beg2[0]) / dDet;
-		
+
 		vBeg1End1 *= dT;
 		ptInt = ln1[0] - vBeg1End1;
 		return true;
@@ -427,19 +430,19 @@ bool line::Intersection_xy(const CLine& ln1, const CLine& ln2, CPnt& ptInt)
 //			vPlnNorm	vector normal to plane
 //			ptInt		intersection on line an plane
 // Returns: true if intersection determined and false if line parallel to plane
-bool line::IntersectionWithPln(const CPnt& ptEnd, const CVec& vDir, const CPnt& ptOnPln, const CVec& vPlnNorm, CPnt *ptInt)	
-{	
+bool line::IntersectionWithPln(const CPnt& ptEnd, const CVec& vDir, const CPnt& ptOnPln, const CVec& vPlnNorm, CPnt* ptInt)
+{
 	double dDotProd = vPlnNorm * vDir;
-	
+
 	if (fabs(dDotProd) > DBL_EPSILON)									// Line and plane are not parallel
 	{
 		CVec v(vDir);
-		CVec vOnPln(ORIGIN, ptOnPln);			
+		CVec vOnPln(ORIGIN, ptOnPln);
 		CVec vEnd(ORIGIN, ptEnd);
-		
-		double dD = - (vPlnNorm * vOnPln);						// Coefficient of plane on which point lies
-		double dT = - ((vPlnNorm * vEnd) + dD) / dDotProd;		// Parameter on the line where it intersects the plane
-		
+
+		double dD = -(vPlnNorm * vOnPln);						// Coefficient of plane on which point lies
+		double dT = -((vPlnNorm * vEnd) + dD) / dDotProd;		// Parameter on the line where it intersects the plane
+
 		v *= dT;
 		*ptInt = ptEnd + v;
 		return true;
@@ -461,7 +464,7 @@ CPnt4 line::IntersectionWithPln(const CPnt4& pt0, const CPnt4& pt1, const CPnt4&
 {
 	CVec4 vDir(pt0, pt1);
 	double dDotProd = vPlnNorm * vDir;
-	
+
 	if (fabs(dDotProd) > DBL_EPSILON)
 	{
 		CVec4 vPtPt0(ptOnPln, pt0);
@@ -489,10 +492,10 @@ int line::ProjPtFrom_xy(const CLine& ln, double dParDis, double dPerDis, CPnt* a
 	double dY = ln[1][1] - ln[0][1];
 
 	double dLen = sqrt(dX * dX + dY * dY);
-	
+
 	if (dLen <= DBL_EPSILON)
 		return (FALSE);
-	
+
 	double dRatio;
 	*arProjPt = ln[0];
 	if (fabs(dParDis) > DBL_EPSILON)
@@ -522,31 +525,31 @@ int line::ProjPtFrom_xy(const CLine& ln, double dParDis, double dPerDis, CPnt* a
 //			= 1 point same as second endpoint of line
 //			> 1 point to right of directed segment
 // Notes:  Results unpredictable if point does not lie on the line.
-	 
+
 // Returns: true  successful completion
 //			false coincidental endpoints .. relationship undefined
-bool line::RelOfPtToEndPts(const CLine& ln, const CPnt& pt, double& dRel) 
+bool line::RelOfPtToEndPts(const CLine& ln, const CPnt& pt, double& dRel)
 {
 	CVec v(ln);
-	
+
 	if (fabs(v[0]) > DBL_EPSILON)
 	{
 		dRel = (pt[0] - ln[0][0]) / v[0];
 		return true;
 	}
-	
+
 	if (fabs(v[1]) > DBL_EPSILON)
 	{
 		dRel = (pt[1] - ln[0][1]) / v[1];
 		return true;
 	}
-	
+
 	if (fabs(v[2]) > DBL_EPSILON)
 	{
 		dRel = (pt[2] - ln[0][2]) / v[2];
 		return true;
 	}
-	
+
 	return false;
 }
 ///<summary>Determines if line segment in wholly or partially contained within window passed.</summary>
@@ -561,7 +564,7 @@ bool p2DEvalWndLn(const CPnt& ptLL, const CPnt& ptUR, const CPnt& ptBeg, const C
 	double	dX = ptEnd[0] - ptBeg[0];
 	double	dY = ptEnd[1] - ptBeg[1];
 	int 	i = 1;
-	
+
 	int 	iOut[2];
 	iOut[0] = p2DRelOfPtToWnd(pt[0], ptLL, ptUR);
 
@@ -569,7 +572,7 @@ bool p2DEvalWndLn(const CPnt& ptLL, const CPnt& ptUR, const CPnt& ptBeg, const C
 	{
 		iOut[i] = p2DRelOfPtToWnd(pt[i], ptLL, ptUR);
 
-		if (iOut[0] == 0 && iOut[1] == 0) 
+		if (iOut[0] == 0 && iOut[1] == 0)
 			return true;
 		if ((iOut[0] & iOut[1]) != 0)
 			return false;
@@ -585,19 +588,19 @@ bool p2DEvalWndLn(const CPnt& ptLL, const CPnt& ptUR, const CPnt& ptBeg, const C
 			pt[i][0] = pt[i][0] + dX * (ptLL[1] - pt[i][1]) / dY;
 			pt[i][1] = ptLL[1];
 		}
-		else if ((iOut[i] & 4) == 4) 
+		else if ((iOut[i] & 4) == 4)
 		{
 			pt[i][1] = pt[i][1] + dY * (ptUR[0] - pt[i][0]) / dX;
 			pt[i][0] = ptUR[0];
 		}
-		else 
+		else
 		{
 			pt[i][1] = pt[i][1] + dY * (ptLL[0] - pt[i][0]) / dX;
 			pt[i][0] = ptLL[0];
 		}
 	}
 }
-int pFndSwpAngGivPlnAnd3Lns(const CVec& vPlnNorm, const CPnt arP1, const CPnt arP2, const CPnt arP3, const CPnt& ptCP, double *adTheta)
+int pFndSwpAngGivPlnAnd3Lns(const CVec& vPlnNorm, const CPnt arP1, const CPnt arP2, const CPnt arP3, const CPnt& ptCP, double* adTheta)
 {
 	double dT[3];
 	CPnt   rR[3];
@@ -610,28 +613,28 @@ int pFndSwpAngGivPlnAnd3Lns(const CVec& vPlnNorm, const CPnt arP1, const CPnt ar
 	rR[0] = arP1;
 	rR[1] = arP2;
 	rR[2] = arP3;
-	for (int i = 0; i < 3; i++) 
+	for (int i = 0; i < 3; i++)
 	{	// Translate points into z=0 plane with center point at origin
 		rR[i] = tm * rR[i];
 		dT[i] = atan2(rR[i][1], rR[i][0]);
 		if (dT[i] < 0.)
 			dT[i] += TWOPI;
 	}
-	double dTMin = Min(dT[0], dT[2]);
-	double dTMax = Max(dT[0], dT[2]);
-	if (fabs(dT[1] - dTMax) > DBL_EPSILON && fabs(dT[1] - dTMin) > DBL_EPSILON) 
+	double dTMin = std::min(dT[0], dT[2]);
+	double dTMax = std::max(dT[0], dT[2]);
+	if (fabs(dT[1] - dTMax) > DBL_EPSILON && fabs(dT[1] - dTMin) > DBL_EPSILON)
 	{	// Inside line is not colinear with outside lines
 		double dTheta = dTMax - dTMin;
-		if (dT[1] > dTMin && dT[1] < dTMax) 
+		if (dT[1] > dTMin && dT[1] < dTMax)
 		{
 			if (dT[0] == dTMax)
-				dTheta = - dTheta;
+				dTheta = -dTheta;
 		}
-		else 
+		else
 		{
 			dTheta = TWOPI - dTheta;
 			if (dT[2] == dTMax)
-				dTheta = - dTheta;
+				dTheta = -dTheta;
 		}
 		*adTheta = dTheta;
 

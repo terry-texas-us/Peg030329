@@ -1,20 +1,22 @@
 #pragma once
 
+#include <afxwin.h>
+
 #include "PixelMapRGB.h"
 
-class CFileBitmap : public CFile
+class CFileBitmap: public CFile
 {
 
 private:
 	int		m_nRows;		// dimensions of the bitmap
 	int		m_nCols;
-	CRGB*	m_rgbPixel;
+	CRGB* m_rgbPixel;
 
 public:
-	CFileBitmap() {}
+	CFileBitmap() { }
 	CFileBitmap(const CString& strPathName);
 
-	~CFileBitmap() {}
-	
+	~CFileBitmap() { }
+
 	bool Load(const CString& strPathName, CBitmap& bm, CPalette& pal);
 };

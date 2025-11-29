@@ -1,12 +1,21 @@
 #include "stdafx.h"
+#include <algorithm>
 
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
 
 #include "ddeGItms.h"
-#include "Polyline.h"
-#include "UnitsString.h"
+#include "FilePeg.h"
 #include "Messages.h"
+#include "ModelTransform.h"
+#include "OpenGL.h"
+#include "Polyline.h"
+#include "PrimArc.h"
+#include "PrimState.h"
+#include "SafeMath.h"
+#include "Seg.h"
+#include "Segs.h"
+#include "UnitsString.h"
 
 CPrimArc::CPrimArc(const CPrimArc& src)
 {
@@ -15,7 +24,7 @@ CPrimArc::CPrimArc(const CPrimArc& src)
 	m_ptCenter = src.m_ptCenter;
 	m_vMajAx = src.m_vMajAx;
 	m_vMinAx = src.m_vMinAx;
-	m_dSwpAng = src.m_dSwpAng; 
+	m_dSwpAng = src.m_dSwpAng;
 }
 ///<summary>Arc is constructed using a center point, a major and minor vector and a sweep ang.</summary>
 CPrimArc::CPrimArc(const CPnt& ptCP, const CVec& vMajAx, const CVec& vMinAx, double dSwpAng)
@@ -23,7 +32,7 @@ CPrimArc::CPrimArc(const CPnt& ptCP, const CVec& vMajAx, const CVec& vMinAx, dou
 {
 	m_nPenColor = pstate.PenColor();
 	m_nPenStyle = pstate.PenStyle();
-	m_dSwpAng = dSwpAng; 
+	m_dSwpAng = dSwpAng;
 }
 ///<summary>Arc is constructed using a center point, a major and minor vector and a sweep ang.</summary>
 CPrimArc::CPrimArc(PENCOLOR nPenColor, PENSTYLE nPenStyle, const CPnt& ptCP, const CVec& vMajAx, const CVec& vMinAx, double dSwpAng)
@@ -31,18 +40,18 @@ CPrimArc::CPrimArc(PENCOLOR nPenColor, PENSTYLE nPenStyle, const CPnt& ptCP, con
 {
 	m_nPenColor = nPenColor;
 	m_nPenStyle = nPenStyle;
-	m_dSwpAng = dSwpAng; 
+	m_dSwpAng = dSwpAng;
 }
 ///<summary>Circle is constructed using a center point and a begin point about view plane normal.</summary>
 CPrimArc::CPrimArc(const CPnt& ptCent, const CPnt& ptBeg)
 {
 	CPegView* pView = CPegView::GetActiveView();
-	
+
 	m_nPenColor = pstate.PenColor();
 	m_nPenStyle = pstate.PenStyle();
-	
-	CVec vPlnNorm = - pView->ModelViewGetDirection();
-	
+
+	CVec vPlnNorm = -pView->ModelViewGetDirection();
+
 	m_ptCenter = ptCent;
 	m_vMajAx = CVec(ptCent, ptBeg);
 	m_vMinAx = m_vMajAx;
@@ -54,9 +63,9 @@ CPrimArc::CPrimArc(const CPnt& ptBeg, const CPnt& ptInt, const CPnt& ptEnd)
 {
 	m_nPenColor = pstate.PenColor();
 	m_nPenStyle = pstate.PenStyle();
-		
+
 	m_dSwpAng = 0.;
-		
+
 	CVec vBegInt(ptBeg, ptInt);
 	CVec vBegEnd(ptBeg, ptEnd);
 	CVec vPlnNorm = vBegInt ^ vBegEnd;
@@ -64,7 +73,7 @@ CPrimArc::CPrimArc(const CPnt& ptBeg, const CPnt& ptInt, const CPnt& ptEnd)
 
 	// Build transformation matrix which will get int and end points to
 	// z=0 plane with beg point as origin
-	
+
 	CTMat	tm(ptBeg, vPlnNorm);
 
 	CPnt   pt[3];
@@ -72,24 +81,24 @@ CPrimArc::CPrimArc(const CPnt& ptBeg, const CPnt& ptInt, const CPnt& ptEnd)
 	pt[0] = ptBeg;
 	pt[1] = ptInt;
 	pt[2] = ptEnd;
-	
+
 	pt[1] = tm * pt[1];
 	pt[2] = tm * pt[2];
-	
+
 	double dDet = (pt[1][0] * pt[2][1] - pt[2][0] * pt[1][1]);
-	
+
 	if (fabs(dDet) > DBL_EPSILON)
 	{	// Three points are not colinear
 		double dT = ((pt[2][0] - pt[1][0]) * pt[2][0] + pt[2][1] * (pt[2][1] - pt[1][1])) / dDet;
-		
+
 		m_ptCenter[0] = (pt[1][0] - pt[1][1] * dT) * .5;
 		m_ptCenter[1] = (pt[1][1] + pt[1][0] * dT) * .5;
 		m_ptCenter[2] = 0.;
 		tm.Inverse();
-		
+
 		// Transform back to original plane
-		m_ptCenter = tm * m_ptCenter;						
-	
+		m_ptCenter = tm * m_ptCenter;
+
 		// None of the points coincide with center point
 
 		tm = CTMat(m_ptCenter, vPlnNorm);
@@ -98,33 +107,33 @@ CPrimArc::CPrimArc(const CPnt& ptBeg, const CPnt& ptInt, const CPnt& ptEnd)
 
 		pt[1] = ptInt;
 		pt[2] = ptEnd;
-	
-		for (int i = 0; i < 3; i++) 
+
+		for (int i = 0; i < 3; i++)
 		{	// Translate points into z=0 plane with center point at origin
 			pt[i] = tm * pt[i];
 			dAng[i] = atan2(pt[i][1], pt[i][0]);
 			if (dAng[i] < 0.)
 				dAng[i] += TWOPI;
 		}
-		double dMin = Min(dAng[0], dAng[2]);
-		double dMax = Max(dAng[0], dAng[2]);
-	
-		if (fabs(dAng[1] - dMax) > DBL_EPSILON && fabs(dAng[1] - dMin) > DBL_EPSILON) 
+		double dMin = std::min(dAng[0], dAng[2]);
+		double dMax = std::max(dAng[0], dAng[2]);
+
+		if (fabs(dAng[1] - dMax) > DBL_EPSILON && fabs(dAng[1] - dMin) > DBL_EPSILON)
 		{	// Inside line is not colinear with outside lines
 			m_dSwpAng = dMax - dMin;
-			if (dAng[1] > dMin && dAng[1] < dMax) 
+			if (dAng[1] > dMin && dAng[1] < dMax)
 			{
 				if (dAng[0] == dMax)
-					m_dSwpAng = - m_dSwpAng;
+					m_dSwpAng = -m_dSwpAng;
 			}
-			else 
+			else
 			{
 				m_dSwpAng = TWOPI - m_dSwpAng;
 				if (dAng[2] == dMax)
-					m_dSwpAng = - m_dSwpAng;
+					m_dSwpAng = -m_dSwpAng;
 			}
 			CPnt ptRot = Pnt_RotAboutArbPtAndAx(ptBeg, m_ptCenter, vPlnNorm, HALF_PI);
-			
+
 			m_vMajAx = CVec(m_ptCenter, ptBeg);
 			m_vMinAx = CVec(m_ptCenter, ptRot);
 		}
@@ -137,12 +146,12 @@ const CPrimArc& CPrimArc::operator=(const CPrimArc& src)
 	m_ptCenter = src.m_ptCenter;
 	m_vMajAx = src.m_vMajAx;
 	m_vMinAx = src.m_vMinAx;
-	m_dSwpAng = src.m_dSwpAng; 
+	m_dSwpAng = src.m_dSwpAng;
 	return (*this);
 }
 void CPrimArc::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const
 {
-		tvAddItem(hTree, hParent, "<Arc>", (CObject*) this);
+	tvAddItem(hTree, hParent, "<Arc>", (CObject*)this);
 }
 CPrim*& CPrimArc::Copy(CPrim*& pPrim) const
 {
@@ -150,56 +159,56 @@ CPrim*& CPrimArc::Copy(CPrim*& pPrim) const
 	return (pPrim);
 }
 void CPrimArc::CutAt2Pts(CPnt* pt, CSegs* pSegs, CSegs* pSegsNew)
-{ 
+{
 	CPrimArc* pArc;
-	
+
 	double dRel[2];
-	
+
 	dRel[0] = SwpAngToPt(pt[0]) / m_dSwpAng;
 	dRel[1] = SwpAngToPt(pt[1]) / m_dSwpAng;
-	
+
 	if (dRel[0] <= DBL_EPSILON && dRel[1] >= 1. - DBL_EPSILON)
 	{	// Put entire arc in trap
 		pArc = this;
-	}										
+	}
 	else
 	{	// Something needs to get cut
 		CVec vPlnNorm = m_vMajAx ^ m_vMinAx;
 		vPlnNorm.Normalize();
-	
+
 		if (fabs(m_dSwpAng - TWOPI) <= DBL_EPSILON)
 		{	// Closed arc
 			m_dSwpAng = (dRel[1] - dRel[0]) * TWOPI;
-		
+
 			m_vMajAx.RotAboutArbAx(vPlnNorm, dRel[0] * TWOPI);
 			m_vMinAx.RotAboutArbAx(vPlnNorm, dRel[0] * TWOPI);
-		
+
 			pArc = new CPrimArc(*this);
-		
+
 			m_vMajAx.RotAboutArbAx(vPlnNorm, m_dSwpAng);
 			m_vMinAx.RotAboutArbAx(vPlnNorm, m_dSwpAng);
-		
+
 			m_dSwpAng = TWOPI - m_dSwpAng;
 		}
-		else														
+		else
 		{	// Arc section with a cut
 			pArc = new CPrimArc(*this);
 			double dSwpAng = m_dSwpAng;
-			
+
 			double dAng1 = dRel[0] * m_dSwpAng;
 			double dAng2 = dRel[1] * m_dSwpAng;
-		
+
 			if (dRel[0] > DBL_EPSILON && dRel[1] < 1. - DBL_EPSILON)				// Cut section out of middle
 			{
 				pArc->SetSwpAng(dAng1);
 				pSegs->AddTail(new CSeg(pArc));
-			
+
 				m_vMajAx.RotAboutArbAx(vPlnNorm, dAng1);
 				m_vMinAx.RotAboutArbAx(vPlnNorm, dAng1);
 				m_dSwpAng = dAng2 - dAng1;
-			
+
 				pArc = new CPrimArc(*this);
-			
+
 				m_vMajAx.RotAboutArbAx(vPlnNorm, m_dSwpAng);
 				m_vMinAx.RotAboutArbAx(vPlnNorm, m_dSwpAng);
 				m_dSwpAng = dSwpAng - dAng2;
@@ -207,7 +216,7 @@ void CPrimArc::CutAt2Pts(CPnt* pt, CSegs* pSegs, CSegs* pSegsNew)
 			else if (dRel[1] < 1. - DBL_EPSILON)							// Cut section in two and place begin section in trap
 			{
 				pArc->SetSwpAng(dAng2);
-			
+
 				m_vMajAx.RotAboutArbAx(vPlnNorm, dAng2);
 				m_vMinAx.RotAboutArbAx(vPlnNorm, dAng2);
 				m_dSwpAng = dSwpAng - dAng2;
@@ -215,7 +224,7 @@ void CPrimArc::CutAt2Pts(CPnt* pt, CSegs* pSegs, CSegs* pSegsNew)
 			else													// Cut section in two and place end section in trap
 			{
 				m_dSwpAng = dAng1;
-			
+
 				CVec v = m_vMajAx;
 				v.RotAboutArbAx(vPlnNorm, dAng1);
 				pArc->SetMajAx(v);
@@ -233,67 +242,67 @@ void CPrimArc::CutAtPt(const CPnt& pt, CSeg* pSeg)
 {
 	if (fabs(m_dSwpAng - TWOPI) <= DBL_EPSILON)
 		// Do not fragment a circle
-		return;    
-	
+		return;
+
 	double dRel = SwpAngToPt(pt) / m_dSwpAng;
-		
+
 	if (dRel <= DBL_EPSILON || dRel >= 1. - DBL_EPSILON)
 		// Nothing to cut
 		return;
-	
+
 	double dSwpAng = m_dSwpAng * dRel;
 
 	CPrimArc* pArc = new CPrimArc(*this);
 	pArc->SetSwpAng(dSwpAng);
-	pSeg->AddTail(pArc); 
+	pSeg->AddTail(pArc);
 
 	CVec vPlnNorm = m_vMajAx ^ m_vMinAx;
 	vPlnNorm.Normalize();
-	
+
 	m_vMajAx.RotAboutArbAx(vPlnNorm, dSwpAng);
 	m_vMinAx.RotAboutArbAx(vPlnNorm, dSwpAng);
 	m_dSwpAng -= dSwpAng;
-}					
+}
 void CPrimArc::Display(CPegView* pView, CDC* pDC) const
 {
 	if (pDC == 0)
 	{
 		PENCOLOR nPenColor = LogicalPenColor();
 		opengl::SetCurrentColor(app.PenColorsGetHot(nPenColor));
-		
+
 		if (fabs(m_dSwpAng) <= DBL_EPSILON)
 			return;
-		
+
 		CTMat tm(m_ptCenter, m_vMajAx, m_vMinAx);
 		tm.Inverse();
-		
+
 		// Number of points based on angle and a smothness coefficient (temporarily fixed at 8.)
-		double dLen = Max(m_vMajAx.Length(), m_vMinAx.Length());
-		int iPts = Max(2, abs(Round(m_dSwpAng / TWOPI * 32.)));
- 		iPts = Min(64, Max(iPts, abs(Round(m_dSwpAng * dLen / .250))));
-		
+		double dLen = std::max(m_vMajAx.Length(), m_vMinAx.Length());
+		int iPts = std::max(2, abs(Round(m_dSwpAng / TWOPI * 32.)));
+		iPts = std::min(64, std::max(iPts, abs(Round(m_dSwpAng * dLen / .250))));
+
 		// Generate points using the double angle algorithm.
 
 		double dAng = m_dSwpAng / (iPts - 1);
 		double dCos = cos(dAng);
 		double dSin = sin(dAng);
-		
+
 		CPnt pt[2];
-			
+
 		opengl::BeginLineStrip();
 
 		pt[0](1., 0., 0.);
-		
-		for (int i = 0; i < iPts; i++) 
+
+		for (int i = 0; i < iPts; i++)
 		{
 			pt[1][0] = pt[0][0] * dCos - pt[0][1] * dSin;
 			pt[1][1] = pt[0][1] * dCos + pt[0][0] * dSin;
 			pt[1][2] = 0.;
-		
+
 			pt[0] = tm * pt[0];
-					
+
 			opengl::SetVertex(pt[0]);
-			
+
 			pt[0] = pt[1];
 		}
 		opengl::End();
@@ -301,12 +310,12 @@ void CPrimArc::Display(CPegView* pView, CDC* pDC) const
 	else
 	{
 		if (fabs(m_dSwpAng) <= DBL_EPSILON) return;
-	
+
 		PENCOLOR nPenColor = LogicalPenColor();
 		PENSTYLE nPenStyle = LogicalPenStyle();
-	
+
 		pstate.SetPen(pDC, nPenColor, nPenStyle);
-	
+
 		polyline::BeginLineStrip();
 		GenPts(m_ptCenter, m_vMajAx, m_vMinAx, m_dSwpAng);
 		polyline::End(pView, pDC, nPenStyle);
@@ -329,20 +338,20 @@ void CPrimArc::DisRep(const CPnt&) const
 void CPrimArc::GenPts(const CPnt& ptCent, const CVec& vMajAx, const CVec& vMinAx, double dSwpAng) const
 {
 	// Number of points based on angle and a smothness coefficient
-	double dLen = Max(vMajAx.Length(), vMinAx.Length());
-	int iPts = Max(2, abs(Round(dSwpAng / TWOPI * 32.)));	
-	iPts = Min(128, Max(iPts, abs(Round(dSwpAng * dLen / .250))));
-	
+	double dLen = std::max(vMajAx.Length(), vMinAx.Length());
+	int iPts = std::max(2, abs(Round(dSwpAng / TWOPI * 32.)));
+	iPts = std::min(128, std::max(iPts, abs(Round(dSwpAng * dLen / .250))));
+
 	CTMat tm(ptCent, vMajAx, vMinAx);
 	tm.Inverse();
-	
+
 	double dAng = m_dSwpAng / (iPts - 1);
 	double dCos = cos(dAng);
 	double dSin = sin(dAng);
-	
+
 	CPnt pt(1., 0., 0.);
-	
-	for (int i = 0; i < iPts; i++) 
+
+	for (int i = 0; i < iPts; i++)
 	{
 		polyline::SetVertex(tm * pt);
 		pt(pt[0] * dCos - pt[1] * dSin, pt[1] * dCos + pt[0] * dSin, 0.);
@@ -372,19 +381,19 @@ CPnt CPrimArc::GetBegPt() const
 }
 ///<summary>Determines the bounding region. This is always a quad, but it may not be xy oriented.</summary>
 void CPrimArc::GetBoundingBox(CPnts& ptsBox) const
-{	
+{
 	ptsBox.SetSize(4);
-	ptsBox[0] = CPnt(- 1., - 1., 0.);
-	ptsBox[1] = CPnt(1., - 1., 0.);
+	ptsBox[0] = CPnt(-1., -1., 0.);
+	ptsBox[1] = CPnt(1., -1., 0.);
 	ptsBox[2] = CPnt(1., 1., 0.);
-	ptsBox[3] = CPnt(- 1., 1., 0.);
+	ptsBox[3] = CPnt(-1., 1., 0.);
 
 	if (m_dSwpAng < 3. * TWOPI / 4.)
 	{
 		double dEndX = cos(m_dSwpAng);
 		double dEndY = sin(m_dSwpAng);
 
-		if (dEndX >= 0.) 
+		if (dEndX >= 0.)
 		{
 			if (dEndY >= 0.)
 			{	// Arc ends in quadrant one
@@ -417,7 +426,7 @@ void CPrimArc::GetBoundingBox(CPnts& ptsBox) const
 
 	for (WORD w = 0; w < 4; ptsBox[w++] = tm * ptsBox[w]);
 }
-CPnt CPrimArc::GetEndPt() const 
+CPnt CPrimArc::GetEndPt() const
 {
 	CTMat tm(m_ptCenter, m_vMajAx, m_vMinAx);
 	tm.Inverse();
@@ -429,22 +438,22 @@ CPnt CPrimArc::GetEndPt() const
 }
 void CPrimArc::GetXYExtents(CPnt arBeg, CPnt arEnd, CPnt* arMin, CPnt* arMax)
 {	// Determines the xy extent of an arc segment.
-	
+
 	double dx = double(m_ptCenter[0] - arBeg[0]);
 	double dy = double(m_ptCenter[1] - arBeg[1]);
-	
+
 	double dRad = sqrt(dx * dx + dy * dy);
-	  
+
 	(*arMin)[0] = m_ptCenter[0] - dRad;
 	(*arMin)[1] = m_ptCenter[1] - dRad;
 	(*arMax)[0] = m_ptCenter[0] + dRad;
 	(*arMax)[1] = m_ptCenter[1] + dRad;
-	
-	if (arBeg[0] >= m_ptCenter[0]) 
+
+	if (arBeg[0] >= m_ptCenter[0])
 	{
 		if (arBeg[1] >= m_ptCenter[1])								// Arc begins in quadrant one
 		{
-			if (arEnd[0] >= m_ptCenter[0]) 
+			if (arEnd[0] >= m_ptCenter[0])
 			{
 				if (arEnd[1] >= m_ptCenter[1])							// Arc ends in quadrant one
 				{
@@ -457,14 +466,14 @@ void CPrimArc::GetXYExtents(CPnt arBeg, CPnt arEnd, CPnt* arMin, CPnt* arMax)
 					}
 				}
 				else											// Arc ends in quadrant four
-					(*arMax)[0] = Max(arBeg[0], arEnd[0]);
+					(*arMax)[0] = std::max(arBeg[0], arEnd[0]);
 			}
 			else
 			{
 				if (arEnd[1] >= m_ptCenter[1])							// Arc ends in quadrant two
 				{
 					(*arMin)[0] = arEnd[0];
-					(*arMin)[1] = Min(arBeg[1], arEnd[1]);
+					(*arMin)[1] = std::min(arBeg[1], arEnd[1]);
 				}
 				else											// Arc ends in quadrant three
 					(*arMin)[1] = arEnd[1];
@@ -473,11 +482,11 @@ void CPrimArc::GetXYExtents(CPnt arBeg, CPnt arEnd, CPnt* arMin, CPnt* arMax)
 		}
 		else													// Arc begins in quadrant four
 		{
-			if (arEnd[0] >= m_ptCenter[0]) 
+			if (arEnd[0] >= m_ptCenter[0])
 			{
 				if (arEnd[1] >= m_ptCenter[1])							// Arc ends in quadrant one
 				{
-					(*arMin)[0] = Min(arBeg[0], arEnd[0]);
+					(*arMin)[0] = std::min(arBeg[0], arEnd[0]);
 					(*arMin)[1] = arBeg[1];
 					(*arMax)[1] = arEnd[1];
 				}
@@ -500,7 +509,7 @@ void CPrimArc::GetXYExtents(CPnt arBeg, CPnt arEnd, CPnt* arMin, CPnt* arMax)
 					(*arMin)[1] = arBeg[1];
 				}
 				else											// Arc ends in quadrant three
-					(*arMin)[1] = Min(arBeg[1], arEnd[1]);
+					(*arMin)[1] = std::min(arBeg[1], arEnd[1]);
 			}
 		}
 	}
@@ -508,10 +517,10 @@ void CPrimArc::GetXYExtents(CPnt arBeg, CPnt arEnd, CPnt* arMin, CPnt* arMax)
 	{
 		if (arBeg[1] >= m_ptCenter[1])								// Arc begins in quadrant two
 		{
-			if (arEnd[0] >= m_ptCenter[0]) 
+			if (arEnd[0] >= m_ptCenter[0])
 			{
 				if (arEnd[1] >= m_ptCenter[1])							// Arc ends in quadrant one
-					(*arMax)[1] = Max(arBeg[1], arEnd[1]);
+					(*arMax)[1] = std::max(arBeg[1], arEnd[1]);
 				else											// Arc ends in quadrant four
 				{
 					(*arMax)[0] = arEnd[0];
@@ -533,28 +542,28 @@ void CPrimArc::GetXYExtents(CPnt arBeg, CPnt arEnd, CPnt* arMin, CPnt* arMax)
 				else											// Arc ends in quadrant three
 				{
 					(*arMin)[1] = arEnd[1];
-					(*arMax)[0] = Max(arBeg[0], arEnd[0]);
+					(*arMax)[0] = std::max(arBeg[0], arEnd[0]);
 					(*arMax)[1] = arBeg[1];
 				}
 			}
 		}
 		else													// Arc begins in quadrant three
 		{
-			if (arEnd[0] >= m_ptCenter[0]) 
+			if (arEnd[0] >= m_ptCenter[0])
 			{
 				if (arEnd[1] >= m_ptCenter[1])							// Arc ends in quadrant one
 					(*arMax)[1] = arEnd[1];
 				else											// Arc ends in quadrant four
 				{
 					(*arMax)[0] = arEnd[0];
-					(*arMax)[1] = Max(arBeg[1], arEnd[1]);
+					(*arMax)[1] = std::max(arBeg[1], arEnd[1]);
 				}
 				(*arMin)[0] = arBeg[0];
 			}
 			else
 			{
 				if (arEnd[1] >= m_ptCenter[1])							// Arc ends in quadrant two
-					(*arMin)[0] = Min(arBeg[0], arEnd[0]);
+					(*arMin)[0] = std::min(arBeg[0], arEnd[0]);
 				else											// Arc ends in quadrant three
 				{
 					if (arBeg[0] < arEnd[0])						// Arc in qraudrant three only
@@ -590,9 +599,9 @@ void CPrimArc::GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const
 bool CPrimArc::IsPtACtrlPt(CPegView* pView, const CPnt4& ptPic) const
 {
 	// Determines if a point is on a control point of the arc.
-	
-	CPnt4 pt[] = {CPnt4(GetBegPt(), 1.), CPnt4(GetEndPt(), 1.)};
-	
+
+	CPnt4 pt [] = {CPnt4(GetBegPt(), 1.), CPnt4(GetEndPt(), 1.)};
+
 	for (WORD w = 0; w < 2; w++)
 	{
 		pView->ModelViewTransform(pt[w]);
@@ -607,33 +616,33 @@ int CPrimArc::IsWithinArea(const CPnt& ptLL, const CPnt& ptUR, CPnt* ptInt)
 {
 	CVec vPlnNorm = m_vMajAx ^ m_vMinAx;
 	vPlnNorm.Normalize();
-	
+
 	if (!(ZDIR ^ vPlnNorm).IsNull())
 		// not on plane normal to z-axis
 		return 0;
-		
-	if (fabs(m_vMajAx.Length() - m_vMinAx.Length()) > FLT_EPSILON) 
+
+	if (fabs(m_vMajAx.Length() - m_vMinAx.Length()) > FLT_EPSILON)
 		// not radial
 		return 0;
 
 	CPnt ptMin, ptMax;
-		
+
 	CPnt ptBeg = GetBegPt();
 	CPnt ptEnd = GetEndPt();
-	
-	if (vPlnNorm[2] < 0.) 
+
+	if (vPlnNorm[2] < 0.)
 	{
 		CPnt pt = ptBeg;
 		ptBeg = ptEnd; ptEnd = pt;
-		
-		vPlnNorm = - vPlnNorm;
-		m_vMajAx = CVec(m_ptCenter, ptBeg); 
+
+		vPlnNorm = -vPlnNorm;
+		m_vMajAx = CVec(m_ptCenter, ptBeg);
 		m_vMinAx = vPlnNorm ^ m_vMajAx;
 	}
-	
+
 	GetXYExtents(ptBeg, ptEnd, &ptMin, &ptMax);
-	
-	if (ptMin[0] >= ptLL[0] && ptMax[0] <= ptUR[0] && ptMin[1] >= ptLL[1] && ptMax[1] <= ptUR[1]) 
+
+	if (ptMin[0] >= ptLL[0] && ptMax[0] <= ptUR[0] && ptMin[1] >= ptLL[1] && ptMax[1] <= ptUR[1])
 	{	// Totally within window boundaries
 		ptInt[0] = ptBeg;
 		ptInt[1] = ptEnd;
@@ -642,86 +651,91 @@ int CPrimArc::IsWithinArea(const CPnt& ptLL, const CPnt& ptUR, CPnt* ptInt)
 	if (ptMin[0] >= ptUR[0] || ptMax[0] <= ptLL[0] || ptMin[1] >= ptUR[1] || ptMax[1] <= ptLL[1])
 		// No extent overlap
 		return 0;
-			
+
 	CPnt ptWrk[8];
 
 	double dDis, dOff;
 	int iSecs = 0;
-		
+
 	double dRad = CVec(m_ptCenter, ptBeg).Length();
 	if (ptMax[0] > ptUR[0])
 	{	// Arc may intersect with right window boundary
-		dDis = (double) (ptUR[0] - m_ptCenter[0]);
+		dDis = (double)(ptUR[0] - m_ptCenter[0]);
 		dOff = sqrt(dRad * dRad - dDis * dDis);
-		if (m_ptCenter[1] - dOff >= ptLL[1] && m_ptCenter[1] - dOff <= ptUR[1]) 
+		if (m_ptCenter[1] - dOff >= ptLL[1] && m_ptCenter[1] - dOff <= ptUR[1])
 		{
-			ptWrk[iSecs][0] = ptUR[0]; 
+			ptWrk[iSecs][0] = ptUR[0];
 			ptWrk[iSecs++][1] = m_ptCenter[1] - dOff;
 		}
-		if (m_ptCenter[1] + dOff <= ptUR[1] && m_ptCenter[1] + dOff >= ptLL[1]) 
+		if (m_ptCenter[1] + dOff <= ptUR[1] && m_ptCenter[1] + dOff >= ptLL[1])
 		{
-			ptWrk[iSecs][0] = ptUR[0]; 
+			ptWrk[iSecs][0] = ptUR[0];
 			ptWrk[iSecs++][1] = m_ptCenter[1] + dOff;
 		}
 	}
-	if (ptMax[1] > ptUR[1]) 
+	if (ptMax[1] > ptUR[1])
 	{	// Arc may intersect with top window boundary
-		dDis = (double) (ptUR[1] - m_ptCenter[1]);
+		dDis = (double)(ptUR[1] - m_ptCenter[1]);
 		dOff = sqrt(dRad * dRad - dDis * dDis);
-		if (m_ptCenter[0] + dOff <= ptUR[0] && m_ptCenter[0] + dOff >= ptLL[0]) 
+		if (m_ptCenter[0] + dOff <= ptUR[0] && m_ptCenter[0] + dOff >= ptLL[0])
 		{
-			ptWrk[iSecs][0] = m_ptCenter[0] + dOff; 
+			ptWrk[iSecs][0] = m_ptCenter[0] + dOff;
 			ptWrk[iSecs++][1] = ptUR[1];
 		}
-		if (m_ptCenter[0] - dOff >= ptLL[0] && m_ptCenter[0] - dOff <= ptUR[0]) 
-		{	ptWrk[iSecs][0] = m_ptCenter[0] - dOff; 
+		if (m_ptCenter[0] - dOff >= ptLL[0] && m_ptCenter[0] - dOff <= ptUR[0])
+		{
+			ptWrk[iSecs][0] = m_ptCenter[0] - dOff;
 			ptWrk[iSecs++][1] = ptUR[1];
 		}
 	}
-	if (ptMin[0] < ptLL[0]) 
+	if (ptMin[0] < ptLL[0])
 	{	// Arc may intersect with left window boundary
-		dDis = (double) (m_ptCenter[0] - ptLL[0]);
+		dDis = (double)(m_ptCenter[0] - ptLL[0]);
 		dOff = sqrt(dRad * dRad - dDis * dDis);
-		if (m_ptCenter[1] + dOff <= ptUR[1] && m_ptCenter[1] + dOff >= ptLL[1]) 
-		{	ptWrk[iSecs][0] = ptLL[0]; 
+		if (m_ptCenter[1] + dOff <= ptUR[1] && m_ptCenter[1] + dOff >= ptLL[1])
+		{
+			ptWrk[iSecs][0] = ptLL[0];
 			ptWrk[iSecs++][1] = m_ptCenter[1] + dOff;
 		}
-		if (m_ptCenter[1] - dOff >= ptLL[1] && m_ptCenter[1] - dOff <= ptUR[1]) 
-		{	ptWrk[iSecs][0] = ptLL[0]; 
+		if (m_ptCenter[1] - dOff >= ptLL[1] && m_ptCenter[1] - dOff <= ptUR[1])
+		{
+			ptWrk[iSecs][0] = ptLL[0];
 			ptWrk[iSecs++][1] = m_ptCenter[1] - dOff;
 		}
 	}
-	if (ptMin[1] < ptLL[1]) 
+	if (ptMin[1] < ptLL[1])
 	{	// Arc may intersect with bottom window boundary
-		dDis = (double) (m_ptCenter[1] - ptLL[1]);
+		dDis = (double)(m_ptCenter[1] - ptLL[1]);
 		dOff = sqrt(dRad * dRad - dDis * dDis);
-		if (m_ptCenter[0] - dOff >= ptLL[0] && m_ptCenter[0] - dOff <= ptUR[0]) 
-		{	ptWrk[iSecs][0] = m_ptCenter[0] - dOff; 
+		if (m_ptCenter[0] - dOff >= ptLL[0] && m_ptCenter[0] - dOff <= ptUR[0])
+		{
+			ptWrk[iSecs][0] = m_ptCenter[0] - dOff;
 			ptWrk[iSecs++][1] = ptLL[1];
 		}
-		if (m_ptCenter[0] + dOff <= ptUR[0] && m_ptCenter[0] + dOff >= ptLL[0]) 
-		{	ptWrk[iSecs][0] = m_ptCenter[0] + dOff;
+		if (m_ptCenter[0] + dOff <= ptUR[0] && m_ptCenter[0] + dOff >= ptLL[0])
+		{
+			ptWrk[iSecs][0] = m_ptCenter[0] + dOff;
 			ptWrk[iSecs++][1] = ptLL[1];
 		}
 	}
-	if (iSecs == 0) 
+	if (iSecs == 0)
 		return 0;
-		
-	double dBegAng = atan2((double) (ptBeg[1] - m_ptCenter[1]), (double) (ptBeg[0] - m_ptCenter[0])); // Arc begin angle (- pi to pi)
-		
+
+	double dBegAng = atan2((double)(ptBeg[1] - m_ptCenter[1]), (double)(ptBeg[0] - m_ptCenter[0])); // Arc begin angle (- pi to pi)
+
 	double dIntAng[8];
 	double dWrkAng;
 	int iInts = 0;
-	for (int i2 = 0; i2 < iSecs; i2++)		
+	for (int i2 = 0; i2 < iSecs; i2++)
 	{	// Loop thru possible intersections
-		dWrkAng = atan2((double) (ptWrk[i2][1] - m_ptCenter[1]), (double) (ptWrk[i2][0] - m_ptCenter[0])); // Current intersection angle (- pi to
+		dWrkAng = atan2((double)(ptWrk[i2][1] - m_ptCenter[1]), (double)(ptWrk[i2][0] - m_ptCenter[0])); // Current intersection angle (- pi to
 		dIntAng[iInts] = dWrkAng - dBegAng; 					// Sweep from begin to intersection
 		if (dIntAng[iInts] < 0.)
 			dIntAng[iInts] += TWOPI;
-		if (fabs(dIntAng[iInts]) - m_dSwpAng < 0.) 
+		if (fabs(dIntAng[iInts]) - m_dSwpAng < 0.)
 		{	// Intersection lies on arc
 			int i;
-			for (i = 0; i < iInts && ptWrk[i2] != ptInt[i]; i++) {}
+			for (i = 0; i < iInts && ptWrk[i2] != ptInt[i]; i++) { }
 
 			if (i == iInts) {	// Unique intersection
 				ptInt[iInts++] = ptWrk[i2];
@@ -731,12 +745,12 @@ int CPrimArc::IsWithinArea(const CPnt& ptLL, const CPnt& ptUR, CPnt* ptInt)
 	if (iInts == 0)
 		// None of the intersections are on sweep of arc 
 		return 0;
-		
+
 	for (int i1 = 0; i1 < iInts; i1++)
 	{	// Sort intersections from begin to end of sweep
 		for (int i2 = 1; i2 < iInts - i1; i2++)
 		{
-			if (fabs(dIntAng[i2]) < fabs(dIntAng[i2 - 1])) 
+			if (fabs(dIntAng[i2]) < fabs(dIntAng[i2 - 1]))
 			{
 				double dAng = dIntAng[i2 - 1];
 				dIntAng[i2 - 1] = dIntAng[i2];
@@ -749,20 +763,20 @@ int CPrimArc::IsWithinArea(const CPnt& ptLL, const CPnt& ptUR, CPnt* ptInt)
 	}
 	//if (fabs(m_dSwpAng - TWOPI) <= DBL_EPSILON)
 	//{ // Arc is a circle in disuise
-	
+
 	//}
 	//else
-	{	
+	{
 		if (ptBeg[0] >= ptLL[0] && ptBeg[0] <= ptUR[0] && ptBeg[1] >= ptLL[1] && ptBeg[1] <= ptUR[1])
 		{	// Add beg point to int set
 			for (int i = iInts; i > 0; i--)
-				ptInt[i] = ptInt[i - 1];	
-			ptInt[0] = ptBeg; 
+				ptInt[i] = ptInt[i - 1];
+			ptInt[0] = ptBeg;
 			iInts++;
 		}
 		if (ptEnd[0] >= ptLL[0] && ptEnd[0] <= ptUR[0] && ptEnd[1] >= ptLL[1] && ptEnd[1] <= ptUR[1])
 		{	// Add end point to int set
-			ptInt[iInts] = ptEnd; 
+			ptInt[iInts] = ptEnd;
 			iInts++;
 		}
 	}
@@ -779,18 +793,18 @@ bool CPrimArc::IsInView(CPegView* pView) const
 	CPnts pts;
 
 	GetBoundingBox(pts);
-	
+
 	CPnt4 ptBeg(pts[0], 1.);
 	pView->ModelViewTransform(ptBeg);
-	
-	for (WORD w = 1; w < 4; w++) 
+
+	for (WORD w = 1; w < 4; w++)
 	{
 		CPnt4 ptEnd(pts[w], 1.);
 		pView->ModelViewTransform(ptEnd);
-	
+
 		if (Pnt4_ClipLine(ptBeg, ptEnd))
 			return true;
-		
+
 		ptBeg = ptEnd;
 	}
 	return false;
@@ -798,12 +812,12 @@ bool CPrimArc::IsInView(CPegView* pView) const
 void CPrimArc::Read(CFile& fl)
 {
 	CPrim::Read(fl);
-	
+
 	m_ptCenter.Read(fl);
 	m_vMajAx.Read(fl);
 	m_vMinAx.Read(fl);
 	FilePeg_ReadDouble(fl, m_dSwpAng);
-}	
+}
 ///<summary>
 ///Determines the best control point on arc within specified tolerance.
 ///Control points for arcs are the points at start and end of the sweep.
@@ -811,20 +825,20 @@ void CPrimArc::Read(CFile& fl)
 CPnt CPrimArc::SelAtCtrlPt(CPegView* pView, const CPnt4& ptPic) const
 {
 	mS_wCtrlPt = USHRT_MAX;
-	
-	double dAPert = mS_dPicApertSiz;
-	
-	CPnt ptCtrl[] = {GetBegPt(), GetEndPt()};
 
-	for (WORD w = 0; w < 2; w++) 
+	double dAPert = mS_dPicApertSiz;
+
+	CPnt ptCtrl [] = {GetBegPt(), GetEndPt()};
+
+	for (WORD w = 0; w < 2; w++)
 	{
 		CPnt4 pt(ptCtrl[w], 1.);
 
 		pView->ModelViewTransform(pt);
-		
+
 		double dDis = Pnt4_DistanceTo_xy(ptPic, pt);
-		
-		if ( dDis < dAPert) 
+
+		if (dDis < dAPert)
 		{
 			mS_wCtrlPt = w;
 			dAPert = dDis;
@@ -834,7 +848,7 @@ CPnt CPrimArc::SelAtCtrlPt(CPegView* pView, const CPnt4& ptPic) const
 }
 ///<summary>Determines if a line crosses arc.</summary>
 bool CPrimArc::SelUsingLine(CPegView* pView, const CLine& ln, CPnts& ptsInt)
-{	
+{
 	polyline::BeginLineStrip();
 	GenPts(m_ptCenter, m_vMajAx, m_vMinAx, m_dSwpAng);
 	return polyline::SelUsingLine(pView, ln, ptsInt);
@@ -855,12 +869,12 @@ double CPrimArc::SwpAngToPt(const CPnt& pt)
 {
 	CVec vPlnNorm = m_vMajAx ^ m_vMinAx;
 	vPlnNorm.Normalize();
-	
+
 	CTMat tm(m_ptCenter, vPlnNorm);
 
 	CPnt ptBeg = m_ptCenter + m_vMajAx;
 	CPnt ptEnd = pt;
-		
+
 	// Translate points into z=0 plane	  
 	ptBeg = tm * ptBeg;
 	ptEnd = tm * ptEnd;
@@ -893,7 +907,7 @@ bool CPrimArc::Write(CFile& fl) const
 
 	return true;
 }
-CPnt pFndPtOnArc(const CPnt& ptCP, const CVec& vMajAx, const CVec& vMinAx, const double dAng) 
+CPnt pFndPtOnArc(const CPnt& ptCP, const CVec& vMajAx, const CVec& vMinAx, const double dAng)
 {
 	CTMat tm(ptCP, vMajAx, vMinAx);
 	tm.Inverse();

@@ -1,5 +1,8 @@
 #pragma once
 
+#include "afxwin.h" // for CString and UINT
+#include <string> // for std::string
+
 /// @brief Displays a confirmation message dialog box with Yes/No buttons, using a string resource for the message and caption. 
 /// @param messageIdentifier Identifier of the message template or resource to display in the confirmation dialog.
 /// @param additionalText text to include in the message (e.g., inserted into the template) or additional text shown in the dialog.

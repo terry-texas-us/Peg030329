@@ -1,5 +1,11 @@
 #pragma once
 
+#include <afxdlgs.h>
+
+#include "resource.h"
+
+class CDataExchange;
+
 // CDlgViewZoom dialog
 
 // User defined message sent by CDlgViewZoom to WndProcKeyPlan when a new
@@ -7,7 +13,7 @@
 //		LPARAM is the new value of ratio
 #define WM_USER_ON_NEW_RATIO WM_USER + 1
 
-class CDlgViewZoom : public CDialog
+class CDlgViewZoom: public CDialog
 {
 	DECLARE_DYNAMIC(CDlgViewZoom)
 
@@ -15,9 +21,9 @@ public:
 	CDlgViewZoom(CWnd* pParent = NULL);   // standard constructor
 	virtual ~CDlgViewZoom();
 
-// Dialog Data
+	// Dialog Data
 	enum { IDD = IDD_VIEW_ZOOM };
-	
+
 	static HBITMAP	m_hbmKeyplan;
 	static CRect	m_rcWnd;
 
@@ -31,7 +37,6 @@ protected:
 	virtual void OnOK();
 
 	void Refresh();
-	
 
 public:
 	afx_msg void OnBnClickedBest();

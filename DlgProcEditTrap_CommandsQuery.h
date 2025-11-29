@@ -1,5 +1,9 @@
 #pragma once
 
+#include <afxwin.h> // for MFC HWND, UINT, WPARAM, LPARAM, BOOL, CALLBACK, HTREEITEM, CObject
+
+class CPrim;
+
 /**
  * @brief Fills the extra list control with data from the given primitive.
  *

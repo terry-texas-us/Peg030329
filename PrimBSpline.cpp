@@ -3,8 +3,13 @@
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
 
-#include "Polyline.h"
+#include "FilePeg.h"
 #include "Messages.h"
+#include "ModelTransform.h"
+#include "OpenGL.h"
+#include "Polyline.h"
+#include "PrimBSpline.h"
+#include "PrimState.h"
 
 CPrimBSpline::CPrimBSpline(WORD wPts, CPnt* pt)
 {

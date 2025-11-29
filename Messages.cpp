@@ -1,4 +1,7 @@
 #include "stdafx.h"
+#include <afxwin.h>
+#include <cctype>
+#include <string>
 
 #include "Mainfrm.h"
 #include "PegAEsys.h"
@@ -16,7 +19,7 @@ std::string msgLoadStringResource(UINT resourceIdentifier)
 int msgConfirm(UINT messageIdentifier, const CString& additionalText)
 {
 	std::string confirm = msgLoadStringResource(messageIdentifier);
-	
+
 	size_t pos = confirm.find("%s");
 	if (pos != std::string::npos)
 	{
@@ -52,7 +55,7 @@ void msgWarning(UINT messageIdentifier, const CString& additionalText)
 	size_t tabPos = warning.find("\t");
 	std::string message = (tabPos != std::string::npos) ? warning.substr(0, tabPos) : warning;
 	std::string caption = (tabPos != std::string::npos) ? warning.substr(tabPos + 1) : "";
-		
+
 	MessageBox(0, message.c_str(), caption.c_str(), MB_ICONWARNING | MB_OK);
 }
 
@@ -93,7 +96,7 @@ void msgInformation(UINT messageIdentifier)
 	if (messageIdentifier == 0)
 	{   // Use current mode indentifier.
 		information = msgLoadStringResource(app.m_iModeId);
-		
+
 		size_t pos = information.find("\n");
 		if (pos != std::string::npos)
 		{	// Truncate at the newline, keeping only the mode name.

@@ -4,6 +4,8 @@
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
+#include "PrimText.h"
+#include "SegsDet.h"
 #include "Text.h"
 
 ///<remarks>

@@ -1,31 +1,40 @@
 #pragma once
 
+#include <afxwin.h>
+
+#include "Pnt.h"
+#include "Vec.h"
+
+class CPrim;
+class CSeg;
+class CSegs;
+
 LRESULT CALLBACK SubProcNodal(HWND, UINT, WPARAM, LPARAM);
 
-#define btest(m, p) 		((bool) (((((DWORD) m) >> ((int) p)) & 1UL) == 1 ? true : false))
-#define ibset(m, p) 		((DWORD) (((DWORD) m) | (1UL << ((int) p))))
-#define ibclr(m, p) 		((DWORD) (((DWORD) m) & ~(1UL << ((int) p))))
+#define btest(m, p) ((bool) (((((DWORD) m) >> ((int) p)) & 1UL) == 1 ? true : false))
+#define ibset(m, p) ((DWORD) (((DWORD) m) | (1UL << ((int) p))))
+#define ibclr(m, p) ((DWORD) (((DWORD) m) & ~(1UL << ((int) p))))
 
-class CNodalPrim : public CObject
+class CNodalPrim: public CObject
 {
 public:
-	const CPrim*	pPrim;
-	DWORD			dwMask;
+	const CPrim* pPrim;
+	DWORD dwMask;
 };
 
-class CUniqPt : public CObject
+class CUniqPt: public CObject
 {
 public:
-	int 	iCnt;
-	CPnt	pt;
+	int iCnt;
+	CPnt pt;
 };
 
 namespace nodal
 {
-	extern bool		bAdd;
-	extern CObList*	UPL;
-	extern CSegs*	SegList;
-	extern CObList*	PrimLis;
+	extern bool bAdd;
+	extern CObList* UPL;
+	extern CSegs* SegList;
+	extern CObList* PrimLis;
 
 	void	AddByArea(CPnt, CPnt);
 	void	AddByPt(const CPnt&);

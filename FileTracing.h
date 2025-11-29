@@ -1,5 +1,7 @@
 #pragma once
 
+#include <afxwin.h> // For CFile as base class and CString
+
 class CLayer;
 
 class CFileTracing : public CFile

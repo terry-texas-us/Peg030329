@@ -2,6 +2,9 @@
 
 #include "PegAEsysView.h"
 
+#include "PrimPolygon.h"
+#include "SegsDet.h"
+
 HTREEITEM tvAddItem(HWND hTree, HTREEITEM hParent, LPCTSTR pszText, CObject* pOb);
 
 void CSegs::AddToTreeViewControl(HWND hTree, HTREEITEM htiParent) const

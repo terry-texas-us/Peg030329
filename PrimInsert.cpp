@@ -1,7 +1,11 @@
 #include "stdafx.h"
 
 #include "PegAEsysDoc.h"
+
+#include "FilePeg.h"
 #include "Messages.h"
+#include "ModelTransform.h"
+#include "PrimInsert.h"
 
 CPrimInsert::CPrimInsert()
 {

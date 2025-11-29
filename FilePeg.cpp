@@ -3,6 +3,23 @@
 #include "PegAEsys.h"
 #include "PegAEsysDoc.h"
 
+#include "FilePeg.h"
+#include "Layer.h"
+#include "Messages.h"
+#include "PenStyle.h"
+#include "PrimArc.h"
+#include "PrimBSpline.h"
+#include "PrimCSpline.h"
+#include "PrimDim.h"
+#include "PrimInsert.h"
+#include "PrimLine.h"
+#include "PrimMark.h"
+#include "PrimPolygon.h"
+#include "PrimPolyline.h"
+#include "PrimSegRef.h"
+#include "PrimTag.h"
+#include "PrimText.h"
+
 void CFilePeg::Load(CPegDoc* pDoc)
 {
 	ReadHeaderSection(pDoc);

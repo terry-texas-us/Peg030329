@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "Mat4.h"
+
 CMat4& CMat4::operator+=(const CMat4& m) 
 {
 	m_v[0] += m[0];

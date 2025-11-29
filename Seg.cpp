@@ -3,6 +3,13 @@
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
+#include "FilePeg.h"
+#include "PrimLine.h"
+#include "PrimPolyline.h"
+#include "PrimSegRef.h"
+#include "PrimText.h"
+#include "Seg.h"
+
 HTREEITEM tvAddItem(HWND hTree, HTREEITEM hParent, LPCTSTR pszText, CObject* pOb);
 
 // static member variable initializations

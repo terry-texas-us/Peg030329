@@ -1,11 +1,19 @@
 #include "stdafx.h"
 
+#include <sstream>
+
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
 
 #include "DlgProcTrapModify.h"
-#include "Text.h"
+#include "FilePeg.h"
 #include "Messages.h"
+#include "ModelTransform.h"
+#include "OpenGL.h"
+#include "Polyline.h"
+#include "PrimState.h"
+#include "PrimText.h"
+#include "Text.h"
 
 CPrimText::CPrimText(const CFontDef& fd, const CRefSys& rs, const char* pszText)
 {

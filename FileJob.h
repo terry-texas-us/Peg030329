@@ -1,5 +1,12 @@
 #pragma once
 
+#include <afxwin.h> // For CString and CFile
+
+#include "Prim.h"
+
+class CLayer;
+class CSeg;
+
 class CFileJob : public CFile
 {
 private:

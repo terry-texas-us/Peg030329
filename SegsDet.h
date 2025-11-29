@@ -1,7 +1,12 @@
 #pragma once
 
+#include "Pnt.h" // for CPnt member
+#include "Seg.h" // for CSeg forward declaration
+#include "Segs.h" // for CSegs base class
+
+class CLayer;
+class CPegView;
 class CPrim;
-class CPrimLine;
 class CPrimText;
 
 class CSegsDet : public CSegs

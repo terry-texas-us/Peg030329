@@ -4,6 +4,12 @@
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
+#include "Messages.h"
+#include "PrimPolygon.h"
+#include "PrimText.h"
+#include "SegsDet.h"
+#include "SegsTrap.h"
+
 CSegsDet::CSegsDet()
 {
 	m_pDetSeg = 0;

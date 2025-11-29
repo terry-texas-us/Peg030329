@@ -1,5 +1,13 @@
 #pragma once
 
+#include <afxwin.h> // for CObject, CDC, CFile, WORD
+
+#include "Pnt.h" // for CPnt
+#include "Pnt4.h" // for CPnt4
+#include "TMat.h" // for CTMat
+#include "Vec.h" // for CVec
+#include "Vec4.h" // for CVec4
+
 class CPegView;
 
 namespace line

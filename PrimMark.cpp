@@ -1,8 +1,17 @@
 #include "stdafx.h"
 
+#include <iomanip>
+#include <sstream>
+
+#include "FilePeg.h"
+#include "Messages.h"
+#include "ModelTransform.h"
+#include "OpenGL.h"
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
-#include "Messages.h"
+
+#include "PrimMark.h"
+#include "PrimState.h"
 
 CPrimMark::CPrimMark()
 {

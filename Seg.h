@@ -1,18 +1,30 @@
 #pragma once
 
-class CBlock;
+#include <afxwin.h>  // For CObject (for casts), CString and CFile plus CDC, POSITION, HWND, HTREEITEM
 
-class CSeg : public CObList
+#include <afxcoll.h> // For CObList
+
+#include "CharCellDef.h" // For CCharCellDef
+#include "FontDef.h" // For CFontDef
+#include "Pnt.h"     // For CPnt, CPnt4
+#include "Prim.h" // For PENSTYLE, PENCOLOR
+#include "TMat.h"  // For CTMat
+#include "Vec.h"  // For CVec
+
+class CBlock;
+class CPegView;
+
+class CSeg: public CObList
 {
 public:
 	/// <summary>Default constructor.</summary>
-	CSeg() {}
+	CSeg() { }
 	/// <summary>Constructor that adds a single primitive.</summary>
 	/// <param name="p">Pointer to the primitive to add.</param>
-	CSeg(CPrim* p) {AddTail(p);}
+	CSeg(CPrim* p) { AddTail(p); }
 	/// <summary>Copy constructor.</summary>
 	/// <param name="seg">The segment to copy from.</param>
-	CSeg(const CSeg&);	
+	CSeg(const CSeg&);
 	/// <summary>Constructor from a block.</summary>
 	/// <param name="blk">The block to initialize from.</param>
 	CSeg(const CBlock&);
@@ -41,14 +53,14 @@ public:
 	/// <summary>Gets the primitive at the specified position.</summary>
 	/// <param name="pos">The position.</param>
 	/// <returns>Pointer to the primitive.</returns>
-	CPrim*		GetAt(POSITION pos) const {return (CPrim*) CObList::GetAt(pos);}
+	CPrim* GetAt(POSITION pos) const { return (CPrim*)CObList::GetAt(pos); }
 	/// <summary>Gets the count of block references with the given name.</summary>
 	/// <param name="strName">The block name.</param>
 	/// <returns>The count.</returns>
 	int			GetBlockRefCount(const CString& strName) const;
 	/// <summary>Gets the count of primitives in the segment.</summary>
 	/// <returns>The count.</returns>
-	int         GetCount() const { return static_cast<int>(CObList::GetCount()); }
+	INT_PTR GetCount() const { return CObList::GetCount(); }
 	/// <summary>Gets the extents of the segment.</summary>
 	/// <param name="ptMin">Minimum point.</param>
 	/// <param name="ptMax">Maximum point.</param>
@@ -57,7 +69,7 @@ public:
 	/// <summary>Gets the next primitive in the list.</summary>
 	/// <param name="pos">The position, updated to the next.</param>
 	/// <returns>Pointer to the primitive.</returns>
-	CPrim*		GetNext(POSITION& pos) const {return ((CPrim*) CObList::GetNext(pos));}
+	CPrim* GetNext(POSITION& pos) const { return ((CPrim*)CObList::GetNext(pos)); }
 	/// <summary>Gets the count of primitives with the given pen style.</summary>
 	/// <param name="nPenStyle">The pen style.</param>
 	/// <returns>The count.</returns>
@@ -96,14 +108,14 @@ public:
 	/// <param name="ptView">The view-space point to check for proximity to control points.</param>
 	/// <param name="ptCtrl">Output parameter for the transformed control point coordinates.</param>
 	/// <returns>Pointer to the selected primitive, or null if none found.</returns>
-	CPrim*		SelPrimAtCtrlPt(CPegView* pView, const CPnt4& ptView, CPnt* ptCtrl) const;
+	CPrim* SelPrimAtCtrlPt(CPegView* pView, const CPnt4& ptView, CPnt* ptCtrl) const;
 	/// <summary>Selects a primitive using a point.</summary>
 	/// <param name="pView">Pointer to the view.</param>
 	/// <param name="pt">The point.</param>
 	/// <param name="dPicApert">Aperture distance.</param>
 	/// <param name="pDetPt">Detected point.</param>
 	/// <returns>Pointer to the selected primitive.</returns>
-	CPrim*		SelPrimUsingPoint(CPegView* pView, const CPnt4& pt, double& dPicApert, CPnt& pDetPt);
+	CPrim* SelPrimUsingPoint(CPegView* pView, const CPnt4& pt, double& dPicApert, CPnt& pDetPt);
 	/// <summary>Selects primitives using a rectangle.</summary>
 	/// <param name="pView">Pointer to the view.</param>
 	/// <param name="pt1">First corner.</param>
@@ -139,7 +151,7 @@ public:
 public:
 	/// <summary>Gets the ignore primitive.</summary>
 	/// <returns>Reference to the ignore primitive.</returns>
-	static CPrim*& IgnorePrim() {return mS_pPrimIgnore;}
+	static CPrim*& IgnorePrim() { return mS_pPrimIgnore; }
 
 private:
 	static CPrim* mS_pPrimIgnore;

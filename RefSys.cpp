@@ -2,6 +2,10 @@
 
 #include "PegAEsysView.h"
 
+#include "CharCellDef.h"
+#include "RefSys.h"
+#include "SafeMath.h"
+
 CRefSys::CRefSys(const CPnt& ptOrigin, const CVec& vDirX, const CVec& vDirY)
 {
 	m_ptOrigin = ptOrigin;
@@ -11,16 +15,16 @@ CRefSys::CRefSys(const CPnt& ptOrigin, const CVec& vDirX, const CVec& vDirY)
 CRefSys::CRefSys(const CPnt& ptOrigin, const CCharCellDef& ccd)
 {
 	CPegView* pView = CPegView::GetActiveView();
-	
+
 	m_ptOrigin = ptOrigin;
 
 	CVec vNorm = pView->ModelViewGetDirection();
 
 	m_vDirY = pView->ModelViewGetVwUp();
 	m_vDirY.RotAboutArbAx(vNorm, ccd.TextRotAngGet());
-	
+
 	m_vDirX = m_vDirY;
-	m_vDirX.RotAboutArbAx(vNorm, - HALF_PI);
+	m_vDirX.RotAboutArbAx(vNorm, -HALF_PI);
 	m_vDirY.RotAboutArbAx(vNorm, ccd.ChrSlantAngGet());
 	m_vDirX *= .6 * ccd.ChrHgtGet() * ccd.ChrExpFacGet();
 	m_vDirY *= ccd.ChrHgtGet();
@@ -36,7 +40,7 @@ CRefSys& CRefSys::operator=(const CRefSys& src)
 	m_ptOrigin = src.m_ptOrigin;
 	m_vDirX = src.m_vDirX;
 	m_vDirY = src.m_vDirY;
-	
+
 	return (*this);
 }
 CTMat CRefSys::GetTransformMatrix() const

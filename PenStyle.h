@@ -1,5 +1,9 @@
 #pragma once
 
+#include <afxwin.h> // for CObject (class base) and CString. Also includes intsafe.h for WORD type.
+
+#include <afxcoll.h> // for CObArray
+
 class CPenStyle : public CObject
 {
 private:

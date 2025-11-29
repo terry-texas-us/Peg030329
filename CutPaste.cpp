@@ -5,6 +5,7 @@
 #include "PegAEsysView.h"
 
 #include "FileJob.h"
+#include "SegsTrap.h"
 #include "Text.h"
 
 ///<summary>Get the drawing using a file opened somewhere else.</summary>

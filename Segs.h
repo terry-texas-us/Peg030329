@@ -1,5 +1,19 @@
 #pragma once
 
+#include <afxwin.h>  // For CObject and CString plus CDC, POSITION, HWND, HTREEITEM
+
+#include <afxcoll.h> // For CObList
+
+#include "Prim.h" // For PENSTYLE, PENCOLOR
+
+class CCharCellDef;
+class CFontDef;
+class CPegView;
+class CPnt;
+class CSeg;
+class CTMat;
+class CVec;
+
 class CSegs : public CObList
 {
 public: // Constructors and destructor

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 
+#include "Block.h"
 #include "FileBlock.h"
+#include "FilePeg.h"
 
 // SECTION_HEADER sentinel						WORD 0x0101
 //		{0 or more key-value pairs}

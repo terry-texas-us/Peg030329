@@ -1,4 +1,12 @@
 #pragma once
+#include <afxwin.h>	// for MFC CObject (base class), CString, WORD, CDC, CFile
+
+#include "FontDef.h" // for CFontDef
+#include "Pnt.h" // for CPnt, CPnts
+#include "RefSys.h" // for CRefSys
+#include "TMat.h" // for CTMat
+
+class CPegView;
 
 // At present one embedded command is supported.
 // It allows for fractions and the following should be noted:

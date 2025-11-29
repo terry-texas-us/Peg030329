@@ -1,5 +1,14 @@
 #pragma once
 
+#include <afxwin.h> // for CObject (base class)
+
+#include <afxcoll.h> // for CObList
+
+#include "Pnt.h" // for CPnt
+#include "Pnt4.h" // for CPnt4
+#include "TMat.h" // for CTMat
+#include "Vec.h" // for CVec
+
 class CModelTransform : public CObject
 {
 

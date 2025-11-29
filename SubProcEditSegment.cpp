@@ -5,6 +5,8 @@
 #include "PegAEsysView.h"
 
 #include "DlgProcEditOps.h"
+#include "ExpProcs.h"
+#include "PrimState.h"
 
 extern CTMat	tmEditSeg;
 

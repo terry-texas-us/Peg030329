@@ -6,7 +6,7 @@
 using namespace dde;
 
 ///<summary>Add a new topic and default processing for its item list and formats</summary>
-PTOPICINFO dde::TopicAdd(LPSTR lpszTopic, PEXECFN pfnExec, PREQUESTFN pfnRequest, PPOKEFN pfnPoke)   
+PTOPICINFO dde::TopicAdd(const char* lpszTopic, PEXECFN pfnExec, PREQUESTFN pfnRequest, PPOKEFN pfnPoke)
 {
 	PTOPICINFO pTopic = TopicFind(lpszTopic);
 
@@ -16,21 +16,21 @@ PTOPICINFO dde::TopicAdd(LPSTR lpszTopic, PEXECFN pfnExec, PREQUESTFN pfnRequest
 		pTopic->pfnExec = pfnExec;
 		pTopic->pfnRequest = pfnRequest;
 		pTopic->pfnPoke = pfnPoke;
-	} 
-	else														
+	}
+	else
 	{	// Create a new topic
 		pTopic = (PTOPICINFO) new char[sizeof(TOPICINFO)];
 		if (!pTopic) return 0;
-		
+
 		::ZeroMemory(pTopic, sizeof(TOPICINFO));
-		pTopic->pszTopicName = lpszTopic;
+		pTopic->pszTopicName = const_cast<LPSTR>(lpszTopic);
 		pTopic->hszTopicName = DdeCreateStringHandle(ServerInfo.dwInstance, lpszTopic, CP_WINANSI);
 		pTopic->pItemList = 0;
 		pTopic->pfnExec = pfnExec;
 		pTopic->pfnRequest = pfnRequest;
 		pTopic->pfnPoke = pfnPoke;
 		pTopic->pCmdList = 0;
-		
+
 		// Add it to the list
 		pTopic->pNext = ServerInfo.pTopicList;
 		ServerInfo.pTopicList = pTopic;
@@ -42,15 +42,15 @@ PTOPICINFO dde::TopicAdd(LPSTR lpszTopic, PEXECFN pfnExec, PREQUESTFN pfnRequest
 	return pTopic;
 }
 ///<summary>Find a topic by its name</summary>
-PTOPICINFO dde::TopicFind(LPSTR lpszName)
+PTOPICINFO dde::TopicFind(const char* lpszName)
 {
 	PTOPICINFO pTopic = ServerInfo.pTopicList;
-	
-	while (pTopic) 
+
+	while (pTopic)
 	{
-		if (lstrcmpi(pTopic->pszTopicName, lpszName) == 0) 
+		if (lstrcmpi(pTopic->pszTopicName, lpszName) == 0)
 			break;
-		
+
 		pTopic = pTopic->pNext;
 	}
 	return pTopic;
@@ -59,12 +59,12 @@ PTOPICINFO dde::TopicFind(LPSTR lpszName)
 PTOPICINFO dde::TopicFind(HSZ hszName)
 {
 	PTOPICINFO pTopic = ServerInfo.pTopicList;
-	
-	while (pTopic) 
+
+	while (pTopic)
 	{
-		if (DdeCmpStringHandles(pTopic->hszTopicName, hszName) == 0) 
+		if (DdeCmpStringHandles(pTopic->hszTopicName, hszName) == 0)
 			break;
-		
+
 		pTopic = pTopic->pNext;
 	}
 	return pTopic;
@@ -72,24 +72,24 @@ PTOPICINFO dde::TopicFind(HSZ hszName)
 ///<summary>
 //Remove a topic and all its items.  If there is an active conversation on the topic then disconnect it.
 ///</summary>
-bool dde::TopicRemove(LPSTR lpszTopic)
+bool dde::TopicRemove(const char* lpszTopic)
 {
 	PTOPICINFO pTopic = ServerInfo.pTopicList;
 	PTOPICINFO pPrevTopic = 0;
 	PCONVERSATIONINFO pCI;
 
 	// See if we have this topic by walking the list
-	while (pTopic) 
+	while (pTopic)
 	{
-		if (lstrcmpi(pTopic->pszTopicName, lpszTopic) == 0) 
+		if (lstrcmpi(pTopic->pszTopicName, lpszTopic) == 0)
 		{
 			// Found it. Disconnect any active conversations on this topic
 			pCI = ConversationFind(pTopic->hszTopicName);
-			while (pCI) 
+			while (pCI)
 			{
 				// Tell DDEML to disconnect it
 				DdeDisconnect(pCI->hConv);
-			
+
 				// We don't get notified until later that it's gone
 				// so remove it from the list now so we won't keep
 				// finding it in this loop.
@@ -100,25 +100,25 @@ bool dde::TopicRemove(LPSTR lpszTopic)
 			}
 			while (pTopic->pCmdList)	// Remove all the execute command handlers in the topic
 			{
-				if (!ExecCmdRemove(lpszTopic, pTopic->pCmdList->pszCmdName)) // Some error
-					return false; 				
+				if (!ExecCmdRemove(const_cast<LPSTR>(lpszTopic), const_cast<LPSTR>(pTopic->pCmdList->pszCmdName))) // Some error
+					return false;
 			}
-			while(pTopic->pItemList)	// Free all the items in the topic
+			while (pTopic->pItemList)	// Free all the items in the topic
 			{
-				if (!ItemRemove(lpszTopic, pTopic->pItemList->pszItemName)) // some error
+				if (!ItemRemove(const_cast<LPSTR>(lpszTopic), const_cast<LPSTR>(pTopic->pItemList->pszItemName))) // some error
 					return false;
 			}
 			// Unlink it from the list.
-			if (pPrevTopic) 
+			if (pPrevTopic)
 				pPrevTopic->pNext = pTopic->pNext;
-			else 
+			else
 				ServerInfo.pTopicList = pTopic->pNext;
-			
+
 			// Release its string handle
 			DdeFreeStringHandle(ServerInfo.dwInstance, pTopic->hszTopicName);
-		
+
 			// Free the memory associated with it
-			delete [] pTopic;		
+			delete [] pTopic;
 			return true;
 		}
 		pTopic = pTopic->pNext;
@@ -136,7 +136,7 @@ HDDEDATA dde::TopicReqFormats(UINT wFmt, HSZ hszTopic, HSZ hszItem)
 	WORD wFormats[MAXFORMATS];
 
 	PTOPICINFO pTopic = TopicFind(hszTopic);
-	
+
 	if (!pTopic)						// No such topic
 		return 0;
 
@@ -150,5 +150,5 @@ HDDEDATA dde::TopicReqFormats(UINT wFmt, HSZ hszTopic, HSZ hszItem)
 		AddFormatsToList(wFormats, MAXFORMATS, pItem->pFormatList); // Add unique formats to the main list
 		pItem = pItem->pNext;
 	}
-	return MakeDataFromFormatList((LPWORD) wFormats, (WORD) wFmt, hszItem);
+	return MakeDataFromFormatList((LPWORD)wFormats, (WORD)wFmt, hszItem);
 }

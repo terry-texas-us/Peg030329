@@ -1,7 +1,12 @@
 #include "stdafx.h"
+#include <algorithm>
 
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
+
+#include "OpenGL.h"
+#include "Polyline.h"
+#include "PrimState.h"
 
 namespace polyline
 {
@@ -26,7 +31,7 @@ CPolyline& CPolyline::operator=(const CPolyline& src)
 }
 void CPolyline::operator+=(const CVec& v)
 {
-	for (WORD w = 0; w < m_pts.GetSize(); w++) 
+	for (WORD w = 0; w < m_pts.GetSize(); w++)
 		m_pts[w] += v;
 }
 void CPolyline::operator-=(const CVec& v)
@@ -34,7 +39,7 @@ void CPolyline::operator-=(const CVec& v)
 	for (WORD w = 0; w < m_pts.GetSize(); w++)
 		m_pts[w] -= v;
 }
-void polyline::BeginLineStrip() 
+void polyline::BeginLineStrip()
 {
 	opengl::BeginLineStrip();
 	polyline::pts_.SetSize(0);
@@ -49,11 +54,11 @@ void polyline::Display(CPegView* pView, CDC* pDC, const CPnts& pts)
 
 	ln[0] = pts[0];
 	pView->ModelViewTransform(ln[0]);
-		
-	for (int n = 1; n < pts.GetSize(); n++) 
+
+	for (int n = 1; n < pts.GetSize(); n++)
 	{
 		ln[1] = pts[n];
-			
+
 		pView->ModelViewTransform(ln[1]);
 		CPnt ptT = ln[1];
 		if (Pnt4_ClipLine(ln[0], ln[1]))
@@ -64,7 +69,7 @@ void polyline::Display(CPegView* pView, CDC* pDC, const CPnts& pts)
 		ln[0] = ptT;
 	}
 }
-void polyline::Display(CPegView* pView, CDC* pDC, const CPnts& pts, short nPenStyle)	
+void polyline::Display(CPegView* pView, CDC* pDC, const CPnts& pts, short nPenStyle)
 {
 	if (CPrim::IsSupportedTyp(nPenStyle))
 		polyline::Display(pView, pDC, pts);
@@ -72,7 +77,7 @@ void polyline::Display(CPegView* pView, CDC* pDC, const CPnts& pts, short nPenSt
 	{
 		CPenStyle* pPenStyle = CPegDoc::GetDoc()->PenStylesGetAtSafe(nPenStyle);
 		if (pPenStyle == 0) return;
-	
+
 		WORD wDefLen = pPenStyle->GetDefLen();
 		if (wDefLen == 0) return;
 
@@ -88,17 +93,17 @@ void polyline::Display(CPegView* pView, CDC* pDC, const CPnts& pts, short nPenSt
 
 		pstate.SetPenStyle(1);
 
-		double dSecLen = Max(.025/* * 96.*/, fabs(dDash[iDashDefId]));
-	
-		for (int i = 0; i < (int) pts.GetSize() - 1; i++) 
+		double dSecLen = std::max(.025/* * 96.*/, fabs(dDash[iDashDefId]));
+
+		for (int i = 0; i < (int)pts.GetSize() - 1; i++)
 		{
 			CVec vLn(pts[i], pts[i + 1]);
 			pt[0] = pts[i];
-		
+
 			double dVecLen = vLn.Length();
 			double dRemDisToEnd = dVecLen;
-		
-			while (dSecLen <= dRemDisToEnd + DBL_EPSILON) 
+
+			while (dSecLen <= dRemDisToEnd + DBL_EPSILON)
 			{
 				CVec vDash(vLn);
 				vDash *= dSecLen / dVecLen;
@@ -119,14 +124,14 @@ void polyline::Display(CPegView* pView, CDC* pDC, const CPnts& pts, short nPenSt
 				}
 				pt[0] = pt[1];
 				iDashDefId = (iDashDefId + 1) % wDefLen;
-				dSecLen = Max(.025/* * 96.*/, fabs(dDash[iDashDefId]));
+				dSecLen = std::max(0.025/* * 96.*/, fabs(dDash[iDashDefId]));
 			}
-			if (dRemDisToEnd > DBL_EPSILON) 							
+			if (dRemDisToEnd > DBL_EPSILON)
 			{	// Partial component of dash section must produced
-				if (dDash[iDashDefId] >= 0.) 
+				if (dDash[iDashDefId] >= 0.)
 				{
 					pt[1] = pts[i + 1];
-			
+
 					ln[0] = pt[0];
 					ln[1] = pt[1];
 
@@ -140,7 +145,7 @@ void polyline::Display(CPegView* pView, CDC* pDC, const CPnts& pts, short nPenSt
 				}
 			}
 			// Length of dash remaining
-			dSecLen -= dRemDisToEnd;							
+			dSecLen -= dRemDisToEnd;
 		}
 		delete [] dDash;
 		pstate.SetPenStyle(nPenStyle);
@@ -156,11 +161,11 @@ void polyline::DisplayLoop(CPegView* pView, CDC* pDC, const CPnts& pts)
 
 	ln[0] = pts[0];
 	pView->ModelViewTransform(ln[0]);
-		
-	for (int n = 1; n <= pts.GetSize(); n++) 
+
+	for (int n = 1; n <= pts.GetSize(); n++)
 	{
 		ln[1] = pts[n % pts.GetSize()];
-			
+
 		pView->ModelViewTransform(ln[1]);
 		CPnt ptT = ln[1];
 		if (Pnt4_ClipLine(ln[0], ln[1]))
@@ -171,35 +176,35 @@ void polyline::DisplayLoop(CPegView* pView, CDC* pDC, const CPnts& pts)
 		ln[0] = ptT;
 	}
 }
-void polyline::End(CPegView* pView, CDC* pDC, short nPenStyle) 
+void polyline::End(CPegView* pView, CDC* pDC, short nPenStyle)
 {
 	if (pDC == 0)
 		opengl::End();
 	else
-        polyline::Display(pView, pDC, polyline::pts_, nPenStyle);
+		polyline::Display(pView, pDC, polyline::pts_, nPenStyle);
 }
 ///<summary>Determines how many times (if any), a line segment intersects with polyline.</summary>
 bool polyline::SelUsingLine(CPegView* pView, const CLine& ln, CPnts& ptsInt)
-{	
+{
 	CPnt4 ptBeg(pts_[0], 1.);
 	CPnt4 ptEnd;
-	
+
 	pView->ModelViewTransform(ptBeg);
-		
+
 	for (WORD w = 1; w < pts_.GetSize(); w++)
 	{
 		ptEnd = CPnt4(pts_[w], 1.);
 		pView->ModelViewTransform(ptEnd);
-		
+
 		CPnt ptInt;
-		if (line::Intersection_xy(ln, CLine(ptBeg, ptEnd), ptInt)) 
+		if (line::Intersection_xy(ln, CLine(ptBeg, ptEnd), ptInt))
 		{
 			double dRel;
 			line::RelOfPtToEndPts(ln, ptInt, dRel);
-			if (dRel >= - DBL_EPSILON && dRel <= 1. + DBL_EPSILON)
+			if (dRel >= -DBL_EPSILON && dRel <= 1. + DBL_EPSILON)
 			{
-				line::RelOfPtToEndPts(CLine(ptBeg, ptEnd), ptInt, dRel);		
-				if (dRel >= - DBL_EPSILON && dRel <= 1. + DBL_EPSILON) 
+				line::RelOfPtToEndPts(CLine(ptBeg, ptEnd), ptInt, dRel);
+				if (dRel >= -DBL_EPSILON && dRel <= 1. + DBL_EPSILON)
 				{
 					ptInt[2] = ptBeg[2] + dRel * (ptEnd[2] - ptBeg[2]);
 					ptsInt.Add(ptInt);
@@ -215,15 +220,15 @@ bool polyline::SelUsingPoint(CPegView* pView, const CPnt4& ptPic, double dTol, d
 	bool bResult = false;
 
 	double dProjDis;
-	
+
 	CPnt4 ptBeg(pts_[0], 1.);
 	pView->ModelViewTransform(ptBeg);
-	
-	for (int i = 1; i < (int) pts_.GetSize(); i++) 
+
+	for (int i = 1; i < (int)pts_.GetSize(); i++)
 	{
 		CPnt4 ptEnd = CPnt4(pts_[i], 1.);
 		pView->ModelViewTransform(ptEnd);
-		if (line::EvalPtProx_xy(CLine(ptBeg, ptEnd), ptPic, dTol, ptProj, &dRel, &dProjDis)) 
+		if (line::EvalPtProx_xy(CLine(ptBeg, ptEnd), ptPic, dTol, ptProj, &dRel, &dProjDis))
 		{
 			ptProj[2] = ptBeg[2] + dRel * (ptEnd[2] - ptBeg[2]);
 			bResult = true;
@@ -237,12 +242,12 @@ bool polyline::SelUsingRect(CPegView* pView, const CPnt& pt1, const CPnt& pt2)
 {
 	CPnt4 ptBeg(pts_[0], 1.);
 	pView->ModelViewTransform(ptBeg);
-	
-	for (WORD w = 1; w < pts_.GetSize(); w++) 
+
+	for (WORD w = 1; w < pts_.GetSize(); w++)
 	{
 		CPnt4 ptEnd(pts_[w], 1.);
 		pView->ModelViewTransform(ptEnd);
-	
+
 		if (p2DEvalWndLn(pt1, pt2, ptBeg, ptEnd))
 			return true;
 
@@ -255,12 +260,12 @@ bool polyline::SelUsingRect(CPegView* pView, const CPnt& pt1, const CPnt& pt2, c
 {
 	CPnt4 ptBeg(pts[0], 1.);
 	pView->ModelViewTransform(ptBeg);
-	
-	for (WORD w = 1; w < pts.GetSize(); w++) 
+
+	for (WORD w = 1; w < pts.GetSize(); w++)
 	{
 		CPnt4 ptEnd(pts[w], 1.);
 		pView->ModelViewTransform(ptEnd);
-	
+
 		if (p2DEvalWndLn(pt1, pt2, ptBeg, ptEnd))
 			return true;
 
@@ -268,7 +273,7 @@ bool polyline::SelUsingRect(CPegView* pView, const CPnt& pt1, const CPnt& pt2, c
 	}
 	return false;
 }
-void polyline::SetVertex(const CPnt& pt) 
+void polyline::SetVertex(const CPnt& pt)
 {
 	opengl::SetVertex(pt);
 	polyline::pts_.Add(pt);

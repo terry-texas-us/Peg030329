@@ -1,8 +1,15 @@
 #include "stdafx.h"
 
+#include <sstream>
+
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
+
+#include "FilePeg.h"
 #include "Messages.h"
+#include "ModelTransform.h"
+#include "OpenGL.h"
+#include "PrimTag.h"
 
 CPrimTag::CPrimTag(const CPrimTag& src)
 {

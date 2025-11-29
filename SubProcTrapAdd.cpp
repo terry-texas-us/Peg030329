@@ -4,6 +4,12 @@
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
+#include "ExpProcs.h"
+#include "Line.h"
+#include "Messages.h"
+#include "PrimState.h"
+#include "SegsDet.h"
+#include "SegsTrap.h"
 #include "SubProcTrapAdd.h"
 
 void	DoEditTrapPopupCommands(HWND hwnd);

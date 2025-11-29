@@ -1,6 +1,17 @@
 #pragma once
 
-class CPrim;
+#include <afxwin.h> // for MFC CString, WORD, DWORD, HWND, HTREEITEM, CDC, CFile
+
+#include "FontDef.h" // for CFontDef member
+#include "Line.h" // for CLine member
+#include "Pnt.h" // for CPnt
+#include "Prim.h" // for CPrim base class, PENSTYLE and PENCOLOR types
+#include "RefSys.h" // for CRefSys member
+#include "TMat.h" // for CTMat
+#include "Vec.h" // for CVec
+
+class CSegs;
+class CPegView;
 
 class CPrimDim : public CPrim
 {

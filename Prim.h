@@ -1,5 +1,11 @@
 #pragma once
 
+#include <afxwin.h> // for MFC CObject (base class), CString, WORD, DWORD, LPCTSTR, HWND, HTREEITEM, CDC, CFile
+
+#include "Pnt.h"    // for CPnt, CPnts (typedef (CArray<CPnt, const CPnt&>))
+#include "TMat.h" // for CTMat
+#include "Vec.h" // for CVec
+
 HTREEITEM tvAddItem(HWND hTree, HTREEITEM hParent, LPCTSTR pszText, CObject* pOb);
 
 typedef short PENSTYLE;
@@ -19,18 +25,18 @@ public:
 	static const PENSTYLE PENSTYLE_BYBLOCK = 32766;
 	static const PENSTYLE PENSTYLE_BYLAYER = 32767;
 
-	static const WORD PRIM_MARK		= 256;		// 0x0100
-	static const WORD PRIM_INSERT	= 257;		// 0x0101
-	static const WORD PRIM_SEGREF	= 258;		// 0x0102
-	static const WORD PRIM_LINE		= 512;		// 0x0200
-	static const WORD PRIM_POLYGON	= 1024;		// 0x0400
-	static const WORD PRIM_ARC		= 4099;		// 0x1003
-	static const WORD PRIM_BSPLINE	= 8192;		// 0x2000
-	static const WORD PRIM_CSPLINE	= 8193;		// 0x2001
-	static const WORD PRIM_POLYLINE	= 8194;		// 0x2002
-	static const WORD PRIM_TEXT		= 16384;	// 0x4000
-	static const WORD PRIM_TAG		= 16640;	// 0x4100
-	static const WORD PRIM_DIM		= 16896;	// 0x4200
+	static const WORD PRIM_MARK = 256;		// 0x0100
+	static const WORD PRIM_INSERT = 257;		// 0x0101
+	static const WORD PRIM_SEGREF = 258;		// 0x0102
+	static const WORD PRIM_LINE = 512;		// 0x0200
+	static const WORD PRIM_POLYGON = 1024;		// 0x0400
+	static const WORD PRIM_ARC = 4099;		// 0x1003
+	static const WORD PRIM_BSPLINE = 8192;		// 0x2000
+	static const WORD PRIM_CSPLINE = 8193;		// 0x2001
+	static const WORD PRIM_POLYLINE = 8194;		// 0x2002
+	static const WORD PRIM_TEXT = 16384;	// 0x4000
+	static const WORD PRIM_TAG = 16640;	// 0x4100
+	static const WORD PRIM_DIM = 16896;	// 0x4200
 
 protected:
 	PENCOLOR	m_nPenColor;
@@ -97,7 +103,7 @@ public: // Methods
 
 public:	// Methods - static 
 	static WORD& CtrlPt() { return mS_wCtrlPt; }
-	static bool			IsSupportedTyp(int iTyp) { return (iTyp <= 7 && iTyp != 4 && iTyp != 5); }
+	static bool	IsSupportedTyp(int iTyp) { return (iTyp <= 7 && iTyp != 4 && iTyp != 5); }
 	static PENCOLOR& LayerPenColor() { return mS_nLayerPenColor; }
 	static PENSTYLE& LayerPenStyle() { return mS_nLayerPenStyle; }
 	static double& PicApertSiz() { return mS_dPicApertSiz; }

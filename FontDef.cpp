@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+#include "FilePeg.h"
+#include "FontDef.h"
+
 CFontDef::CFontDef()
 {
 	m_wTextPrec = PREC_PEGSTROKEFONT;
@@ -9,7 +12,7 @@ CFontDef::CFontDef()
 	m_wTextVerAlign = VER_ALIGN_BOTTOM;
 	m_dChrSpac = 0.;
 }
-CFontDef::CFontDef(const CFontDef& fd) 
+CFontDef::CFontDef(const CFontDef& fd)
 {
 	m_wTextPrec = fd.m_wTextPrec;
 	m_strTextFont = fd.m_strTextFont;
@@ -31,29 +34,29 @@ CFontDef& CFontDef::operator=(const CFontDef& fd)
 }
 CString CFontDef::FormatTextHorAlign() const
 {
-	CString strAlign[] = {"Left", "Center", "Right"};
-	CString str = (m_wTextHorAlign >= 1 && m_wTextHorAlign <= 3) ? strAlign[m_wTextHorAlign - 1] : "Invalid!";
+	CString strAlign [] = {"Left", "Center", "Right"};
+	CString str = (m_wTextHorAlign >= 1 && m_wTextHorAlign <= 3) ? strAlign[m_wTextHorAlign - 1] : CString("Invalid!");
 
 	return (str);
 }
 CString CFontDef::FormatTextPath() const
 {
-	CString strPath[] = {"Right", "Left", "Up", "Down"};
-	CString str = (m_wTextPath >= 0 && m_wTextPath <= 3) ? strPath[m_wTextPath] : "Invalid!";
+	CString strPath [] = {"Right", "Left", "Up", "Down"};
+	CString str = (m_wTextPath >= 0 && m_wTextPath <= 3) ? strPath[m_wTextPath] : CString("Invalid!");
 
 	return (str);
 }
 CString CFontDef::FormatTextPrec() const
 {
-	CString strPrec[] = {"True Type", "Stroke"};
-	CString str = (m_wTextPrec >= 1 && m_wTextPrec <= 2) ? strPrec[m_wTextPrec - 1] : "Invalid!";
+	CString strPrec [] = {"True Type", "Stroke"};
+	CString str = (m_wTextPrec >= 1 && m_wTextPrec <= 2) ? strPrec[m_wTextPrec - 1] : CString("Invalid!");
 
 	return (str);
 }
 CString CFontDef::FormatTextVerAlign() const
 {
-	CString strAlign[] = {"Top", "Middle", "Bottom"};
-	CString str = (m_wTextVerAlign >= 2 && m_wTextVerAlign <= 4) ? strAlign[m_wTextVerAlign - 2] : "Invalid!";
+	CString strAlign [] = {"Top", "Middle", "Bottom"};
+	CString str = (m_wTextVerAlign >= 2 && m_wTextVerAlign <= 4) ? strAlign[m_wTextVerAlign - 2] : CString("Invalid!");
 
 	return (str);
 }

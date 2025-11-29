@@ -1,5 +1,8 @@
 #pragma once
 
+class CPrimLine;
+class CPrimMark;
+
 LRESULT CALLBACK SubProcLPD(HWND, UINT, WPARAM, LPARAM);
 
 enum	ETransition {None, Begin, End, Both};

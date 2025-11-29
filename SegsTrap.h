@@ -1,5 +1,13 @@
 #pragma once
 
+#include "Pnt.h" // for CPnt member
+#include "Prim.h" // for PENCOLOR and PENSTYLE typedefs
+#include "Segs.h" // for CSegs base class
+
+class CPegView;
+class CPrim;
+class CPrimText;
+
 class CSegsDet;
 
 class CSegsTrap : public CSegs

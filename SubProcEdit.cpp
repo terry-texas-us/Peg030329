@@ -5,6 +5,8 @@
 #include "PegAEsysView.h"
 
 #include "DlgProcEditOps.h"
+#include "ExpProcs.h"
+#include "SegsTrap.h"
 
 // Edits segments in trap
 LRESULT CALLBACK SubProcEdit(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)

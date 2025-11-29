@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "ExpProcs.h"
 #include "PegAEsys.h"
 
 BOOL CALLBACK DlgProcDrawOptions(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM  )

@@ -2,6 +2,8 @@
 
 #include "PegAEsys.h"
 
+#include "SegsTrap.h"
+
 BOOL CALLBACK DlgProcSetPasteLoc(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM  )
 {
 	CPnt pt;

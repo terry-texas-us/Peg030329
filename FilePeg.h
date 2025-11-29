@@ -1,6 +1,9 @@
 #pragma once
 
+#include <afxwin.h> // For CFile and other MFC classes
+
 class CPegDoc;
+class CPrim;
 
 class CFilePeg : public CFile
 {

@@ -3,8 +3,9 @@
 #include "PegAEsys.h"
 
 #include "ddeGItms.h"
-#include "DlgSetLength.h"
 #include "DlgProcEditOps.h"
+#include "DlgSetLength.h"
+#include "ExpProcs.h"
 #include "FileJob.h"
 #include "UnitsString.h"
 

@@ -1,10 +1,15 @@
 #include "stdafx.h"
+#include <algorithm>
 
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
 
+#include "Messages.h"
+#include "PrimState.h"
+#include "SafeMath.h"
+
 // State list maintenance
-CPrimState* psSav[] = {0, 0, 0, 0};
+CPrimState* psSav [] = {0, 0, 0, 0};
 
 HPEN		hPen[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 PENSTYLE	nPenStyles[8];
@@ -16,8 +21,8 @@ const CPrimState& CPrimState::operator=(const CPrimState& src)
 	m_fd = src.m_fd;
 
 	m_nPenColor = src.m_nPenColor;
-	m_nPenStyle = src.m_nPenStyle;	
-	m_nMarkStyle = src.m_nMarkStyle;	
+	m_nPenStyle = src.m_nPenStyle;
+	m_nMarkStyle = src.m_nMarkStyle;
 	m_nPolygonIntStyle = src.m_nPolygonIntStyle;
 	m_nPolygonIntStyleId = src.m_nPolygonIntStyleId;
 
@@ -27,18 +32,18 @@ void CPrimState::Restore(CDC* pDC, int iSaveId)
 {
 	if (iSaveId >= sizeof(psSav) / sizeof(psSav[0]))
 		return;
-	
-	if (psSav[iSaveId] != 0) 
+
+	if (psSav[iSaveId] != 0)
 	{
 		SetPen(pDC, psSav[iSaveId]->PenColor(), psSav[iSaveId]->PenStyle());
-		
+
 		m_fd = psSav[iSaveId]->m_fd;
 
 		SetTxtAlign(pDC, m_fd.TextHorAlign(), m_fd.TextVerAlign());
 
 		SetPolygonIntStyle(psSav[iSaveId]->PolygonIntStyle());
 		SetPolygonIntStyleId(psSav[iSaveId]->PolygonIntStyleId());
-		
+
 		delete psSav[iSaveId];
 		psSav[iSaveId] = 0;
 	}
@@ -46,11 +51,11 @@ void CPrimState::Restore(CDC* pDC, int iSaveId)
 int CPrimState::Save()
 {
 	int iSaveId = sizeof(psSav) / sizeof(psSav[0]) - 1;
-	
+
 	while (iSaveId >= 0 && psSav[iSaveId] != 0)
 		iSaveId--;
 
-	if (iSaveId < 0) 
+	if (iSaveId < 0)
 		msgWarning(IDS_MSG_SAVE_STATE_LIST_ERROR);
 	else
 	{
@@ -62,74 +67,74 @@ int CPrimState::Save()
 	return (iSaveId);
 }
 void CPrimState::SetPen(CDC* pDC, PENCOLOR nPenColor, PENSTYLE nPenStyle)
-{	
+{
 	if (CPrim::SpecPenColor() != 0)
 		nPenColor = CPrim::SpecPenColor();
 
 	if (nPenColor == CPrim::PENCOLOR_BYLAYER)
 		nPenColor = WORD(CPrim::LayerPenColor());
-	
+
 	if (CPrim::SpecPenStyle() != 0)
 		nPenStyle = CPrim::SpecPenStyle();
-	
+
 	if (nPenStyle == CPrim::PENSTYLE_BYLAYER)
 		nPenStyle = CPrim::LayerPenStyle();
-	
+
 	m_nPenColor = nPenColor;
 	m_nPenStyle = nPenStyle;
-	
+
 	SetPen(pDC, nPenColor, 1, nPenStyle);
 }
 ///<summary>Sets the pen used to for LineTo, PolyLine, PolyPolyLine, or Arc to draw the lines.</summary>
 void CPrimState::SetPen(CDC* pDC, PENCOLOR nPenColor, int nPenWidth, PENSTYLE nPenStyle)
-{	
+{
 	CPegView* pView = CPegView::GetActiveView();
 
 	static HPEN hPenCur;
 
 	static int nPens = sizeof(hPen) / sizeof(hPen[0]);
 
-	switch (nPenStyle) 
+	switch (nPenStyle)
 	{
-		case 0:
-			nPenStyle = PS_NULL;
-			break;
-		
-		case 2:
-			nPenStyle = PS_DOT;
-			break;
-		
-		case 3:
-			nPenStyle = PS_DASH;
-			break;
-		
-		case 6:
-			nPenStyle = PS_DASHDOT;
-			break;
-		
-		case 7:
-			nPenStyle = PS_DASHDOTDOT;
-			break;
-		
-		default:
-			nPenStyle = PS_SOLID;
+	case 0:
+		nPenStyle = PS_NULL;
+		break;
+
+	case 2:
+		nPenStyle = PS_DOT;
+		break;
+
+	case 3:
+		nPenStyle = PS_DASH;
+		break;
+
+	case 6:
+		nPenStyle = PS_DASHDOT;
+		break;
+
+	case 7:
+		nPenStyle = PS_DASHDOTDOT;
+		break;
+
+	default:
+		nPenStyle = PS_SOLID;
 	}
 	double dLogWidth = 0.;
 
-	if (pView != NULL && pView->m_bViewPenWidths)	
+	if (pView != NULL && pView->m_bViewPenWidths)
 	{
 		int iLogPixelsX = pDC->GetDeviceCaps(LOGPIXELSX);
 		dLogWidth = app.PenWidthsGet(nPenColor) * double(iLogPixelsX);
-		dLogWidth *= Min(1., pView->GetWidthInInches() / pView->ModelViewGetUExt());
+		dLogWidth *= std::min(1., pView->GetWidthInInches() / pView->ModelViewGetUExt());
 	}
 	nPenWidth = Round(dLogWidth);
 
 	pDC->SetTextColor(pColTbl[nPenColor]);
-	
+
 	int iPen = 0;
 	for (int i = 0; i < nPens; i++)
 	{
-		if (hPen[i] != 0 && nPenStyles[i] == nPenStyle && nPenWidths[i] == nPenWidth && crColRef[i] == pColTbl[nPenColor]) 
+		if (hPen[i] != 0 && nPenStyles[i] == nPenStyle && nPenWidths[i] == nPenWidth && crColRef[i] == pColTbl[nPenColor])
 		{
 			//if (hPenCur != hPen[i])
 			{
@@ -139,22 +144,22 @@ void CPrimState::SetPen(CDC* pDC, PENCOLOR nPenColor, int nPenWidth, PENSTYLE nP
 			return;
 		}
 		if (hPen[i] == 0)
-			iPen = i;		
+			iPen = i;
 	}
-	
+
 	HPEN hPenNew = ::CreatePen(nPenStyle, nPenWidth, pColTbl[nPenColor]);
 
-	if (hPenNew != 0) 
+	if (hPenNew != 0)
 	{
 		hPenCur = hPenNew;
 		pDC->SelectObject(CPen::FromHandle(hPenNew));
 
 		if (hPen[iPen] != 0)
 			::DeleteObject(hPen[iPen]);
-		
+
 		hPen[iPen] = hPenNew;
-		nPenStyles[iPen] = nPenStyle; 
-		nPenWidths[iPen] = nPenWidth; 
+		nPenStyles[iPen] = nPenStyle;
+		nPenWidths[iPen] = nPenWidth;
 		crColRef[iPen] = pColTbl[nPenColor];
 	}
 }
@@ -169,7 +174,7 @@ void CPrimState::SetPenColor(PENCOLOR nPenColor)
 void CPrimState::SetPenStyle(PENSTYLE nPenStyle)
 {
 	CPegView* pView = CPegView::GetActiveView();
-// CrashSite: pView is undefined on display tree started as a print preview
+	// CrashSite: pView is undefined on display tree started as a print preview
 	CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
 
 	m_nPenStyle = nPenStyle;
@@ -186,7 +191,7 @@ int CPrimState::SetROP2(CDC* pDC, int iDrawMode)
 	{
 		if (iDrawMode == R2_XORPEN)
 			iDrawMode = R2_NOTXORPEN;
-	}			
+	}
 	return (pDC->SetROP2(iDrawMode));
 }
 void CPrimState::SetTxtAlign(CDC* pDC, WORD wHor, WORD wVer)

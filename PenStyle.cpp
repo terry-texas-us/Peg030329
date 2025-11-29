@@ -1,4 +1,7 @@
 #include "stdafx.h"
+#include <algorithm>
+
+#include "PenStyle.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -21,7 +24,7 @@ CPenStyle::CPenStyle(const CString& strName, const CString& strDesc, WORD wLens,
 		m_dLen = new double[m_wLens];
 		for (int i = 0; i < m_wLens; i++)
 		{
-			m_dLen[i] = Max(- 99., Min(dLen[i], 99.));
+			m_dLen[i] = std::max(-99., std::min(dLen[i], 99.));
 		}
 	}
 }
@@ -56,8 +59,8 @@ double CPenStyle::GetPatternLen() const
 {
 	double dLen = 0.;
 
-	for (int i = 0; i < m_wLens; i++) 
+	for (int i = 0; i < m_wLens; i++)
 		dLen += fabs(m_dLen[i]);
-	
+
 	return (dLen);
 }

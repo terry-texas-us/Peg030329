@@ -1,10 +1,12 @@
 #include "stdafx.h"
 
 #include "PegAEsys.h"
-#include "PegAEsysView.h"
 #include "PegAEsysDoc.h"
+#include "PegAEsysView.h"
 
+#include "Messages.h"
 #include "Preview.h"
+#include "SegsTrap.h"
 
 void	DoEditTrapCopy(CPegView* pView);
 

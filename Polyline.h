@@ -1,5 +1,12 @@
 #pragma once
 
+#include <afxwin.h> // for CDC and WORD
+
+#include "Line.h" // for CLine
+#include "Pnt.h" // for CPnt and CPnts (typedef CArray<CPnt, const CPnt&> CPnts;)
+#include "Pnt4.h" // for CPnt4
+#include "Vec.h" // for CVec
+
 class CPegView;
 
 class CPolyline
@@ -7,7 +14,7 @@ class CPolyline
 private:
 
 	WORD	m_wFlags;		// bit 1 set - polygon is closed
-								// bit 8 set - segment oriented linetype mapping
+							// bit 8 set - segment oriented linetype mapping
 	CPnts	m_pts;
 	
 public: // Constructors and destructor

@@ -4,6 +4,8 @@
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
+#include "SegsTrap.h"
+
 void trapFilterByPenColor(PENCOLOR);
 void trapFilterByLineStyle(int);
 void trapFilterByPrimType(WORD);
