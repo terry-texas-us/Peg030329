@@ -1,5 +1,9 @@
 #include "stdafx.h"
 
+#include <windows.h>
+
+#include <string.h>
+
 #include "PegAEsys.h"
 
 #include "dde.h"
@@ -8,6 +12,7 @@
 #include "ddeSys.h"
 #include "lex.h"
 #include "Messages.h"
+#include "resource.h"
 
 using namespace dde;
 
@@ -15,19 +20,19 @@ using namespace dde;
 // String names for standard Windows Clipboard formats
 CFTAGNAME dde::CFNames [] =
 {
-	CF_TEXT,		(const_cast<LPSTR>("TEXT")),
-	CF_BITMAP,		(const_cast<LPSTR>("BITMAP")),
-	CF_METAFILEPICT,(const_cast<LPSTR>("METAFILEPICT")),
-	CF_SYLK,		(const_cast<LPSTR>("SYLK")),
-	CF_DIF, 		(const_cast<LPSTR>("DIF")),
-	CF_TIFF,		(const_cast<LPSTR>("TIFF")),
-	CF_OEMTEXT, 	(const_cast<LPSTR>("OEMTEXT")),
-	CF_DIB, 		(const_cast<LPSTR>("DIB")),
-	CF_PALETTE, 	(const_cast<LPSTR>("PALETTE")),
-	CF_PENDATA, 	(const_cast<LPSTR>("PENDATA")),
-	CF_RIFF,		(const_cast<LPSTR>("RIFF")),
-	CF_WAVE,		(const_cast<LPSTR>("WAVE")),
-	0,			0
+	CF_TEXT,		{const_cast<LPSTR>("TEXT")},
+	CF_BITMAP,		{const_cast<LPSTR>("BITMAP")},
+	CF_METAFILEPICT,{const_cast<LPSTR>("METAFILEPICT")},
+	CF_SYLK,		{const_cast<LPSTR>("SYLK")},
+	CF_DIF, 		{const_cast<LPSTR>("DIF")},
+	CF_TIFF,		{const_cast<LPSTR>("TIFF")},
+	CF_OEMTEXT, 	{const_cast<LPSTR>("OEMTEXT")},
+	CF_DIB, 		{const_cast<LPSTR>("DIB")},
+	CF_PALETTE, 	{const_cast<LPSTR>("PALETTE")},
+	CF_PENDATA, 	{const_cast<LPSTR>("PENDATA")},
+	CF_RIFF,		{const_cast<LPSTR>("RIFF")},
+	CF_WAVE,		{const_cast<LPSTR>("WAVE")},
+	0,				0
 };
 // Local data 
 SERVERINFO dde::ServerInfo;
@@ -168,7 +173,7 @@ HDDEDATA WINAPI dde::StdCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hsz1, H
 		break;
 
 	case XTYP_WILDCONNECT:				// Sent when service name and/or topic name is NULL
-		if ((hsz2 == NULL) || !DdeCmpStringHandles(hsz2, ServerInfo.hszServiceName))
+		if ((hsz2 == nullptr) || !DdeCmpStringHandles(hsz2, ServerInfo.hszServiceName))
 			return (DoWildConnect(hsz1));
 		break;
 
@@ -184,13 +189,15 @@ HDDEDATA WINAPI dde::StdCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hsz1, H
 	case XTYP_POKE:
 
 		// Try and process them here first.
-		if (DoCallback(wType, wFmt, hConv, hsz1, hsz2, hData, &hDdeData))
-			return hDdeData;
+		if (DoCallback(wType, wFmt, hConv, hsz1, hsz2, hData, &hDdeData)) { return hDdeData; }
 
-		// Fall Through to allow the custom callback a chance
+		[[fallthrough]]; // Fall Through to allow the custom callback a chance
+
 	default:
 		if (ServerInfo.pfnCustomCallback != 0)
+		{
 			return(ServerInfo.pfnCustomCallback(wType, wFmt, hConv, hsz1, hsz2, hData, dwData1, dwData2));
+		}
 	}
 	return (HDDEDATA)0;
 }

@@ -1,16 +1,23 @@
 #pragma once
 
-#include <afxwin.h> // for MFC CObject (base class), CString, WORD, DWORD, LPCTSTR, HWND, HTREEITEM, CDC, CFile
+#include <windows.h>
+
+#include <afx.h>
+#include <string>
+#include <string.h>
 
 #include "Pnt.h"    // for CPnt, CPnts (typedef (CArray<CPnt, const CPnt&>))
+#include "Pnt4.h"
 #include "TMat.h" // for CTMat
 #include "Vec.h" // for CVec
+#include <afxstr.h>
 
 HTREEITEM tvAddItem(HWND hTree, HTREEITEM hParent, LPCTSTR pszText, CObject* pOb);
 
 typedef short PENSTYLE;
 typedef short PENCOLOR;
 
+class CFile;
 class CPegView;
 class CSegs;
 class CSeg;
@@ -26,21 +33,21 @@ public:
 	static const PENSTYLE PENSTYLE_BYLAYER = 32767;
 
 	static const WORD PRIM_MARK = 256;		// 0x0100
-	static const WORD PRIM_INSERT = 257;		// 0x0101
-	static const WORD PRIM_SEGREF = 258;		// 0x0102
+	static const WORD PRIM_INSERT = 257;	// 0x0101
+	static const WORD PRIM_SEGREF = 258;	// 0x0102
 	static const WORD PRIM_LINE = 512;		// 0x0200
-	static const WORD PRIM_POLYGON = 1024;		// 0x0400
+	static const WORD PRIM_POLYGON = 1024;	// 0x0400
 	static const WORD PRIM_ARC = 4099;		// 0x1003
-	static const WORD PRIM_BSPLINE = 8192;		// 0x2000
-	static const WORD PRIM_CSPLINE = 8193;		// 0x2001
-	static const WORD PRIM_POLYLINE = 8194;		// 0x2002
+	static const WORD PRIM_BSPLINE = 8192;	// 0x2000
+	static const WORD PRIM_CSPLINE = 8193;	// 0x2001
+	static const WORD PRIM_POLYLINE = 8194;	// 0x2002
 	static const WORD PRIM_TEXT = 16384;	// 0x4000
-	static const WORD PRIM_TAG = 16640;	// 0x4100
-	static const WORD PRIM_DIM = 16896;	// 0x4200
+	static const WORD PRIM_TAG = 16640;		// 0x4100
+	static const WORD PRIM_DIM = 16896;		// 0x4200
 
 protected:
-	PENCOLOR	m_nPenColor;
-	PENSTYLE	m_nPenStyle;
+	PENCOLOR	m_nPenColor{1};
+	PENSTYLE	m_nPenStyle{1};
 
 	static	PENCOLOR	mS_nLayerPenColor;
 	static	PENSTYLE	mS_nLayerPenStyle;
@@ -52,7 +59,13 @@ protected:
 	static	double		mS_dPicApertSiz;
 
 public: // Constructors and destructor
-	CPrim() { m_nPenColor = 0; m_nPenStyle = 0; }
+	CPrim() noexcept = default;
+	explicit CPrim(PENCOLOR color, PENSTYLE style) noexcept
+		: m_nPenColor(color), m_nPenStyle(style)
+	{ }
+
+	CPrim(const CPrim&) = delete;
+	CPrim& operator=(const CPrim&) = delete;
 
 	virtual ~CPrim() { }
 

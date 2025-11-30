@@ -4,7 +4,6 @@
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
 
-#include "ddeGItms.h"
 #include "FilePeg.h"
 #include "Messages.h"
 #include "ModelTransform.h"

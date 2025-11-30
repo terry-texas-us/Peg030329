@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+#include <afxstr.h>
 #include <algorithm>
 
 #include "PenStyle.h"

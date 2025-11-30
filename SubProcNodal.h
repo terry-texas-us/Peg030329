@@ -1,6 +1,9 @@
 #pragma once
 
-#include <afxwin.h>
+#include <Windows.h>
+
+#include <afx.h>
+#include <afxcoll.h>
 
 #include "Pnt.h"
 #include "Vec.h"
@@ -20,6 +23,13 @@ class CNodalPrim: public CObject
 public:
 	const CPrim* pPrim;
 	DWORD dwMask;
+public:
+	CNodalPrim() noexcept : CObject(), pPrim(nullptr), dwMask(0) { }
+	CNodalPrim(const CNodalPrim&) = delete;
+	CNodalPrim& operator=(const CNodalPrim&) = delete;
+
+	CNodalPrim(CNodalPrim&&) = delete;
+	CNodalPrim& operator=(CNodalPrim&&) = delete;
 };
 
 class CUniqPt: public CObject
@@ -27,6 +37,12 @@ class CUniqPt: public CObject
 public:
 	int iCnt;
 	CPnt pt;
+public:
+	CUniqPt() noexcept : CObject(), iCnt(0), pt() { }
+	CUniqPt(const CUniqPt&) = delete;
+	CUniqPt& operator=(const CUniqPt&) = delete;
+	CUniqPt(CUniqPt&&) = delete;
+	CUniqPt& operator=(CUniqPt&&) = delete;
 };
 
 namespace nodal

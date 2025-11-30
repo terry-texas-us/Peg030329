@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <string.h>
 
-#include "DlgProcEditTrap_CommandsQuery.h"
 #include "Prim.h"
 #include "resource.h"
 #include "SegsTrap.h"
@@ -17,6 +16,76 @@ HTREEITEM tvAddItem(HWND hTree, HTREEITEM hParent, LPCTSTR pszText, CObject* pOb
 	tvIS.item.pszText = (LPTSTR)pszText;
 	tvIS.item.lParam = (LPARAM)(LPCSTR)pOb;
 	return TreeView_InsertItem(hTree, &tvIS);
+}
+
+void DlgProcEditTrap_CommandsQueryFillExtraList(HWND hDlg, CPrim* pPrim)
+{
+	HWND hWndExtra = ::GetDlgItem(hDlg, IDC_EXTRA_LIST_CTRL);
+
+	LVITEM lvi;
+	::ZeroMemory(&lvi, sizeof(lvi));
+	lvi.mask = LVIF_TEXT | LVIF_STATE;
+
+	char szBuf[64];
+
+	int iItem = 0;
+
+	CString str;
+	pPrim->FormatExtra(str);
+
+	int nOff = 0;
+	for (int nDel = str.Mid(nOff).Find(';'); nDel != -1;)
+	{
+		lvi.iItem = iItem;
+		strcpy_s(szBuf, sizeof(szBuf), str.Mid(nOff, nDel));
+		lvi.pszText = szBuf;
+		ListView_InsertItem(hWndExtra, &lvi);
+		nOff += nDel + 1;
+		nDel = str.Mid(nOff).Find('\t');
+		int nLen = std::min(nDel, static_cast<int>(sizeof(szBuf)) - 1);
+		strcpy_s(szBuf, sizeof(szBuf), str.Mid(nOff, nLen));
+		ListView_SetItemText(hWndExtra, iItem++, 1, szBuf);
+		nOff += nDel + 1;
+		nDel = str.Mid(nOff).Find(';');
+	}
+}
+
+void DlgProcEditTrap_CommandsQueryFillGeometryList(HWND hDlg, CPrim* pPrim)
+{
+	HWND hWndGeometry = ::GetDlgItem(hDlg, IDC_GEOMETRY_LIST);
+
+	LVITEM lvi;
+	::ZeroMemory(&lvi, sizeof(lvi));
+	lvi.mask = LVIF_TEXT | LVIF_STATE;
+
+	char szBuf[64];
+	int iItem = 0;
+
+	CString strBuf;
+	pPrim->FormatGeometry(strBuf);
+
+	int nOff = 0;
+	for (int nDel = strBuf.Mid(nOff).Find(';'); nDel != -1;)
+	{
+		lvi.iItem = iItem;
+		strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
+		lvi.pszText = szBuf;
+		ListView_InsertItem(hWndGeometry, &lvi);
+		nOff += nDel + 1;
+		nDel = strBuf.Mid(nOff).Find(';');
+		strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
+		ListView_SetItemText(hWndGeometry, iItem, 1, szBuf);
+		nOff += nDel + 1;
+		nDel = strBuf.Mid(nOff).Find(';');
+		strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
+		ListView_SetItemText(hWndGeometry, iItem, 2, szBuf);
+		nOff += nDel + 1;
+		nDel = strBuf.Mid(nOff).Find('\t');
+		strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
+		ListView_SetItemText(hWndGeometry, iItem++, 3, szBuf);
+		nOff += nDel + 1;
+		nDel = strBuf.Mid(nOff).Find(';');
+	}
 }
 
 BOOL CALLBACK DlgProcEditTrap_CommandsQuery(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam)
@@ -99,74 +168,4 @@ BOOL CALLBACK DlgProcEditTrap_CommandsQuery(HWND hDlg, UINT nMsg, WPARAM wParam,
 	}
 	}
 	return (FALSE);
-}
-
-void DlgProcEditTrap_CommandsQueryFillExtraList(HWND hDlg, CPrim* pPrim)
-{
-	HWND hWndExtra = ::GetDlgItem(hDlg, IDC_EXTRA_LIST_CTRL);
-
-	LVITEM lvi;
-	::ZeroMemory(&lvi, sizeof(lvi));
-	lvi.mask = LVIF_TEXT | LVIF_STATE;
-
-	char szBuf[64];
-
-	int iItem = 0;
-
-	CString str;
-	pPrim->FormatExtra(str);
-
-	int nOff = 0;
-	for (int nDel = str.Mid(nOff).Find(';'); nDel != -1;)
-	{
-		lvi.iItem = iItem;
-		strcpy_s(szBuf, sizeof(szBuf), str.Mid(nOff, nDel));
-		lvi.pszText = szBuf;
-		ListView_InsertItem(hWndExtra, &lvi);
-		nOff += nDel + 1;
-		nDel = str.Mid(nOff).Find('\t');
-		int nLen = std::min(nDel, static_cast<int>(sizeof(szBuf)) - 1);
-		strcpy_s(szBuf, sizeof(szBuf), str.Mid(nOff, nLen));
-		ListView_SetItemText(hWndExtra, iItem++, 1, szBuf);
-		nOff += nDel + 1;
-		nDel = str.Mid(nOff).Find(';');
-	}
-}
-
-void DlgProcEditTrap_CommandsQueryFillGeometryList(HWND hDlg, CPrim* pPrim)
-{
-	HWND hWndGeometry = ::GetDlgItem(hDlg, IDC_GEOMETRY_LIST);
-
-	LVITEM lvi;
-	::ZeroMemory(&lvi, sizeof(lvi));
-	lvi.mask = LVIF_TEXT | LVIF_STATE;
-
-	char szBuf[64];
-	int iItem = 0;
-
-	CString strBuf;
-	pPrim->FormatGeometry(strBuf);
-
-	int nOff = 0;
-	for (int nDel = strBuf.Mid(nOff).Find(';'); nDel != -1;)
-	{
-		lvi.iItem = iItem;
-		strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
-		lvi.pszText = szBuf;
-		ListView_InsertItem(hWndGeometry, &lvi);
-		nOff += nDel + 1;
-		nDel = strBuf.Mid(nOff).Find(';');
-		strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
-		ListView_SetItemText(hWndGeometry, iItem, 1, szBuf);
-		nOff += nDel + 1;
-		nDel = strBuf.Mid(nOff).Find(';');
-		strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
-		ListView_SetItemText(hWndGeometry, iItem, 2, szBuf);
-		nOff += nDel + 1;
-		nDel = strBuf.Mid(nOff).Find('\t');
-		strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
-		ListView_SetItemText(hWndGeometry, iItem++, 3, szBuf);
-		nOff += nDel + 1;
-		nDel = strBuf.Mid(nOff).Find(';');
-	}
 }

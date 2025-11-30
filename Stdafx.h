@@ -25,10 +25,12 @@
 #define NOMINMAX                 // Prevent windows.h from defining min/max macros
 #define STRICT                   // Enforce stricter type safety
 
+#include <windows.h>
+
 #include <afx.h> // Core MFC GUI classes
 //#include <Windows.h>
 //#include <vector> // Dynamic contiguous array; the most frequently used container in modern C++. Extremely compile-time expensive – always pre-include.
-//#include <string> // std::string and std::wstring; owns null-terminated character data with SSO. Essential for almost all text handling.
+#include <string> // std::string and std::wstring; owns null-terminated character data with SSO. Essential for almost all text handling.
 //#include <memory> //Smart pointers (std::unique_ptr, std::shared_ptr, std::weak_ptr), std::make_unique, std::make_shared, and std::allocator.
 //#include <array> // std::array<T,N>; fixed-size contiguous array with STL interface and no dynamic allocation.
 //#include <unordered_map> // Hash table (std::unordered_map, std::unordered_set); average O(1) lookup/insert. Very common for caches and dictionaries.
@@ -48,12 +50,9 @@
 //#include <shlwapi.h>
 //#include <commdlg.h>
 
-//#include <string>
 //#include <sstream>
 //#include <iomanip>
 //#include <cctype>
-
-//#include <algorithm>
 
 //#include <cfloat>
 //#include <cmath>

@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <sstream>
 
+#include "Pnt.h"
 #include "TMat.h"
 #include "Vec.h"
 

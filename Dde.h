@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Windows.h>
+
 #include <ddeml.h>
 
 // String names for some standard DDE strings not defined in DDEML.H
@@ -39,13 +41,13 @@ namespace dde
 	typedef struct _ITEMINFO
 	{
 		struct _ITEMINFO* pNext;			// pointer to the next item
-		LPSTR					pszItemName;	// pointer to its string name
-		HSZ 					hszItemName;	// DDE string handle for the name
-		struct _TOPICINFO* pTopic;		// pointer to the topic it belongs to
-		LPWORD					pFormatList;	// ptr to null term list of CF format words.
-		PREQUESTFN				pfnRequest; 	// pointer to the item specific request processor
-		PPOKEFN					pfnPoke;		// pointer to the item specific poke processor
-		HDDEDATA				hData;			// data for this item
+		LPSTR				pszItemName;	// pointer to its string name
+		HSZ 				hszItemName;	// DDE string handle for the name
+		struct _TOPICINFO* pTopic;			// pointer to the topic it belongs to
+		LPWORD				pFormatList;	// ptr to null term list of CF format words.
+		PREQUESTFN			pfnRequest; 	// pointer to the item specific request processor
+		PPOKEFN				pfnPoke;		// pointer to the item specific poke processor
+		HDDEDATA			hData;			// data for this item
 	} ITEMINFO, * PITEMINFO;
 
 	// Structure used to store information on a DDE execute command processor function

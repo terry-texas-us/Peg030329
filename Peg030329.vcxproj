@@ -96,11 +96,11 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
-      <DiagnosticsFormat>Classic</DiagnosticsFormat>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <DisableSpecificWarnings>5045</DisableSpecificWarnings>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
-      <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -126,11 +126,11 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <SuppressStartupBanner>false</SuppressStartupBanner>
-      <DiagnosticsFormat>Classic</DiagnosticsFormat>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <DisableSpecificWarnings>5045</DisableSpecificWarnings>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
-      <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
