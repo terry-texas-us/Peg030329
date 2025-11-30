@@ -726,12 +726,18 @@
     <None Include="Peg &amp; Tra File Formats.pdf">
       <Filter>Documents</Filter>
     </None>
+    <None Include="Job File Format.md">
+      <Filter>Documents</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Peg &amp; Tra File Formats.txt">
       <Filter>Documents</Filter>
     </Text>
     <Text Include="Peg &amp; Tra File Formats (extracted FilePeg comments).txt">
+      <Filter>Documents</Filter>
+    </Text>
+    <Text Include="Job File Format.txt">
       <Filter>Documents</Filter>
     </Text>
   </ItemGroup>

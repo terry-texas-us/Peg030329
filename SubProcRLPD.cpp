@@ -478,7 +478,7 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 
 					if (detsegs.SelSegAndPrimUsingPoint(ptCur) != 0)  // find diameter of duct
 					{
-						if (detsegs.DetPrim()->Is(CPrim::PRIM_LINE))
+						if (detsegs.DetPrim()->Is(CPrim::Type::Line))
 						{
 							(static_cast<CPrimLine*>(detsegs.DetPrim()))->GetPts(ptBeg, ptEnd);
 							CSeg::IgnorePrim() = detsegs.DetPrim();
@@ -487,7 +487,7 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 							pView->ModelViewTransform(ptView);
 							if (detsegs.SelSegAndPrimAtCtrlPt(ptView))
 							{
-								if (detsegs.DetPrim()->Is(CPrim::PRIM_LINE))
+								if (detsegs.DetPrim()->Is(CPrim::Type::Line))
 								{
 									(static_cast<CPrimLine*>(detsegs.DetPrim()))->GetPts(ptBeg, ptEnd);
 									ptMid = Mid(ptBeg, ptEnd);
@@ -603,7 +603,7 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 				}
 				if (detsegs.SelSegAndPrimUsingPoint(ptBeg) != 0)
 				{
-					if (detsegs.DetPrim()->Is(CPrim::PRIM_LINE))
+					if (detsegs.DetPrim()->Is(CPrim::Type::Line))
 					{	// endpoints of endcap line
 						(static_cast<CPrimLine*>(detsegs.DetPrim()))->GetPts(ptBeg, ptEnd);
 					}
@@ -613,7 +613,7 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 				CPnt4 ptView(ptBeg, 1.);
 				pView->ModelViewTransform(ptView);
 				if (detsegs.SelSegAndPrimAtCtrlPt(ptView) == 0) { break; }
-				if (!detsegs.DetPrim()->Is(CPrim::PRIM_LINE)) { break; }
+				if (!detsegs.DetPrim()->Is(CPrim::Type::Line)) { break; }
 
 				ptBeg = detsegs.DetPt();
 				(static_cast<CPrimLine*>(detsegs.DetPrim()))->GetPts(ptBeg, ptMid);
@@ -700,7 +700,7 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 				}
 			}
 			if (detsegs.SelSegAndPrimUsingPoint(ptBeg) == 0) { break; }
-			if (!detsegs.DetPrim()->Is(CPrim::PRIM_LINE)) { break; }
+			if (!detsegs.DetPrim()->Is(CPrim::Type::Line)) { break; }
 			dAng = 0.;
 			vVwPlnNorm = pView->ModelViewGetDirection();
 
@@ -718,7 +718,7 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 				CPnt4 ptView(ptBeg, 1.);
 				pView->ModelViewTransform(ptView);
 				if (detsegs.SelSegAndPrimAtCtrlPt(ptView) == 0) { break; }
-				if (!detsegs.DetPrim()->Is(CPrim::PRIM_LINE)) { break; }
+				if (!detsegs.DetPrim()->Is(CPrim::Type::Line)) { break; }
 
 				ptBeg = detsegs.DetPt();
 				(static_cast<CPrimLine*>(detsegs.DetPrim()))->GetPts(ptBeg, ptEnd);
@@ -804,7 +804,7 @@ bool rlpd::Fnd2LnsGivLn(CPrimLine* pTestLine, double dAccAng, CPrim*& pLeftLine,
 		while (posPrim != 0)
 		{
 			pPrim = pSeg->GetNext(posPrim);
-			if (pPrim == pTestLine || !pPrim->Is(CPrim::PRIM_LINE))
+			if (pPrim == pTestLine || !pPrim->Is(CPrim::Type::Line))
 				continue;
 
 			static_cast<CPrimLine*>(pPrim)->GetPts(ptBeg, ptEnd);
@@ -1110,7 +1110,7 @@ bool rlpd::SelEndCapUsingPoint(CPegView* pView, const CPnt& pt, CSeg*& pSeg, CPr
 		while (posPrim != 0)
 		{
 			CPrim* pPrim = pSeg->GetNext(posPrim);
-			if (pPrim->Is(CPrim::PRIM_MARK))
+			if (pPrim->Is(CPrim::Type::Mark))
 			{
 				pMark = static_cast<CPrimMark*>(pPrim);
 				if (pMark->PenColor() == 15 && pMark->MarkStyle() == 8 && pMark->SelUsingPoint(pView, ptView, dTol, ptProj))

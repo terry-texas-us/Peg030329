@@ -65,7 +65,7 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 				while (eJoinHor == pipe::No && eJoinVer == pipe::No && posPrim != 0)
 				{
 					CPrim* pPrim = pSeg->GetNext(posPrim);
-					if (pPrim->Is(CPrim::PRIM_ARC))
+					if (pPrim->Is(CPrim::Type::Arc))
 					{	// Primitive is potentially an existing vertical pipe section
 						CPrimArc* pArc = static_cast<CPrimArc*>(pPrim);
 						if (fabs(pArc->GetSwpAng() - TWOPI) <= DBL_EPSILON)
@@ -78,7 +78,7 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 							}
 						}
 					}
-					else if (pPrim->Is(CPrim::PRIM_LINE))
+					else if (pPrim->Is(CPrim::Type::Line))
 					{	// Primitive is potentially an existing horizontal pipe section
 						CPrimLine* pLine = static_cast<CPrimLine*>(pPrim);
 
@@ -523,7 +523,7 @@ void pipe::GenSyms(CDC* pDC, const CPnt& P0)
 		while (posPrim != 0)
 		{
 			CPrim* pPrim = pSeg->GetNext(posPrim);
-			if (pPrim->Is(CPrim::PRIM_LINE))
+			if (pPrim->Is(CPrim::Type::Line))
 			{	// Primitive is potentially an existing horizontal pipe section
 				pLine = static_cast<CPrimLine*>(pPrim);
 

@@ -71,7 +71,7 @@ void DlgProcTrapModifyPolygons()
 		{
 			CPrim* pPrim = pSeg->GetNext(posPrim);
 			
-			if (pPrim->Is(CPrim::PRIM_POLYGON))
+			if (pPrim->Is(CPrim::Type::Polygon))
 			{
 				CPrimPolygon* pPolygon = static_cast<CPrimPolygon*>(pPrim);
 				pPolygon->SetIntStyle(pstate.PolygonIntStyle());

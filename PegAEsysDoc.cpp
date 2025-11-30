@@ -61,14 +61,14 @@ void DoEditTrapCopy(CPegView* view)
 {
 	::OpenClipboard(NULL);
 	::EmptyClipboard();
-	
+
 	if (app.GetEditCFText())
 	{
 		// UNDONE possible
 		CString strBuf;
 
 		POSITION pos = trapsegs.GetHeadPosition();
-		while (pos != 0) 		
+		while (pos != 0)
 		{
 			CSeg* pSeg = trapsegs.GetNext(pos);
 
@@ -76,7 +76,7 @@ void DoEditTrapCopy(CPegView* view)
 			while (posPrim != 0)
 			{
 				CPrim* pPrim = pSeg->GetNext(posPrim);
-				if (pPrim->Is(CPrim::PRIM_TEXT))
+				if (pPrim->Is(CPrim::Type::Text))
 				{
 					strBuf += static_cast<CPrimText*>(pPrim)->Text();
 					strBuf += "\r\n";
@@ -84,7 +84,7 @@ void DoEditTrapCopy(CPegView* view)
 			}
 		}
 		GLOBALHANDLE hGMem = GlobalAlloc(GHND, strBuf.GetLength() + 1);
-		LPSTR lpBuffer = (LPSTR) GlobalLock(hGMem);
+		LPSTR lpBuffer = (LPSTR)GlobalLock(hGMem);
 		strcpy_s(lpBuffer, strBuf.GetLength() + 1, strBuf);
 		GlobalUnlock(hGMem);
 		::SetClipboardData(CF_TEXT, hGMem);
@@ -92,12 +92,12 @@ void DoEditTrapCopy(CPegView* view)
 	if (app.GetEditCFImage())
 	{
 		int iPrimState = pstate.Save();
-		
+
 		HDC hdcEMF = ::CreateEnhMetaFile(0, 0, 0, 0);
 		trapsegs.Display(view, CDC::FromHandle(hdcEMF));
 		HENHMETAFILE hemf = ::CloseEnhMetaFile(hdcEMF);
 		::SetClipboardData(CF_ENHMETAFILE, hemf);
-	
+
 		pstate.Restore(CDC::FromHandle(hdcEMF), iPrimState);
 	}
 	if (app.GetEditCFSegments())
@@ -105,34 +105,34 @@ void DoEditTrapCopy(CPegView* view)
 		CPegView* activeView = CPegView::GetActiveView();
 
 		CPnt ptMin(FLT_MAX, FLT_MAX, FLT_MAX);
-		CPnt ptMax(- FLT_MAX, - FLT_MAX, - FLT_MAX);
+		CPnt ptMax(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 
-		CMemFile mf;				
-	
+		CMemFile mf;
+
 		mf.SetLength(96);
 		mf.SeekToEnd();
-	
+
 		char* pBuf = new char[CPrim::BUFFER_SIZE];
-			
+
 		trapsegs.Write(mf, pBuf);
 		trapsegs.GetExtents(ptMin, ptMax, activeView->ModelViewGetMatrix());
 
 		delete [] pBuf;
-	
+
 		ptMin = activeView->ModelViewGetMatrixInverse() * ptMin;
-	
+
 		ULONGLONG dwSizeOfBuffer = mf.GetLength();
-	
+
 		mf.SeekToBegin();
 		mf.Write(&dwSizeOfBuffer, sizeof(DWORD));
 		ptMin.Write(mf);
 
 		GLOBALHANDLE hGMem = GlobalAlloc(GHND, SIZE_T(dwSizeOfBuffer));
-		LPSTR lpBuffer = (LPSTR) GlobalLock(hGMem);
-	
+		LPSTR lpBuffer = (LPSTR)GlobalLock(hGMem);
+
 		mf.SeekToBegin();
 		mf.Read(lpBuffer, UINT(dwSizeOfBuffer));
-	
+
 		GlobalUnlock(hGMem);
 		::SetClipboardData(app.GetClipboardFormatPegSegs(), hGMem);
 	}
@@ -141,7 +141,7 @@ void DoEditTrapCopy(CPegView* view)
 
 UINT AFXAPI HashKey(CString& str)
 {
-	LPCTSTR pStr = (LPCTSTR) str;
+	LPCTSTR pStr = (LPCTSTR)str;
 	UINT nHash = 0;
 	while (*pStr)
 	{
@@ -167,14 +167,14 @@ CPegDoc::CPegDoc()
 CPegDoc::~CPegDoc()
 {
 	// Release resources allocated for line type table
-	
-	for (WORD w = 0; w < m_PenStyles.GetSize(); w++) 
+
+	for (WORD w = 0; w < m_PenStyles.GetSize(); w++)
 		delete m_PenStyles[w];
-	
+
 	m_PenStyles.RemoveAll();
 
 	// Release resources allocated for blocks
-	
+
 	BlksRemoveAll();
 	LayersRemoveAll();
 }
@@ -191,9 +191,9 @@ void CPegDoc::DeleteContents()
 	LayersRemoveAll();
 	m_pLayerWork = NULL;
 	DeletedSegsRemoveSegs();
-	
+
 	trapsegs.RemoveAll();
-	detsegs.RemoveAll();	
+	detsegs.RemoveAll();
 	detsegs.DetSeg() = 0;
 }
 BOOL CPegDoc::OnNewDocument()
@@ -206,9 +206,9 @@ BOOL CPegDoc::OnNewDocument()
 	m_pLayerWork = new CLayer("0");
 	LayersAdd(m_pLayerWork);
 	SetOpenFile(FILE_TYPE_NONE, "0");
-		
+
 	UpdateAllViews(NULL, 0L, NULL);
-	
+
 	AppSetGinCur();
 
 	return TRUE;
@@ -227,11 +227,11 @@ void CPegDoc::Serialize(CArchive& ar)
 {
 	char szFileName[MAX_PATH];
 	strcpy_s(szFileName, sizeof(szFileName), ar.m_strFileName.GetString());
-	
+
 	if (ar.IsStoring())
 	{
 		if (m_wOpenFileType == FILE_TYPE_DWG || m_wOpenFileType == FILE_TYPE_DXF)
-		{	
+		{
 #if ODA_FUNCTIONALITY
 			CFileOpenDWG fod;
 			short nError;
@@ -245,13 +245,13 @@ void CPegDoc::Serialize(CArchive& ar)
 		}
 		else if (m_wOpenFileType == FILE_TYPE_PEG)
 		{
-			CFilePeg* pFile = (CFilePeg*) ar.GetFile();
+			CFilePeg* pFile = (CFilePeg*)ar.GetFile();
 			pFile->Unload(this);
 		}
 		else if (FileTypeIsTracing(m_wOpenFileType))
 		{
 			CLayer* pLayer = LayersGet(szFileName);
-			
+
 			if (pLayer == 0)
 				return;
 
@@ -270,12 +270,12 @@ void CPegDoc::Serialize(CArchive& ar)
 					return;
 				ft.WriteHeader();
 				ft.WriteSegs(pLayer);
-			}	
+			}
 			msgInformation(IDS_MSG_TRACING_SAVE_SUCCESS, szFileName);
 		}
 		else
 			msgWarning(IDS_MSG_NOTHING_TO_SAVE);
-		
+
 	}
 	else
 	{
@@ -287,7 +287,7 @@ void CPegDoc::Serialize(CArchive& ar)
 			CFileOpenDWG fod;
 			short nError;
 			if (fod.Initialize(&nError))
-			{	
+			{
 				char szPathName[MAX_PATH];
 				strcpy_s(szPathName, sizeof(szPathName), ar.m_strFileName.GetString());
 				fod.Load(szPathName);
@@ -297,7 +297,7 @@ void CPegDoc::Serialize(CArchive& ar)
 #endif
 		}
 		else if (wFileType == FILE_TYPE_FFA)
-		{	
+		{
 #pragma tasMSG(TODO: .ffa file type now retained. should out of ffa reproduce jb1 set for backwards compatability)
 			ffaReadFile(szFileName);
 			SetOpenFile(FILE_TYPE_FFA, szFileName);
@@ -305,7 +305,7 @@ void CPegDoc::Serialize(CArchive& ar)
 		else if (wFileType == FILE_TYPE_PEG)
 		{
 #pragma tasMSG(TODO: was opening and retaining pFile for locking stuff. now using the pfile provided in ar which is released automatically)
-			((CFilePeg*) ar.GetFile())->Load(this);
+			((CFilePeg*)ar.GetFile())->Load(this);
 			SetOpenFile(FILE_TYPE_PEG, szFileName);
 			UpdateAllViews(NULL, 0L, NULL);
 		}
@@ -412,10 +412,10 @@ END_MESSAGE_MAP()
 void CPegDoc::AddTextBlock(char* pszText)
 {
 	CPnt ptPvt = app.CursorPosGet();
-	
+
 	CFontDef fd;
 	pstate.GetFontDef(fd);
-	
+
 	CCharCellDef ccd;
 	pstate.GetCharCellDef(ccd);
 
@@ -427,7 +427,7 @@ void CPegDoc::AddTextBlock(char* pszText)
 	{
 		if (strlen(pText) > 0)
 		{
-			CSeg* pSeg = new CSeg(new CPrimText(fd, rs, pText)); 
+			CSeg* pSeg = new CSeg(new CPrimText(fd, rs, pText));
 			WorkLayerAddTail(pSeg);
 			UpdateAllViews(NULL, HINT_SEG, pSeg);
 		}
@@ -447,19 +447,19 @@ int CPegDoc::BlockGetRefCount(const CString& strBlkNam) const
 		CLayer* pLayer = m_layers.GetAt(i);
 		iCount += pLayer->GetBlockRefCount(strBlkNam);
 	}
-	
+
 	CString strKey;
 	CBlock* pBlock;
-	
+
 	POSITION pos = m_blks.GetStartPosition();
 	while (pos != NULL)
 	{
 		m_blks.GetNextAssoc(pos, strKey, pBlock);
-        iCount += pBlock->GetBlockRefCount(strBlkNam);
+		iCount += pBlock->GetBlockRefCount(strBlkNam);
 	}
 	return (iCount);
 }
-bool CPegDoc::BlksLookup(CString strKey, CBlock*& pBlock) const 
+bool CPegDoc::BlksLookup(CString strKey, CBlock*& pBlock) const
 {
 	if (m_blks.Lookup(strKey, pBlock))
 	{
@@ -509,7 +509,7 @@ void CPegDoc::DeletedSegsRestore()
 	{
 		// have at least one deleted segment to restore
 		CSeg* pSeg = DeletedSegsRemoveTail();
-		WorkLayerAddTail(pSeg); 
+		WorkLayerAddTail(pSeg);
 		UpdateAllViews(NULL, HINT_SEG_SAFE, pSeg);
 	}
 }
@@ -521,11 +521,11 @@ void CPegDoc::DeletedSegsRestore()
 void CPegDoc::DoPrimDelete(const CPnt& pt)
 {
 	CSeg* pSeg = detsegs.SelSegAndPrimUsingPoint(pt);
-	
-	if (pSeg != 0)	
+
+	if (pSeg != 0)
 	{
 		POSITION pos = trapsegs.Find(pSeg);
-		
+
 		LPARAM lHint = (pos != 0) ? HINT_SEG_ERASE_SAFE_TRAP : HINT_SEG_ERASE_SAFE;
 		// erase entire segment even if segment has more than one primitive
 		UpdateAllViews(NULL, lHint, pSeg);
@@ -544,7 +544,7 @@ void CPegDoc::DoPrimDelete(const CPnt& pt)
 		{ // deleting an entire segment
 			AnyLayerRemove(pSeg);
 			detsegs.Remove(pSeg);
-			
+
 			if (trapsegs.Remove(pSeg) != 0)
 			{
 				app.StatusLineDisplay(TrapCnt);
@@ -552,7 +552,7 @@ void CPegDoc::DoPrimDelete(const CPnt& pt)
 		}
 		DeletedSegsAddTail(pSeg);
 		msgInformation(IDS_MSG_PRIM_ADDED_TO_DEL_SEGS);
-	}		
+	}
 }
 bool CPegDoc::FileTypeIsTracing(WORD wType) const
 {
@@ -561,12 +561,12 @@ bool CPegDoc::FileTypeIsTracing(WORD wType) const
 void CPegDoc::GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const
 {
 	ptMin(FLT_MAX, FLT_MAX, FLT_MAX);
-	ptMax(- FLT_MAX, - FLT_MAX, - FLT_MAX);
+	ptMax(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 
 	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
 		CLayer* pLayer = m_layers.GetAt(i);
-		if (pLayer->IsOn()) 
+		if (pLayer->IsOn())
 			pLayer->GetExtents(ptMin, ptMax, tm);
 	}
 }
@@ -577,7 +577,7 @@ int CPegDoc::GetHotCount() const
 	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
 		CLayer* pLayer = m_layers.GetAt(i);
-		if (pLayer->IsHot()) {iCount += pLayer->GetCount();}
+		if (pLayer->IsHot()) { iCount += pLayer->GetCount(); }
 	}
 	return iCount;
 }
@@ -591,7 +591,7 @@ int CPegDoc::PenStylesFillCB(HWND hwnd) const
 	for (int i = 0; i < iSize; i++)
 	{
 		CPenStyle* pPenStyle = m_PenStyles[i];
-		::SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM) (LPCSTR) pPenStyle->GetName());
+		::SendMessage(hwnd, CB_ADDSTRING, 0, (LPARAM)(LPCSTR)pPenStyle->GetName());
 	}
 	return (iSize);
 }
@@ -600,15 +600,15 @@ PENSTYLE CPegDoc::PenStylesLookup(const CString& strName) const
 {
 	if (this == NULL)
 		return 0;
-	
-	if (strName.CompareNoCase("ByBlock") == 0) 
+
+	if (strName.CompareNoCase("ByBlock") == 0)
 	{
 		return PENSTYLE(1);
 	}
 	for (WORD w = 0; w < m_PenStyles.GetSize(); w++)
 	{
 		CPenStyle* pPenStyle = m_PenStyles[w];
-		if (strName.CompareNoCase(pPenStyle->GetName()) == 0) 
+		if (strName.CompareNoCase(pPenStyle->GetName()) == 0)
 		{
 			return (PENSTYLE(w));
 		}
@@ -620,10 +620,10 @@ PENSTYLE CPegDoc::PenStylesLookup(const CString& strName) const
 CPenStyle* CPegDoc::PenStylesGetAtSafe(int i)
 {
 	int iType = static_cast<int>(m_PenStyles.GetSize()) - 1;
-	
-	if (iType < 0) {return 0;} // No line types defined
 
-	if (i < iType) {iType = i;}
+	if (iType < 0) { return 0; } // No line types defined
+
+	if (i < iType) { iType = i; }
 
 	return (m_PenStyles[iType]);
 }
@@ -635,7 +635,7 @@ int CPegDoc::GetWarmCount() const
 	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
 		CLayer* pLayer = m_layers.GetAt(i);
-		if (pLayer->IsWarm()) {iCount += pLayer->GetCount();}
+		if (pLayer->IsWarm()) { iCount += pLayer->GetCount(); }
 	}
 	return iCount;
 }
@@ -643,34 +643,34 @@ int CPegDoc::GetWarmCount() const
 void CPegDoc::InitAll()
 {
 	WorkLayerInit();
-	SetOpenFile(FILE_TYPE_NONE, "0");			
-	
-	for (int i = (int) m_layers.GetSize() - 1; i > 0; i--)
+	SetOpenFile(FILE_TYPE_NONE, "0");
+
+	for (int i = (int)m_layers.GetSize() - 1; i > 0; i--)
 		LayersRemoveAt(i);
 
 	BlksRemoveAll();
-	
+
 	AppSetGinCur();
 }
 void CPegDoc::LayerBlank(const CString& strFileName)
 {
 	CLayer* pLayer = LayersGet(strFileName);
-	
+
 	if (pLayer == 0)
-		msgWarning(IDS_LAYER_NOT_LOADED); 
+		msgWarning(IDS_LAYER_NOT_LOADED);
 	else if (pLayer->IsResident())
 		msgWarning(IDS_MSG_LAYER_IS_RESIDENT, strFileName);
 	else if (pLayer->IsOpened())
-	{		
+	{
 		if (msgConfirm(IDS_MSG_CONFIRM_BLANK, strFileName) == IDYES)
 		{
 			trapsegs.RemoveAll();
-			detsegs.RemoveAll();	
+			detsegs.RemoveAll();
 			detsegs.DetSeg() = 0;
 			m_segsDeleted.RemoveSegs();
-			
+
 			SetOpenFile(FILE_TYPE_NONE, "0");
-			
+
 			UpdateAllViews(NULL, HINT_LAYER_ERASE, pLayer);
 			LayersRemove(strFileName);
 		}
@@ -683,11 +683,11 @@ void CPegDoc::LayerBlank(const CString& strFileName)
 }
 ///<summary>Displays drawing and determines which segments are detectable.</summary>
 void CPegDoc::LayersDisplayAll(CPegView* pView, CDC* pDC)
-{	
+{
 	bool bIdentifyTrap = trapsegs.Identify() && !trapsegs.IsEmpty();
-	
+
 	detsegs.RemoveAll();
-		
+
 	if (pDC == 0)
 	{
 		if (pView->m_bViewWireframe)
@@ -704,7 +704,7 @@ void CPegDoc::LayersDisplayAll(CPegView* pView, CDC* pDC)
 	}
 	else
 	{
-		CPrim::SpecPolygonStyle() = pView->m_bViewWireframe ? POLYGON_HOLLOW : short(- 1);
+		CPrim::SpecPolygonStyle() = pView->m_bViewWireframe ? POLYGON_HOLLOW : short(-1);
 		int iPrimState = pstate.Save();
 
 		for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
@@ -713,26 +713,26 @@ void CPegDoc::LayersDisplayAll(CPegView* pView, CDC* pDC)
 			pLayer->Display(pView, pDC, bIdentifyTrap);
 		}
 		pstate.Restore(pDC, iPrimState);
-		CPrim::SpecPolygonStyle() = - 1;
+		CPrim::SpecPolygonStyle() = -1;
 	}
 }
 CLayer* CPegDoc::LayersGet(const CString& strName) const
 {
 	int i = LayersLookup(strName);
-	return (i < 0 ? (CLayer*) 0 : m_layers.GetAt(i));
+	return (i < 0 ? (CLayer*)0 : m_layers.GetAt(i));
 }
-CLayer* CPegDoc::LayersGetAt(int i) const 
+CLayer* CPegDoc::LayersGetAt(int i) const
 {
-	return (i >= (int) m_layers.GetSize() ? (CLayer*) NULL : m_layers.GetAt(i));
+	return (i >= (int)m_layers.GetSize() ? (CLayer*)NULL : m_layers.GetAt(i));
 }
 int CPegDoc::LayersLookup(const CString& strName) const
 {
 	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
 		CLayer* pLayer = m_layers.GetAt(i);
-		if (strName.CompareNoCase(pLayer->GetName()) == 0) {return (i);}
+		if (strName.CompareNoCase(pLayer->GetName()) == 0) { return (i); }
 	}
-	return (- 1);
+	return (-1);
 }
 ///<summary>A layer is converted to a tracing or a job file</summary>
 bool CPegDoc::LayerMelt(CString& strName) const
@@ -747,7 +747,7 @@ bool CPegDoc::LayerMelt(CString& strName) const
 	::LoadString(app.GetInstance(), IDS_OPENFILE_FILTER_TRACINGS, szFilter, sizeof(szFilter));
 
 	OPENFILENAME of;
-		
+
 	::ZeroMemory(&of, sizeof(OPENFILENAME));
 	of.lStructSize = sizeof(OPENFILENAME);
 	of.hwndOwner = 0;
@@ -775,7 +775,7 @@ bool CPegDoc::LayerMelt(CString& strName) const
 				{
 					ft.WriteHeader();
 					ft.WriteSegs(pLayer);
-                    bRetVal = true;
+					bRetVal = true;
 				}
 			}
 			else
@@ -794,7 +794,7 @@ bool CPegDoc::LayerMelt(CString& strName) const
 				pLayer->SetStateFlg(CLayer::STATE_FLG_RESIDENT);
 				pLayer->SetStateCold();
 				pLayer->SetTracingFlg(CLayer::TRACING_FLG_MAPPED);
-			
+
 				strName = strName.Mid(of.nFileOffset);
 				pLayer->SetName(strName);
 			}
@@ -851,7 +851,7 @@ int CPegDoc::PenStyleGetRefCount(PENSTYLE nPenStyle) const
 		CLayer* pLayer = m_layers.GetAt(i);
 		iCount += pLayer->GetPenStyleRefCount(nPenStyle);
 	}
-	
+
 	CString strKey;
 	CBlock* pBlock;
 
@@ -875,7 +875,7 @@ void CPegDoc::PenStylesRemoveUnused()
 		if (PenStyleGetRefCount(nPenStyle) != 0 || i < 10)
 		{
 			m_PenStyles.SetSize(i + 1);
-			break;	
+			break;
 		}
 		delete pPenStyle;
 	}
@@ -891,18 +891,18 @@ void CPegDoc::PenTranslation(WORD wCols, PENCOLOR* pColNew, PENCOLOR* pCol)
 CLayer* CPegDoc::LayersSelUsingPoint(const CPnt& pt) const
 {
 	CSeg* pSeg = detsegs.SelSegAndPrimUsingPoint(pt);
-	
+
 	if (pSeg != 0)
 	{
 		for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 		{
 			CLayer* pLayer = m_layers.GetAt(i);
-			if (pLayer->Find(pSeg)) 
+			if (pLayer->Find(pSeg))
 			{
 				return (pLayer);
 			}
 		}
-	}	
+	}
 	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
 		CLayer* pLayer = m_layers.GetAt(i);
@@ -923,7 +923,7 @@ int CPegDoc::RemoveEmptyNotes()
 		CLayer* pLayer = m_layers.GetAt(i);
 		iCount += pLayer->RemoveEmptyNotes();
 	}
-	
+
 #pragma tasMSG(TODO remove empty notes from blocks)
 
 	CString strKey;
@@ -945,7 +945,7 @@ int CPegDoc::RemoveEmptySegs()
 		CLayer* pLayer = m_layers.GetAt(i);
 		iCount += pLayer->RemoveEmptySegs();
 	}
-	
+
 #pragma tasMSG(TODO remove empty segs from blocks)
 
 	CString strKey;
@@ -964,7 +964,7 @@ void CPegDoc::WorkLayerAddTail(CSeg* pSeg)
 	detsegs.AddTail(pSeg);
 
 	app.StatusLineDisplay(WorkCnt);
-	SetModifiedFlag();	
+	SetModifiedFlag();
 }
 void CPegDoc::WorkLayerAddTail(CSegs* pSegs)
 {
@@ -972,22 +972,22 @@ void CPegDoc::WorkLayerAddTail(CSegs* pSegs)
 	detsegs.AddTail(pSegs);
 
 	app.StatusLineDisplay(WorkCnt);
-	SetModifiedFlag();	
+	SetModifiedFlag();
 }
 // Locates the layer containing a segment and removes it.
 // The segment itself is not deleted.
 CLayer* CPegDoc::AnyLayerRemove(CSeg* pSeg)
-{	
+{
 	for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
 	{
 		CLayer* pLayer = m_layers.GetAt(i);
 		if (pLayer->IsHot() || pLayer->IsWarm())
-		{	
+		{
 			if (pLayer->Remove(pSeg) != 0)
 			{
 				app.StatusLineDisplay(WorkCnt);
-				SetModifiedFlag();	
-				
+				SetModifiedFlag();
+
 				return pLayer;
 			}
 		}
@@ -997,28 +997,28 @@ CLayer* CPegDoc::AnyLayerRemove(CSeg* pSeg)
 CSeg* CPegDoc::WorkLayerGetTail() const
 {
 	POSITION pos = m_pLayerWork->GetTailPosition();
-	return ((CSeg*) (pos != 0 ? m_pLayerWork->GetPrev(pos) : 0));
+	return ((CSeg*)(pos != 0 ? m_pLayerWork->GetPrev(pos) : 0));
 }
 void CPegDoc::SetOpenFile(WORD wFileType, const CString& strFileName)
 {
-    int n = 0;
-    for (n = strFileName.GetLength() - 1; n > 0; n--)
-    {
-        if (strFileName[n] == '\\')
-        {
-            n++;
-            break;
-        }
-    }
+	int n = 0;
+	for (n = strFileName.GetLength() - 1; n > 0; n--)
+	{
+		if (strFileName[n] == '\\')
+		{
+			n++;
+			break;
+		}
+	}
 
-    CString strItem = "&File:" + strFileName.Mid(n);
+	CString strItem = "&File:" + strFileName.Mid(n);
 
-    app.ModifyMenu(0, strItem);
+	app.ModifyMenu(0, strItem);
 
-    if (wFileType == FILE_TYPE_NONE)
-        WorkLayerSet(LayersGetAt(0));
+	if (wFileType == FILE_TYPE_NONE)
+		WorkLayerSet(LayersGetAt(0));
 
-    m_wOpenFileType = wFileType;
+	m_wOpenFileType = wFileType;
 }
 
 void CPegDoc::TracingFuse(CString& layerName) const
@@ -1031,7 +1031,7 @@ void CPegDoc::TracingFuse(CString& layerName) const
 		char* context = nullptr;
 		strtok_s(title, ".", &context);
 		layerName = title;
-		delete[] title;
+		delete [] title;
 
 		layer->ClrTracingFlg();
 		layer->ClrStateFlg();
@@ -1049,9 +1049,9 @@ bool CPegDoc::TracingLoadLayer(const CString& strPathName, CLayer* pLayer) const
 
 	if (pLayer == 0)
 		return false;
-		
+
 	bool bFileOpen = false;
-	
+
 	if (wFileType == FILE_TYPE_TRACING)
 	{
 		CFileTracing ft;
@@ -1071,8 +1071,8 @@ bool CPegDoc::TracingLoadLayer(const CString& strPathName, CLayer* pLayer) const
 			fj.ReadHeader();
 			fj.ReadSegs(pLayer);
 		}
-	}	 
-	
+	}
+
 	return (bFileOpen);
 }
 bool CPegDoc::TracingMap(const CString& strPathName)
@@ -1080,11 +1080,11 @@ bool CPegDoc::TracingMap(const CString& strPathName)
 	WORD wFileType = CPegApp::GetFileTypeFromPath(strPathName);
 	if (!FileTypeIsTracing(wFileType))
 		return false;
-		
+
 	bool bFileOpen = false;
-	
+
 	CLayer* pLayer = LayersGet(strPathName);
-	
+
 	if (pLayer != 0)
 	{
 		if (pLayer->IsOpened())
@@ -1095,15 +1095,15 @@ bool CPegDoc::TracingMap(const CString& strPathName)
 	else
 	{
 		pLayer = new CLayer(strPathName, CLayer::STATE_FLG_COLD);
-		
+
 		bFileOpen = TracingLoadLayer(strPathName, pLayer);
-		
+
 		if (bFileOpen)
 			LayersAdd(pLayer);
 		else
 			delete pLayer;
 	}
-	if (bFileOpen)		
+	if (bFileOpen)
 	{
 		pLayer->SetTracingFlg(CLayer::TRACING_FLG_MAPPED);
 		UpdateAllViews(NULL, HINT_LAYER_SAFE, pLayer);
@@ -1111,13 +1111,13 @@ bool CPegDoc::TracingMap(const CString& strPathName)
 	return (bFileOpen);
 }
 bool CPegDoc::TracingOpen(const CString& strFileName)
-{	
+{
 	// Opens tracing file.
-	
+
 	CLayer* pLayer = 0;
-	
+
 	int iLayId = LayersLookup(strFileName);
-	
+
 	if (iLayId > 0)
 	{	// already loaded
 		pLayer = LayersGetAt(iLayId);
@@ -1125,33 +1125,33 @@ bool CPegDoc::TracingOpen(const CString& strFileName)
 	}
 	else
 	{	// create a new layer and append all the segments in the segment file.
-		
+
 		pLayer = new CLayer(strFileName, CLayer::STATE_FLG_HOT | CLayer::STATE_FLG_WARM);
 		LayersAdd(pLayer);
-		
+
 		TracingLoadLayer(strFileName, pLayer);
-		
+
 		detsegs.AddTail(pLayer);
 	}
 	pLayer->SetTracingFlg(CLayer::TRACING_FLG_OPENED);
-	
+
 	SetOpenFile(FILE_TYPE_TRACING, strFileName);
 	WorkLayerSet(pLayer);
 
 	UpdateAllViews(NULL, 0L, NULL);
 
 	return true;
-}	
+}
 bool CPegDoc::TracingView(const CString& strPathName)
 {
 	WORD wFileType = CPegApp::GetFileTypeFromPath(strPathName);
 	if (!FileTypeIsTracing(wFileType))
 		return false;
-		
+
 	bool bFileOpen = false;
-	
+
 	CLayer* pLayer = LayersGet(strPathName);
-	
+
 	if (pLayer != 0)
 	{
 		if (pLayer->IsOpened())
@@ -1162,15 +1162,15 @@ bool CPegDoc::TracingView(const CString& strPathName)
 	else
 	{
 		pLayer = new CLayer(strPathName, CLayer::STATE_FLG_COLD);
-		
+
 		bFileOpen = TracingLoadLayer(strPathName, pLayer);
-		
+
 		if (bFileOpen)
 			LayersAdd(pLayer);
 		else
 			delete pLayer;
 	}
-	if (bFileOpen)		
+	if (bFileOpen)
 	{
 		pLayer->SetTracingFlg(CLayer::TRACING_FLG_VIEWED);
 		UpdateAllViews(NULL, HINT_LAYER_SAFE, pLayer);
@@ -1188,7 +1188,7 @@ void CPegDoc::WorkLayerInit()
 	m_pLayerWork->RemoveSegs();
 
 	trapsegs.RemoveAll();
-	detsegs.RemoveAll();	
+	detsegs.RemoveAll();
 	detsegs.DetSeg() = 0;
 	m_segsDeleted.RemoveSegs();
 }
@@ -1196,22 +1196,22 @@ void CPegDoc::WorkLayerSet(CLayer* pLayer)
 {
 	if (m_pLayerWork == 0)
 	{
-// HACK: m_pLayerWork should be created already. OnNew something, somewhere.
+		// HACK: m_pLayerWork should be created already. OnNew something, somewhere.
 		m_pLayerWork = pLayer;
 	}
 	m_pLayerWork->SetStateWarm();
 	m_pLayerWork = pLayer;
 	m_pLayerWork->SetStateHot();
-	
+
 	CString strItem;
-	GetMenuString(app.GetMenu(), 0, strItem.GetBuffer(128), 128, MF_BYPOSITION); 
+	GetMenuString(app.GetMenu(), 0, strItem.GetBuffer(128), 128, MF_BYPOSITION);
 	strItem.ReleaseBuffer();
 
 	int n = strItem.Find('/');
-	
-	if (n == - 1)
+
+	if (n == -1)
 		n = strItem.GetLength();
-	
+
 	strItem.Truncate(n);
 	strItem += "/" + m_pLayerWork->GetName();
 
@@ -1232,11 +1232,11 @@ void CPegDoc::WriteShadowFile()
 			strShadowFilePath.Truncate(nExt);
 			strShadowFilePath += fs.m_mtime.Format("_%Y%m%d%H%M");
 			strShadowFilePath += ".peg";
-			
+
 			CFileException e;
 			CFilePeg fp;
 			if (!fp.Open(strShadowFilePath, CFile::modeWrite, &e))
-			{	
+			{
 				fp.Open(strShadowFilePath, CFile::modeCreate | CFile::modeWrite | CFile::shareExclusive, &e);
 				fp.Unload(this);
 				msgWarning(IDS_MSG_FILE_SHADOWED_AS, strShadowFilePath);
@@ -1347,34 +1347,34 @@ void CPegDoc::OnPrimBreak()
 	if (pSeg != 0 && detsegs.DetPrim() != 0)
 	{
 		CPrim* pPrim = detsegs.DetPrim();
-		
+
 		PENCOLOR nPenColor = pPrim->PenColor();
 		PENSTYLE nPenStyle = pPrim->PenStyle();
 
-		if (pPrim->Is(CPrim::PRIM_POLYLINE))
+		if (pPrim->Is(CPrim::Type::Polyline))
 		{
 			pSeg->FindAndRemovePrim(pPrim);
 
 			CPrimPolyline* pPolyline = static_cast<CPrimPolyline*>(pPrim);
-			
+
 			CPnts pts;
 			pPolyline->GetAllPts(pts);
-			
+
 			for (WORD w = 0; w < pts.GetSize() - 1; w++)
 				pSeg->AddTail(new CPrimLine(nPenColor, nPenStyle, pts[w], pts[w + 1]));
-			
+
 			if (pPolyline->IsLooped())
 				pSeg->AddTail(new CPrimLine(nPenColor, nPenStyle, pts[pts.GetUpperBound()], pts[0]));
-			
+
 			delete pPrim;
 			detsegs.DetSeg() = 0;
 		}
-		else if (pPrim->Is(CPrim::PRIM_SEGREF))
+		else if (pPrim->Is(CPrim::Type::SegRef))
 		{
 			CPrimSegRef* pSegRef = static_cast<CPrimSegRef*>(pPrim);
 
 			CBlock* pBlock;
-	
+
 			if (BlksLookup(pSegRef->GetName(), pBlock) != 0)
 			{
 				pSeg->FindAndRemovePrim(pPrim);
@@ -1382,7 +1382,7 @@ void CPegDoc::OnPrimBreak()
 				CPnt ptBase = pBlock->GetBasePt();
 
 				CTMat tm = pSegRef->BuildTransformMatrix(ptBase);
-				
+
 				CSeg* pSegT = new CSeg(*pBlock);
 				pSegT->Transform(tm);
 				pSeg->AddTail(pSegT);
@@ -1391,16 +1391,16 @@ void CPegDoc::OnPrimBreak()
 				detsegs.DetSeg() = 0;
 			}
 		}
-		else if (pPrim->Is(CPrim::PRIM_INSERT))
+		else if (pPrim->Is(CPrim::Type::Insert))
 		{
-		
+
 		}
 	}
 }
 void CPegDoc::OnEditSegToWork()
 {
 	CPnt pt = app.CursorPosGet();
-	
+
 	CLayer* pLayer = LayersSelUsingPoint(pt);
 
 	if (pLayer != 0)
@@ -1408,12 +1408,12 @@ void CPegDoc::OnEditSegToWork()
 		if (pLayer->IsInternal())
 		{
 			CSeg* pSeg = pLayer->SelSegUsingPoint(pt);
-	
-			if (pSeg != 0)	
+
+			if (pSeg != 0)
 			{
 				pLayer->Remove(pSeg);
 				UpdateAllViews(NULL, HINT_SEG_ERASE_SAFE, pSeg);
-				WorkLayerAddTail(pSeg); 
+				WorkLayerAddTail(pSeg);
 				UpdateAllViews(NULL, HINT_SEG, pSeg);
 			}
 		}
@@ -1429,30 +1429,30 @@ void CPegDoc::OnFileQuery()
 	{
 		CPoint point;
 		::GetCursorPos(&point);
-		
+
 		m_strIdentifiedLayerName = pLayer->GetName();
-		
+
 		int iMenu = (pLayer->IsInternal()) ? IDR_LAYER : IDR_TRACING;
-		
+
 		HMENU hMenu = ::LoadMenu(app.GetInstance(), MAKEINTRESOURCE(iMenu));
 		CMenu* pMenuSub = CMenu::FromHandle(::GetSubMenu(hMenu, 0));
-		
+
 		pMenuSub->ModifyMenu(0, MF_BYPOSITION | MF_STRING, 0, m_strIdentifiedLayerName);
-		
+
 		if (iMenu == IDR_LAYER)
 		{
 			pMenuSub->CheckMenuItem(ID_LAYER_WORK, MF_BYCOMMAND | pLayer->IsHot() ? MF_CHECKED : MF_UNCHECKED);
 			pMenuSub->CheckMenuItem(ID_LAYER_ACTIVE, MF_BYCOMMAND | pLayer->IsWarm() ? MF_CHECKED : MF_UNCHECKED);
 			pMenuSub->CheckMenuItem(ID_LAYER_STATIC, MF_BYCOMMAND | pLayer->IsCold() ? MF_CHECKED : MF_UNCHECKED);
 			pMenuSub->CheckMenuItem(ID_LAYER_HIDDEN, MF_BYCOMMAND | pLayer->IsOff() ? MF_CHECKED : MF_UNCHECKED);
-		}				
+		}
 		else
 		{
 			pMenuSub->CheckMenuItem(ID_TRACING_OPEN, MF_BYCOMMAND | pLayer->IsOpened() ? MF_CHECKED : MF_UNCHECKED);
 			pMenuSub->CheckMenuItem(ID_TRACING_MAP, MF_BYCOMMAND | pLayer->IsMapped() ? MF_CHECKED : MF_UNCHECKED);
 			pMenuSub->CheckMenuItem(ID_TRACING_VIEW, MF_BYCOMMAND | pLayer->IsViewed() ? MF_CHECKED : MF_UNCHECKED);
 			pMenuSub->CheckMenuItem(ID_TRACING_CLOAK, MF_BYCOMMAND | pLayer->IsOff() ? MF_CHECKED : MF_UNCHECKED);
-		}					
+		}
 		pMenuSub->TrackPopupMenu(0, point.x, point.y, CWnd::FromHandle(app.GetSafeHwnd()), 0);
 		::DestroyMenu(hMenu);
 	}
@@ -1460,12 +1460,12 @@ void CPegDoc::OnFileQuery()
 void CPegDoc::OnLayerActive()
 {
 	CLayer* pLayer = LayersGet(m_strIdentifiedLayerName);
-	
+
 	if (pLayer == 0)
 	{
 	}
 	else
-	{	
+	{
 		if (pLayer->IsHot())
 			msgWarning(IDS_MSG_LAYER_NO_ACTIVE, m_strIdentifiedLayerName);
 		else
@@ -1480,7 +1480,7 @@ void CPegDoc::OnLayerStatic()
 	CLayer* pLayer = LayersGet(m_strIdentifiedLayerName);
 
 	if (pLayer != 0)
-	{	
+	{
 		if (pLayer->IsHot())
 			msgWarning(IDS_MSG_LAYER_NO_STATIC, m_strIdentifiedLayerName);
 		else
@@ -1493,9 +1493,9 @@ void CPegDoc::OnLayerStatic()
 void CPegDoc::OnLayerHidden()
 {
 	CLayer* pLayer = LayersGet(m_strIdentifiedLayerName);
-	
+
 	if (pLayer != 0)
-	{	
+	{
 		if (pLayer->IsHot())
 			msgWarning(IDS_MSG_LAYER_NO_HIDDEN, m_strIdentifiedLayerName);
 		else
@@ -1512,7 +1512,7 @@ void CPegDoc::OnLayerMelt()
 void CPegDoc::OnLayerWork()
 {
 	CLayer* pLayer = LayersGet(m_strIdentifiedLayerName);
-	
+
 	WorkLayerSet(pLayer);
 }
 void CPegDoc::OnTracingMap()
@@ -1528,9 +1528,9 @@ void CPegDoc::OnTracingCloak()
 	CLayer* pLayer = LayersGet(m_strIdentifiedLayerName);
 
 	if (pLayer->IsOpened())
-	{					
+	{
 		CFileJob fj;
-		if (!fj.OpenForWrite(m_strIdentifiedLayerName)) 
+		if (!fj.OpenForWrite(m_strIdentifiedLayerName))
 			return;
 		fj.WriteHeader();
 		fj.WriteSegs(pLayer);
@@ -1609,7 +1609,7 @@ void CPegDoc::OnBlocksUnload()
 {
 	CFileDialog dlg(FALSE, "blk", "*.blk");
 	dlg.m_ofn.lpstrTitle = "Unload Blocks As";
-		
+
 	if (dlg.DoModal() == IDOK)
 	{
 		if ((dlg.m_ofn.Flags & OFN_EXTENSIONDIFFERENT) == 0)
@@ -1627,7 +1627,7 @@ void CPegDoc::OnEditImageToClipboard()
 	HDC hdcEMF = ::CreateEnhMetaFile(0, 0, 0, 0);
 	LayersDisplayAll(pView, CDC::FromHandle(hdcEMF));
 	HENHMETAFILE hemf = ::CloseEnhMetaFile(hdcEMF);
-	
+
 	::OpenClipboard(NULL);
 	::EmptyClipboard();
 	::SetClipboardData(CF_ENHMETAFILE, hemf);
@@ -1644,11 +1644,11 @@ void CPegDoc::OnEditTrace()
 
 		UINT nClipboardFormat;
 		UINT nFormat = 0;
-		
+
 		while ((nClipboardFormat = EnumClipboardFormats(nFormat)) != 0)
 		{
 			GetClipboardFormatName(nClipboardFormat, sBuf, 16);
-			
+
 			if (strcmp(sBuf, "PegSegs") == 0)
 			{
 				HGLOBAL hGbl = GetClipboardData(nClipboardFormat);
@@ -1657,16 +1657,16 @@ void CPegDoc::OnEditTrace()
 					CMemFile mf;
 					CVec vTrns;
 
-					LPCSTR lpBuffer = (LPCSTR) GlobalLock(hGbl);
-					DWORD dwSizeOfBuffer = *((DWORD*) lpBuffer);
+					LPCSTR lpBuffer = (LPCSTR)GlobalLock(hGbl);
+					DWORD dwSizeOfBuffer = *((DWORD*)lpBuffer);
 					mf.Write(lpBuffer, UINT(dwSizeOfBuffer));
 					GlobalUnlock(hGbl);
-					
+
 					mf.Seek(96, CFile::begin);
 					mfGetAll(mf, vTrns);
 
 					break;
-				}		
+				}
 			}
 			nFormat = nClipboardFormat;
 		}
@@ -1674,7 +1674,7 @@ void CPegDoc::OnEditTrace()
 	}
 	else
 
-		msgWarning(IDS_MSG_CLIPBOARD_LOCKED);	
+		msgWarning(IDS_MSG_CLIPBOARD_LOCKED);
 }
 void CPegDoc::OnEditTrapDelete()
 {
@@ -1707,7 +1707,7 @@ void CPegDoc::OnEditTrapCut()
 void CPegDoc::OnEditTrapPaste()
 {
 	CWnd* pWnd = AfxGetApp()->GetMainWnd();
-	
+
 	if (::OpenClipboard(NULL))
 	{
 		UINT nClipboardFormat = app.GetClipboardFormatPegSegs();
@@ -1720,36 +1720,36 @@ void CPegDoc::OnEditTrapPaste()
 				if (hGbl != 0)
 				{
 					CPnt ptMin;
-						
+
 					CPnt ptPvt(app.CursorPosGet());
 					trapsegs.PvtPt() = ptPvt;
-											
-					LPCSTR lpBuffer = (LPCSTR) GlobalLock(hGbl);
-						
-					DWORD dwSizeOfBuffer = *((DWORD*) lpBuffer);
-						
+
+					LPCSTR lpBuffer = (LPCSTR)GlobalLock(hGbl);
+
+					DWORD dwSizeOfBuffer = *((DWORD*)lpBuffer);
+
 					CMemFile mf;
 					mf.Write(lpBuffer, UINT(dwSizeOfBuffer));
-						
+
 					mf.Seek(sizeof(DWORD), CFile::begin);
 					ptMin.Read(mf);
 
-					CVec vTrns(ptMin,  ptPvt);
+					CVec vTrns(ptMin, ptPvt);
 
 					GlobalUnlock(hGbl);
-					
+
 					mf.Seek(96, CFile::begin);
 					mfGetAll(mf, vTrns);
-				}		
+				}
 			}
 		}
 		else if (IsClipboardFormatAvailable(CF_TEXT))
 		{
 			HGLOBAL hGbl = GetClipboardData(CF_TEXT);
-				
+
 			LPSTR lpText = new char[GlobalSize(hGbl)];
 
-			LPCSTR lpBuffer = (LPCSTR) GlobalLock(hGbl);
+			LPCSTR lpBuffer = (LPCSTR)GlobalLock(hGbl);
 			lstrcpy(lpText, lpBuffer);
 			GlobalUnlock(hGbl);
 
@@ -1764,7 +1764,7 @@ void CPegDoc::OnEditTrapPaste()
 }
 ///<summary>Adds all segments in the work layer to the trap.</summary>
 void CPegDoc::OnEditTrapWork()
-{	
+{
 	if (trapsegs.Identify())
 	{
 		UpdateAllViews(NULL, HINT_SEGS_SAFE, &trapsegs);
@@ -1815,7 +1815,7 @@ void CPegDoc::OnTrapCommandsInvert()
 	{
 		CLayer* pLayer = m_layers.GetAt(i);
 		if (pLayer->IsHot() || pLayer->IsWarm())
-		{	
+		{
 			POSITION pos = pLayer->GetHeadPosition();
 			while (pos != 0)
 			{
@@ -1857,8 +1857,7 @@ void CPegDoc::OnTrapCommandsBlock()
 		std::stringstream ss;
 		ss << "_" << std::setfill('0') << std::setw(3) << ++w;
 		blockName = ss.str();
-	}
-	while (BlksLookup(blockName.c_str(), block));
+	} while (BlksLookup(blockName.c_str(), block));
 
 	block = new CBlock;
 
@@ -1885,7 +1884,7 @@ void CPegDoc::OnTrapCommandsUnblock()
 void CPegDoc::OnSetupPenColor()
 {
 	CWnd* pWnd = AfxGetApp()->GetMainWnd();
-	
+
 	::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_COLOR), pWnd->GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupPenColor));
 	app.StatusLineDisplay(Pen);
 }
@@ -1904,8 +1903,7 @@ void CPegDoc::OnSetupFillSolid()
 	pstate.SetPolygonIntStyle(POLYGON_SOLID);
 }
 void CPegDoc::OnSetupFillPattern()
-{
-}
+{ }
 void CPegDoc::OnSetupFillHatch()
 {
 	CWnd* pWnd = AfxGetApp()->GetMainWnd();
@@ -1929,26 +1927,26 @@ void CPegDoc::OnSegBreak()
 void CPegDoc::OnSegDelete()
 {
 	CPnt pt = app.CursorPosGet();
-	
+
 	CSeg* pSeg = detsegs.SelSegAndPrimUsingPoint(pt);
-	
-	if (pSeg != 0)	
+
+	if (pSeg != 0)
 	{
 		CPegView* pView = CPegView::GetActiveView();
 		CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
-	
+
 		int iPrimState = pstate.Save();
-		
+
 		AnyLayerRemove(pSeg);
 		detsegs.Remove(pSeg);
 		if (trapsegs.Remove(pSeg) != NULL)
 			app.StatusLineDisplay(TrapCnt);
-		
+
 		UpdateAllViews(NULL, HINT_SEG_ERASE_SAFE, pSeg);
 		pstate.Restore(pDC, iPrimState);
 		DeletedSegsAddTail(pSeg);
 		msgInformation(IDS_SEG_DEL_TO_RESTORE);
-	}		
+	}
 }
 void CPegDoc::OnSegDeleteLast()
 {
@@ -1971,12 +1969,12 @@ void CPegDoc::OnPrimSnapToEndPoint()
 
 	CPnt4 ptView(app.CursorPosGet(), 1.);
 	pView->ModelViewTransform(ptView);
-	
+
 	if (detsegs.IsSegEngaged())
 	{
 		CPrim* pPrim = detsegs.DetPrim();
-		
-		if (pPrim->PvtOnCtrlPt(pView, ptView)) 
+
+		if (pPrim->PvtOnCtrlPt(pView, ptView))
 		{
 			CPnt ptEng = detsegs.DetPt();
 			pPrim->DisRep(ptEng);
@@ -1985,9 +1983,9 @@ void CPegDoc::OnPrimSnapToEndPoint()
 		}
 		// Did not pivot on engaged primitive
 		if (pPrim->IsPtACtrlPt(pView, ptView))
-			 // still on the control point of the engaged primitive
-			 // need to keep pick from re-identifying it
-			 CSeg::IgnorePrim() = pPrim;
+			// still on the control point of the engaged primitive
+			// need to keep pick from re-identifying it
+			CSeg::IgnorePrim() = pPrim;
 	}
 	if (detsegs.SelSegAndPrimAtCtrlPt(ptView) != 0)
 	{
@@ -2062,7 +2060,7 @@ void CPegDoc::OnFileTracing()
 	of.hwndOwner = 0;
 	of.hInstance = app.GetInstance();
 	of.lpstrFilter = szFilter;
-	of.lpstrFile = new char[MAX_PATH]; 
+	of.lpstrFile = new char[MAX_PATH];
 	of.lpstrFile[0] = 0;
 	of.nMaxFile = MAX_PATH;
 	of.lpstrTitle = "Tracing File";
@@ -2070,14 +2068,14 @@ void CPegDoc::OnFileTracing()
 	of.lpstrDefExt = "tra";
 	of.lpfnHook = reinterpret_cast<LPOFNHOOKPROC>(OFNHookProcFileTracing);
 	of.lpTemplateName = MAKEINTRESOURCE(IDD_TRACING_EX);
-	
+
 	if (GetOpenFileName(&of))
 	{
 		nFilterIndex = of.nFilterIndex;
-		
+
 		TracingOpen(of.lpstrFile);
 	}
-	
+
 	delete [] of.lpstrFile;
 }
 void CPegDoc::OnMaintenanceRemoveEmptyNotes()
@@ -2115,7 +2113,7 @@ void CPegDoc::OnPensLoadColors()
 	of.lpstrInitialDir = app.m_strAppPath;
 	of.Flags = OFN_HIDEREADONLY | OFN_NOCHANGEDIR;
 	of.lpstrDefExt = "txt";
-	
+
 	if (GetOpenFileName(&of))
 	{
 		if ((of.Flags & OFN_EXTENSIONDIFFERENT) == 0)
@@ -2133,11 +2131,11 @@ void CPegDoc::OnPensTranslate()
 {
 	CStdioFile fl;
 
-	if (fl.Open(app.m_strAppPath + "\\Pens\\xlate.txt", CFile::modeRead | CFile::typeText)) 
+	if (fl.Open(app.m_strAppPath + "\\Pens\\xlate.txt", CFile::modeRead | CFile::typeText))
 	{
 		char pBuf[128];
 		WORD wCols = 0;
-		
+
 		while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0)
 			wCols++;
 
@@ -2145,11 +2143,11 @@ void CPegDoc::OnPensTranslate()
 		{
 			PENCOLOR* pColNew = new PENCOLOR[wCols];
 			PENCOLOR* pCol = new PENCOLOR[wCols];
-		
+
 			WORD w = 0;
-		
+
 			fl.SeekToBegin();
-		
+
 			while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0)
 			{
 				char* context = nullptr;
@@ -2157,7 +2155,7 @@ void CPegDoc::OnPensTranslate()
 				pColNew[w++] = PENCOLOR(atoi(strtok_s(0, "\n", &context)));
 			}
 			CPegDoc::GetDoc()->PenTranslation(wCols, pColNew, pCol);
-		
+
 			delete [] pColNew;
 			delete [] pCol;
 		}
@@ -2167,9 +2165,9 @@ void CPegDoc::OnPensTranslate()
 void CPegDoc::OnFile()
 {
 	CWnd* pWnd = AfxGetApp()->GetMainWnd();
-	
+
 	CPoint pnt(8, 8);
-	
+
 	pWnd->ClientToScreen(&pnt);
 	HMENU hFilePopupMenu = app.GetSubMenu(0);
 	::TrackPopupMenu(hFilePopupMenu, TPM_LEFTALIGN, pnt.x, pnt.y, 0, pWnd->GetSafeHwnd(), 0);
@@ -2177,7 +2175,7 @@ void CPegDoc::OnFile()
 void CPegDoc::OnPrimExtractNum()
 {
 	CPnt pt = app.CursorPosGet();
-	
+
 	CSeg* pSeg = detsegs.SelSegAndPrimUsingPoint(pt);
 	if (pSeg == 0) return;
 
@@ -2185,10 +2183,14 @@ void CPegDoc::OnPrimExtractNum()
 
 	CString strChr;
 
-	if (pPrim->Is(CPrim::PRIM_TEXT))
+	if (pPrim->Is(CPrim::Type::Text))
+	{
 		strChr = static_cast<CPrimText*>(pPrim)->Text();
-	else if (pPrim->Is(CPrim::PRIM_DIM))
+	}
+	else if (pPrim->Is(CPrim::Type::Dim))
+	{
 		strChr = static_cast<CPrimDim*>(pPrim)->Text();
+	}
 	else
 		return;
 
@@ -2201,8 +2203,8 @@ void CPegDoc::OnPrimExtractNum()
 	try
 	{
 		lex::Parse(strChr);
-		lex::EvalTokenStream((char*) 0, &iTokId, &lDef, &iTyp, (void*) dVal, bufferSize);
-		
+		lex::EvalTokenStream((char*)0, &iTokId, &lDef, &iTyp, (void*)dVal, bufferSize);
+
 		if (iTyp != lex::TOK_LENGTH_OPERAND)
 		{
 			lex::ConvertValTyp(iTyp, lex::TOK_REAL, &lDef, dVal);
@@ -2214,7 +2216,7 @@ void CPegDoc::OnPrimExtractNum()
 		gbl_dExtNum = dVal[0];
 		dde::PostAdvise(dde::ExtNumInfo);
 	}
-	catch(char* szMessage)
+	catch (char* szMessage)
 	{
 		::MessageBox(0, szMessage, 0, MB_ICONWARNING | MB_OK);
 	}
@@ -2223,18 +2225,18 @@ void CPegDoc::OnPrimExtractNum()
 void CPegDoc::OnPrimExtractStr()
 {
 	CPnt pt = app.CursorPosGet();
-	
+
 	if (detsegs.SelSegAndPrimUsingPoint(pt) != 0)
 	{
 		CPrim* pPrim = detsegs.DetPrim();
 
 		CString strChr;
-		
-		if (pPrim->Is(CPrim::PRIM_TEXT))
-		{ 
-			strChr = static_cast<CPrimText*>(pPrim)->Text(); 
+
+		if (pPrim->Is(CPrim::Type::Text))
+		{
+			strChr = static_cast<CPrimText*>(pPrim)->Text();
 		}
-		else if (pPrim->Is(CPrim::PRIM_DIM))
+		else if (pPrim->Is(CPrim::Type::Dim))
 		{
 			strChr = static_cast<CPrimDim*>(pPrim)->Text();
 		}
@@ -2253,13 +2255,13 @@ void CPegDoc::OnPrimExtractStr()
 // Returns a pointer to the currently active document.
 CPegDoc* CPegDoc::GetDoc(void)
 {
-	CMDIFrameWnd* pFrame = (CMDIFrameWnd*) (AfxGetApp()->m_pMainWnd);
+	CMDIFrameWnd* pFrame = (CMDIFrameWnd*)(AfxGetApp()->m_pMainWnd);
 	if (pFrame == NULL)
 		return NULL;
 
-	CMDIChildWnd* pChild = (CMDIChildWnd*) pFrame->MDIGetActive();
+	CMDIChildWnd* pChild = (CMDIChildWnd*)pFrame->MDIGetActive();
 
-	return (pChild == NULL) ? NULL : (CPegDoc*) pChild->GetActiveDocument();
+	return (pChild == NULL) ? NULL : (CPegDoc*)pChild->GetActiveDocument();
 }
 void CPegDoc::OnFileSave()
 {

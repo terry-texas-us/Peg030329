@@ -25,25 +25,28 @@ class CSeg;
 class CPrim: public CObject
 {
 public:
-	static const WORD BUFFER_SIZE = 2048;
+	static inline constexpr size_t BUFFER_SIZE = 2048;
 
 	static const PENCOLOR PENCOLOR_BYBLOCK = 0;
 	static const PENCOLOR PENCOLOR_BYLAYER = 256;
 	static const PENSTYLE PENSTYLE_BYBLOCK = 32766;
 	static const PENSTYLE PENSTYLE_BYLAYER = 32767;
 
-	static const WORD PRIM_MARK = 256;		// 0x0100
-	static const WORD PRIM_INSERT = 257;	// 0x0101
-	static const WORD PRIM_SEGREF = 258;	// 0x0102
-	static const WORD PRIM_LINE = 512;		// 0x0200
-	static const WORD PRIM_POLYGON = 1024;	// 0x0400
-	static const WORD PRIM_ARC = 4099;		// 0x1003
-	static const WORD PRIM_BSPLINE = 8192;	// 0x2000
-	static const WORD PRIM_CSPLINE = 8193;	// 0x2001
-	static const WORD PRIM_POLYLINE = 8194;	// 0x2002
-	static const WORD PRIM_TEXT = 16384;	// 0x4000
-	static const WORD PRIM_TAG = 16640;		// 0x4100
-	static const WORD PRIM_DIM = 16896;		// 0x4200
+	enum class Type: WORD
+	{
+		Mark = 256,      // 0x0100
+		Insert = 257,    // 0x0101
+		SegRef = 258,    // 0x0102
+		Line = 512,      // 0x0200
+		Polygon = 1024,  // 0x0400
+		Arc = 4099,      // 0x1003
+		BSpline = 8192,  // 0x2000
+		CSpline = 8193,  // 0x2001
+		Polyline = 8194, // 0x2002
+		Text = 16384,    // 0x4000
+		Tag = 16640,     // 0x4100
+		Dim = 16896      // 0x4200
+	};
 
 protected:
 	PENCOLOR	m_nPenColor{1};
@@ -81,7 +84,7 @@ public: // Methods - absolute virtuals
 	virtual CPnt	GetCtrlPt() const = 0;
 	virtual void	GetExtents(CPnt&, CPnt&, const CTMat&) const = 0;
 	virtual CPnt	GoToNxtCtrlPt() const = 0;
-	virtual bool	Is(WORD wType) const = 0;
+	virtual bool	Is(CPrim::Type type) const = 0;
 	virtual bool	IsInView(CPegView* pView) const = 0;
 	virtual bool	IsPtACtrlPt(CPegView* pView, const CPnt4&) const = 0;
 	virtual void	Read(CFile&) = 0;

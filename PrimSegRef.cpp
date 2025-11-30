@@ -13,15 +13,15 @@ CPrimSegRef::CPrimSegRef()
 {
 	m_pt = ORIGIN;
 	m_vZ = ZDIR;
-	
+
 	m_vScale(1., 1., 1.);
 	m_dRotation = 0.;
-	
+
 	m_wColCnt = 1;
 	m_wRowCnt = 1;
 	m_dColSpac = 0.;
 	m_dRowSpac = 0.;
-}	
+}
 
 CPrimSegRef::CPrimSegRef(const CString& strName, const CPnt& pt)
 {
@@ -34,7 +34,7 @@ CPrimSegRef::CPrimSegRef(const CString& strName, const CPnt& pt)
 	m_wRowCnt = 1;
 	m_dColSpac = 0.;
 	m_dRowSpac = 0.;
-}	
+}
 CPrimSegRef::CPrimSegRef(const CPrimSegRef& src)
 {
 	m_strName = src.m_strName;
@@ -66,11 +66,11 @@ const CPrimSegRef& CPrimSegRef::operator=(const CPrimSegRef& src)
 void CPrimSegRef::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const
 {
 	CBlock* pBlock;
-	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) {return;}
+	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) { return; }
 
-	HTREEITEM hti = tvAddItem(hTree, hParent, "<SegRef>", (CObject*) this);
+	HTREEITEM hti = tvAddItem(hTree, hParent, "<SegRef>", (CObject*)this);
 
-	((CSeg*) pBlock)->AddPrimsToTreeViewControl(hTree, hti);
+	((CSeg*)pBlock)->AddPrimsToTreeViewControl(hTree, hti);
 }
 CTMat CPrimSegRef::BuildTransformMatrix(const CPnt& ptBase) const
 {
@@ -79,7 +79,7 @@ CTMat CPrimSegRef::BuildTransformMatrix(const CPnt& ptBase) const
 	CTMat tm3; tm3.RotateZ(sin(m_dRotation), cos(m_dRotation));
 	CTMat tm4(ORIGIN, m_vZ);
 	CTMat tm5; tm5.Translate(m_pt - ORIGIN);
-	
+
 	return (tm1 * tm2 * tm3 * tm4 * tm5);
 }
 
@@ -96,12 +96,12 @@ void CPrimSegRef::Display(CPegView* pView, CDC* pDC) const
 
 	CPnt ptBase = pBlock->GetBasePt();
 	CTMat tm = BuildTransformMatrix(ptBase);
-		
+
 	mspace.InvokeNew();
 	mspace.SetLocalTM(tm);
 
 	pBlock->Display(pView, pDC);
-	
+
 	mspace.Return();
 }
 void CPrimSegRef::DisRep(const CPnt&) const
@@ -135,7 +135,7 @@ void CPrimSegRef::FormatGeometry(CString& str) const
 	str = ss.str().c_str();
 }
 
-CPnt CPrimSegRef::GetCtrlPt() const 
+CPnt CPrimSegRef::GetCtrlPt() const
 {
 	CPnt pt;
 	pt = m_pt;
@@ -145,8 +145,8 @@ CPnt CPrimSegRef::GetCtrlPt() const
 void CPrimSegRef::GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const
 {
 	CBlock* pBlock;
-	
-	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) {return;}
+
+	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) { return; }
 
 	CPnt ptBase = pBlock->GetBasePt();
 
@@ -165,7 +165,7 @@ bool CPrimSegRef::IsInView(CPegView* pView) const
 	// Test whether an instance of a block is wholly or partially within the current view volume.
 	CBlock* pBlock;
 
-	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) {return false;}
+	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) { return false; }
 
 	CPnt ptBase = pBlock->GetBasePt();
 
@@ -173,28 +173,28 @@ bool CPrimSegRef::IsInView(CPegView* pView) const
 
 	mspace.InvokeNew();
 	mspace.SetLocalTM(tm);
-	
+
 	bool bInView = pBlock->IsInView(pView);
-	
+
 	mspace.Return();
 	return (bInView);
 }
-CPnt CPrimSegRef::SelAtCtrlPt(CPegView* pView, const CPnt4& ptPic) const 
+CPnt CPrimSegRef::SelAtCtrlPt(CPegView* pView, const CPnt4& ptPic) const
 {
 	mS_wCtrlPt = USHRT_MAX;
 	CPnt ptCtrl;
 
 	CBlock* pBlock;
 
-	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) {return ptCtrl;}
+	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) { return ptCtrl; }
 
 	CPnt ptBase = pBlock->GetBasePt();
-	
+
 	CTMat tm = BuildTransformMatrix(ptBase);
-	
+
 	mspace.InvokeNew();
 	mspace.SetLocalTM(tm);
-	
+
 	POSITION pos = pBlock->GetHeadPosition();
 	while (pos != 0)
 	{
@@ -202,7 +202,7 @@ CPnt CPrimSegRef::SelAtCtrlPt(CPegView* pView, const CPnt4& ptPic) const
 		ptCtrl = pPrim->SelAtCtrlPt(pView, ptPic);
 		if (mS_wCtrlPt != USHRT_MAX)
 		{
-			mspace.Transform(ptCtrl);	
+			mspace.Transform(ptCtrl);
 			break;
 		}
 	}
@@ -213,17 +213,17 @@ bool CPrimSegRef::SelUsingRect(CPegView* pView, const CPnt& pt1, const CPnt& pt2
 {
 	CBlock* pBlock;
 
-	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) {return false;}
+	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) { return false; }
 
 	CPnt ptBase = pBlock->GetBasePt();
-	
+
 	CTMat tm = BuildTransformMatrix(ptBase);
-	
+
 	mspace.InvokeNew();
 	mspace.SetLocalTM(tm);
-	
+
 	bool bResult = pBlock->SelUsingRect(pView, pt1, pt2);
-	
+
 	mspace.Return();
 	return (bResult);
 }
@@ -234,29 +234,31 @@ bool CPrimSegRef::SelUsingPoint(CPegView* pView, const CPnt4& pt, double dtol, C
 
 	CBlock* pBlock;
 
-	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) {return (bResult);}
+	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) { return (bResult); }
 
 	CPnt ptBase = pBlock->GetBasePt();
-	
+
 	CTMat tm = BuildTransformMatrix(ptBase);
 
 	mspace.InvokeNew();
 	mspace.SetLocalTM(tm);
-	
+
 	POSITION posPrim = pBlock->GetHeadPosition();
 	while (posPrim != 0)
 	{
 		if ((pBlock->GetNext(posPrim))->SelUsingPoint(pView, pt, dtol, ptProj))
-			{bResult = true; break;}
+		{
+			bResult = true; break;
+		}
 	}
 	mspace.Return();
 	return (bResult);
-}	 
+}
 
 void CPrimSegRef::Read(CFile& fl)
 {
 	CPrim::Read(fl);
-	
+
 	FilePeg_ReadString(fl, m_strName);
 	m_pt.Read(fl);
 	m_vZ.Read(fl);
@@ -287,10 +289,10 @@ void CPrimSegRef::TranslateUsingMask(const CVec& v, DWORD dwMask)
 }
 bool CPrimSegRef::Write(CFile& fl) const
 {
-	FilePeg_WriteWord(fl, PRIM_SEGREF);
+	FilePeg_WriteWord(fl, static_cast<WORD>(CPrim::Type::SegRef));
 	FilePeg_WriteWord(fl, m_nPenColor);
 	FilePeg_WriteWord(fl, m_nPenStyle);
-	FilePeg_WriteString(fl, m_strName); 
+	FilePeg_WriteString(fl, m_strName);
 	m_pt.Write(fl);
 	m_vZ.Write(fl);
 	m_vScale.Write(fl);

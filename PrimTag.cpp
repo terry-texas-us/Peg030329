@@ -28,7 +28,7 @@ const CPrimTag& CPrimTag::operator=(const CPrimTag& src)
 
 void CPrimTag::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const
 {
-	tvAddItem(hTree, hParent, "<Tag>", (CObject*) this);
+	tvAddItem(hTree, hParent, "<Tag>", (CObject*)this);
 }
 CPrim*& CPrimTag::Copy(CPrim*& pPrim) const
 {
@@ -43,7 +43,7 @@ void CPrimTag::Display(CPegView*, CDC* pDC) const
 		opengl::SetCurrentColor(app.PenColorsGetHot(nPenColor));
 
 		opengl::BeginPoints();
-			opengl::SetVertex(m_Pt);
+		opengl::SetVertex(m_Pt);
 		opengl::End();
 	}
 }
@@ -110,7 +110,7 @@ CPnt CPrimTag::SelAtCtrlPt(CPegView* pView, const CPnt4& ptPic) const
 bool CPrimTag::SelUsingPoint(CPegView* pView, const CPnt4& ptPic, double dTol, CPnt& ptProj)
 {
 	CPnt4 pt(m_Pt, 1.);
-	
+
 	pView->ModelViewTransform(pt);
 
 	ptProj = pt;
@@ -122,7 +122,7 @@ bool CPrimTag::SelUsingRect(CPegView* pView, const CPnt& pt1, const CPnt& pt2)
 {
 	CPnt4 pt(m_Pt, 1.);
 	pView->ModelViewTransform(pt);
-	
+
 	return ((pt[0] >= pt1[0] && pt[0] <= pt2[0] && pt[1] >= pt1[1] && pt[1] <= pt2[1]) ? true : false);
 }
 
@@ -137,7 +137,7 @@ bool CPrimTag::IsPtACtrlPt(CPegView* pView, const CPnt4& ptPic) const
 void CPrimTag::Read(CFile& fl)
 {
 	CPrim::Read(fl);
-	
+
 	m_Pt.Read(fl);
 }
 void CPrimTag::Transform(const CTMat& tm)
@@ -153,7 +153,7 @@ void CPrimTag::TranslateUsingMask(const CVec& v, const DWORD dwMask)
 
 bool CPrimTag::Write(CFile& fl) const
 {
-	FilePeg_WriteWord(fl, PRIM_TAG);
+	FilePeg_WriteWord(fl, static_cast<WORD>(CPrim::Type::Tag));
 	FilePeg_WriteWord(fl, m_nPenColor);
 	FilePeg_WriteWord(fl, m_nPenStyle);
 	m_Pt.Write(fl);

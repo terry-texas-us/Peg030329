@@ -434,7 +434,7 @@ void CPrimDim::TranslateUsingMask(const CVec& v, const DWORD dwMask)
 }
 bool CPrimDim::Write(CFile& fl) const
 {
-	FilePeg_WriteWord(fl, PRIM_DIM);
+	FilePeg_WriteWord(fl, static_cast<WORD>(CPrim::Type::Dim));
 
 	FilePeg_WriteWord(fl, m_nPenColor);
 	FilePeg_WriteWord(fl, m_nPenStyle);

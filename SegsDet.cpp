@@ -81,7 +81,7 @@ CSeg* CSegsDet::SelLineUsingPoint(CPegView* pView, const CPnt& pt)
 		while (posPrim != 0)
 		{
 			CPrim* pPrim = pSeg->GetNext(posPrim);
-			if (pPrim->Is(CPrim::PRIM_LINE))
+			if (pPrim->Is(CPrim::Type::Line))
 			{
 				if (pPrim->SelUsingPoint(pView, ptView, tol, ptEng))
 				{	
@@ -111,7 +111,7 @@ CPrimText* CSegsDet::SelTextUsingPoint(CPegView* pView, const CPnt& ptPic)
 		while (posPrim !=0)
 		{
 			CPrim* pPrim = pSeg->GetNext(posPrim);
-			if (pPrim->Is(CPrim::PRIM_TEXT))
+			if (pPrim->Is(CPrim::Type::Text))
 			{
 				CPnt ptProj;
 				if (static_cast<CPrimText*>(pPrim)->SelUsingPoint(pView, ptView, 0., ptProj))

@@ -1191,7 +1191,7 @@ void CPegView::OnPrimPerpJump()
 
 	if (detsegs.SelSegAndPrimUsingPoint(pt) != 0)
 	{
-		if (detsegs.DetPrim()->Is(CPrim::PRIM_LINE))
+		if (detsegs.DetPrim()->Is(CPrim::Type::Line))
 		{
 			CPrimLine* pPrimLine = static_cast<CPrimLine*>(detsegs.DetPrim());
 			pt = pPrimLine->ProjPt(app.m_ptCursorPosWorld);

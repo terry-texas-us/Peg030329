@@ -178,33 +178,33 @@ bool filejob_GetNextPrim(CFile& f, int iVersion, char* pBuf, CPrim*& pPrim)
 		}
 	} while (*pTyp <= 0 || pBuf[5] == 33);
 
-	switch (*pTyp)
+	switch (static_cast<CPrim::Type>(*pTyp))
 	{
-	case CPrim::PRIM_MARK:
+	case CPrim::Type::Mark:
 		pPrim = new CPrimMark(pBuf, 3);
 		break;
-	case CPrim::PRIM_LINE:
+	case CPrim::Type::Line:
 		pPrim = new CPrimLine(pBuf, 3);
 		break;
-	case CPrim::PRIM_POLYGON:
+	case CPrim::Type::Polygon:
 		pPrim = new CPrimPolygon(pBuf, 3);
 		break;
-	case CPrim::PRIM_ARC:
+	case CPrim::Type::Arc:
 		pPrim = new CPrimArc(pBuf, 3);
 		break;
-	case CPrim::PRIM_BSPLINE:
+	case CPrim::Type::BSpline:
 		pPrim = new CPrimBSpline(pBuf, 3);
 		break;
-	case CPrim::PRIM_CSPLINE:
+	case CPrim::Type::CSpline:
 		pPrim = new CPrimCSpline(pBuf);
 		break;
-	case CPrim::PRIM_TEXT:
+	case CPrim::Type::Text:
 		pPrim = new CPrimText(pBuf, 3);
 		break;
-	case CPrim::PRIM_TAG:
+	case CPrim::Type::Tag:
 		pPrim = new CPrimTag(pBuf);
 		break;
-	case CPrim::PRIM_DIM:
+	case CPrim::Type::Dim:
 		pPrim = new CPrimDim(pBuf);
 		break;
 
@@ -243,32 +243,32 @@ bool filejob_IsValidPrimitive(const short nType)
 {
 	char* pType = (char*)&nType;
 
-	switch (nType)
+	switch (static_cast<CPrim::Type>(nType))
 	{
-	case CPrim::PRIM_MARK:				// 0x0100
-		//case CPrim::PRIM_INSERT:			// 0x0101
-		//case CPrim::PRIM_SEGREF			// 0x0102
-	case CPrim::PRIM_LINE:				// 0x0200
-	case CPrim::PRIM_POLYGON:			// 0x0400
-	case CPrim::PRIM_ARC:				// 0x1003
-	case CPrim::PRIM_BSPLINE:			// 0x2000
-	case CPrim::PRIM_CSPLINE:			// 0x2001
-		//case CPrim::PRIM_POLYLINE:		// 0x2002
-	case CPrim::PRIM_TEXT:				// 0x4000
-	case CPrim::PRIM_TAG:				// 0x4100
-	case CPrim::PRIM_DIM:				// 0x4200
+	case CPrim::Type::Mark:				// 0x0100
+		//case CPrim::Type::Insert:			// 0x0101
+		//case CPrim::Type::SegRef			// 0x0102
+	case CPrim::Type::Line:				// 0x0200
+	case CPrim::Type::Polygon:			// 0x0400
+	case CPrim::Type::Arc:				// 0x1003
+	case CPrim::Type::BSpline:			// 0x2000
+	case CPrim::Type::CSpline:			// 0x2001
+		//case CPrim::Type::Polyline:		// 0x2002
+	case CPrim::Type::Text:				// 0x4000
+	case CPrim::Type::Tag:				// 0x4100
+	case CPrim::Type::Dim:				// 0x4200
 		return true;
 
 	default:
 		switch (pType[1])
 		{
-		case 17:			// 0x11	to PRIM_TEXT
-		case 24:			// 0x18	to PRIM_BSPLINE
+		case 17:			// 0x11	to CPrim::Type::Text
+		case 24:			// 0x18	to CPrim::Type::BSpline
 		case 33:			// 0x21 conic (twopi)
-		case 61:			// 0x3d to PRIM_ARC 
-		case 67:			// 0x43 to PRIM_LINE 
-		case 70:			// 0x46 to PRIM_MARK
-		case 100:			// 0x64 to PRIM_POLYGON
+		case 61:			// 0x3d to CPrim::Type::Arc
+		case 67:			// 0x43 to CPrim::Type::Line
+		case 70:			// 0x46 to CPrim::Type::Mark
+		case 100:			// 0x64 to CPrim::Type::Polygon
 			return true;
 
 		default:
@@ -325,7 +325,7 @@ CPrimArc::CPrimArc(char* p, int iVer)
 void CPrimArc::Write(CFile& f, char* p) const
 {
 	p[3] = 2;
-	*((short*)&p[4]) = PRIM_ARC;
+	*((short*)&p[4]) = static_cast<WORD>(CPrim::Type::Arc);
 	p[6] = char(m_nPenColor == PENCOLOR_BYLAYER ? mS_nLayerPenColor : m_nPenColor);
 	p[7] = char(m_nPenStyle == PENSTYLE_BYLAYER ? mS_nLayerPenStyle : m_nPenStyle);
 	if (p[7] >= 16) p[7] = 2;
@@ -384,7 +384,7 @@ CPrimBSpline::CPrimBSpline(char* p, int iVer)
 void CPrimBSpline::Write(CFile& f, char* p) const
 {
 	p[3] = char((2 + m_pts.GetSize() * 3) / 8 + 1);
-	*((short*)&p[4]) = PRIM_BSPLINE;
+	*((short*)&p[4]) = static_cast<WORD>(CPrim::Type::BSpline);
 	p[6] = char(m_nPenColor == PENCOLOR_BYLAYER ? mS_nLayerPenColor : m_nPenColor);
 	p[7] = char(m_nPenStyle == PENSTYLE_BYLAYER ? mS_nLayerPenStyle : m_nPenStyle);
 
@@ -422,7 +422,7 @@ CPrimCSpline::CPrimCSpline(char* p)
 void CPrimCSpline::Write(CFile& f, char* p) const
 {
 	p[3] = char((69 + m_pts.GetSize() * 12) / 32);
-	*((short*)&p[4]) = PRIM_CSPLINE;
+	*((short*)&p[4]) = static_cast<WORD>(CPrim::Type::CSpline);
 	p[6] = char(m_nPenColor == PENCOLOR_BYLAYER ? mS_nLayerPenColor : m_nPenColor);
 	p[7] = char(m_nPenStyle == PENSTYLE_BYLAYER ? mS_nLayerPenStyle : m_nPenStyle);
 
@@ -472,7 +472,7 @@ CPrimDim::CPrimDim(char* p)
 void CPrimDim::Write(CFile& f, char* p) const
 {
 	p[3] = char((118 + m_strText.GetLength()) / 32);
-	*((short*)&p[4]) = PRIM_DIM;
+	*((short*)&p[4]) = static_cast<WORD>(CPrim::Type::Dim);
 	p[6] = char(m_nPenColor == PENCOLOR_BYLAYER ? mS_nLayerPenColor : m_nPenColor);
 	p[7] = char(m_nPenStyle == PENSTYLE_BYLAYER ? mS_nLayerPenStyle : m_nPenStyle);
 	if (p[7] >= 16) p[7] = 2;
@@ -560,7 +560,7 @@ CPrimLine::CPrimLine(char* p, int iVer)
 void CPrimLine::Write(CFile& f, char* p) const
 {
 	p[3] = 1;
-	*((short*)&p[4]) = PRIM_LINE;
+	*((CPrim::Type*)&p[4]) = CPrim::Type::Line;
 	p[6] = char(m_nPenColor == PENCOLOR_BYLAYER ? mS_nLayerPenColor : m_nPenColor);
 	p[7] = char(m_nPenStyle == PENSTYLE_BYLAYER ? mS_nLayerPenStyle : m_nPenStyle);
 	if (p[7] >= 16) p[7] = 2;
@@ -612,7 +612,7 @@ CPrimMark::CPrimMark(char* p, int iVer)
 void CPrimMark::Write(CFile& f, char* p) const
 {
 	p[3] = 1;
-	*((short*)&p[4]) = PRIM_MARK;
+	*((CPrim::Type*)&p[4]) = CPrim::Type::Mark;
 	p[6] = char(m_nPenColor == PENCOLOR_BYLAYER ? mS_nLayerPenColor : m_nPenColor);
 	p[7] = char(m_nMarkStyle);
 
@@ -735,7 +735,7 @@ CPrimPolygon::CPrimPolygon(char* p, int iVer)
 void CPrimPolygon::Write(CFile& f, char* p) const
 {
 	p[3] = char((79 + m_wPts * 12) / 32);
-	*((short*)&p[4]) = PRIM_POLYGON;
+	*((CPrim::Type*)&p[4]) = CPrim::Type::Polygon;
 	p[6] = char(m_nPenColor == PENCOLOR_BYLAYER ? mS_nLayerPenColor : m_nPenColor);
 	p[7] = char(m_nIntStyle);
 	*((short*)&p[8]) = short(m_nIntStyleId);
@@ -796,7 +796,7 @@ CPrimTag::CPrimTag(char* p)
 void CPrimTag::Write(CFile& f, char* p) const
 {
 	p[3] = 1;
-	*((short*)&p[4]) = PRIM_TAG;
+	*((short*)&p[4]) = static_cast<WORD>(CPrim::Type::Tag);
 	p[6] = char(m_nPenColor == PENCOLOR_BYLAYER ? mS_nLayerPenColor : m_nPenColor);
 	p[7] = char(m_nPenStyle);
 
@@ -893,7 +893,7 @@ CPrimText::CPrimText(char* p, int iVer)
 void CPrimText::Write(CFile& f, char* p) const
 {
 	p[3] = char((86 + m_strText.GetLength()) / 32);
-	*((short*)&p[4]) = PRIM_TEXT;
+	*((short*)&p[4]) = static_cast<WORD>(CPrim::Type::Text);
 	p[6] = char(m_nPenColor == PENCOLOR_BYLAYER ? mS_nLayerPenColor : m_nPenColor);
 	p[7] = char(m_fd.TextPrec());
 	*((short*)&p[8]) = 0;

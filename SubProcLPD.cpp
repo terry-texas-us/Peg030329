@@ -482,7 +482,7 @@ bool lpd::Fnd2LnsGivLn(CPrimLine* pTestLine, double dAccAng, CPrim*& pLeftLine, 
 		while (posPrim != 0)
 		{
 			pPrim = pSeg->GetNext(posPrim);
-			if (pPrim == pTestLine || !pPrim->Is(CPrim::PRIM_LINE))
+			if (pPrim == pTestLine || !pPrim->Is(CPrim::Type::Line))
 				continue;
 			static_cast<CPrimLine*>(pPrim)->GetPts(ptBeg, ptEnd);
 			if (ptBeg == lnTest[0] || ptBeg == lnTest[1])
@@ -1329,7 +1329,7 @@ bool lpd::SelEndCapUsingPoint(CPegView* view, const CPnt& model_point, CSeg*& se
 		{
 			CPrim* pPrim = segment->GetNext(posPrim);
 
-			if (pPrim->Is(CPrim::PRIM_MARK))
+			if (pPrim->Is(CPrim::Type::Mark))
 			{
 				mark_primitive = static_cast<CPrimMark*>(pPrim);
 				if (mark_primitive->PenColor() == 15 && mark_primitive->MarkStyle() == 8)

@@ -379,12 +379,14 @@
     <ResourceCompile Include="res\PegAEsys.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Job File Format.md" />
     <None Include="Peg &amp; Tra File Formats.docx" />
     <None Include="Peg &amp; Tra File Formats.md" />
     <None Include="Peg &amp; Tra File Formats.pdf" />
     <None Include="res\PegAEsys.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Job File Format.txt" />
     <Text Include="Peg &amp; Tra File Formats (extracted FilePeg comments).txt" />
     <Text Include="Peg &amp; Tra File Formats.txt" />
   </ItemGroup>

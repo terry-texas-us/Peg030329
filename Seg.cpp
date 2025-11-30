@@ -55,7 +55,7 @@ void CSeg::BreakPolylines()
 	{
 		POSITION posPrim = pos;
 		CPrim* pPrim = GetNext(pos);
-		if (pPrim->Is(CPrim::PRIM_POLYLINE))
+		if (pPrim->Is(CPrim::Type::Polyline))
 		{
 			PENCOLOR nPenColor = pPrim->PenColor();
 			PENSTYLE nPenStyle = pPrim->PenStyle();
@@ -72,7 +72,7 @@ void CSeg::BreakPolylines()
 			this->RemoveAt(posPrim);
 			delete pPrim;
 		}
-		else if (pPrim->Is(CPrim::PRIM_SEGREF))
+		else if (pPrim->Is(CPrim::Type::SegRef))
 		{
 			CBlock* pBlock;
 			if (CPegDoc::GetDoc()->BlksLookup(static_cast<CPrimSegRef*>(pPrim)->GetName(), pBlock) != 0)
@@ -93,7 +93,7 @@ void CSeg::BreakSegRefs()
 		{
 			POSITION posPrim = pos;
 			CPrim* pPrim = GetNext(pos);
-			if (pPrim->Is(CPrim::PRIM_SEGREF))
+			if (pPrim->Is(CPrim::Type::SegRef))
 			{
 				iSegRefs++;
 				CBlock* pBlock;
@@ -149,7 +149,7 @@ int CSeg::GetBlockRefCount(const CString& strBlkNam) const
 	while (pos != 0)
 	{
 		CPrim* pPrim = GetNext(pos);
-		if (pPrim->Is(CPrim::PRIM_SEGREF))
+		if (pPrim->Is(CPrim::Type::SegRef))
 		{
 			if (static_cast<CPrimSegRef*>(pPrim)->GetName() == strBlkNam)
 				iCount++;
@@ -214,7 +214,7 @@ void CSeg::ModifyNotes(const CFontDef& fd, const CCharCellDef& ccd, int iAtt)
 	while (pos != 0)
 	{
 		CPrim* pPrim = GetNext(pos);
-		if (pPrim->Is(CPrim::PRIM_TEXT))
+		if (pPrim->Is(CPrim::Type::Text))
 		{
 			static_cast<CPrimText*>(pPrim)->ModifyNotes(fd, ccd, iAtt);
 		}
@@ -264,7 +264,7 @@ int CSeg::RemoveEmptyNotes()
 	{
 		POSITION posPrev = pos;
 		CPrim* pPrim = GetNext(pos);
-		if (pPrim->Is(CPrim::PRIM_TEXT))
+		if (pPrim->Is(CPrim::Type::Text))
 		{
 			if (static_cast<CPrimText*>(pPrim)->Text().GetLength() == 0)
 			{
@@ -344,7 +344,7 @@ void CSeg::SortTextOnY()
 			POSITION pos2 = pos1;
 			CPrim* pPrim2 = GetNext(pos2);
 
-			if (pPrim1->Is(CPrim::PRIM_TEXT) && pPrim2->Is(CPrim::PRIM_TEXT))
+			if (pPrim1->Is(CPrim::Type::Text) && pPrim2->Is(CPrim::Type::Text))
 			{
 				double dY1 = static_cast<CPrimText*>(pPrim1)->RefPt()[1];
 				double dY2 = static_cast<CPrimText*>(pPrim2)->RefPt()[1];
@@ -355,7 +355,7 @@ void CSeg::SortTextOnY()
 					iT = i;
 				}
 			}
-			else if (pPrim1->Is(CPrim::PRIM_TEXT) || pPrim2->Is(CPrim::PRIM_TEXT))
+			else if (pPrim1->Is(CPrim::Type::Text) || pPrim2->Is(CPrim::Type::Text))
 			{
 				SetAt(pos, pPrim2);
 				SetAt(pos1, pPrim1);
@@ -373,7 +373,7 @@ void CSeg::Square()
 	while (pos != 0)
 	{
 		CPrim* pPrim = GetNext(pos);
-		if (pPrim->Is(CPrim::PRIM_LINE))
+		if (pPrim->Is(CPrim::Type::Line))
 		{
 			static_cast<CPrimLine*>(pPrim)->Square();
 		}

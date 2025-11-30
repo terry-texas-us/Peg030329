@@ -17,7 +17,7 @@ CPrimInsert::CPrimInsert()
 	m_wRowCnt = 1;
 	m_dColSpac = 0.;
 	m_dRowSpac = 0.;
-}	
+}
 CPrimInsert::CPrimInsert(const CString& strName, const CPnt& pt)
 {
 	m_strName = strName;
@@ -29,7 +29,7 @@ CPrimInsert::CPrimInsert(const CString& strName, const CPnt& pt)
 	m_wRowCnt = 1;
 	m_dColSpac = 0.;
 	m_dRowSpac = 0.;
-}	
+}
 CPrimInsert::CPrimInsert(const CPrimInsert& src)
 {
 	m_strName = src.m_strName;
@@ -59,7 +59,7 @@ const CPrimInsert& CPrimInsert::operator=(const CPrimInsert& src)
 
 void CPrimInsert::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const
 {
-	tvAddItem(hTree, hParent, "<Insert>", (CObject*) this);
+	tvAddItem(hTree, hParent, "<Insert>", (CObject*)this);
 }
 CTMat CPrimInsert::BuildTransformMatrix(const CPnt& ptBase) const
 {
@@ -78,20 +78,20 @@ CPrim*& CPrimInsert::Copy(CPrim*& pPrim) const
 void CPrimInsert::Display(CPegView* pView, CDC* pDC) const
 {
 	CBlock* pBlock;
-	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) 
+	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0)
 		return;
 
 	CPnt ptBase = pBlock->GetBasePt();
 	CTMat tm = BuildTransformMatrix(ptBase);
-	
+
 	mspace.InvokeNew();
 	mspace.SetLocalTM(tm);
-			
+
 	pBlock->Display(pView, pDC);
-	
+
 	mspace.Return();
 }
-void CPrimInsert::DisRep(const CPnt&) const 
+void CPrimInsert::DisRep(const CPnt&) const
 {
 	std::string str = "<Insert>";
 	str += " Color: " + StdFormatPenColor();
@@ -114,7 +114,7 @@ void CPrimInsert::FormatGeometry(CString& str) const
 	geometry += "Z Axis;" + m_vZ.ToStdString();
 	str = geometry.c_str();
 }
-CPnt CPrimInsert::GetCtrlPt() const 
+CPnt CPrimInsert::GetCtrlPt() const
 {
 	CPnt pt;
 	pt = m_pt;
@@ -124,13 +124,13 @@ CPnt CPrimInsert::GetCtrlPt() const
 void CPrimInsert::GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const
 {
 	CBlock* pBlock;
-	
-	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) {return;}
+
+	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) { return; }
 
 	CPnt ptBase = pBlock->GetBasePt();
 
 	CTMat tmIns = BuildTransformMatrix(ptBase);
-	
+
 	mspace.InvokeNew();
 	mspace.SetLocalTM(tmIns);
 
@@ -144,36 +144,36 @@ bool CPrimInsert::IsInView(CPegView* pView) const
 	// Test whether an instance of a block is wholly or partially within the current view volume.
 	CBlock* pBlock;
 
-	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) {return false;}
+	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) { return false; }
 
 	CPnt ptBase = pBlock->GetBasePt();
 
 	CTMat tm = BuildTransformMatrix(ptBase);
-	
+
 	mspace.InvokeNew();
 	mspace.SetLocalTM(tm);
-	
+
 	bool bInView = pBlock->IsInView(pView);
-	
+
 	mspace.Return();
 	return (bInView);
 }
-CPnt CPrimInsert::SelAtCtrlPt(CPegView* pView, const CPnt4& ptPic) const 
+CPnt CPrimInsert::SelAtCtrlPt(CPegView* pView, const CPnt4& ptPic) const
 {
 	mS_wCtrlPt = USHRT_MAX;
 	CPnt ptCtrl;
 
 	CBlock* pBlock;
 
-	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) {return ptCtrl;}
+	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) { return ptCtrl; }
 
 	CPnt ptBase = pBlock->GetBasePt();
-	
+
 	CTMat tm = BuildTransformMatrix(ptBase);
-	
+
 	mspace.InvokeNew();
 	mspace.SetLocalTM(tm);
-	
+
 	POSITION pos = pBlock->GetHeadPosition();
 	while (pos != 0)
 	{
@@ -181,7 +181,7 @@ CPnt CPrimInsert::SelAtCtrlPt(CPegView* pView, const CPnt4& ptPic) const
 		ptCtrl = pPrim->SelAtCtrlPt(pView, ptPic);
 		if (mS_wCtrlPt != USHRT_MAX)
 		{
-			mspace.Transform(ptCtrl);	
+			mspace.Transform(ptCtrl);
 			break;
 		}
 	}
@@ -192,17 +192,17 @@ bool CPrimInsert::SelUsingRect(CPegView* pView, const CPnt& pt1, const CPnt& pt2
 {
 	CBlock* pBlock;
 
-	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) {return false;}
+	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) { return false; }
 
 	CPnt ptBase = pBlock->GetBasePt();
-	
+
 	CTMat tm = BuildTransformMatrix(ptBase);
-	
+
 	mspace.InvokeNew();
 	mspace.SetLocalTM(tm);
-	
+
 	bool bResult = pBlock->SelUsingRect(pView, pt1, pt2);
-	
+
 	mspace.Return();
 	return (bResult);
 }
@@ -214,29 +214,31 @@ bool CPrimInsert::SelUsingPoint(CPegView* pView, const CPnt4& pt, double dtol, C
 
 	CBlock* pBlock;
 
-	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) {return (bResult);}
+	if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) { return (bResult); }
 
 	CPnt ptBase = pBlock->GetBasePt();
-	
+
 	CTMat tm = BuildTransformMatrix(ptBase);
-	
+
 	mspace.InvokeNew();
 	mspace.SetLocalTM(tm);
-	
+
 	POSITION posPrim = pBlock->GetHeadPosition();
 	while (posPrim != 0)
 	{
 		if ((pBlock->GetNext(posPrim))->SelUsingPoint(pView, pt, dtol, ptProj))
-			{bResult = true; break;}
+		{
+			bResult = true; break;
+		}
 	}
 	mspace.Return();
 	return (bResult);
-}	 
+}
 
 void CPrimInsert::Read(CFile& fl)
 {
 	CPrim::Read(fl);
-	
+
 	FilePeg_ReadString(fl, m_strName);
 	m_pt.Read(fl);
 	m_vX.Read(fl);
@@ -264,10 +266,10 @@ void CPrimInsert::TranslateUsingMask(const CVec& v, DWORD dwMask)
 }
 bool CPrimInsert::Write(CFile& fl) const
 {
-	FilePeg_WriteWord(fl, PRIM_INSERT);
+	FilePeg_WriteWord(fl, static_cast<WORD>(CPrim::Type::Insert));
 	FilePeg_WriteWord(fl, m_nPenColor);
 	FilePeg_WriteWord(fl, m_nPenStyle);
-	FilePeg_WriteString(fl, m_strName); 
+	FilePeg_WriteString(fl, m_strName);
 	m_pt.Write(fl);
 	m_vX.Write(fl);
 	m_vY.Write(fl);

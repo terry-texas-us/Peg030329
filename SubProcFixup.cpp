@@ -73,7 +73,7 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
 				return 0;
 			}
 			pPrimRef = detsegs.DetPrim();
-			if (!pPrimRef->Is(CPrim::PRIM_LINE))
+			if (!pPrimRef->Is(CPrim::Type::Line))
 			{
 				return 0;
 			}
@@ -352,7 +352,7 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
 			{
 				pPrimSec = detsegs.DetPrim();
 				ptCurPos = detsegs.DetPt();
-				if (pPrimSec->Is(CPrim::PRIM_LINE))
+				if (pPrimSec->Is(CPrim::Type::Line))
 				{
 					pLine = static_cast<CPrimLine*>(pPrimSec);
 					pLine->GetLine(lnSec);
@@ -372,7 +372,7 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
 			if (pSegRef != 0 && pSegSec != 0)
 			{
 				pPrimSec = detsegs.DetPrim();
-				if (pPrimSec->Is(CPrim::PRIM_LINE))
+				if (pPrimSec->Is(CPrim::Type::Line))
 				{
 					pLine = static_cast<CPrimLine*>(pPrimSec);
 

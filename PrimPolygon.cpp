@@ -548,7 +548,7 @@ void CPrimPolygon::TranslateUsingMask(const CVec& v, const DWORD dwMask)
 
 bool CPrimPolygon::Write(CFile& fl) const
 {
-	FilePeg_WriteWord(fl, PRIM_POLYGON);
+	FilePeg_WriteWord(fl, static_cast<WORD>(CPrim::Type::Polygon));
 	FilePeg_WriteWord(fl, m_nPenColor);
 	FilePeg_WriteWord(fl, m_nIntStyle);  // note polygon style stuffed up into unused pen style on io
 	FilePeg_WriteWord(fl, m_nIntStyleId);
