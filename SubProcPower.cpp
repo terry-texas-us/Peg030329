@@ -64,7 +64,7 @@ LRESULT CALLBACK SubProcPower(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
 				while (eJoin == No && posPrim != 0)
 				{
 					CPrim* pPrim = pSeg->GetNext(posPrim);
-					if (pPrim->Is(CPrim::PRIM_ARC))
+					if (pPrim->Is(CPrim::Type::Arc))
 					{
 						CPrimArc* pArc = static_cast<CPrimArc*>(pPrim);
 
@@ -310,7 +310,7 @@ int SubProcPowerFndCirc(CLine& ln, const CPnt& pt, CPnt& ptProj, double* dRel)
 		while (posPrim != 0)
 		{
 			CPrim* pPrim = pSeg->GetNext(posPrim);
-			if (pPrim->Is(CPrim::PRIM_LINE))
+			if (pPrim->Is(CPrim::Type::Line))
 			{
 				CPrimLine* pLine = static_cast<CPrimLine*>(pPrim);
 

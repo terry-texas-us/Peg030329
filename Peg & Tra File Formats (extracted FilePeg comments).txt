@@ -55,14 +55,14 @@
 
 // Primitive definition
 //		Mark primitive
-//			PRIM_MARK type code					WORD 0x0100
+//			CPrim::Type::Mark type code			WORD 0x0100
 //			Pen color							WORD
 //			Mark style							WORD
 //			Point								Pnt
 //			Number of data values				WORD
 //			{0 or more data values}
 //		Insert primitive
-//			PRIM_INSERT type code				WORD 0x0101
+//			CPrim::Type::Insert type code		WORD 0x0101
 //			Pen color							WORD
 //			Pen style							WORD
 //			Insertion point						Pnt
@@ -87,12 +87,12 @@
 //			Column spacing						double
 //			Row spacing							double
 //		Line primitive
-//			PRIM_LINE type code					WORD 0x0200
+//			CPrim::Type::Line type code			WORD 0x0200
 //			Pen color							WORD
 //			Pen style							WORD
 //			Line								Ln
 //		Polygon primitive
-//			PRIM_POLYGON type code				WORD 0x0400
+//			CPrim::Type::Polygon type code		WORD 0x0400
 //			Pen color							WORD
 //			Polygon style						WORD
 //			Polygon Style Index					WORD
@@ -102,7 +102,7 @@
 //			Hatch/pattern reference y-axis		Vec
 //			{0 or more points}	
 //		Arc primitive
-//			PRIM_ARC type code					WORD 0x1003
+//			CPrim::Type::Arc type code			WORD 0x1003
 //			Pen color							WORD
 //			Pen style							WORD
 //			Center point						Pnt
@@ -110,13 +110,13 @@
 //			Minor axis							Vec
 //			Sweep angle							double
 //		BSpline primitive
-//			PRIM_BSPLINE type code				WORD 0x2000
+//			CPrim::Type::BSpline type code		WORD 0x2000
 //			Pen color							WORD
 //			Pen style							WORD
 //			Number of control points			WORD
 //			{0 or more control points}
 //		CSpline primitive
-//			PRIM_CSPLINE type code				WORD 0x2001
+//			CPrim::Type::CSpline type code		WORD 0x2001
 //			Pen color							WORD
 //			Pen style							WORD
 //			m_wPtsS								WORD
@@ -126,13 +126,13 @@
 //			End point tangent vector			Vec
 //			{0 or more control points}
 //		Polyline primitive (not ready for io)
-//			PRIM_POLYLINE type code				WORD 0x2002
+//			CPrim::Type::Polyline type code		WORD 0x2002
 //			Pen color							WORD
 //			Pen style							WORD
 //			Number of points					WORD
 //			{0 or more points}			
 //		Text primitive
-//			PRIM_TEXT type code					WORD 0x4000
+//			CPrim::Type::Text type code			WORD 0x4000
 //			Pen color							WORD
 //			Pen style							WORD
 //			Text precision						WORD
@@ -146,7 +146,7 @@
 //			Local reference y-axis				Vec
 //			Text								string
 //		Tag primitive
-//			PRIM_TAG type code					WORD 0x4100
+//			CPrim::Type::Tag type code			WORD 0x4100
 //			Pen color							WORD
 //			Pen style							WORD
 //			Point								Pnt

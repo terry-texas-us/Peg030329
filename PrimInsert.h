@@ -11,7 +11,7 @@
 
 class CPegView;
 
-class CPrimInsert : public CPrim
+class CPrimInsert: public CPrim
 {
 private:
 	CString		m_strName;
@@ -19,7 +19,7 @@ private:
 	CVec		m_vX;
 	CVec		m_vY;
 	CVec		m_vZ;
-	
+
 	CVec		m_vScale;
 	double		m_dRotation;
 
@@ -37,34 +37,34 @@ public: // Constructors and destructor
 
 	CPrimInsert(const CPrimInsert&);
 
-	~CPrimInsert() {};
+	~CPrimInsert() { };
 
 public: // Operators
 	const CPrimInsert& operator=(const CPrimInsert&);
 
 public: // Methods - absolute virtuals
 	void	AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const;
-	void	Assign(CPrim* pPrim) {*this = *static_cast<CPrimInsert*>(pPrim);}
+	void	Assign(CPrim* pPrim) { *this = *static_cast<CPrimInsert*>(pPrim); }
 	CTMat	BuildTransformMatrix(const CPnt& ptBase) const;
 	CPrim*& Copy(CPrim*&) const;
 	void	Display(CPegView* pView, CDC* pDC) const;
 	void	DisRep(const CPnt&) const;
-	void	GetAllPts(CPnts& pts) {pts.SetSize(0); pts.Add(m_pt);}
+	void	GetAllPts(CPnts& pts) { pts.SetSize(0); pts.Add(m_pt); }
 	void	FormatExtra(CString& str) const;
 	void    FormatGeometry(CString& str) const;
 	CPnt	GetCtrlPt() const;
 	void	GetExtents(CPnt&, CPnt&, const CTMat&) const;
-	CPnt	GoToNxtCtrlPt() const {return m_pt;}
-	bool	Is(WORD wType) const {return wType == PRIM_INSERT;}
+	CPnt	GoToNxtCtrlPt() const { return m_pt; }
+	bool    Is(CPrim::Type type) const { return type == CPrim::Type::Insert; }
 	bool	IsInView(CPegView* pView) const;
-	bool	IsPtACtrlPt(CPegView*, const CPnt4&) const {return false;}
+	bool	IsPtACtrlPt(CPegView*, const CPnt4&) const { return false; }
 	void	Read(CFile&);
 	CPnt	SelAtCtrlPt(CPegView* pView, const CPnt4&) const;
-	bool	SelUsingLine(CPegView*, const CLine&, CPnts&) {return false;}
+	bool	SelUsingLine(CPegView*, const CLine&, CPnts&) { return false; }
 	bool	SelUsingPoint(CPegView* pView, const CPnt4&, double, CPnt&);
 	bool	SelUsingRect(CPegView* pView, const CPnt&, const CPnt&);
 	void	Transform(const CTMat&);
-	void	Translate(const CVec& v) {m_pt += v;}
+	void	Translate(const CVec& v) { m_pt += v; }
 	void	TranslateUsingMask(const CVec& v, const DWORD dwMask);
 	bool	Write(CFile& fl) const;
 	void	Write(CFile&, char*) const;
@@ -72,14 +72,14 @@ public: // Methods - absolute virtuals
 	bool	Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT);
 #endif
 
-	CString&	BlkNam() {return m_strName;}
-	WORD&		ColCnt() {return m_wColCnt;}
-	double& 	ColSpacing() {return m_dColSpac;}
-	CPnt&		InsPt() {return m_pt;}
-	CVec&		XRefVec() {return m_vX;}
-	CVec&		YRefVec() {return m_vY;}
-	CVec&		ZRefVec() {return m_vZ;}
-	WORD&		RowCnt() {return m_wRowCnt;}
-	double& 	RowSpacing() {return m_dRowSpac;}
-	
+	CString& BlkNam() { return m_strName; }
+	WORD& ColCnt() { return m_wColCnt; }
+	double& ColSpacing() { return m_dColSpac; }
+	CPnt& InsPt() { return m_pt; }
+	CVec& XRefVec() { return m_vX; }
+	CVec& YRefVec() { return m_vY; }
+	CVec& ZRefVec() { return m_vZ; }
+	WORD& RowCnt() { return m_wRowCnt; }
+	double& RowSpacing() { return m_dRowSpac; }
+
 };

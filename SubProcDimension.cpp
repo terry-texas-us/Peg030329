@@ -5,6 +5,7 @@
 #include "PegAEsysView.h"
 
 #include "Messages.h"
+#include "Prim.h"
 #include "PrimArc.h"
 #include "PrimDim.h"
 #include "PrimLine.h"
@@ -324,9 +325,9 @@ CPnt dimension::AddArrowHead(CPnt arPt)
 		{
 			CPrim* pPrim = pSeg->GetNext(posPrim);
 			CLine ln;
-			if (pPrim->Is(CPrim::PRIM_LINE))
+			if (pPrim->Is(CPrim::Type::Line))
 				static_cast<CPrimLine*>(pPrim)->GetLine(ln);
-			else if (pPrim->Is(CPrim::PRIM_DIM))
+			else if (pPrim->Is(CPrim::Type::Dim))
 				ln = static_cast<CPrimDim*>(pPrim)->Line();
 			else
 				continue;
@@ -368,7 +369,7 @@ CPnt dimension::AddDiameter(const CPnt& pt)
 	{
 		CPnt ptEnd = detsegs.DetPt();
 
-		if ((detsegs.DetPrim())->Is(CPrim::PRIM_ARC))
+		if ((detsegs.DetPrim())->Is(CPrim::Type::Arc))
 		{
 			CPrimArc* pArc = static_cast<CPrimArc*>(detsegs.DetPrim());
 
@@ -404,7 +405,7 @@ CPnt dimension::AddRadius(const CPnt& arPt)
 	{
 		CPnt ptEnd = detsegs.DetPt();
 
-		if ((detsegs.DetPrim())->Is(CPrim::PRIM_ARC))
+		if ((detsegs.DetPrim())->Is(CPrim::Type::Arc))
 		{
 			CPrimArc* pArc = static_cast<CPrimArc*>(detsegs.DetPrim());
 
@@ -459,7 +460,7 @@ CPnt dimension::CvtPrim(CPegView* pView, CPnt pt)
 			{
 				CLine ln;
 
-				if (pPrim->Is(CPrim::PRIM_LINE))
+				if (pPrim->Is(CPrim::Type::Line))
 				{
 					CPrimLine* pPrimLine = static_cast<CPrimLine*>(pPrim);
 					pPrimLine->GetLine(ln);
@@ -472,7 +473,7 @@ CPnt dimension::CvtPrim(CPegView* pView, CPnt pt)
 					delete pPrim;
 					return ptProj;
 				}
-				else if (pPrim->Is(CPrim::PRIM_DIM))
+				else if (pPrim->Is(CPrim::Type::Dim))
 				{
 					CPrimDim* pPrimDim = static_cast<CPrimDim*>(pPrim);
 					CRefSys rs;
@@ -511,10 +512,14 @@ CPnt dimension::ProjPtToLn(CPnt pt)
 		{
 			CPrim* pPrim = pSeg->GetNext(posPrim);
 
-			if (pPrim->Is(CPrim::PRIM_LINE))
+			if (pPrim->Is(CPrim::Type::Line))
+			{
 				static_cast<CPrimLine*>(pPrim)->GetLine(ln);
-			else if (pPrim->Is(CPrim::PRIM_DIM))
+			}
+			else if (pPrim->Is(CPrim::Type::Dim))
+			{
 				ln = static_cast<CPrimDim*>(pPrim)->Line();
+			}
 			else
 				continue;
 

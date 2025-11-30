@@ -7,13 +7,17 @@
 
 #include "DlgProcTrapModify.h"
 #include "FilePeg.h"
+#include "FontDef.h"
 #include "Messages.h"
 #include "ModelTransform.h"
 #include "OpenGL.h"
 #include "Polyline.h"
+#include "Prim.h"
 #include "PrimState.h"
 #include "PrimText.h"
+#include "RefSys.h"
 #include "Text.h"
+#include "Vec.h"
 
 CPrimText::CPrimText(const CFontDef& fd, const CRefSys& rs, const char* pszText)
 {
@@ -35,12 +39,12 @@ const CPrimText& CPrimText::operator=(const CPrimText& src)
 	m_fd = src.m_fd;
 	m_rs = src.m_rs;
 	m_strText = src.m_strText;
-	
+
 	return (*this);
 }
 void CPrimText::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const
 {
-	tvAddItem(hTree, hParent, "<Text>", (CObject*) this);
+	tvAddItem(hTree, hParent, "<Text>", (CObject*)this);
 }
 CPrim*& CPrimText::Copy(CPrim*& pPrim) const
 {
@@ -59,10 +63,10 @@ void CPrimText::Display(CPegView* pView, CDC* pDC) const
 	else
 	{
 		pstate.SetPenColor(LogicalPenColor());
-				
+
 		PENSTYLE nPenStyle = pstate.PenStyle();
 		pstate.SetPenStyle(1);
-			
+
 		text_Display0(pView, pDC, m_fd, m_rs, m_strText);
 		pstate.SetPenStyle(nPenStyle);
 	}
@@ -111,9 +115,9 @@ CPnt CPrimText::GetCtrlPt() const
 void CPrimText::GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const
 {
 	CPnts pts;
-		
+
 	text_GetBoundingBox(m_fd, m_rs, m_strText.GetLength(), 0., pts);
-	
+
 	for (WORD w = 0; w < pts.GetSize(); w++)
 	{
 		mspace.Transform(pts[w]);
@@ -125,18 +129,18 @@ void CPrimText::GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const
 bool CPrimText::IsInView(CPegView* pView) const
 {
 	CPnt4 pt[2];
-	
+
 	CPnts pts;
-	
+
 	text_GetBoundingBox(m_fd, m_rs, m_strText.GetLength(), 0., pts);
-	
-	for (size_t n = 0; n <= 2; ) 
+
+	for (size_t n = 0; n <= 2; )
 	{
 		pt[0] = pts[n++];
 		pt[1] = pts[n++];
 
 		pView->ModelViewTransform(2, pt);
-		
+
 		if (Pnt4_ClipLine(pt[0], pt[1]))
 			return true;
 	}
@@ -158,9 +162,9 @@ bool CPrimText::IsPtACtrlPt(CPegView* pView, const CPnt4& ptPic) const
 void CPrimText::ModifyState()
 {
 	CPrim::ModifyState();
-	
+
 	pstate.GetFontDef(m_fd);
-	
+
 	CCharCellDef ccd;
 	pstate.GetCharCellDef(ccd);
 
@@ -183,7 +187,7 @@ void CPrimText::ModifyNotes(const CFontDef& fd, const CCharCellDef& ccd, int iAt
 	{
 		m_fd.ChrSpacSet(fd.ChrSpac());
 		m_fd.TextPathSet(fd.TextPath());
-		
+
 		m_rs.Rescale(ccd);
 	}
 }
@@ -193,16 +197,16 @@ CPnt CPrimText::SelAtCtrlPt(CPegView*, const CPnt4& ptPicVw) const
 	return (ptPicVw);
 }
 ///<summary>Evaluates whether a point lies within the bounding region of text.</summary>
-bool CPrimText::SelUsingPoint(CPegView* pView, const CPnt4& ptView, double, CPnt& ptProj) 
+bool CPrimText::SelUsingPoint(CPegView* pView, const CPnt4& ptView, double, CPnt& ptProj)
 {
 	if (m_strText.GetLength() == 0)
 		return false;
 
 	CPnts pts;
-	
+
 	text_GetBoundingBox(m_fd, m_rs, m_strText.GetLength(), 0., pts);
-	
-	CPnt4 pt0[] = {CPnt4(pts[0], 1.), CPnt4(pts[1], 1.), CPnt4(pts[2], 1.), CPnt4(pts[3], 1.)};
+
+	CPnt4 pt0 [] = {CPnt4(pts[0], 1.), CPnt4(pts[1], 1.), CPnt4(pts[2], 1.), CPnt4(pts[3], 1.)};
 
 	pView->ModelViewTransform(4, pt0);
 
@@ -218,10 +222,10 @@ bool CPrimText::SelUsingPoint(CPegView* pView, const CPnt4& ptView, double, CPnt
 void CPrimText::Read(CFile& fl)
 {
 	CPrim::Read(fl);
-	
+
 	m_fd.Read(fl);
 	m_rs.Read(fl);
-	
+
 	FilePeg_ReadString(fl, m_strText);
 }
 void CPrimText::Transform(const CTMat& tm)
@@ -235,7 +239,7 @@ void CPrimText::TranslateUsingMask(const CVec& v, const DWORD dwMask)
 }
 bool CPrimText::Write(CFile& fl) const
 {
-	FilePeg_WriteWord(fl, PRIM_TEXT);
+	FilePeg_WriteWord(fl, static_cast<WORD>(CPrim::Type::Text));
 	FilePeg_WriteWord(fl, m_nPenColor);
 	FilePeg_WriteWord(fl, m_nPenStyle);
 	m_fd.Write(fl);

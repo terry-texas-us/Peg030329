@@ -11,7 +11,7 @@
 
 class CPegView;
 
-class CPrimPolygon : public CPrim
+class CPrimPolygon: public CPrim
 {
 private:
 	short	m_nIntStyle;
@@ -20,7 +20,7 @@ private:
 	CPnt	m_ptOrig;
 	CVec	m_vPosXAx;
 	CVec	m_vPosYAx;
-	CPnt*	m_Pt;
+	CPnt* m_Pt;
 
 public:	// Constructors and destructor
 	CPrimPolygon();
@@ -30,16 +30,16 @@ public:	// Constructors and destructor
 #endif
 	CPrimPolygon(WORD, CPnt*);
 	CPrimPolygon(WORD, CPnt, const CVec&, const CVec&, const CPnt*);
-	
+
 	CPrimPolygon(const CPrimPolygon& src);
 public: // Operators
 	const CPrimPolygon& operator=(const CPrimPolygon&);
-	
-	~CPrimPolygon();	
-   
+
+	~CPrimPolygon();
+
 public: // Methods - absolute virtuals
 	void	AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const;
-	void	Assign(CPrim* pPrim) {*this = *static_cast<CPrimPolygon*>(pPrim);}
+	void	Assign(CPrim* pPrim) { *this = *static_cast<CPrimPolygon*>(pPrim); }
 	CPrim*& Copy(CPrim*&) const;
 	void	Display(CPegView* pView, CDC* pDC) const;
 	void	DisRep(const CPnt&) const;
@@ -49,12 +49,12 @@ public: // Methods - absolute virtuals
 	CPnt	GetCtrlPt() const;
 	void	GetExtents(CPnt&, CPnt&, const CTMat&) const;
 	CPnt	GoToNxtCtrlPt() const;
-	bool	Is(WORD wType) const {return wType == PRIM_POLYGON;}
+	bool    Is(CPrim::Type type) const { return type == CPrim::Type::Polygon; }
 	bool	IsPtACtrlPt(CPegView* pView, const CPnt4&) const;
 	bool	IsInView(CPegView* pView) const;
 	void	Read(CFile&);
 	CPnt	SelAtCtrlPt(CPegView* pView, const CPnt4&) const;
-	bool	SelUsingLine(CPegView*, const CLine&, CPnts&) {return false;}
+	bool	SelUsingLine(CPegView*, const CLine&, CPnts&) { return false; }
 	bool	SelUsingPoint(CPegView* pView, const CPnt4&, double, CPnt&);
 	bool	SelUsingRect(CPegView* pView, const CPnt&, const CPnt&);
 	void	Transform(const CTMat&);
@@ -67,14 +67,14 @@ public: // Methods - absolute virtuals
 #endif
 
 	CString			FormatIntStyle() const;
-	const short&	IntStyle() const {return (m_nIntStyle);}
-	const short&	IntStyleId() const {return (m_nIntStyleId);}
-	CPnt			GetPt(int i) const {return (m_Pt[i]);}
-	int 			GetPts() {return (m_wPts);}
+	const short& IntStyle() const { return (m_nIntStyle); }
+	const short& IntStyleId() const { return (m_nIntStyleId); }
+	CPnt			GetPt(int i) const { return (m_Pt[i]); }
+	int 			GetPts() { return (m_wPts); }
 	void			ModifyState();
 	bool			PvtOnCtrlPt(CPegView* pView, const CPnt4&) const;
-	void			SetIntStyle(const short n) {m_nIntStyle = n;}
-	void			SetIntStyleId(const short n) {m_nIntStyleId = n;}
+	void			SetIntStyle(const short n) { m_nIntStyle = n; }
+	void			SetIntStyleId(const short n) { m_nIntStyleId = n; }
 	void			SetHatRefVecs(double, double, double);
 
 private:
@@ -85,6 +85,6 @@ private:
 	static WORD mS_wEdge;
 	static WORD mS_wPivotVertex;
 public:
-	static WORD& EdgeToEvaluate() {return mS_wEdgeToEvaluate;}
-	static WORD& Edge() {return mS_wEdge;}
+	static WORD& EdgeToEvaluate() { return mS_wEdgeToEvaluate; }
+	static WORD& Edge() { return mS_wEdge; }
 };

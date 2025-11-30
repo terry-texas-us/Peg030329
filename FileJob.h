@@ -1,26 +1,29 @@
 #pragma once
 
-#include <afxwin.h> // For CString and CFile
+#include "Job File Format.txt"
+
+#include <afx.h>
+#include <afxstr.h>
 
 #include "Prim.h"
 
 class CLayer;
 class CSeg;
 
-class CFileJob : public CFile
+class CFileJob: public CFile
 {
 private:
-	int			m_iVersion;
-	char*		m_PrimBuf;
+	int   m_iVersion{0};
+	char* m_PrimBuf{nullptr};
 
 public:
-	CFileJob() {m_PrimBuf = new char[CPrim::BUFFER_SIZE];}
+	CFileJob() { m_PrimBuf = new char[CPrim::BUFFER_SIZE]; }
 
-	virtual ~CFileJob() {delete [] m_PrimBuf;}
+	virtual ~CFileJob() { delete [] m_PrimBuf; }
 
 	CFileJob(const CFileJob&) = delete;
 	CFileJob& operator=(const CFileJob&) = delete;
-	
+
 	bool	OpenForRead(const CString& strPathName);
 	bool	OpenForWrite(const CString& strPathName);
 	void	ReadHeader();
@@ -108,7 +111,7 @@ bool filejob_IsValidPrimitive(const short nType);
 
 //		Arc primitive (version 3)
 //			Number of 32 byte chunks (2)		char			[3]
-//			PRIM_ARC type code					WORD 0x0100     [4-5]
+//			CPrim::Type::Arc type code			WORD 0x0100     [4-5]
 //			Pen color							char			[6]
 //			Pen style							char			[7]							
 //			Center point						vaxfloat[3]		[8-11][12-15][16-19]
@@ -118,7 +121,7 @@ bool filejob_IsValidPrimitive(const short nType);
 //		BSpline primitive (version 3)
 //			Number of 32 byte chunks			char			[3]
 //				(2 + nPts * 3) / 8 + 1
-//			PRIM_BSPLINE type code				WORD 0x2000		[4-5]
+//			CPrim::Type::BSpline type code		WORD 0x2000		[4-5]
 //			Pen color							char			[6]
 //			Pen style							char			[7]
 //			Number of control points			WORD			[8-9]
@@ -126,7 +129,7 @@ bool filejob_IsValidPrimitive(const short nType);
 //		CSpline primitive (version 3 only)
 //			Number of 32 byte chunks			char			[3]
 //				(69 + nPts * 12) / 32
-//			PRIM_CSPLINE type code				WORD 0x2001		[4-5]
+//			CPrim::Type::CSpline type code		WORD 0x2001		[4-5]
 //			Pen color							char			[6]
 //			Pen style							char			[7]
 //			m_wPtsS								WORD			[8-9]
@@ -138,7 +141,7 @@ bool filejob_IsValidPrimitive(const short nType);
 //		Dim primitive (version 3 only)
 //			Number of 32 byte chunks			char			[3]								
 //				(118 + nLen) / 32
-//			PRIM_DIM type code					WORD 0x			[4-5]
+//			CPrim::Type::Dim type code			WORD 0x4200		[4-5]
 //			Line pen color						char			[6]
 //			Line pen style						char			[7]
 //			Point 1								vaxfloat[3]		[8-11][12-15][16-19]
@@ -157,14 +160,14 @@ bool filejob_IsValidPrimitive(const short nType);
 //			Text								char[]			[81..]
 //		Line primitive (version 3)
 //			Number of 32 byte chunks (1)		char			[3]
-//			PRIM_LINE type code					WORD 0x0200		[4-5]
+//			CPrim::Type::Line type code			WORD 0x0200		[4-5]
 //			Pen color							char			[6]
 //			Pen style							char			[7]
 //			Point 1								vaxfloat[3]		[8-11][12-15][16-19]
 //			Point 2								vaxfloat[3]		[20-23][24-27][28-31]
 //		Mark primitive (version 3)
 //			Number of 32 byte chunks (1)		char			[3]
-//			PRIM_MARK type code					WORD 0x0100		[4-5]
+//			CPrim::Type::Mark type code			WORD 0x0100		[4-5]
 //			Pen color							char			[6]
 //			Mark style							char			[7]
 //			Point								vaxfloat[3]		[8-11][12-15][16-19]
@@ -172,7 +175,7 @@ bool filejob_IsValidPrimitive(const short nType);
 //		Polygon primitive (version 3)
 //			Number of 32 byte chunks			char			[3]					
 //				(79 + nPts * 12) / 32
-//			PRIM_POLYGON type code				WORD 0x0400		[4-5]
+//			CPrim::Type::Polygon type code		WORD 0x0400		[4-5]
 //			Pen color							char			[6]
 //			Polygon style						char			[7]
 //			Polygon Style Index					WORD			[8-9]
@@ -183,7 +186,7 @@ bool filejob_IsValidPrimitive(const short nType);
 //			{0 or more points}					vaxfloat[3]		[48-51][52-55][56-59]
 //		Tag primitive
 //			Number of 32 byte chunks (1)		char			[3]
-//			PRIM_TAG type code					WORD 0x4100		[4-5]
+//			CPrim::Type::Tag type code			WORD 0x4100		[4-5]
 //			Pen color							char			[6]
 //			Pen style							char			[7]
 //			Point								Pnt				[8-11][12-15][16-19]
@@ -191,7 +194,7 @@ bool filejob_IsValidPrimitive(const short nType);
 //		Text primitive (version 3)
 //			Number of 32 byte chunks			char			[3]								
 //				(86 + nLen) / 32
-//			PRIM_TEXT type code					WORD 0x4000		[4-5]
+//			CPrim::Type::Text type code			WORD 0x4000		[4-5]
 //			Pen color							char			[6]
 //			Text precision						char			[7]
 //			Text font	(0 for simplex)			WORD			[8-9]

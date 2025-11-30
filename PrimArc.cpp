@@ -896,7 +896,7 @@ void CPrimArc::TranslateUsingMask(const CVec& v, const DWORD dwMask)
 
 bool CPrimArc::Write(CFile& fl) const
 {
-	FilePeg_WriteWord(fl, PRIM_ARC);
+	FilePeg_WriteWord(fl, static_cast<WORD>(CPrim::Type::Arc));
 	FilePeg_WriteWord(fl, m_nPenColor);
 	FilePeg_WriteWord(fl, m_nPenStyle);
 	m_ptCenter.Write(fl);

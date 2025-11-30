@@ -369,7 +369,7 @@ void nodal::GenFilAreas(const CVec& vTrns)
 			dwMask = nodal::GetPrimMask(pPrim);
 			if (dwMask == 0)
 				continue;
-			if (pPrim->Is(CPrim::PRIM_LINE))
+			if (pPrim->Is(CPrim::Type::Line))
 			{
 				pLine = static_cast<CPrimLine*>(pPrim);
 				if ((dwMask & 3) == 3)
@@ -396,7 +396,7 @@ void nodal::GenFilAreas(const CVec& vTrns)
 					pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegNew);
 				}
 			}
-			else if (pPrim->Is(CPrim::PRIM_POLYGON))
+			else if (pPrim->Is(CPrim::Type::Polygon))
 			{
 				pPolygon = static_cast<CPrimPolygon*>(pPrim);
 				int iPts = pPolygon->GetPts();
