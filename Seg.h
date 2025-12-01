@@ -32,6 +32,11 @@ public:
 	/// @param other The segment to copy from.
 	CSeg(const CSeg& other) noexcept;
 
+	/// @brief Assignment operator.
+	/// @param other The segment to assign from.
+	/// @returns Reference to this segment.
+	CSeg& operator=(const CSeg& other);
+
 	/// @brief Constructor from a block.
 	/// @param blk The block to initialize from.
 	CSeg(const CBlock& block);

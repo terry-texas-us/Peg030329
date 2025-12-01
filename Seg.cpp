@@ -33,6 +33,22 @@ CSeg::CSeg(const CSeg& other) noexcept
 		AddTail((other.GetNext(pos))->Copy(primitive));
 	}
 }
+
+CSeg& CSeg::operator=(const CSeg& other)
+{
+	if (this != &other)
+	{
+		RemovePrims(); // delete current primitives
+		CPrim* primitive;
+		POSITION pos{other.GetHeadPosition()};
+		while (pos != nullptr)
+		{
+			AddTail((other.GetNext(pos))->Copy(primitive));
+		}
+	}
+	return *this;
+}
+
 CSeg::CSeg(const CBlock& block)
 {
 	CPrim* primitive;
