@@ -1,15 +1,22 @@
 #pragma once
 
-#include <afxwin.h> // for MFC CString, WORD, DWORD, HWND, HTREEITEM, CDC, CFile
+#include <Windows.h> // for HWND, HTREEITEM
+
+#include <afxwin.h> // for CDC
+
+#include <afxstr.h> // for CString
 
 #include "FontDef.h" // for CFontDef member
 #include "Line.h" // for CLine member
 #include "Pnt.h" // for CPnt
+#include "Pnt4.h" // for CPnt4
 #include "Prim.h" // for CPrim base class, PENSTYLE and PENCOLOR types
 #include "RefSys.h" // for CRefSys member
 #include "TMat.h" // for CTMat
 #include "Vec.h" // for CVec
+#include <afx.h>
 
+class CSeg;
 class CSegs;
 class CPegView;
 
@@ -25,40 +32,40 @@ private:
 
 public:	// Constructors and destructor
 	CPrimDim() { }
-	CPrimDim(PENCOLOR nPenColor, PENSTYLE nPenStyle, const CLine& ln);
+	CPrimDim(PENCOLOR penColor, PENSTYLE penStyle, const CLine& line);
 	CPrimDim(char*);
 
-	CPrimDim(const CPrimDim& src);
+	CPrimDim(const CPrimDim& other);
 
 	~CPrimDim() { }
 
 public: // Operators
-	const CPrimDim& operator=(const CPrimDim& src);
+	const CPrimDim& operator=(const CPrimDim& other);
 
 public: // Methods - absolute virtuals
-	void		AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const;
-	void		Assign(CPrim* pPrim) { *this = *static_cast<CPrimDim*>(pPrim); }
+	void		AddToTreeViewControl(HWND tree, HTREEITEM parent) const;
+	void		Assign(CPrim* primitive) { *this = *static_cast<CPrimDim*>(primitive); }
 	CPrim*& Copy(CPrim*&) const;
-	void		Display(CPegView* pView, CDC* pDC) const;
-	void		DisRep(const CPnt&) const;
+	void		Display(CPegView* view, CDC* context) const;
+	void		DisRep(const CPnt& point) const;
 	void		FormatExtra(CString& str) const;
 	void		FormatGeometry(CString& str) const;
-	void		GetAllPts(CPnts& pts);
-	CPnt		GetCtrlPt() const { return m_ln.ProjPtAlong(.5); }
+	void		GetAllPts(CPnts& points);
+	CPnt		GetCtrlPt() const { return m_ln.ProjPtAlong(0.5); }
 	void		GetExtents(CPnt&, CPnt&, const CTMat&) const;
 	CPnt		GoToNxtCtrlPt() const;
 	bool        Is(CPrim::Type type) const { return type == CPrim::Type::Dim; }
-	bool		IsInView(CPegView* pView) const;
+	bool		IsInView(CPegView* view) const;
 	bool		IsPtACtrlPt(CPegView* pView, const CPnt4&) const;
-	void		Read(CFile& fl);
-	CPnt		SelAtCtrlPt(CPegView* pView, const CPnt4&) const;
-	bool		SelUsingLine(CPegView* pView, const CLine& ln, CPnts& ptInt);
-	bool		SelUsingPoint(CPegView* pView, const CPnt4&, double, CPnt&);
-	bool		SelUsingRect(CPegView* pView, const CPnt&, const CPnt&);
+	void		Read(CFile& file);
+	CPnt		SelAtCtrlPt(CPegView* view, const CPnt4&) const;
+	bool		SelUsingLine(CPegView* view, const CLine& ln, CPnts& ptInt);
+	bool		SelUsingPoint(CPegView* view, const CPnt4&, double, CPnt&);
+	bool		SelUsingRect(CPegView* view, const CPnt&, const CPnt&);
 	void		Transform(const CTMat&);
 	void		Translate(const CVec&);
 	void		TranslateUsingMask(const CVec&, const DWORD);
-	bool		Write(CFile& fl) const;
+	bool		Write(CFile& file) const;
 	void		Write(CFile&, char*) const;
 #if ODA_FUNCTIONALITY
 	bool		Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT);

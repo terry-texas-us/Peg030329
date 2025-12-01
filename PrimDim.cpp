@@ -17,7 +17,7 @@
 #include "Text.h"
 #include "UnitsString.h"
 
-WORD CPrimDim::mS_wFlags = 0;
+WORD CPrimDim::mS_wFlags{0};
 
 CPrimDim::CPrimDim(PENCOLOR nPenColor, PENSTYLE nPenStyle, const CLine& ln) : m_ln(ln)
 {
@@ -127,7 +127,7 @@ void CPrimDim::CutAtPt(const CPnt& pt, CSeg* pSeg)
 void CPrimDim::Display(CPegView* pView, CDC* pDC) const
 {
 	PENCOLOR nPenColor = LogicalPenColor();
-	if (pDC == 0)
+	if (pDC == nullptr)
 	{
 		opengl::SetCurrentColor(app.PenColorsGetHot(nPenColor));
 		opengl::BeginLineStrip();
@@ -206,7 +206,7 @@ void CPrimDim::GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const
 {
 	CPnt pt[2] = {m_ln[0], m_ln[1]};
 
-	for (WORD w = 0; w < 2; w++)
+	for (WORD w{0}; w < 2; w++)
 	{
 		mspace.Transform(pt[w]);
 		pt[w] = tm * pt[w];
@@ -248,7 +248,7 @@ bool CPrimDim::IsPtACtrlPt(CPegView* pView, const CPnt4& ptPic) const
 {
 	CPnt4 pt;
 
-	for (WORD w = 0; w < 2; w++)
+	for (WORD w{0}; w < 2; w++)
 	{
 		pt = CPnt4(m_ln[w], 1.);
 		pView->ModelViewTransform(pt);
@@ -288,7 +288,7 @@ CPnt CPrimDim::SelAtCtrlPt(CPegView* pView, const CPnt4& ptPic) const
 
 	double dAPert = mS_dPicApertSiz;
 
-	for (WORD w = 0; w < 2; w++)
+	for (WORD w{0}; w < 2; w++)
 	{
 		CPnt4 pt(m_ln[w], 1.);
 		pView->ModelViewTransform(pt);
@@ -331,7 +331,7 @@ bool CPrimDim::SelUsingPoint(CPegView* pView, const CPnt4& pt0, double dTol, CPn
 	pt[3] = CPnt4(ptsExt[3], 1.);
 	pView->ModelViewTransform(4, pt);
 
-	for (size_t n = 0; n < 4; n++)
+	for (size_t n{0}; n < 4; n++)
 	{
 		if (CLine(pt[n], pt[(n + 1) % 4]).DirRelOfPt(pt0) < 0)
 			return false;
