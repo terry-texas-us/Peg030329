@@ -1,146 +1,156 @@
 #include "stdafx.h"
 
+#include <afx.h>
 #include <afxext.h>
+#include <afxwin.h>
 
 #include "MainFrm.h"
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
 
+#include "resource.h"
+#include <afxstr.h>
+
 void CPegApp::ModeLineDisplay()
 {
-	if (m_iModeId == 0)
-		return;
+    if (m_iModeId == 0) { return; }
 
-	m_wOpHighlighted = 0;
+    m_wOpHighlighted = 0;
 
-	CMainFrame* pFrame = (CMainFrame*) (AfxGetApp()->m_pMainWnd);
-	CPegView* pView = CPegView::GetActiveView();
-	CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+    CMainFrame* pFrame = (CMainFrame*)(AfxGetApp()->m_pMainWnd);
+    CPegView* pView = CPegView::GetActiveView();
+    CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
-	CString strMode;
-	strMode.LoadString(m_hInstance, (UINT) m_iModeId);
+    if (pDC == nullptr) return;
 
-	CString strModeOp;
-	
-	for (int i = 0; i < 10; i++)
-	{
-		AfxExtractSubString(strModeOp, strMode, i + 1, '\n');
-		UINT nLen = strModeOp.GetLength();
+    CString strMode;
+    strMode.LoadString(m_hInstance, (UINT)m_iModeId);
 
-		CSize size = pDC->GetTextExtent(strModeOp, nLen);
+    CString strModeOp;
 
-		pFrame->SetPaneInfo(i + 1, ID_OP0 + i, SBPS_NORMAL, size.cx - 2 * nLen);
-		pFrame->SetPaneText(i + 1, strModeOp);
-		if (m_bViewModeInfo)	
-		{
-			CFont* pFont = pDC->SelectObject(m_pFontApp);
-			UINT nTextAlign = pDC->SetTextAlign(TA_LEFT | TA_TOP);
-			COLORREF crText = pDC->SetTextColor(AppGetTextCol()); 
-			COLORREF crBk = pDC->SetBkColor(~AppGetTextCol());
+    for (int i = 0; i < 10; i++)
+    {
+        AfxExtractSubString(strModeOp, strMode, i + 1, '\n');
+        UINT nLen = strModeOp.GetLength();
 
-			TEXTMETRIC tm;		 
-			pDC->GetTextMetrics(&tm);
-	
-			CRect rcClient;
-			pView->GetClientRect(&rcClient);
-		
-			int iMaxChrs = (rcClient.Width() / 10) / tm.tmAveCharWidth;
-			
-			CRect rc(i * iMaxChrs * tm.tmAveCharWidth, rcClient.bottom - tm.tmHeight, (i + 1) * iMaxChrs * tm.tmAveCharWidth, rcClient.bottom);
-			pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, strModeOp, nLen, 0);
-		
-			pDC->SetBkColor(crBk);
-			pDC->SetTextColor(crText);
-			pDC->SetTextAlign(nTextAlign);
-			pDC->SelectObject(pFont);
-		}
-	}
+        CSize size = pDC->GetTextExtent(strModeOp, nLen);
+
+        pFrame->SetPaneInfo(i + 1, ID_OP0 + i, SBPS_NORMAL, size.cx - 2 * nLen);
+        pFrame->SetPaneText(i + 1, strModeOp);
+        if (m_bViewModeInfo && pDC != nullptr)
+        {
+            CFont* pFont = pDC->SelectObject(m_pFontApp);
+            UINT nTextAlign = pDC->SetTextAlign(TA_LEFT | TA_TOP);
+            COLORREF crText = pDC->SetTextColor(AppGetTextCol());
+            COLORREF crBk = pDC->SetBkColor(~AppGetTextCol());
+
+            TEXTMETRIC tm;
+            pDC->GetTextMetrics(&tm);
+
+            CRect rcClient;
+            pView->GetClientRect(&rcClient);
+
+            int iMaxChrs = (rcClient.Width() / 10) / tm.tmAveCharWidth;
+
+            CRect rc(i * iMaxChrs * tm.tmAveCharWidth, rcClient.bottom - tm.tmHeight, (i + 1) * iMaxChrs * tm.tmAveCharWidth, rcClient.bottom);
+            pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, strModeOp, nLen, 0);
+
+            pDC->SetBkColor(crBk);
+            pDC->SetTextColor(crText);
+            pDC->SetTextAlign(nTextAlign);
+            pDC->SelectObject(pFont);
+        }
+    }
 }
 
 WORD CPegApp::ModeLineHighlightOp(WORD wOp)
 {
-	ModeLineUnhighlightOp(m_wOpHighlighted);
-		
-	m_wOpHighlighted = wOp;
+    ModeLineUnhighlightOp(m_wOpHighlighted);
 
-	if (wOp == 0)
-		return 0;
+    m_wOpHighlighted = wOp;
 
-	int i = m_wOpHighlighted - ID_OP0;
+    if (wOp == 0)
+        return 0;
 
-	CMainFrame* pFrame = (CMainFrame*) (AfxGetApp()->m_pMainWnd);
-	pFrame->SetPaneStyle(i + 1, SBPS_POPOUT);
+    int i = m_wOpHighlighted - ID_OP0;
 
-	if (m_bViewModeInfo)	
-	{
-		CString strModeOp = pFrame->GetPaneText(i + 1);
-			
-		CPegView* pView = CPegView::GetActiveView();
-		CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
-		
-		CFont* pFont = pDC->SelectObject(m_pFontApp);
-		UINT nTextAlign = pDC->SetTextAlign(TA_LEFT | TA_TOP);
-		COLORREF crText = pDC->SetTextColor(RGB(255, 0, 0));
-		COLORREF crBk = pDC->SetBkColor(~AppGetTextCol());
+    CMainFrame* pFrame = (CMainFrame*)(AfxGetApp()->m_pMainWnd);
+    pFrame->SetPaneStyle(i + 1, SBPS_POPOUT);
 
-		TEXTMETRIC tm;		 
-		pDC->GetTextMetrics(&tm);
-	
-		CRect rcClient;
-		pView->GetClientRect(&rcClient);
-		
-		int iMaxChrs = (rcClient.Width() / 10) / tm.tmAveCharWidth;
-		CRect rc(i * iMaxChrs * tm.tmAveCharWidth, rcClient.bottom - tm.tmHeight, (i + 1) * iMaxChrs * tm.tmAveCharWidth, rcClient.bottom);
+    if (m_bViewModeInfo)
+    {
+        CString strModeOp = pFrame->GetPaneText(i + 1);
 
-		pDC->ExtTextOut(rc.left , rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, strModeOp, (UINT) strModeOp.GetLength(), 0);
-		
-		pDC->SetBkColor(crBk);
-		pDC->SetTextColor(crText);
-		pDC->SetTextAlign(nTextAlign);
-		pDC->SelectObject(pFont);
-	}												  
-	return (wOp) ;  
+        CPegView* pView = CPegView::GetActiveView();
+        CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
+
+        if (pDC == nullptr) return wOp;
+
+        CFont* pFont = pDC->SelectObject(m_pFontApp);
+        UINT nTextAlign = pDC->SetTextAlign(TA_LEFT | TA_TOP);
+        COLORREF crText = pDC->SetTextColor(RGB(255, 0, 0));
+        COLORREF crBk = pDC->SetBkColor(~AppGetTextCol());
+
+        TEXTMETRIC tm;
+        pDC->GetTextMetrics(&tm);
+
+        CRect rcClient;
+        pView->GetClientRect(&rcClient);
+
+        int iMaxChrs = (rcClient.Width() / 10) / tm.tmAveCharWidth;
+        CRect rc(i * iMaxChrs * tm.tmAveCharWidth, rcClient.bottom - tm.tmHeight, (i + 1) * iMaxChrs * tm.tmAveCharWidth, rcClient.bottom);
+
+        pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, strModeOp, (UINT)strModeOp.GetLength(), 0);
+
+        pDC->SetBkColor(crBk);
+        pDC->SetTextColor(crText);
+        pDC->SetTextAlign(nTextAlign);
+        pDC->SelectObject(pFont);
+    }
+    return (wOp);
 }
 
 void CPegApp::ModeLineUnhighlightOp(WORD& wOp)
 {
-	m_wOpHighlighted = 0;
+    m_wOpHighlighted = 0;
 
-	if (wOp == 0)
-		return;
+    if (wOp == 0)
+        return;
 
-	int i = wOp - ID_OP0;
+    int i = wOp - ID_OP0;
 
-	CMainFrame* pFrame = (CMainFrame*) (AfxGetApp()->m_pMainWnd);
-	pFrame->SetPaneStyle(i + 1, SBPS_NORMAL);
+    CMainFrame* pFrame = (CMainFrame*)(AfxGetApp()->m_pMainWnd);
+    pFrame->SetPaneStyle(i + 1, SBPS_NORMAL);
 
-	if (m_bViewModeInfo)	
-	{
-		CString strModeOp = pFrame->GetPaneText(i + 1);
+    if (m_bViewModeInfo)
+    {
+        CString strModeOp = pFrame->GetPaneText(i + 1);
 
-		CPegView* pView = CPegView::GetActiveView();
-		CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
-	
-		CFont* pFont = pDC->SelectObject(m_pFontApp);
-		UINT nTextAlign = pDC->SetTextAlign(TA_LEFT | TA_TOP);
-		COLORREF crText = pDC->SetTextColor(AppGetTextCol());
-		COLORREF crBk = pDC->SetBkColor(~AppGetTextCol());
+        CPegView* pView = CPegView::GetActiveView();
+        CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
-		TEXTMETRIC tm;		 
-		pDC->GetTextMetrics(&tm);
-	
-		CRect rcClient;
-		pView->GetClientRect(&rcClient);
-		
-		int iMaxChrs = (rcClient.Width() / 10) / tm.tmAveCharWidth;
-		CRect rc(i * iMaxChrs * tm.tmAveCharWidth, rcClient.bottom - tm.tmHeight, (i + 1) * iMaxChrs * tm.tmAveCharWidth, rcClient.bottom);
+        if (pDC == nullptr) { wOp = 0; return; }
 
-		pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, strModeOp, (UINT) strModeOp.GetLength(), 0);
-		
-		pDC->SetBkColor(crBk);
-		pDC->SetTextColor(crText);
-		pDC->SetTextAlign(nTextAlign);
-		pDC->SelectObject(pFont);
-	}
-	wOp = 0;
+        CFont* pFont = pDC->SelectObject(m_pFontApp);
+        UINT nTextAlign = pDC->SetTextAlign(TA_LEFT | TA_TOP);
+        COLORREF crText = pDC->SetTextColor(AppGetTextCol());
+        COLORREF crBk = pDC->SetBkColor(~AppGetTextCol());
+
+        TEXTMETRIC tm;
+        pDC->GetTextMetrics(&tm);
+
+        CRect rcClient;
+        pView->GetClientRect(&rcClient);
+
+        int iMaxChrs = (rcClient.Width() / 10) / tm.tmAveCharWidth;
+        CRect rc(i * iMaxChrs * tm.tmAveCharWidth, rcClient.bottom - tm.tmHeight, (i + 1) * iMaxChrs * tm.tmAveCharWidth, rcClient.bottom);
+
+        pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, strModeOp, (UINT)strModeOp.GetLength(), 0);
+
+        pDC->SetBkColor(crBk);
+        pDC->SetTextColor(crText);
+        pDC->SetTextAlign(nTextAlign);
+        pDC->SelectObject(pFont);
+    }
+    wOp = 0;
 }
