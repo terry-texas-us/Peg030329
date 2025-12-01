@@ -1,11 +1,18 @@
 #pragma once
 
+#include <Windows.h>
+
+#include <afx.h>
+
+#include <afxstr.h>
 #include <afxwin.h> // for MFC CString, WORD, DWORD, HWND, HTREEITEM, CDC, CFile
 
 #include "Line.h" // for CLine
 #include "Pnt.h" // for CPnt member
 #include "Pnt4.h" // for CPnt4
 #include "Prim.h" // for CPrim base class
+#include "Seg.h"
+#include "Segs.h"
 #include "TMat.h" // for CTMat
 #include "Vec.h" // for CVec
 

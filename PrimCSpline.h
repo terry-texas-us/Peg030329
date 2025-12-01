@@ -1,6 +1,11 @@
 #pragma once
 
-#include <afxwin.h> // for MFC CString, WORD, DWORD, HWND, HTREEITEM, CDC, CFile
+#include <Windows.h> // for HWND, HTREEITEM
+
+#include <afx.h>
+
+#include <afxstr.h> // for MFC CString
+#include <afxwin.h> // for MFC WORD, DWORD, HWND, HTREEITEM, CDC, CFile
 
 #include "Line.h" // for CLine
 #include "Messages.h"

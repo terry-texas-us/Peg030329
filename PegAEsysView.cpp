@@ -1,14 +1,17 @@
 #include "stdafx.h"
 
-#include <windows.h>
+#include <Windows.h>
 
 #include <afx.h>
 #include <afxwin.h>
 
+#include <afxdlgs.h>
 #include <afxext.h>
 #include <afxmsg_.h>
 #include <afxres.h>
 #include <atltypes.h>
+
+#include <string.h>
 
 #include <algorithm>
 #include <cfloat>
@@ -36,6 +39,7 @@
 #include "OpenGL.h"
 #include "Pnt.h"
 #include "Pnt4.h"
+#include "Prim.h"
 #include "PrimLine.h"
 #include "PrimPolygon.h"
 #include "PrimState.h"

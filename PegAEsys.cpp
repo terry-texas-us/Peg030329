@@ -2,6 +2,10 @@
 
 #include <Windows.h>
 
+#include <afx.h>
+
+#include <afxcoll.h>
+#include <afxmsg_.h>
 #include <afxwin.h>
 
 #include <afxdisp.h>

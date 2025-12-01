@@ -21,11 +21,11 @@
 #define ODA_FUNCTIONALITY 0 // This functionality is dead forever. Do not enable it. Use to find related code only.
 #define GL_FUNCTIONALITY 0
 
-#define WIN32_LEAN_AND_MEAN      // Exclude rarely-used services from windows.h
-#define NOMINMAX                 // Prevent windows.h from defining min/max macros
+#define WIN32_LEAN_AND_MEAN      // Exclude rarely-used services from Windows.h
+#define NOMINMAX                 // Prevent Windows.h from defining min/max macros
 #define STRICT                   // Enforce stricter type safety
 
-#include <windows.h>
+#include <Windows.h>
 
 #include <afx.h> // Core MFC GUI classes
 //#include <Windows.h>

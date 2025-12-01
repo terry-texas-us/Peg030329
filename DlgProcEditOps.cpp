@@ -1,5 +1,12 @@
 #include "stdafx.h"
 
+#include <Windows.h>
+
+#include <afx.h>
+
+#include <cfloat>
+#include <cmath>
+
 #include "DlgProcEditOps.h"
 #include "ExpProcs.h"
 #include "resource.h"

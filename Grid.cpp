@@ -1,13 +1,27 @@
 #include "stdafx.h"
 
+#include <Windows.h>
+
+#include <afx.h>
+#include <afxwin.h>
+
+#include <atltypes.h>
+
+#include <cfloat>
+#include <cmath>
+
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
 
 #include "ExpProcs.h"
 #include "Grid.h"
-#include "Polyline.h"
+#include "Line.h"
+#include "Pnt.h"
+#include "Pnt4.h"
 #include "Prim.h"
 #include "PrimState.h"
+#include "resource.h"
+#include "Vec.h"
 
 using namespace grid;
 

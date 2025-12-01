@@ -1,12 +1,21 @@
 #include "stdafx.h"
 
-#include "PegAEsys.h"
+#include <Windows.h>
+
+#include <afx.h>
+#include <afxwin.h>
+
 #include "PegAEsysDoc.h"
 
+#include "CharCellDef.h"
 #include "DlgProcTrapModify.h"
+#include "FontDef.h"
 #include "Hatch.h"
+#include "Prim.h"
 #include "PrimPolygon.h"
 #include "PrimState.h"
+#include "resource.h"
+#include "Seg.h"
 #include "SegsTrap.h"
 
 ///<summary>Modifies attributes of all segment primatives in current trap tocurrent settings.</summary>
@@ -45,10 +54,10 @@ void DlgProcTrapModifyDoOK(HWND hDlg)
     if (::SendDlgItemMessage(hDlg, IDC_MOD_FILL, BM_GETCHECK, 0, 0L))
         DlgProcTrapModifyPolygons();
 
-    CCharCellDef ccd;
+    CCharCellDef ccd{};
     pstate.GetCharCellDef(ccd);
 
-    CFontDef fd;
+    CFontDef fd{};
     pstate.GetFontDef(fd);
 
     if (::SendDlgItemMessage(hDlg, IDC_MOD_NOTE, BM_GETCHECK, 0, 0L))

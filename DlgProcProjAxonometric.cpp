@@ -1,9 +1,16 @@
 #include "stdafx.h"
 
-#include "ExpProcs.h"
-#include "resource.h"
+#include <Windows.h>
+
+#include <afx.h>
 
 #include "PegAEsysView.h"
+
+#include "ExpProcs.h"
+#include "Pnt.h"
+#include "resource.h"
+#include "Vec.h"
+
 
 BOOL CALLBACK DlgProcProjAxonometric(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {

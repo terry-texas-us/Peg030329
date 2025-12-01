@@ -1,10 +1,22 @@
 #include "stdafx.h"
 
+#include <Windows.h>
+
+#include <afx.h>
+#include <afxwin.h>
+
+#include <string.h>
+
+#include <cstdlib>
+
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
 
+#include "CharCellDef.h"
 #include "ExpProcs.h"
+#include "FontDef.h"
 #include "PrimState.h"
+#include "resource.h"
 #include "SafeMath.h"
 
 void DlgProcSetupNoteInit(HWND hDlg);

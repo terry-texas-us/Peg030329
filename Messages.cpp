@@ -1,5 +1,11 @@
 #include "stdafx.h"
+
+#include <Windows.h>
+
 #include <afxwin.h>
+
+#include <afxstr.h>
+
 #include <cctype>
 #include <string>
 

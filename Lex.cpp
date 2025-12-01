@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include <windows.h>
+#include <Windows.h>
 
 #include <afx.h>
 
@@ -18,7 +18,6 @@
 #include "resource.h"
 #include "SafeMath.h"
 #include "UnitsString.h"
-#include <Windows.h>
 
 using namespace lex;
 

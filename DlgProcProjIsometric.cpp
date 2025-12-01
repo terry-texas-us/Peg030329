@@ -1,8 +1,13 @@
 #include "stdafx.h"
 
-#include "resource.h"
+#include <Windows.h>
+
+#include <afx.h>
 
 #include "PegAEsysView.h"
+
+#include "resource.h"
+#include "Vec.h"
 
 BOOL CALLBACK DlgProcProjIsometric(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {

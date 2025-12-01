@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include <windows.h>
+#include <Windows.h>
 
 #include <afxwin.h>
 
@@ -13,9 +13,10 @@
 #include "PegAEsys.h"
 #include "PegAEsysDoc.h"
 
+#include <afx.h>
+
 #include "Block.h"
 #include "DlgProcFileManage.h"
-#include "FileJob.h"
 #include "Layer.h"
 #include "Messages.h"
 #include "Preview.h"
@@ -561,7 +562,7 @@ void DlgProcFileManageInit(HWND hDlg)
 
     for (size_t i = 0; i < sizeof(crHotCols) / sizeof(COLORREF); i++)
     {
-        _itoa_s(i, szBuf, sizeof(szBuf), 10);
+        _itoa_s(static_cast<int>(i), szBuf, sizeof(szBuf), 10);
         ::SendDlgItemMessage(hDlg, IDC_COLOR_ID, CB_ADDSTRING, 0, (LPARAM)(LPCSTR)szBuf);
     }
     pDoc->PenStylesFillCB(::GetDlgItem(hDlg, IDC_PENSTYLE));

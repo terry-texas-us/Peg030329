@@ -4,6 +4,7 @@
 #include "Pnt.h"  // for CPnt
 #include "Pnt4.h" // for CPnt4
 #include "Vec.h"  // for CVec
+#include "Vec4.h" // for CVec4
 
 class CTMat : public CMat4
 {
@@ -19,9 +20,13 @@ public:	// Constructors amd destructor
 	CTMat(const CPnt& pt, const CVec& vXRef, const CVec& vYRef);		
 	CTMat(int*, const CVec&);
 
+	CTMat(const CTMat& other) : CMat4(other) {}
+
 	~CTMat() {}
 
 public: // Operators	
+
+	CTMat& operator=(const CTMat& other) { CMat4::operator=(other); return *this; }
 	
 public: // Methods
 	

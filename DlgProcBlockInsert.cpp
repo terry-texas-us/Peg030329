@@ -1,11 +1,19 @@
 #include "stdafx.h"
 
+#include <Windows.h>
+
+#include <afx.h>
+#include <afxstr.h>
+
 #include "PegAEsys.h"
 #include "PegAEsysDoc.h"
 
+#include "Block.h"
 #include "Pnt.h"
 #include "Preview.h"
 #include "PrimSegRef.h"
+#include "resource.h"
+#include "Seg.h"
 
 void	BlockInsertDoOK(HWND);
 LRESULT	BlockInsertGetCurSel(HWND, int, CString& strName);

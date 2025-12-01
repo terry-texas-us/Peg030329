@@ -1,9 +1,17 @@
 #include "stdafx.h"
 
-#include "PegAEsys.h"
+#include <Windows.h>
+
+#include <afx.h>
+
+#include <afxwin.h>
+
+#include <cstdlib>
+
 #include "PegAEsysView.h"
 
 #include "ExpProcs.h"
+#include "resource.h"
 
 BOOL CALLBACK DlgProcViewParameters(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {

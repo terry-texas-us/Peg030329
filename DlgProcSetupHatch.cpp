@@ -1,4 +1,9 @@
 #include "stdafx.h"
+
+#include <Windows.h>
+
+#include <afx.h>
+
 #include <algorithm>
 
 #include "ExpProcs.h"

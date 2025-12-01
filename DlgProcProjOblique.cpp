@@ -1,10 +1,19 @@
 #include "stdafx.h"
 
+#include <Windows.h>
+
+#include <afx.h>
+
+#include <cfloat>
+#include <cmath>
+
 #include "PegAEsysView.h"
 
 #include "ExpProcs.h"
+#include "Pnt.h"
 #include "resource.h"
 #include "SafeMath.h"
+#include "Vec.h"
 
 
 BOOL CALLBACK DlgProcProjOblique(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)

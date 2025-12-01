@@ -1,6 +1,9 @@
 #pragma once
 
-#include <afxwin.h> // for CObject, CPoint
+#include <afx.h>
+
+#include <afxtempl.h> // for CList
+#include <atltypes.h>
 
 #include "Pnt.h" // for CPnt
 #include "Pnt4.h" // for CPnt4, CPnt4s

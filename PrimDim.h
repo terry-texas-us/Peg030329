@@ -1,6 +1,6 @@
 #pragma once
 
-#include <windows.h> // for HWND, HTREEITEM
+#include <Windows.h> // for HWND, HTREEITEM
 
 #include <afx.h>
 #include <afxwin.h> // for CDC
