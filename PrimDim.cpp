@@ -88,7 +88,7 @@ CPrim*& CPrimDim::Copy(CPrim*& pPrim) const
 void CPrimDim::CutAt2Pts(CPnt* pt, CSegs* pSegs, CSegs* pSegsNew)
 {
     CPrimDim* pDim;
-    double	dRel[2];
+    double	dRel[2]{};
 
     line::RelOfPtToEndPts(m_ln, pt[0], dRel[0]);
     line::RelOfPtToEndPts(m_ln, pt[1], dRel[1]);
@@ -290,7 +290,7 @@ void CPrimDim::Read(CFile& fl)
     CPrim::Read(fl);
     m_ln.Read(fl);
 
-    FilePeg_ReadShort(fl, m_nTextPenColor);
+    FilePeg_ReadUnsignedShort(fl, m_nTextPenColor);
     m_fd.Read(fl);
     m_rs.Read(fl);
     FilePeg_ReadString(fl, m_strText);

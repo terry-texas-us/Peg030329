@@ -7,11 +7,9 @@
 
 #include <atltypes.h>
 
-#include <cstdlib>
+#include <string>
 
 #include "PegAEsys.h"
-#include "PegAEsysDoc.h"
-#include "PegAEsysView.h"
 
 #include "OwnerDraw.h"
 #include "Prim.h"
@@ -20,10 +18,9 @@
 
 void SetupPenColor_DrawEntire(LPDRAWITEMSTRUCT, int);
 
-BOOL CALLBACK DlgProcSetupPenColor(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM  lParam)
+BOOL CALLBACK DlgProcSetupPenColor(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM  lParam) noexcept
 {
-    char	szBuf[16]{};
-
+    std::string szBuf;
     PENCOLOR nPenColor;
 
     switch (anMsg)
@@ -31,8 +28,8 @@ BOOL CALLBACK DlgProcSetupPenColor(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM 
     case WM_INITDIALOG:
         for (size_t i = 0; i < sizeof(crHotCols) / sizeof(COLORREF); i++)
         {
-            _itoa_s(static_cast<int>(i), szBuf, sizeof(szBuf), 10);
-            ::SendDlgItemMessage(hDlg, IDC_COL_LIST, CB_ADDSTRING, 0, (LPARAM)(LPCSTR)szBuf);
+            szBuf = std::to_string(i);
+            ::SendDlgItemMessage(hDlg, IDC_COL_LIST, CB_ADDSTRING, 0, (LPARAM)szBuf.c_str());
         }
         nPenColor = pstate.PenColor();
         ::SendDlgItemMessage(hDlg, IDC_COL_LIST, CB_SETCURSEL, nPenColor, 0L);
@@ -86,17 +83,24 @@ void  SetupPenColor_DrawEntire(LPDRAWITEMSTRUCT lpDIS, int inflate)
     CDC dc;
     dc.Attach(lpDIS->hDC);
 
-    char szBuf[32]{};
+    std::string buffer(32, '\0');
 
     CRect rc;
     ::CopyRect(&rc, &lpDIS->rcItem);
 
-    ::SendMessage(lpDIS->hwndItem, CB_GETLBTEXT, lpDIS->itemID, (LPARAM)(LPCSTR)szBuf);
+    LRESULT result = ::SendMessage(lpDIS->hwndItem, CB_GETLBTEXT, lpDIS->itemID, reinterpret_cast<LPARAM>(&buffer[0]));
+    if (result == CB_ERR)
+    {
+        dc.Detach();
+        return;
+    }
+    buffer.resize(static_cast<size_t>(result));
+    UINT length = static_cast<UINT>(result);
 
     dc.SetTextColor(RGB(0, 0, 0));
-    dc.SetBkColor(RGB(255, 255, 255)),
+    dc.SetBkColor(RGB(255, 255, 255));
 
-        dc.ExtTextOut(rc.right - 16, rc.top + 2, ETO_CLIPPED, &rc, szBuf, lstrlen(szBuf), 0);
+    dc.ExtTextOut(rc.right - 16, rc.top + 2, ETO_CLIPPED, &rc, buffer.c_str(), length, 0);
 
     ::InflateRect(&rc, inflate - 2, inflate - 2);
     rc.right -= 24;

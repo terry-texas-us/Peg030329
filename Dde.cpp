@@ -234,7 +234,7 @@ bool dde::DoCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hszTopic, HSZ hszIt
         }
         else
         {
-            char sz[32];
+            char sz[32]{};
             DdeGetData(hData, (LPBYTE)sz, (DWORD)sizeof(sz), (DWORD)0);
             ::PostMessage(app.GetSafeHwnd(), WM_CHAR, (WPARAM)sz[0], (LPARAM)1);
             *phReturnData = (HDDEDATA)(DWORD)DDE_FACK;
@@ -268,7 +268,7 @@ bool dde::DoCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hszTopic, HSZ hszIt
         return false;
 
     PPOKEFN		pfnPoke;
-    CONVINFO		ci;
+    CONVINFO	ci{};
     PREQUESTFN	pfnRequest;
 
     switch (wType)			// Do whatever is required for each specific transaction
@@ -582,7 +582,7 @@ bool dde::ProcessExecRequest(PTOPICINFO pTopic, HDDEDATA hData)
     UINT	uiNargs;
     LPSTR	pArgBuf = 0;
     PCONVERSATIONINFO pCI;
-    char	szResult[MAXRESULTSIZE];
+    char	szResult[MAXRESULTSIZE]{};
 
     if (!hData) return false;
 

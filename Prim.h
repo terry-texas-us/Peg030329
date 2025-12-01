@@ -16,7 +16,7 @@
 HTREEITEM tvAddItem(HWND hTree, HTREEITEM hParent, LPCTSTR pszText, CObject* pOb);
 
 typedef short PENSTYLE;
-typedef short PENCOLOR;
+typedef unsigned short PENCOLOR;
 
 class CFile;
 class CPegView;
