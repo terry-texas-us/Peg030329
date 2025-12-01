@@ -130,7 +130,7 @@ namespace dde
 	PTOPICINFO			TopicFind(const char* lpszName);
 	bool 				TopicRemove(const char* lpszTopic);
 
-	LPSTR				GetCFNameFromId(WORD wFmt, LPSTR lpBuf, int iSize);
+	LPSTR				GetCFNameFromId(WORD wFmt, LPSTR lpBuf, size_t iSize);
 	HDDEDATA 			MakeCFText(UINT, LPSTR, HSZ);
 	HDDEDATA			MakeDataFromFormatList(LPWORD pFmt, WORD wFmt, HSZ hszItem);
 	bool				ParseCmd(LPSTR* ppszCmdLine, PTOPICINFO pTopic, LPSTR pszError, UINT uiErrorSize, PPOP pOpTable, UINT uiNops, LPSTR pArgBuf);

@@ -507,7 +507,7 @@ bool dde::ExecCmdRemove(LPSTR pszTopic, LPSTR pszCmdName)
     return false;					// We don't have that one
 }
 ///<summary>Get the text name of a Clipboard format from its id</summary>
-LPSTR dde::GetCFNameFromId(WORD wFmt, LPSTR lpBuf, int iSize)
+LPSTR dde::GetCFNameFromId(WORD wFmt, LPSTR lpBuf, size_t iSize)
 {
     PCFTAGNAME pCTN = CFNames;
 
@@ -521,7 +521,7 @@ LPSTR dde::GetCFNameFromId(WORD wFmt, LPSTR lpBuf, int iSize)
         }
         pCTN++;
     }
-    if (GetClipboardFormatName(wFmt, lpBuf, iSize) == 0)		// It's unknown (not registered)
+    if (GetClipboardFormatName(wFmt, lpBuf, (int)iSize) == 0)		// It's unknown (not registered)
         *lpBuf = '\0';
 
     return lpBuf;
