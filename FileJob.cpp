@@ -1,12 +1,30 @@
 #include "stdafx.h"
+
+#include <Windows.h>
+
+#include <afx.h>
+#include <afxwin.h>
+
+#include <afxstr.h>
+
+#include <string.h>
+
 #include <algorithm>
+#include <cctype>
+#include <cfloat>
+#include <cmath>
 
 #include "PegAEsysDoc.h"
 
+#include "Block.h"
 #include "FileJob.h"
+#include "FontDef.h"
+#include "Layer.h"
 #include "Messages.h"
 #include "ModelTransform.h"
+#include "Pnt.h"
 #include "Polygon.h"
+#include "Prim.h"
 #include "PrimArc.h"
 #include "PrimBSpline.h"
 #include "PrimCSpline.h"
@@ -21,7 +39,10 @@
 #include "PrimText.h"
 #include "resource.h"
 #include "SafeMath.h"
+#include "Seg.h"
+#include "TMat.h"
 #include "Vax.h"
+#include "Vec.h"
 
 bool CFileJob::OpenForRead(const CString& strPathName)
 {
