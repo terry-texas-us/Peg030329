@@ -1,9 +1,15 @@
 #include "stdafx.h"
 
+#include <Windows.h>
+
+#include <afx.h>
+
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
+#include "Block.h"
 #include "FilePeg.h"
+#include "Prim.h"
 #include "PrimLine.h"
 #include "PrimPolyline.h"
 #include "PrimSegRef.h"
@@ -15,28 +21,32 @@ HTREEITEM tvAddItem(HWND hTree, HTREEITEM hParent, LPCTSTR pszText, CObject* pOb
 
 // static member variable initializations
 
-CPrim* CSeg::mS_pPrimIgnore = (CPrim*)0;
+CPrim* CSeg::mS_pPrimIgnore{nullptr};
 
-CSeg::CSeg(const CSeg& seg)
+CSeg::CSeg(const CSeg& other) noexcept
 {
-	CPrim* pPrim;
+	CPrim* primitive;
 
-	POSITION pos = seg.GetHeadPosition();
-	while (pos != 0)
-		AddTail((seg.GetNext(pos))->Copy(pPrim));
+	POSITION pos{other.GetHeadPosition()};
+	while (pos != nullptr)
+	{
+		AddTail((other.GetNext(pos))->Copy(primitive));
+	}
 }
-CSeg::CSeg(const CBlock& blk)
+CSeg::CSeg(const CBlock& block)
 {
-	CPrim* pPrim;
+	CPrim* primitive;
 
-	POSITION pos = blk.GetHeadPosition();
-	while (pos != 0)
-		AddTail((blk.GetNext(pos))->Copy(pPrim));
+	POSITION pos{block.GetHeadPosition()};
+	while (pos != nullptr)
+	{
+		AddTail((block.GetNext(pos))->Copy(primitive));
+	}
 }
 void CSeg::AddPrimsToTreeViewControl(HWND hTree, HTREEITEM hParent) const
 {
 	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
 		pPrim->AddToTreeViewControl(hTree, hParent);
@@ -51,7 +61,7 @@ HTREEITEM CSeg::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const
 void CSeg::BreakPolylines()
 {
 	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	while (pos != nullptr)
 	{
 		POSITION posPrim = pos;
 		CPrim* pPrim = GetNext(pos);
@@ -59,16 +69,12 @@ void CSeg::BreakPolylines()
 		{
 			PENCOLOR nPenColor = pPrim->PenColor();
 			PENSTYLE nPenStyle = pPrim->PenStyle();
-
 			CPnts pts;
 			static_cast<CPrimPolyline*>(pPrim)->GetAllPts(pts);
-
 			for (WORD w = 0; w < pts.GetSize() - 1; w++)
 				CObList::InsertBefore(posPrim, new CPrimLine(nPenColor, nPenStyle, pts[w], pts[w + 1]));
-
 			if (static_cast<CPrimPolyline*>(pPrim)->IsLooped())
 				CObList::InsertBefore(posPrim, new CPrimLine(nPenColor, nPenStyle, pts[pts.GetUpperBound()], pts[0]));
-
 			this->RemoveAt(posPrim);
 			delete pPrim;
 		}
@@ -89,7 +95,7 @@ void CSeg::BreakSegRefs()
 	{
 		iSegRefs = 0;
 		POSITION pos = GetHeadPosition();
-		while (pos != 0)
+		while (pos != nullptr)
 		{
 			POSITION posPrim = pos;
 			CPrim* pPrim = GetNext(pos);
@@ -103,7 +109,6 @@ void CSeg::BreakSegRefs()
 					CPnt ptBase = pBlock->GetBasePt();
 					CTMat tm = static_cast<CPrimSegRef*>(pPrim)->BuildTransformMatrix(ptBase);
 					pSegT->Transform(tm);
-
 					this->InsertBefore(posPrim, pSegT);
 					this->RemoveAt(posPrim);
 					delete pPrim;
@@ -117,7 +122,7 @@ void CSeg::BreakSegRefs()
 void CSeg::Display(CPegView* pView, CDC* pDC)
 {
 	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
 		pPrim->Display(pView, pDC);
@@ -126,16 +131,14 @@ void CSeg::Display(CPegView* pView, CDC* pDC)
 POSITION CSeg::FindAndRemovePrim(CPrim* pPrim)
 {
 	POSITION pos = Find(pPrim);
-
-	if (pos != 0)
+	if (pos != nullptr)
 		RemoveAt(pos);
-
 	return (pos);
 }
 void CSeg::InsertBefore(POSITION posPrim, CSeg* pSeg)
 {
 	POSITION pos = pSeg->GetHeadPosition();
-	while (pos != 0)
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = pSeg->GetNext(pos);
 		CObList::InsertBefore(posPrim, (CObject*)pPrim);
@@ -143,10 +146,9 @@ void CSeg::InsertBefore(POSITION posPrim, CSeg* pSeg)
 }
 int CSeg::GetBlockRefCount(const CString& strBlkNam) const
 {
-	int iCount = 0;
-
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	int iCount{0};
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
 		if (pPrim->Is(CPrim::Type::SegRef))
@@ -159,8 +161,8 @@ int CSeg::GetBlockRefCount(const CString& strBlkNam) const
 }
 void CSeg::GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const
 {
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
 		pPrim->GetExtents(ptMin, ptMax, tm);
@@ -168,10 +170,9 @@ void CSeg::GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const
 }
 int CSeg::GetPenStyleRefCount(PENSTYLE nPenStyle) const
 {
-	int iCount = 0;
-
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	int iCount{0};
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
 
@@ -184,8 +185,8 @@ int CSeg::GetPenStyleRefCount(PENSTYLE nPenStyle) const
 }
 bool CSeg::IsInView(CPegView* pView) const
 {
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
 		if (pPrim->IsInView(pView))
@@ -197,8 +198,8 @@ bool CSeg::IsInView(CPegView* pView) const
 }
 bool CSeg::SelUsingRect(CPegView* pView, const CPnt& pt1, const CPnt& pt2) const
 {
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
 		if (pPrim->SelUsingRect(pView, pt1, pt2))
@@ -210,8 +211,8 @@ bool CSeg::SelUsingRect(CPegView* pView, const CPnt& pt1, const CPnt& pt2) const
 }
 void CSeg::ModifyNotes(const CFontDef& fd, const CCharCellDef& ccd, int iAtt)
 {
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
 		if (pPrim->Is(CPrim::Type::Text))
@@ -222,8 +223,8 @@ void CSeg::ModifyNotes(const CFontDef& fd, const CCharCellDef& ccd, int iAtt)
 }
 void CSeg::ModifyPenColor(PENCOLOR nPenColor)
 {
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
 		pPrim->PenColor() = nPenColor;
@@ -231,8 +232,8 @@ void CSeg::ModifyPenColor(PENCOLOR nPenColor)
 }
 void CSeg::ModifyPenStyle(PENSTYLE nPenStyle)
 {
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
 		pPrim->PenStyle() = nPenStyle;
@@ -240,11 +241,10 @@ void CSeg::ModifyPenStyle(PENSTYLE nPenStyle)
 }
 void CSeg::PenTranslation(WORD wCols, PENCOLOR* pColNew, PENCOLOR* pCol)
 {
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
-
 		for (WORD w = 0; w < wCols; w++)
 		{
 			if (pPrim->PenColor() == pCol[w])
@@ -257,10 +257,9 @@ void CSeg::PenTranslation(WORD wCols, PENCOLOR* pColNew, PENCOLOR* pCol)
 }
 int CSeg::RemoveEmptyNotes()
 {
-	int iCount = 0;
-
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	int iCount{0};
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		POSITION posPrev = pos;
 		CPrim* pPrim = GetNext(pos);
@@ -278,36 +277,30 @@ int CSeg::RemoveEmptyNotes()
 }
 CPrim* CSeg::SelPrimUsingPoint(CPegView* pView, const CPnt4& pt, double& dPicApert, CPnt& pDetPt)
 {
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
-
 		if (pPrim->SelUsingPoint(pView, pt, dPicApert, pDetPt))
 		{
 			dPicApert = Pnt4_DistanceTo_xy(pt, CPnt4(pDetPt, 1.));
 			return (pPrim);
 		}
 	}
-	return 0;
+	return nullptr;
 }
 CPrim* CSeg::SelPrimAtCtrlPt(CPegView* pView, const CPnt4& ptView, CPnt* ptCtrl) const
 {
-	CPrim* primitiveSelected = nullptr;
-
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	CPrim* primitiveSelected{nullptr};
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* primitive = GetNext(pos);
-
 		if (primitive == mS_pPrimIgnore) { continue; }
-
 		CPnt pt = primitive->SelAtCtrlPt(pView, ptView);
-
 		if (CPrim::CtrlPt() != USHRT_MAX)
 		{
 			primitiveSelected = primitive;
-
 			CPnt4 pointInModelView(pt, 1.);
 			pView->ModelViewTransform(pointInModelView);
 			*ptCtrl = pointInModelView;
@@ -318,8 +311,8 @@ CPrim* CSeg::SelPrimAtCtrlPt(CPegView* pView, const CPnt4& ptView, CPnt* ptCtrl)
 
 void CSeg::RemovePrims()
 {
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
 		delete (pPrim);
@@ -328,22 +321,18 @@ void CSeg::RemovePrims()
 }
 void CSeg::SortTextOnY()
 {
-	INT_PTR iT;
-	INT_PTR iCount = GetCount();
-
+	INT_PTR iT{0};
+	INT_PTR iCount{GetCount()};
 	do
 	{
 		iT = 0;
-
-		POSITION pos = GetHeadPosition();
+		POSITION pos{GetHeadPosition()};
 		for (INT_PTR i = 1; i < iCount; i++)
 		{
 			POSITION pos1 = pos;
 			CPrim* pPrim1 = GetNext(pos1);
-
 			POSITION pos2 = pos1;
 			CPrim* pPrim2 = GetNext(pos2);
-
 			if (pPrim1->Is(CPrim::Type::Text) && pPrim2->Is(CPrim::Type::Text))
 			{
 				double dY1 = static_cast<CPrimText*>(pPrim1)->RefPt()[1];
@@ -361,7 +350,6 @@ void CSeg::SortTextOnY()
 				SetAt(pos1, pPrim1);
 				iT = i;
 			}
-
 			pos = pos1;
 		}
 		iCount = iT;
@@ -369,8 +357,8 @@ void CSeg::SortTextOnY()
 }
 void CSeg::Square()
 {
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
 		if (pPrim->Is(CPrim::Type::Line))
@@ -381,8 +369,8 @@ void CSeg::Square()
 }
 void CSeg::Transform(const CTMat& tm)
 {
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
 		pPrim->Transform(tm);
@@ -390,8 +378,8 @@ void CSeg::Transform(const CTMat& tm)
 }
 void CSeg::Translate(const CVec& v) const
 {
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
 		pPrim->Translate(v);
@@ -400,8 +388,7 @@ void CSeg::Translate(const CVec& v) const
 void CSeg::Write(CFile& fl)
 {
 	FilePeg_WriteWord(fl, (WORD)GetCount());
-
-	for (POSITION pos = GetHeadPosition(); pos != 0;)
+	for (POSITION pos{GetHeadPosition()}; pos != nullptr;)
 	{
 		CPrim* pPrim = GetNext(pos);
 		pPrim->Write(fl);
@@ -413,9 +400,8 @@ void CSeg::Write(CFile& f, char* p)
 	p[0] = 0;
 	// number of primitives in segment
 	*((short*)&p[1]) = short(GetCount());
-
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
 		pPrim->Write(f, p);
@@ -424,8 +410,8 @@ void CSeg::Write(CFile& f, char* p)
 #if ODA_FUNCTIONALITY
 void CSeg::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD_ENT hen)
 {
-	POSITION pos = GetHeadPosition();
-	while (pos != 0)
+	POSITION pos{GetHeadPosition()};
+	while (pos != nullptr)
 	{
 		CPrim* pPrim = GetNext(pos);
 		pPrim->Write(hdb, entlist, henhd, hen);

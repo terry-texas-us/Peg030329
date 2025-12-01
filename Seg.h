@@ -1,15 +1,19 @@
 #pragma once
 
-#include <afxwin.h>  // For CObject (for casts), CString and CFile plus CDC, POSITION, HWND, HTREEITEM
+#include <Windows.h> // for HWND, HTREEITEM
 
-#include <afxcoll.h> // For CObList
+#include <afxwin.h> // for CObject (for casts), CString and CFile plus CDC, POSITION, HWND, HTREEITEM
 
-#include "CharCellDef.h" // For CCharCellDef
-#include "FontDef.h" // For CFontDef
-#include "Pnt.h"     // For CPnt, CPnt4
-#include "Prim.h" // For PENSTYLE, PENCOLOR
-#include "TMat.h"  // For CTMat
-#include "Vec.h"  // For CVec
+#include <afxcoll.h> // for CObList
+#include <afxstr.h> // for CString
+
+#include "CharCellDef.h" // for CCharCellDef
+#include "FontDef.h" // for CFontDef
+#include "Pnt.h" // for CPnt, CPnt4
+#include "Pnt4.h" // for CPnt4
+#include "Prim.h" // for PENSTYLE, PENCOLOR
+#include "TMat.h" // for CTMat
+#include "Vec.h" // for CVec
 
 class CBlock;
 class CPegView;
@@ -17,140 +21,171 @@ class CPegView;
 class CSeg: public CObList
 {
 public:
-	/// <summary>Default constructor.</summary>
+	/// @brief Default constructor.
 	CSeg() { }
-	/// <summary>Constructor that adds a single primitive.</summary>
-	/// <param name="p">Pointer to the primitive to add.</param>
-	CSeg(CPrim* p) { AddTail(p); }
-	/// <summary>Copy constructor.</summary>
-	/// <param name="seg">The segment to copy from.</param>
-	CSeg(const CSeg&);
-	/// <summary>Constructor from a block.</summary>
-	/// <param name="blk">The block to initialize from.</param>
-	CSeg(const CBlock&);
 
-	/// <summary>Adds primitives to the tree view control.</summary>
-	/// <param name="hTree">Handle to the tree view.</param>
-	/// <param name="hParent">Parent tree item.</param>
-	void		AddPrimsToTreeViewControl(HWND hTree, HTREEITEM hParent) const;
-	/// <summary>Adds the segment to the tree view control.</summary>
-	/// <param name="hTree">Handle to the tree view.</param>
-	/// <param name="hParent">Parent tree item.</param>
-	/// <returns>The tree item handle.</returns>
-	HTREEITEM	AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const;
-	/// <summary>Breaks polylines into individual lines.</summary>
-	void		BreakPolylines();
-	/// <summary>Breaks segment references.</summary>
-	void		BreakSegRefs();
-	/// <summary>Displays the segment.</summary>
-	/// <param name="pView">Pointer to the view.</param>
-	/// <param name="pDC">Pointer to the device context.</param>
-	void		Display(CPegView* pView, CDC* pDC);
-	/// <summary>Finds and removes a primitive.</summary>
-	/// <param name="pPrim">Pointer to the primitive to remove.</param>
-	/// <returns>The position of the removed primitive.</returns>
-	POSITION	FindAndRemovePrim(CPrim* pPrim);
-	/// <summary>Gets the primitive at the specified position.</summary>
-	/// <param name="pos">The position.</param>
-	/// <returns>Pointer to the primitive.</returns>
+	/// @brief Constructor that adds a single primitive.
+	/// @param primitive Pointer to the primitive to add.
+	CSeg(CPrim* primitive) { AddTail(primitive); }
+
+	/// @brief Copy constructor.
+	/// @param other The segment to copy from.
+	CSeg(const CSeg& other) noexcept;
+
+	/// @brief Constructor from a block.
+	/// @param blk The block to initialize from.
+	CSeg(const CBlock& block);
+
+	/// @brief Adds primitives to the tree view control.
+	/// @param tree Handle to the tree view.
+	/// @param parent Parent tree item.
+	void AddPrimsToTreeViewControl(HWND tree, HTREEITEM parent) const;
+
+	/// @brief Adds the segment to the tree view control.
+	/// @param tree Handle to the tree view.
+	/// @param parent Parent tree item.
+	/// @returns The tree item handle.
+	HTREEITEM AddToTreeViewControl(HWND tree, HTREEITEM parent) const;
+
+	/// @brief Breaks polylines into individual lines.
+	void BreakPolylines();
+
+	/// @brief Breaks segment references.
+	void BreakSegRefs();
+
+	/// @brief Displays the segment.
+	/// @param pView Pointer to the view.
+	/// @param pDC Pointer to the device context.
+	void Display(CPegView* view, CDC* context);
+
+	/// @brief Finds and removes a primitive.
+	/// @param pPrim Pointer to the primitive to remove.
+	/// @returns The position of the removed primitive.
+	POSITION FindAndRemovePrim(CPrim* primitive);
+
+	/// @brief Gets the primitive at the specified position.
+	/// @param pos The position.
+	/// @returns Pointer to the primitive.
 	CPrim* GetAt(POSITION pos) const { return (CPrim*)CObList::GetAt(pos); }
-	/// <summary>Gets the count of block references with the given name.</summary>
-	/// <param name="strName">The block name.</param>
-	/// <returns>The count.</returns>
-	int			GetBlockRefCount(const CString& strName) const;
-	/// <summary>Gets the count of primitives in the segment.</summary>
-	/// <returns>The count.</returns>
+
+	/// @brief Gets the count of block references with the given name.
+	/// @param strName The block name.
+	/// @returns The count.
+	int GetBlockRefCount(const CString& name) const;
+
+	/// @brief Gets the count of primitives in the segment.
+	/// @returns The count.
 	INT_PTR GetCount() const { return CObList::GetCount(); }
-	/// <summary>Gets the extents of the segment.</summary>
-	/// <param name="ptMin">Minimum point.</param>
-	/// <param name="ptMax">Maximum point.</param>
-	/// <param name="tm">Transformation matrix.</param>
-	void		GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const;
-	/// <summary>Gets the next primitive in the list.</summary>
-	/// <param name="pos">The position, updated to the next.</param>
-	/// <returns>Pointer to the primitive.</returns>
+
+	/// @brief Gets the extents of the segment.
+	/// @param minPoint Minimum point.
+	/// @param maxPoint Maximum point.
+	/// @param transformMatrix Transformation matrix.
+	void GetExtents(CPnt& minPoint, CPnt& maxPoint, const CTMat& transformMatrix) const;
+
+	/// @brief Gets the next primitive in the list.
+	/// @param pos The position, updated to the next.
+	/// @returns Pointer to the primitive.
 	CPrim* GetNext(POSITION& pos) const { return ((CPrim*)CObList::GetNext(pos)); }
-	/// <summary>Gets the count of primitives with the given pen style.</summary>
-	/// <param name="nPenStyle">The pen style.</param>
-	/// <returns>The count.</returns>
-	int			GetPenStyleRefCount(PENSTYLE nPenStyle) const;
-	/// <summary>Inserts a segment before the specified position.</summary>
-	/// <param name="pos">The position.</param>
-	/// <param name="pSeg">Pointer to the segment to insert.</param>
-	void		InsertBefore(POSITION pos, CSeg* pSeg);
-	/// <summary>Checks if the segment is in view.</summary>
-	/// <param name="pView">Pointer to the view.</param>
-	/// <returns>True if in view.</returns>
-	bool		IsInView(CPegView* pView) const;
-	/// <summary>Modifies notes in text primitives.</summary>
-	/// <param name="fd">Font definition.</param>
-	/// <param name="ccd">Character cell definition.</param>
-	/// <param name="iAtt">Attribute.</param>
-	void		ModifyNotes(const CFontDef& fd, const CCharCellDef& ccd, int iAtt = 0);
-	/// <summary>Modifies the pen color of all primitives.</summary>
-	/// <param name="nPenColor">The new pen color.</param>
-	void		ModifyPenColor(PENCOLOR nPenColor);
-	/// <summary>Modifies the pen style of all primitives.</summary>
-	/// <param name="nPenStyle">The new pen style.</param>
-	void		ModifyPenStyle(PENSTYLE nPenStyle);
-	/// <summary>Translates pen colors.</summary>
-	/// <param name="wCols">Number of colors.</param>
-	/// <param name="pColNew">New colors array.</param>
-	/// <param name="pCol">Old colors array.</param>
-	void		PenTranslation(WORD wCols, PENCOLOR* pColNew, PENCOLOR* pCol);
-	/// <summary>Removes empty notes.</summary>
-	/// <returns>The number of removed notes.</returns>
-	int			RemoveEmptyNotes();
-	/// <summary>Removes all primitives.</summary>
-	void		RemovePrims();
-	/// <summary>Selects a primitive at a control point near the given view point.</summary>
-	/// <param name="pView">Pointer to the view for coordinate transformations.</param>
-	/// <param name="ptView">The view-space point to check for proximity to control points.</param>
-	/// <param name="ptCtrl">Output parameter for the transformed control point coordinates.</param>
-	/// <returns>Pointer to the selected primitive, or null if none found.</returns>
-	CPrim* SelPrimAtCtrlPt(CPegView* pView, const CPnt4& ptView, CPnt* ptCtrl) const;
-	/// <summary>Selects a primitive using a point.</summary>
-	/// <param name="pView">Pointer to the view.</param>
-	/// <param name="pt">The point.</param>
-	/// <param name="dPicApert">Aperture distance.</param>
-	/// <param name="pDetPt">Detected point.</param>
-	/// <returns>Pointer to the selected primitive.</returns>
-	CPrim* SelPrimUsingPoint(CPegView* pView, const CPnt4& pt, double& dPicApert, CPnt& pDetPt);
-	/// <summary>Selects primitives using a rectangle.</summary>
-	/// <param name="pView">Pointer to the view.</param>
-	/// <param name="pt1">First corner.</param>
-	/// <param name="pt2">Second corner.</param>
-	/// <returns>True if any selected.</returns>
-	bool		SelUsingRect(CPegView* pView, const CPnt& pt1, const CPnt& pt2) const;
-	/// <summary>Sorts text primitives on Y.</summary>
-	void		SortTextOnY();
-	/// <summary>Squares the segment.</summary>
-	void		Square();
-	/// <summary>Transforms the segment.</summary>
-	/// <param name="tm">Transformation matrix.</param>
-	void		Transform(const CTMat& tm);
-	/// <summary>Translates the segment.</summary>
-	/// <param name="v">Translation vector.</param>
-	void		Translate(const CVec& v) const;
-	/// <summary>Writes the segment to a file.</summary>
-	/// <param name="fl">The file.</param>
-	void		Write(CFile& fl);
-	/// <summary>Writes the segment to a file with buffer.</summary>
-	/// <param name="f">The file.</param>
-	/// <param name="p">Buffer.</param>
-	void		Write(CFile& f, char* p);
+
+	/// @brief Gets the count of primitives with the given pen style.
+	/// @param penStyle The pen style.
+	/// @returns The count.
+	int	GetPenStyleRefCount(PENSTYLE penStyle) const;
+
+	/// @brief Inserts a segment before the specified position.
+	/// @param pos The position.
+	/// @param segment Pointer to the segment to insert.
+	void InsertBefore(POSITION pos, CSeg* segment);
+
+	/// @brief Checks if the segment is in view.
+	/// @param view Pointer to the view.
+	/// @returns True if in view.
+	bool IsInView(CPegView* view) const;
+
+	/// @brief Modifies notes in text primitives.
+	/// @param fontDefinition Font definition.
+	/// @param characterCellDefinition Character cell definition.
+	/// @param attribute Attribute.
+	void ModifyNotes(const CFontDef& fontDefinition, const CCharCellDef& characterCellDefinition, int attribute = 0);
+
+	/// @brief Modifies the pen color of all primitives.
+	/// @param penColor The new pen color.
+	void ModifyPenColor(PENCOLOR penColor);
+
+	/// @brief Modifies the pen style of all primitives.
+	/// @param penStyle The new pen style.
+	void ModifyPenStyle(PENSTYLE penStyle);
+
+	/// @brief Translates pen colors.
+	/// @param numberOfColors Number of colors.
+	/// @param newColors New colors array.
+	/// @param oldColors Old colors array.
+	void PenTranslation(WORD numberOfColors, PENCOLOR* newColors, PENCOLOR* oldColors);
+
+	/// @brief Removes empty notes.
+	/// @returns The number of removed notes.
+	int RemoveEmptyNotes();
+	/// @brief Removes all primitives.
+	void RemovePrims();
+
+	/// @brief Selects a primitive at a control point near the given view point.
+	/// @param view Pointer to the view for coordinate transformations.
+	/// @param pointInView The view-space point to check for proximity to control points.
+	/// @param controlPoint Output parameter for the transformed control point coordinates.
+	/// @returns Pointer to the selected primitive, or null if none found.
+	CPrim* SelPrimAtCtrlPt(CPegView* view, const CPnt4& pointInView, CPnt* controlPoint) const;
+
+	/// @brief Selects a primitive using a point.
+	/// @param view Pointer to the view.
+	/// @param point The point.
+	/// @param aperture Aperture distance.
+	/// @param detectedPoint Detected point.
+	/// @returns Pointer to the selected primitive.
+	CPrim* SelPrimUsingPoint(CPegView* view, const CPnt4& point, double& aperture, CPnt& detectedPoint);
+
+	/// @brief Selects primitives using a rectangle.
+	/// @param view Pointer to the view.
+	/// @param firstCornerPoint First corner.
+	/// @param secondCornerPoint Second corner.
+	/// @returns True if any selected.
+	bool SelUsingRect(CPegView* view, const CPnt& firstCornerPoint, const CPnt& secondCornerPoint) const;
+
+	/// @brief Sorts text primitives on Y.
+	void SortTextOnY();
+
+	/// @brief Squares the segment.
+	void Square();
+
+	/// @brief Transforms the segment.
+	/// @param tm Transformation matrix.
+	void Transform(const CTMat& tmtransformMatrix);
+
+	/// @brief Translates the segment.
+	/// @param translation Translation vector.
+	void Translate(const CVec& translation) const;
+
+	/// @brief Writes the segment to a file.
+	/// @param fl The file.
+	void Write(CFile& file);
+
+	/// @brief Writes the segment to a file with buffer.
+	/// @param file The file.
+	/// @param buffer Buffer.
+	void Write(CFile& file, char* buffer);
+
 #if ODA_FUNCTIONALITY
-	/// <summary>Writes the segment for ODA functionality.</summary>
-	/// <param name="hdb">Database handle.</param>
-	/// <param name="entlist">Entity list.</param>
-	/// <param name="henhd">Entity header.</param>
-	/// <param name="hen">Entity.</param>
-	void		Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD_ENT hen);
+	/// @brief Writes the segment for ODA functionality.
+	/// @param hdb Database handle.
+	/// @param entlist Entity list.
+	/// @param henhd Entity header.
+	/// @param hen Entity.
+	void Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD_ENT hen);
 #endif
 
 public:
-	/// <summary>Gets the ignore primitive.</summary>
-	/// <returns>Reference to the ignore primitive.</returns>
+	/// @brief Gets the ignore primitive.
+	/// @returns Reference to the ignore primitive.
 	static CPrim*& IgnorePrim() { return mS_pPrimIgnore; }
 
 private:
