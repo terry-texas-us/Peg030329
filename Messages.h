@@ -1,6 +1,9 @@
 #pragma once
 
-#include "afxwin.h" // for CString and UINT
+#include <Windows.h>
+
+#include <afxstr.h>
+
 #include <string> // for std::string
 
 /// @brief Displays a confirmation message dialog box with Yes/No buttons, using a string resource for the message and caption. 

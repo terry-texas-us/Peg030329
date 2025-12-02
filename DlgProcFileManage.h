@@ -1,5 +1,9 @@
 #pragma once
 
+#include <Windows.h>
+
+#include <afxstr.h>
+
 void	DlgProcFileManageDoLayerActive(HWND);
 void	DlgProcFileManageDoLayerDelete(HWND);
 void	DlgProcFileManageDoLayerHidden(HWND);

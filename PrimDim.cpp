@@ -417,7 +417,7 @@ void CPrimDim::SetDefaultNote()
     m_rs.SetDirX(vRefXAx);
     m_rs.SetDirY(vRefYAx);
 
-    char szBuf[64];
+    char szBuf[64]{};
     UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), m_ln.Length());
     m_strText = szBuf;
     m_strText.TrimLeft();

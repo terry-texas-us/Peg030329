@@ -1,8 +1,8 @@
 #pragma once
 
-#include "PegAEsys.h"
-
 #include <string>
+
+#include "PegAEsys.h"
 
 /// @brief Formats an angle value into a string using the specified minimum field width and decimal precision.
 /// @param angle The angle value to format.
@@ -43,7 +43,7 @@ std::string	UnitsString_FormatAsSimple(double length, int minWidth, int precisio
 /// @param aiNmb1 The first integer.
 /// @param aiNmb2 The second integer.
 /// @return The non-negative greatest common divisor of the two arguments. If one argument is zero, returns the absolute value of the other; if both are zero, returns 0.
-int	UnitsString_GCD(int aiNmb1, int aiNmb2);	   
+int	UnitsString_GCD(int aiNmb1, int aiNmb2);
 
 /// @brief 
 /// @param  

@@ -539,8 +539,8 @@ HDDEDATA dde::MakeCFText(UINT wFmt, LPSTR lpszStr, HSZ hszItem)
 // Returns: A DDE data handle to a list of the format names.
 HDDEDATA dde::MakeDataFromFormatList(LPWORD pFmt, WORD wFmt, HSZ hszItem)
 {
-    int 	cb;
-    char	buf[256];
+    int cb;
+    char buf[256]{};
 
     HDDEDATA hData = DdeCreateDataHandle(ServerInfo.dwInstance, 0, 0, 0, hszItem, wFmt, 0); // Empty data object to fill
     int cbOffset = 0;

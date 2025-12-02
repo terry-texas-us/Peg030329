@@ -15,7 +15,6 @@
 
 #include "Pnt.h"
 #include "Prim.h"
-#include "resource.h"
 
 class CSeg;
 

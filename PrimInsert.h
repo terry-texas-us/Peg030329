@@ -4,14 +4,14 @@
 
 #include <afx.h>
 #include <afxstr.h>
-#include <afxwin.h> // for MFC CString, WORD, DWORD, HWND, HTREEITEM, CDC, CFile
+#include <afxwin.h>
 
-#include "Line.h" // for CLine
-#include "Pnt.h" // for CPnt member
-#include "Pnt4.h" // for CPnt4
-#include "Prim.h" // for CPrim base class
-#include "TMat.h" // for CTMat
-#include "Vec.h" // for CVec member
+#include "Line.h"
+#include "Pnt.h"
+#include "Pnt4.h"
+#include "Prim.h"
+#include "TMat.h"
+#include "Vec.h"
 
 class CPegView;
 

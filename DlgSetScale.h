@@ -1,27 +1,30 @@
 #pragma once
 
-// CDlgSetScale dialog
+#include <afx.h>
+#include <afxwin.h>
 
-class CDlgSetScale : public CDialog
+#include "resource.h"
+
+class CDlgSetScale: public CDialog
 {
-	DECLARE_DYNAMIC(CDlgSetScale)
+    DECLARE_DYNAMIC(CDlgSetScale)
 
 public:
-	CDlgSetScale(CWnd* pParent = NULL);   // standard constructor
-	virtual ~CDlgSetScale();
+    CDlgSetScale(CWnd* pParent = NULL);   // standard constructor
+    virtual ~CDlgSetScale();
 
-	CDlgSetScale(const CDlgSetScale&) = delete; // Prevent copying
-	CDlgSetScale& operator=(const CDlgSetScale&) = delete; // Prevent assignment
+    CDlgSetScale(const CDlgSetScale&) = delete; // Prevent copying
+    CDlgSetScale& operator=(const CDlgSetScale&) = delete; // Prevent assignment
 
-// Dialog Data
-	enum { IDD = IDD_SET_SCALE };
+    // Dialog Data
+    enum { IDD = IDD_SET_SCALE };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
 public:
-	double m_dScale;
+    double m_dScale;
 
 protected:
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };

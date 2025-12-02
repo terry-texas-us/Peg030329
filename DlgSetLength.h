@@ -1,6 +1,12 @@
 #pragma once
 
-// CDlgSetLength dialog
+#include <Windows.h>
+
+#include <afx.h>
+#include <afxstr.h>
+#include <afxwin.h>
+
+#include "resource.h"
 
 class CDlgSetLength: public CDialog
 {

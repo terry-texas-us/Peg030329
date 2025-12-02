@@ -41,7 +41,7 @@ BOOL CALLBACK DlgProcPipeSymbol(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 }
 void DlgProcPipeSymbolInit(HWND hDlg)
 {
-    char szNames[512];
+    char szNames[512]{};
     char* pName;
 
     ::LoadString(app.GetInstance(), IDS_SUBPROC_PIPE_SYMBOL_NAMES, szNames, 256);

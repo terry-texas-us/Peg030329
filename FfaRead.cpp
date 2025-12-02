@@ -13,36 +13,36 @@
 
 void ffaReadFile(const CString& strPathName)
 {
-	CPegDoc* pDoc = CPegDoc::GetDoc();
+    CPegDoc* pDoc = CPegDoc::GetDoc();
 
-	CStdioFile fl;
-						
-	if (fl.Open(strPathName, CFile::modeRead | CFile::typeText))
-	{
-		char szLine[256];
-		while (fl.ReadString(szLine, sizeof(szLine) - 1) != 0)
-		{
-			CString strLine(szLine);
-			int nComment = strLine.Find("//");
-			
-			if (nComment == 0 || nComment == - 1) continue;
-			
-			CString strName = strLine.Left(nComment);
-			strName.TrimRight();
-			strName += ".jb1";
+    CStdioFile fl;
 
-			if (pDoc->LayersLookup(strName) < 0)
-			{
-				pDoc->TracingMap(strName);
-				pDoc->TracingFuse(strName);
-				CLayer* pLayer = pDoc->LayersGet(strName);
-				if (pLayer != 0)
-				{
-					strName = strLine.Mid(nComment + 2);
-					strName.Trim();
-					pLayer->SetName(strName);
-				}
-			}
-		}
-	}
+    if (fl.Open(strPathName, CFile::modeRead | CFile::typeText))
+    {
+        char szLine[256]{};
+        while (fl.ReadString(szLine, sizeof(szLine) - 1) != 0)
+        {
+            CString strLine(szLine);
+            int nComment = strLine.Find("//");
+
+            if (nComment == 0 || nComment == -1) continue;
+
+            CString strName = strLine.Left(nComment);
+            strName.TrimRight();
+            strName += ".jb1";
+
+            if (pDoc->LayersLookup(strName) < 0)
+            {
+                pDoc->TracingMap(strName);
+                pDoc->TracingFuse(strName);
+                CLayer* pLayer = pDoc->LayersGet(strName);
+                if (pLayer != 0)
+                {
+                    strName = strLine.Mid(nComment + 2);
+                    strName.Trim();
+                    pLayer->SetName(strName);
+                }
+            }
+        }
+    }
 }

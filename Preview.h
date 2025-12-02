@@ -1,5 +1,10 @@
 #pragma once
 
+#include <Windows.h>
+
+class CBlock;
+class CSegs;
+
 void	WndProcPreviewClear(HWND hwnd);
 void	WndProcPreviewUpdate(HWND hwnd, CBlock* pBlock);
 void	WndProcPreviewUpdate(HWND hwnd, CSegs* pSegs);

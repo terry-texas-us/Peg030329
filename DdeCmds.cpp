@@ -38,7 +38,7 @@ using namespace dde;
 ///<summary>Sets the Text Height.</summary>
 bool dde::ExecNoteHT(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 {
-    char szBuf[32];
+    char szBuf[32]{};
     strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
     CCharCellDef ccd;
     pstate.GetCharCellDef(ccd);
@@ -49,7 +49,7 @@ bool dde::ExecNoteHT(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 ///<summary>Sets the Fill.</summary>
 bool dde::ExecFill(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 {
-    char szBuf[8];
+    char szBuf[8]{};
     strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
     pstate.SetPolygonIntStyleId(WORD(atoi(szBuf)));
     return true;
@@ -57,7 +57,7 @@ bool dde::ExecFill(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 ///<summary>Sets the Scale.</summary>
 bool dde::ExecScale(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 {
-    char szBuf[32];
+    char szBuf[32]{};
     strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
     app.SetScale(atof(szBuf));
     app.StatusLineDisplay(Scale);
@@ -66,7 +66,7 @@ bool dde::ExecScale(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 ///<summary>Sets the Diamond Length.</summary>
 bool dde::ExecDL(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 {
-    char szBuf[32];
+    char szBuf[32]{};
     strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
     app.SetDimLen(UnitsString_ParseLength(app.GetUnits(), szBuf));
     app.StatusLineDisplay(DimLen);
@@ -75,7 +75,7 @@ bool dde::ExecDL(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 ///<summary>Sets the Diamond Angle.</summary>
 bool dde::ExecDA(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 {
-    char szBuf[32];
+    char szBuf[32]{};
     strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
     app.SetDimAngZ(atof(szBuf));
     app.StatusLineDisplay(DimAng);
@@ -156,7 +156,7 @@ bool dde::ExecFileGet(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs)
 ///<summary>Set the position of the cursor.</summary>
 bool dde::ExecGotoPoint(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 {
-    char szBuf[8];
+    char szBuf[8]{};
 
     strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 
@@ -168,7 +168,7 @@ bool dde::ExecGotoPoint(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 ///<summary>Sets the pen color.</summary>
 bool dde::ExecPen(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 {
-    char szBuf[8];
+    char szBuf[8]{};
 
     strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 
@@ -180,7 +180,7 @@ bool dde::ExecPen(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 ///<summary>Sets the pen style</summary>
 bool dde::ExecLine(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 {
-    char szBuf[8];
+    char szBuf[8]{};
 
     strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 
@@ -238,7 +238,7 @@ bool dde::ExecSend(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 ///<summary>Sets a home point.</summary>
 bool dde::ExecSetPoint(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 {
-    char szBuf[8];
+    char szBuf[8]{};
 
     strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 

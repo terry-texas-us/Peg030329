@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Pnt.h" // for CPnt
+#include "Pnt.h"
 
 void UserAxisInit();
 void UserAxisSetInfAng(double);

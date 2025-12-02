@@ -1,25 +1,29 @@
 #pragma once
 
-class CRGB : public CObject
+#include <Windows.h>
+
+#include <afx.h>
+
+class CRGB: public CObject
 {
 public:
-	
-	BYTE m_bR;
-	BYTE m_bG;
-	BYTE m_bB;
+
+    BYTE m_bR;
+    BYTE m_bG;
+    BYTE m_bB;
 
 public: // Contructors and destructor
-	CRGB() {m_bR = m_bG = m_bB = 0;}
-	CRGB(const CRGB& rgb) {m_bR = rgb.m_bR; m_bG = rgb.m_bG; m_bB = rgb.m_bB;}
-	CRGB(BYTE bR, BYTE bG, BYTE bB) {m_bR = bR; m_bG = bG; m_bB = bB;}
+    CRGB() { m_bR = m_bG = m_bB = 0; }
+    CRGB(const CRGB& rgb) { m_bR = rgb.m_bR; m_bG = rgb.m_bG; m_bB = rgb.m_bB; }
+    CRGB(BYTE bR, BYTE bG, BYTE bB) { m_bR = bR; m_bG = bG; m_bB = bB; }
 
-	~CRGB() {}
+    ~CRGB() { }
 
 public: // Operators
-	CRGB& operator=(const CRGB& src) {m_bR = src.m_bR; m_bG = src.m_bG; m_bB = src.m_bB; return *this;}
+    CRGB& operator=(const CRGB& src) { m_bR = src.m_bR; m_bG = src.m_bG; m_bB = src.m_bB; return *this; }
 
 public:	// Methods
-	void Set(BYTE bR, BYTE bG, BYTE bB) {m_bR = bR; m_bG = bG; m_bB = bB;}
+    void Set(BYTE bR, BYTE bG, BYTE bB) { m_bR = bR; m_bG = bG; m_bB = bB; }
 };
 
 //class CPixelMapRGB

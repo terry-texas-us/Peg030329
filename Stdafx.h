@@ -27,35 +27,31 @@
 
 #include <Windows.h>
 
-#include <afx.h> // Core MFC GUI classes
-//#include <Windows.h>
-//#include <vector> // Dynamic contiguous array; the most frequently used container in modern C++. Extremely compile-time expensive – always pre-include.
-#include <string> // std::string and std::wstring; owns null-terminated character data with SSO. Essential for almost all text handling.
-//#include <memory> //Smart pointers (std::unique_ptr, std::shared_ptr, std::weak_ptr), std::make_unique, std::make_shared, and std::allocator.
-//#include <array> // std::array<T,N>; fixed-size contiguous array with STL interface and no dynamic allocation.
-//#include <unordered_map> // Hash table (std::unordered_map, std::unordered_set); average O(1) lookup/insert. Very common for caches and dictionaries.
-//#include <map> // Red - black tree(std::map, std::set); ordered associative containers with O(log n) operations.
-//#include <algorithm> // 100+ generic algorithms (std::sort, std::find, std::transform, std::copy, etc.). Used in almost every project.
-//#include <utility> // std::move, std::forward, std::pair, std::exchange, std::in_place, etc. Core building blocks of modern C++.
-
+#include <afx.h>
+//#include <afxadv.h>
 //#include <afxext.h>
 //#include <afxdisp.h>
-//#include <afxadv.h>
 //#include <afxtempl.h>
 
+//#include <commdlg.h>
 //#include <ddeml.h>
 //#include <direct.h>
-
 //#include <shlobj.h>
 //#include <shlwapi.h>
-//#include <commdlg.h>
 
-//#include <sstream>
-//#include <iomanip>
+//#include <algorithm>
+//#include <array>
 //#include <cctype>
-
 //#include <cfloat>
 //#include <cmath>
+//#include <iomanip>
+//#include <memory>
+//#include <map>
+//#include <sstream>
+#include <string>
+//#include <unordered_map>
+//#include <utility>
+//#include <vector>
 
 #if GL_FUNCTIONALITY
 #include <gl\gl.h>
@@ -67,30 +63,28 @@
 #include "odio.h"
 #endif
 
-//#include "resource.h"
-//#include "Messages.h"
+#include "resource.h"
 
+//#include "AbstractView.h"
+//#include "Block.h"
 //#include "ExpProcs.h"
-UINT AFXAPI HashKey(CString& str);
-
-//#include "SafeMath.h"
-
 //#include "Pnt.h"
 //#include "Pnt4.h"
-//#include "Vec.h"
-//#include "Vec4.h"
 //#include "Mat4.h"
-//#include "TMat.h"
+//#include "Messages.h"
 //#include "RefSys.h"
 //#include "Viewport.h"
-//#include "AbstractView.h"
 //#include "ModelView.h"
 //#include "ModelTransform.h"
 //#include "PenStyle.h"
 //#include "Line.h"
 //#include "Polyline.h"
 //#include "CharCellDef.h"
+//#include "FilePeg.h"
+//#include "FileTracing.h"
 //#include "FontDef.h"
+//#include "Layer.h"
+//#include "OpenGL.h"
 //#include "Prim.h"
 //#include "PrimArc.h"
 //#include "PrimBSpline.h"
@@ -101,18 +95,17 @@ UINT AFXAPI HashKey(CString& str);
 //#include "PrimPolygon.h"
 //#include "PrimPolyline.h"
 //#include "PrimSegRef.h"
+//#include "PrimState.h"
 //#include "PrimTag.h"
 //#include "PrimText.h"
 //#include "PrimDim.h"
-//#include "Block.h"
-//#include "Layer.h"
+//#include "SafeMath.h"
 //#include "Seg.h"
 //#include "Segs.h"
 //#include "SegsDet.h"
 //#include "SegsTrap.h"
-//#include "PrimState.h"
-//#include "FilePeg.h"
-//#include "FileTracing.h"
+//#include "TMat.h"
+//#include "Vec.h"
+//#include "Vec4.h"
 
-//#include "OpenGL.h"
-
+UINT AFXAPI HashKey(CString& str);

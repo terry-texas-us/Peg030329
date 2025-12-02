@@ -1,12 +1,11 @@
 #pragma once
 
 #include <afx.h>
-
-#include <afxtempl.h> // for CList
+#include <afxtempl.h>
 #include <atltypes.h>
 
-#include "Pnt.h" // for CPnt
-#include "Pnt4.h" // for CPnt4, CPnt4s
+#include "Pnt.h"
+#include "Pnt4.h"
 
 class CViewport: public CObject
 {

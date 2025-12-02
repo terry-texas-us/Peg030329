@@ -17,7 +17,7 @@ BOOL CALLBACK DlgProcViewParameters(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM
 {
     CPegView* pView = CPegView::GetActiveView();
 
-    char   szBuf[32];
+    char szBuf[32]{};
 
     switch (anMsg)
     {

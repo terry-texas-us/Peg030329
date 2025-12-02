@@ -27,11 +27,11 @@ void DlgProcEditTrap_CommandsQueryFillExtraList(HWND hDlg, CPrim* pPrim)
 {
     HWND hWndExtra = ::GetDlgItem(hDlg, IDC_EXTRA_LIST_CTRL);
 
-    LVITEM lvi;
-    ::ZeroMemory(&lvi, sizeof(lvi));
+    LVITEM lvi{};
+
     lvi.mask = LVIF_TEXT | LVIF_STATE;
 
-    char szBuf[64];
+    char szBuf[64]{};
 
     int iItem = 0;
 
@@ -59,11 +59,11 @@ void DlgProcEditTrap_CommandsQueryFillGeometryList(HWND hDlg, CPrim* pPrim)
 {
     HWND hWndGeometry = ::GetDlgItem(hDlg, IDC_GEOMETRY_LIST);
 
-    LVITEM lvi;
-    ::ZeroMemory(&lvi, sizeof(lvi));
+    LVITEM lvi{};
+
     lvi.mask = LVIF_TEXT | LVIF_STATE;
 
-    char szBuf[64];
+    char szBuf[64]{};
     int iItem = 0;
 
     CString strBuf;
@@ -137,8 +137,8 @@ BOOL CALLBACK DlgProcEditTrap_CommandsQuery(HWND hDlg, UINT nMsg, WPARAM wParam,
             {
                 NM_TREEVIEW* nmtv = (NM_TREEVIEW*)lParam;
                 char szText[256]{};
-                TV_ITEM item;
-                ::ZeroMemory(&item, sizeof(item));
+                TV_ITEM item{};
+
                 item.hItem = nmtv->itemNew.hItem;
                 item.mask = TVIF_TEXT | TVIF_PARAM;
                 item.pszText = szText;

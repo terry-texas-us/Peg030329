@@ -29,7 +29,7 @@ void CDlgSetLength::DoDataExchange(CDataExchange* pDX)
 }
 BOOL CDlgSetLength::OnInitDialog()
 {
-    char szBuf[32];
+    char szBuf[32]{};
 
     CDialog::OnInitDialog();
     if (!m_strTitle.IsEmpty())
@@ -42,7 +42,7 @@ BOOL CDlgSetLength::OnInitDialog()
 }
 void CDlgSetLength::OnOK()
 {
-    char szBuf[32];
+    char szBuf[32]{};
 
     GetDlgItemText(IDC_DISTANCE, (LPSTR)szBuf, 32);
     m_dLength = UnitsString_ParseLength(app.GetUnits(), szBuf);

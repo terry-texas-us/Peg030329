@@ -215,7 +215,7 @@ void lex::ConvertValTyp(int aiTyp, int aiTypReq, long* alDef, void* apVal)
 
     if (aiTyp == TOK_STRING)
     {
-        char	szVal[256];
+        char szVal[256]{};
 
         strcpy_s(szVal, sizeof(szVal), (char*)apVal);
         if (aiTypReq == TOK_INTEGER)
@@ -266,7 +266,7 @@ void lex::ConvertStringToVal(int aiTyp, long alDef, char* aszVal, long* alDefReq
 {
     if (LOWORD(alDef) <= 0) throw "Empty string";
 
-    char szTok[64];
+    char szTok[64]{};
     int iNxt = 0;
 
     int iTyp = Scan(szTok, sizeof(szTok), aszVal, iNxt);
@@ -304,7 +304,7 @@ void lex::ConvertStringToVal(int aiTyp, long alDef, char* aszVal, long* alDefReq
 //				apOp		result
 void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* apOp, size_t bufferSize)
 {
-    char szTok[256];
+    char szTok[256]{};
 
     int iDim;
     int iTyp;
@@ -538,7 +538,7 @@ void lex::Parse(const char* szLine)
     iToks = 0;
     iValsCount = 0;
 
-    char szTok[256];
+    char szTok[256]{};
 
     int iBeg = 0;
     int iLnLen = (int)strlen(szLine);
@@ -658,9 +658,9 @@ int lex::TokType(int aiTokId)
 }
 void lex::UnaryOp(int aiTokTyp, int* aiTyp, long* alDef, double* adOp, size_t bufferSize)
 {
-    CD		cd{};
-    char	szTok[32];
-    int 	i;
+    CD cd{};
+    char szTok[32]{};
+    int i{0};
 
     int iDim = LOWORD(*alDef);
     int iLen = HIWORD(*alDef);

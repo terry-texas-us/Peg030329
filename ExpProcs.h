@@ -1,8 +1,6 @@
 #pragma once
 
-// Prototypes for all procedure called directly by Windows
-
-// Dialog procedures
+#include <Windows.h>
 
 BOOL CALLBACK DlgProcAnnotateOptions(HWND, UINT, WPARAM, LPARAM);
 BOOL CALLBACK DlgProcBlockInsert(HWND, UINT, WPARAM, LPARAM);

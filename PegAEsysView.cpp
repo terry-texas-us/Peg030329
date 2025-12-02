@@ -58,10 +58,10 @@
 #define new DEBUG_NEW
 #endif
 
-char szLeftMouseDown[60] = "";
-char szRightMouseDown[60] = "";
-char szLeftMouseUp[60] = "{13}"; //default return
-char szRightMouseUp[60] = "{27}"; //default escape
+char szLeftMouseDown[60]{};
+char szRightMouseDown[60]{};
+char szLeftMouseUp[60]{"{13}"}; //default return
+char szRightMouseUp[60]{"{27}"}; //default escape
 
 extern CTMat tmEditSeg;
 
@@ -1289,7 +1289,7 @@ void CPegView::DisplayOdometer()
 
     if (m_bViewOdometer)
     {
-        char szBuf[32];
+        char szBuf[32]{};
         if (app.RubberBandingGetType() == Lines)
         {
             CLine ln(app.RubberBandingGetStart(), pt);

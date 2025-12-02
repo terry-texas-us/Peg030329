@@ -1,28 +1,34 @@
 #pragma once
 
-// CDlgSetAngle dialog
+#include <Windows.h>
 
-class CDlgSetAngle : public CDialog
+#include <afx.h>
+#include <afxstr.h>
+#include <afxwin.h>
+
+#include "resource.h"
+
+class CDlgSetAngle: public CDialog
 {
-	DECLARE_DYNAMIC(CDlgSetAngle)
+    DECLARE_DYNAMIC(CDlgSetAngle)
 
 public:
-	CDlgSetAngle(CWnd* pParent = NULL);   // standard constructor
-	virtual ~CDlgSetAngle();
+    CDlgSetAngle(CWnd* pParent = NULL);   // standard constructor
+    virtual ~CDlgSetAngle();
 
-	CDlgSetAngle(const CDlgSetAngle&) = delete; // Prevent copying
-	CDlgSetAngle& operator=(const CDlgSetAngle&) = delete; // Prevent assignment
+    CDlgSetAngle(const CDlgSetAngle&) = delete; // Prevent copying
+    CDlgSetAngle& operator=(const CDlgSetAngle&) = delete; // Prevent assignment
 
-// Dialog Data
-	enum { IDD = IDD_SET_ANGLE };
+    // Dialog Data
+    enum { IDD = IDD_SET_ANGLE };
 
 protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	virtual BOOL OnInitDialog();
+    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+    virtual BOOL OnInitDialog();
 public:
-	double m_dAngle;
-	CString m_strTitle;
+    double m_dAngle;
+    CString m_strTitle;
 
 protected:
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };

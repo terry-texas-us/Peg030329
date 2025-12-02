@@ -1,6 +1,4 @@
 #pragma once
-#include <cfloat>
-#include <cmath>
 
 const double PI = 3.141592653589793;
 const double HALF_PI = (PI * .5);
@@ -34,11 +32,11 @@ const double TWOPI = (PI * 2.);
 
 inline int Round(double d) // closest integer
 {
-	return  (int)(d + 0.5);
+    return  (int)(d + 0.5);
 }
 inline double Arc(double degrees)  // arc length of an angle
 {
-	return degrees * (PI / 180);
+    return degrees * (PI / 180);
 }
 //inline double Deg(double arc)
 //// angle in degree, corresponding to an arc length

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Pnt.h" // for CPnt member
+#include "Pnt.h"
 #include "Pnt4.h"
-#include "Seg.h" // for CSeg forward declaration
-#include "Segs.h" // for CSegs base class
+#include "Seg.h"
+#include "Segs.h"
 
 class CLayer;
 class CPegView;

@@ -43,7 +43,7 @@ BOOL CALLBACK DlgProcSetupNote(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM)
             CCharCellDef ccd;
             pstate.GetCharCellDef(ccd);
 
-            char szBuf[32];
+            char szBuf[32]{};
 
             ::GetDlgItemText(hDlg, IDC_TEXT_HEIGHT, szBuf, sizeof(szBuf));
             ccd.ChrHgtSet(atof(szBuf));
@@ -115,17 +115,18 @@ int CALLBACK EnumFontFamProc(const LPLOGFONT lplf, const LPTEXTMETRIC, int, LPAR
 
 void DlgProcSetupNoteInit(HWND hDlg)
 {
-    CPegView* pView = CPegView::GetActiveView();
-    CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+    CPegView* activeView = CPegView::GetActiveView();
+    CDC* context = (activeView == nullptr) ? nullptr : activeView->GetDC();
 
-    LOGFONT lf;
-    ::ZeroMemory(&lf, sizeof(lf));
+    LOGFONT lf{};
 
     lf.lfFaceName[0] = '\0';
     lf.lfCharSet = ANSI_CHARSET;
 
-    ::EnumFontFamiliesEx(pDC->GetSafeHdc(), &lf, (FONTENUMPROC)EnumFontFamProc, LPARAM(hDlg), 0);
-
+    if (context != nullptr)
+    {
+        ::EnumFontFamiliesEx(context->GetSafeHdc(), &lf, (FONTENUMPROC)EnumFontFamProc, LPARAM(hDlg), 0);
+    }
     ::SendDlgItemMessage(hDlg, IDC_FONT_NAME, CB_ADDSTRING, 0, (LPARAM)(LPCSTR)"Simplex.psf");
 
     CCharCellDef ccd;
@@ -140,7 +141,7 @@ void DlgProcSetupNoteInit(HWND hDlg)
     CFontDef fd;
     pstate.GetFontDef(fd);
 
-    char szBuf[32];
+    char szBuf[32]{};
     strcpy_s(szBuf, sizeof(szBuf), fd.TextFont());
     ::SendDlgItemMessage(hDlg, IDC_FONT_NAME, CB_SELECTSTRING, (WPARAM)-1, (LPARAM)((LPSTR)szBuf));
 

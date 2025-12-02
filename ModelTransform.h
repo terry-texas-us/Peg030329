@@ -1,40 +1,43 @@
 #pragma once
 
-#include <afxwin.h> // for CObject (base class)
+#include <Windows.h>
 
-#include <afxcoll.h> // for CObList
+#include <afx.h>
 
-#include "Pnt.h" // for CPnt
-#include "Pnt4.h" // for CPnt4
-#include "TMat.h" // for CTMat
-#include "Vec.h" // for CVec
+#include <afxcoll.h>
 
-class CModelTransform : public CObject
+#include "Pnt.h"
+#include "Pnt4.h"
+#include "TMat.h"
+#include "Vec.h"
+#include "Vec4.h"
+
+class CModelTransform: public CObject
 {
 
 private:
 
-	WORD	m_wDepth;
-	CTMat*	m_p_tmCompositeModeling;
+    WORD	m_wDepth;
+    CTMat* m_p_tmCompositeModeling;
 
-	CObList m_TMList;	
+    CObList m_TMList;
 
 public:
-	
-	CModelTransform();
-	~CModelTransform();
 
-	// Explicitly delete copy constructor and assignment operator to avoid C4625 and C4626
-	CModelTransform(const CModelTransform&) = delete;
-	CModelTransform& operator=(const CModelTransform&) = delete;
+    CModelTransform();
+    ~CModelTransform();
 
-	void	InvokeNew();
-	void	Return();
-	void	Transform(CPnt& pt) const;
-	void	Transform(CPnt4& pt) const;
-	void	Transform(CVec4& v) const;
-	void	Transform(CVec& v) const;
-	void	SetLocalTM(const CTMat& tm);
+    // Explicitly delete copy constructor and assignment operator to avoid C4625 and C4626
+    CModelTransform(const CModelTransform&) = delete;
+    CModelTransform& operator=(const CModelTransform&) = delete;
+
+    void	InvokeNew();
+    void	Return();
+    void	Transform(CPnt& pt) const;
+    void	Transform(CPnt4& pt) const;
+    void	Transform(CVec4& v) const;
+    void	Transform(CVec& v) const;
+    void	SetLocalTM(const CTMat& tm);
 
 };
 

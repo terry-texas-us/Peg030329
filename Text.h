@@ -1,10 +1,13 @@
 #pragma once
-#include <afxwin.h>	// for MFC CObject (base class), CString, WORD, CDC, CFile
 
-#include "FontDef.h" // for CFontDef
-#include "Pnt.h" // for CPnt, CPnts
-#include "RefSys.h" // for CRefSys
-#include "TMat.h" // for CTMat
+#include <afxstr.h>
+
+#include <afxwin.h>
+
+#include "FontDef.h"
+#include "Pnt.h"
+#include "RefSys.h"
+#include "TMat.h"
 
 class CPegView;
 
@@ -25,10 +28,10 @@ class CPegView;
 //	  b0 - b11  relative y displacement
 //	  b12 - b23 relative x displacement
 //	  b24 - b31 operation code (5 for line, else move)
-	
+
 void text_Display(CPegView* pView, CDC* pDC, const CFontDef& fd, const CTMat& tm, int nOff, int nLen, const CString& strText);
 bool text_Display(CPegView* pView, CDC* pDC, const CFontDef& fd, const CRefSys& rs, const CString& strText);
 void text_Display0(CPegView* pView, CDC* pDC, const CFontDef& fd, const CRefSys& rs, const CString& strText);
 void text_GetBottomLeft(const CFontDef& fd, int iChrs, CPnt& pt);
-void text_GetBoundingBox(const CFontDef& fd, const CRefSys& cs, int nLen, double dSpacFac,  CPnts& ptsBox);
+void text_GetBoundingBox(const CFontDef& fd, const CRefSys& cs, int nLen, double dSpacFac, CPnts& ptsBox);
 CPnt text_GetNewLinePos(const CFontDef& fd, const CRefSys& rs, double dLineSpaceFac, double dChrSpaceFac);

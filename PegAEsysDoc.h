@@ -197,6 +197,9 @@ public:
     afx_msg void OnClearWorkingLayer();
     afx_msg void OnEditImageToClipboard();
     afx_msg void OnEditSegToWork();
+
+    /// @brief Pastes clipboard to drawing. Only `PegSegs` format handled and no translation is performed.
+    /// @note This function does not modify the clipboard contents.
     afx_msg void OnEditTrace();
     afx_msg void OnEditTrapCopy();
     afx_msg void OnEditTrapCut();

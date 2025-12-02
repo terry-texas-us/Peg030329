@@ -17,7 +17,7 @@
 /// @return A std::string containing the loaded resource text. The returned string may be empty if loading fails, and may be truncated if the resource exceeds the internal 256-byte buffer.
 std::string msgLoadStringResource(UINT resourceIdentifier)
 {
-    char resourceString[256];
+    char resourceString[256]{};
     ::LoadString(app.GetInstance(), resourceIdentifier, resourceString, sizeof(resourceString));
     return std::string(resourceString);
 }

@@ -93,7 +93,7 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
         case ID_OP1:										// Search for an endcap in proximity of current location
             if (rlpd::SelEndCapUsingPoint(pView, ptCur, pEndCapSeg, pEndCapMark))
             {	// Endcap located
-                char szLen[32];
+                char szLen[32]{};
                 char* pszLen;
 
                 ptPrv = pEndCapMark->GetPt();
@@ -1025,7 +1025,7 @@ void rlpd::GenSizeNote(CPnt arPt, double adAng, double adDiam)
     vYAx.RotAboutZAx(dSinAng, dCosAng);
     CRefSys rs(arPt, vXAx, vYAx);
 
-    char pSize[16];
+    char pSize[16]{};
     char* p;
 
     UnitsString_FormatLength(pSize, sizeof(pSize), std::max(app.GetUnits(), Inches), adDiam, 0, 2);

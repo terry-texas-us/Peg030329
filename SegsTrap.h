@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Pnt.h" // for CPnt member
-#include "Prim.h" // for PENCOLOR and PENSTYLE typedefs
-#include "Segs.h" // for CSegs base class
-#include "TMat.h" // for CTMat
+#include "Pnt.h"
+#include "Prim.h"
+#include "Segs.h"
+#include "TMat.h"
 #include "Vec.h"
 
 class CPegView;

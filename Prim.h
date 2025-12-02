@@ -3,15 +3,17 @@
 #include <Windows.h>
 
 #include <afx.h>
-#include <afxwin.h> // for CDC
-#include <string>
+#include <afxstr.h>
+#include <afxwin.h>
+
 #include <string.h>
 
-#include "Pnt.h"    // for CPnt, CPnts (typedef (CArray<CPnt, const CPnt&>))
+#include <string>
+
+#include "Pnt.h"
 #include "Pnt4.h"
-#include "TMat.h" // for CTMat
-#include "Vec.h" // for CVec
-#include <afxstr.h>
+#include "TMat.h"
+#include "Vec.h"
 
 HTREEITEM tvAddItem(HWND hTree, HTREEITEM hParent, LPCTSTR pszText, CObject* pOb);
 

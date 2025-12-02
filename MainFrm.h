@@ -1,47 +1,52 @@
 #pragma once
 
+#include <Windows.h>
+
+#include <afx.h>
 #include <afxext.h>
+#include <afxstr.h>
+#include <afxwin.h>
 
-class CMainFrame : public CMDIFrameWnd
+class CMainFrame: public CMDIFrameWnd
 {
-	DECLARE_DYNAMIC(CMainFrame)
+    DECLARE_DYNAMIC(CMainFrame)
 public:
-	CMainFrame();
+    CMainFrame();
 
-	// Explicitly delete copy constructor and assignment operator to fix C4625 and C4626 warnings
-	CMainFrame(const CMainFrame&) = delete;
-	CMainFrame& operator=(const CMainFrame&) = delete;
+    // Explicitly delete copy constructor and assignment operator to fix C4625 and C4626 warnings
+    CMainFrame(const CMainFrame&) = delete;
+    CMainFrame& operator=(const CMainFrame&) = delete;
 
-// Attributes
+    // Attributes
 public:
 
-// Operations
+    // Operations
 public:
-	CString GetPaneText(int nIndex) {return m_wndStatusBar.GetPaneText(nIndex);}
-	void SetPaneInfo(int nIndex, UINT nId, UINT nStyle, int cxWidth) {m_wndStatusBar.SetPaneInfo(nIndex, nId, nStyle, cxWidth);}
-	BOOL SetPaneText(int nIndex, LPCSTR lpszNewText) {return m_wndStatusBar.SetPaneText(nIndex, lpszNewText);}
-	void SetPaneStyle(int nIndex, UINT nStyle) {m_wndStatusBar.SetPaneStyle(nIndex, nStyle);}
+    CString GetPaneText(int nIndex) { return m_wndStatusBar.GetPaneText(nIndex); }
+    void SetPaneInfo(int nIndex, UINT nId, UINT nStyle, int cxWidth) { m_wndStatusBar.SetPaneInfo(nIndex, nId, nStyle, cxWidth); }
+    BOOL SetPaneText(int nIndex, LPCSTR lpszNewText) { return m_wndStatusBar.SetPaneText(nIndex, lpszNewText); }
+    void SetPaneStyle(int nIndex, UINT nStyle) { m_wndStatusBar.SetPaneStyle(nIndex, nStyle); }
 
-// Overrides
+    // Overrides
 public:
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+    virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 
-// Implementation
+    // Implementation
 public:
-	virtual ~CMainFrame();
+    virtual ~CMainFrame();
 #ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+    virtual void AssertValid() const;
+    virtual void Dump(CDumpContext& dc) const;
 #endif
 protected:  // control bar embedded members
-	CStatusBar  m_wndStatusBar;
-	CToolBar    m_wndToolBar;
+    CStatusBar  m_wndStatusBar;
+    CToolBar    m_wndToolBar;
 
-// Generated message map functions
+    // Generated message map functions
 protected:
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	afx_msg void OnDestroy();
+    afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+    afx_msg void OnDestroy();
 
 protected:
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 };

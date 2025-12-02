@@ -1,6 +1,8 @@
 #pragma once
 
-#include <afxwin.h> // for MFC HWND, UINT, WPARAM, LPARAM, BOOL, CALLBACK, HTREEITEM, CObject
+#include <Windows.h>
+
+#include <afx.h>
 
 class CPrim;
 

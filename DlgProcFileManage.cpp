@@ -25,7 +25,7 @@
 
 void DlgProcFileManageDoLayerColor(HWND hDlg);
 
-char szLayerName[64];
+char szLayerName[64]{};
 
 BOOL CALLBACK DlgProcFileManage(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -446,11 +446,11 @@ void DlgProcFileManageDoTracingInclude(HWND hDlg)
 
     static DWORD nFilterIndex = 1;
 
-    char szFilter[256];
+    char szFilter[256]{};
     ::LoadString(app.GetInstance(), IDS_OPENFILE_FILTER_TRACINGS, szFilter, sizeof(szFilter));
 
-    OPENFILENAME of;
-    ::ZeroMemory(&of, sizeof(OPENFILENAME));
+    OPENFILENAME of{};
+
     of.lStructSize = sizeof(OPENFILENAME);
     of.hwndOwner = 0;
     of.hInstance = app.GetInstance();
@@ -541,7 +541,7 @@ void DlgProcFileManageInit(HWND hDlg)
 {
     CPegDoc* pDoc = CPegDoc::GetDoc();
 
-    char szBuf[MAX_PATH];
+    char szBuf[MAX_PATH]{};
     ::GetWindowText(hDlg, szBuf, MAX_PATH);
 
     CString strName = szBuf;

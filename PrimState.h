@@ -1,10 +1,12 @@
 #pragma once
 
-#include <afxwin.h>  // For CDC, WORD, and other MFC types
+#include <Windows.h>
 
-#include "CharCellDef.h"  // For CCharCellDef member
-#include "FontDef.h"  // For CFontDef member
-#include "Prim.h"  // for PENCOLOR and PENSTYLE typedefs
+#include <afxwin.h>
+
+#include "CharCellDef.h"
+#include "FontDef.h"
+#include "Prim.h"
 
 class CPrimState
 {
@@ -24,8 +26,8 @@ public: // Operators
     const CPrimState& operator=(const CPrimState&);
 
 public: // Methods
-    void			GetCharCellDef(CCharCellDef& ccd) const { ccd = m_ccd; }
-    void			GetFontDef(CFontDef& fd) const { fd = m_fd; }
+    void		GetCharCellDef(CCharCellDef& ccd) const { ccd = m_ccd; }
+    void		GetFontDef(CFontDef& fd) const { fd = m_fd; }
     const short& MarkStyle() const { return m_nMarkStyle; }
     const PENCOLOR& PenColor() const { return (m_nPenColor); }
     const PENSTYLE& PenStyle() const { return (m_nPenStyle); }

@@ -21,6 +21,8 @@
 
 #include <cmath>
 #include <cstdlib>
+#include <exception>
+#include <fstream>
 #include <iomanip>
 #include <ios>
 #include <sstream>
@@ -78,7 +80,6 @@
 #include "UnitsString.h"
 #include "UserAxis.h"
 
-
 LRESULT CALLBACK WndProcKeyPlan(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WndProcPreview(HWND, UINT, WPARAM, LPARAM);
 
@@ -91,7 +92,7 @@ namespace hatch
     float fTableValue[1536];
 }
 double gbl_dExtNum = 0.;
-char gbl_szExtStr[128];
+char gbl_szExtStr[128]{};
 
 double dPWids [] =
 {
@@ -99,6 +100,7 @@ double dPWids [] =
 };
 
 #include "PegColors.h"
+#include <string.h>
 
 COLORREF* pColTbl = crHotCols;
 
@@ -238,10 +240,10 @@ BOOL CPegApp::InitInstance()
     if (!::RegisterClass(&wc))
         return (FALSE);
 
-    HatchesLoad(m_strAppPath + "\\Hatches\\DefaultSet.txt");
-    PenWidthsLoad(m_strAppPath + "\\Pens\\Widths.txt");
-    PenColorsLoad(m_strAppPath + "\\Pens\\Colors\\Default.txt");
-    PenStylesLoad(m_strAppPath + "\\Pens\\LineTypes.txt");
+    HatchesLoad(m_strAppPath + "\\..\\..\\res\\Hatches\\DefaultSet.txt");
+    PenWidthsLoad(m_strAppPath + "\\..\\..\\res\\Pens\\Widths.txt");
+    PenColorsLoad(m_strAppPath + "\\..\\..\\res\\Pens\\Colors\\Default.txt");
+    PenStylesLoad(m_strAppPath + "\\..\\..\\res\\Pens\\LineTypes.txt");
     StrokeFontLoad("");
 
     CPegView* pView = CPegView::GetActiveView();
@@ -340,7 +342,7 @@ void CPegApp::OnEditCfText()
     app.CheckMenuItem(ID_EDIT_CF_TEXT, MF_BYCOMMAND | (m_bEditCFText ? MF_CHECKED : MF_UNCHECKED));
 }
 // Subclasses the main window to Trap mode operations.
-void CPegApp::OnModeTrap(void)
+void CPegApp::OnModeTrap()
 {
     app.SetWindowMode(m_bTrapModeAddSegments ? ID_MODE_TRAP : ID_MODE_TRAPR);
 }
@@ -507,7 +509,7 @@ void CPegApp::OnTrapCommandsAddSegments()
 }
 void CPegApp::OnFileRun()
 {
-    char szFilter[256];
+    char szFilter[256]{};
     ::LoadString(app.GetInstance(), IDS_OPENFILE_FILTER_APPS, szFilter, sizeof(szFilter));
 
     CFileDialog dlg(TRUE, "exe", "*.exe", OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, szFilter);
@@ -516,28 +518,61 @@ void CPegApp::OnFileRun()
     if (dlg.DoModal() == IDOK)
     {
         CString strFile = dlg.GetFileName();
-#pragma tasMSG(TODO: use of winexec should be replaced with createprocess)
-        WinExec(strFile, SW_SHOW);
+
+        STARTUPINFO StartupInfo{sizeof(StartupInfo)};  // Initialize startup information
+
+        StartupInfo.dwFlags = STARTF_USESHOWWINDOW; // Enable the wShowWindow flag
+        StartupInfo.wShowWindow = SW_SHOW;
+
+        PROCESS_INFORMATION processInfo{0};    // Will receive process and thread info
+
+        // Call CreateProcess
+        BOOL success = CreateProcess(NULL, (LPTSTR)strFile.GetBuffer(), NULL, NULL, FALSE, 0, NULL, NULL, &StartupInfo, &processInfo);
+
+        if (!success) {
+            // Handle error, e.g., via GetLastError()
+            return;
+        }
+
+        // Optionally wait for the process to complete (WinExec does not wait by default)
+        // WaitForSingleObject(pi.hProcess, INFINITE);
+
+        // Clean up handles
+        CloseHandle(processInfo.hProcess);
+        CloseHandle(processInfo.hThread);
+
+        return;
     }
 }
 void CPegApp::OnHelpContents()
 {
     ::WinHelp(app.GetSafeHwnd(), "peg.hlp", HELP_CONTENTS, 0L);
 }
-void CPegApp::PenWidthsLoad(const CString& strFileName)
+void CPegApp::PenWidthsLoad(const CString& fileName)
 {
-    CStdioFile fl;
+    std::ifstream file(fileName);
+    if (!file.is_open()) { return; }
 
-    if (fl.Open(strFileName, CFile::modeRead | CFile::typeText))
-    {
-        char pBuf[32]{};
-        char* context = nullptr;
-        while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0)
-        {
-            int iId = atoi(strtok_s(pBuf, "=", &context));
-            double dVal = atof(strtok_s(0, ",\n", &context));
-            if (iId >= 0 && iId < sizeof(dPWids) / sizeof(dPWids[0]))
-                dPWids[iId] = dVal;
+    std::string line;
+    while (std::getline(file, line)) {
+        std::size_t equalPosition{line.find('=')};
+        if (equalPosition == std::string::npos) { continue; } // skip lines without '='
+
+        try {
+            std::string idString{line.substr(0, equalPosition)};
+            int iId = std::stoi(idString);
+
+            std::string valueString{line.substr(equalPosition + 1)};
+            std::size_t commaPosition = valueString.find(',');
+            if (commaPosition != std::string::npos) { valueString = valueString.substr(0, commaPosition); }
+
+            double value = std::stod(valueString);
+            const int arraySize = static_cast<int>(sizeof(dPWids) / sizeof(dPWids[0]));
+
+            if (iId >= 0 && iId < arraySize) { dPWids[iId] = value; }
+        }
+        catch (const std::exception&) {
+            continue; // skip misunderstood lines
         }
     }
 }
@@ -644,14 +679,15 @@ void CPegApp::HatchesLoad(const CString& strFileName)
     if (!fl.Open(strFileName, CFile::modeRead | CFile::typeText, &e))
         return;
 
-    char	szLn[128];
-    double	dTotStrsLen;
-    int 	iNmbEnts, iNmbStrsId;
+    char szLn[128]{};
+    double dTotStrsLen{0.};
+    int iNmbEnts{0};
+    int iNmbStrsId{0};
 
     char szValDel [] = ",\0";
-    int iHatId = 0;
-    int iNmbHatLns = 0;
-    int iTblId = 0;
+    int iHatId{0};
+    int iNmbHatLns{0};
+    int iTblId{0};
 
     while (fl.ReadString(szLn, sizeof(szLn) - 1) != 0)
     {
@@ -768,7 +804,7 @@ void CPegApp::PenStylesLoad(const CString& strFileName)
     {
         CString strDescription;
         CString strName;
-        char pBuf[128];
+        char pBuf[128]{};
 
         WORD wLensMax = 8;
         double* pLen = new double[wLensMax];
@@ -808,9 +844,8 @@ void CPegApp::ModifyMenu(UINT uPos, LPCTSTR lpNewItem)
 }
 void CPegApp::PenColorsChoose()
 {
-    CHOOSECOLOR 	cc;
+    CHOOSECOLOR cc{};
 
-    ::ZeroMemory(&cc, sizeof(CHOOSECOLOR));
     cc.lStructSize = sizeof(CHOOSECOLOR);
 
     cc.rgbResult = crHotCols[pstate.PenColor()];
@@ -832,8 +867,8 @@ void CPegApp::PenColorsLoad(const CString& strFileName)
 
     if (fl.Open(strFileName, CFile::modeRead | CFile::typeText))
     {
-        char	pBuf[128];
-        LPSTR	pId, pRed, pGreen, pBlue;
+        char pBuf[128]{};
+        LPSTR pId, pRed, pGreen, pBlue;
 
         while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0 && _strnicmp(pBuf, "<Colors>", 8) != 0);
 
@@ -1096,7 +1131,7 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli)
         CDC* pDC = pView->GetDC();
 
         CRect rc;
-        char szBuf[128];
+        char szBuf[128]{};
 
         CFont* pFont = pDC->SelectObject(m_pFontApp);
         UINT nTextAlign = pDC->SetTextAlign(TA_LEFT | TA_TOP);
