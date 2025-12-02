@@ -5,12 +5,13 @@
 
 #include "ExpProcs.h"
 #include "Grid.h"
+#include "Pnt.h"
 #include "SegsTrap.h"
 
-INT_PTR CALLBACK DlgProcHomePointGo(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcHomePointGo(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
-    WORD wNotifyCode = HIWORD(wParam);
-    static CPnt pt;
+    WORD wNotifyCode{HIWORD(wParam)};
+    static CPnt pt{};
 
     if (anMsg == WM_INITDIALOG)
     {
@@ -115,12 +116,12 @@ INT_PTR CALLBACK DlgProcHomePointGo(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM
     return (FALSE);
 }
 
-INT_PTR CALLBACK DlgProcHomePointSet(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcHomePointSet(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
-    WORD wNotifyCode = HIWORD(wParam);
-    static CPnt pt;
+    WORD wNotifyCode{HIWORD(wParam)};
+    static CPnt pt{};
 
-    int 	iId;
+    int iId{};
 
     if (anMsg == WM_INITDIALOG)
     {

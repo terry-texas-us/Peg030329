@@ -80,7 +80,7 @@ void dlgproceditops::SetScale(double dX, double dY, double dZ)
     dlgproceditops::dZScale = dZ;
 }
 
-INT_PTR CALLBACK DlgProcEditOps(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcEditOps(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
     if (anMsg == WM_INITDIALOG)
     {

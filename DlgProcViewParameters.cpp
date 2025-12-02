@@ -1,16 +1,14 @@
 #include "stdafx.h"
 
-#include <afxwin.h>
-
 #include <cstdlib>
 
 #include "PegAEsysView.h"
 
 #include "ExpProcs.h"
 
-INT_PTR CALLBACK DlgProcViewParameters(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcViewParameters(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
-    CPegView* pView = CPegView::GetActiveView();
+    CPegView* pView{CPegView::GetActiveView()};
 
     char szBuf[32]{};
 

@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <afxwin.h>
-
 #include "PegAEsysDoc.h"
 
 #include "CharCellDef.h"
@@ -16,9 +14,9 @@
 
 ///<summary>Modifies attributes of all segment primatives in current trap tocurrent settings.</summary>
 ///<remarks>Trap color index is not modified.</remarks>
-INT_PTR CALLBACK DlgProcTrapModify(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcTrapModify(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
-    CPegDoc* pDoc = CPegDoc::GetDoc();
+    CPegDoc* pDoc{CPegDoc::GetDoc()};
 
     switch (anMsg)
     {

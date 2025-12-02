@@ -2,4 +2,4 @@
 
 #include <Windows.h>
 
-LRESULT CALLBACK SubProcPower(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK SubProcPower(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam) noexcept;

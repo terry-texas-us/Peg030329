@@ -6,7 +6,7 @@
 
 #include "Pnt.h"
 
-LRESULT CALLBACK SubProcCut(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK SubProcCut(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 namespace cut
 {

@@ -6,7 +6,7 @@
 
 #include "Pnt.h"
 
-LRESULT CALLBACK SubProcPipe(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK SubProcPipe(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 namespace pipe
 {

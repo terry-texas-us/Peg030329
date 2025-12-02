@@ -5,7 +5,7 @@
 #include "PegAEsysView.h"
 #include "Pnt.h"
 
-LRESULT CALLBACK SubProcDimension(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK SubProcDimension(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 namespace dimension
 {

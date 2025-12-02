@@ -29,43 +29,44 @@
 
 namespace rlpd
 {
-    EJust0	eJust0 = Center0;
-    bool	bGenCenterline = false;
-    bool	bContSec = false;
-    double	dSecDiam;
-    double	dInsideRadiusFactor = 1.5;		// inside radius elbow factor
+    EJust0	eJust0{Center0};
+    bool	bGenCenterline{false};
+    bool	bContSec{false};
+    double	dSecDiam{0.0};
+    double	dInsideRadiusFactor{1.5};		// inside radius elbow factor
 }
-CSeg* pgEndCapSeg = 0;
+CSeg* pgEndCapSeg{nullptr};
 
-LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam) noexcept
 {
-    static double dDiam[3] = {.125, .125, .125};
-    static WORD wPrvKeyDwn = 0;
-    static CPnt ptPrv;
-    static CLine lnPar[4];
-    static CSeg* pEndCapSeg = 0;
-    static CPrimMark* pEndCapMark = 0;
-    static int iEndCapId = 0;
+    static double dDiam[3]{0.125, 0.125, 0.125};
+    static WORD wPrvKeyDwn{0};
+    static CPnt ptPrv{};
+    static CLine lnPar[4]{};
+    static CSeg* pEndCapSeg{nullptr};
+    static CPrimMark* pEndCapMark{nullptr};
+    static int iEndCapId{0};
 
-    CPrim* pLeftLine;
-    CPrim* pRightLine;
-    CLine	lnLead;
-    CLine	lnCap;
+    CPrim* pLeftLine{nullptr};
+    CPrim* pRightLine{nullptr};
+    CLine	lnLead{};
+    CLine	lnCap{};
 
-    double	dAng;
-    int iJus[2];
+    double	dAng{};
+    int iJus[2]{};
 
-    double	dSlo[2] = {4., 4.};
+    double	dSlo[2]{4.0, 4.0};
 
     if (anMsg == WM_COMMAND)
     {
-        long lResult = 0;
+        long lResult{0};
 
-        CPegDoc* pDoc = CPegDoc::GetDoc();
-        CPegView* pView = CPegView::GetActiveView();
+        CPegDoc* pDoc{CPegDoc::GetDoc()};
+        CPegView* pView{CPegView::GetActiveView()};
+
         CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
 
-        CPnt ptCur = app.CursorPosGet();
+        CPnt ptCur{app.CursorPosGet()};
 
         switch (LOWORD(wParam))
         {

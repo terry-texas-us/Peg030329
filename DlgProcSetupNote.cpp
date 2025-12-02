@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <afxwin.h>
-
 #include <string.h>
 
 #include <cstdlib>
@@ -17,7 +15,7 @@
 
 void DlgProcSetupNoteInit(HWND hDlg);
 
-INT_PTR CALLBACK DlgProcSetupNote(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcSetupNote(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM) noexcept
 {
     switch (nMsg)
     {

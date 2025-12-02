@@ -11,7 +11,7 @@ class CPrimLine;
 class CPrimMark;
 class CSeg;
 
-LRESULT CALLBACK SubProcRLPD(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK SubProcRLPD(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 namespace rlpd
 {

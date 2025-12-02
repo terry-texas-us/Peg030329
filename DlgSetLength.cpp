@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include <afxstr.h>
-#include <afxwin.h>
 
 #include "PegAEsys.h"
 

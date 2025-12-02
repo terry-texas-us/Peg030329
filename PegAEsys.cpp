@@ -6,7 +6,6 @@
 #include <afxmsg_.h>
 #include <afxres.h>
 #include <afxstr.h>
-#include <afxwin.h>
 #include <atltypes.h>
 #include <ShlObj_core.h>
 #include <tchar.h>
@@ -409,7 +408,7 @@ void CPegApp::OnModeFixup()
 void CPegApp::OnModeLetter()
 {
 #pragma tasMSG(TODO: OnModeLetter - Using app main window as parent of dialog)
-    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_ADD_NOTE), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcModeLetter));
+    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_ADD_NOTE), GetSafeHwnd(), DlgProcModeLetter);
 }
 void CPegApp::OnModePipe()
 {
@@ -451,7 +450,7 @@ void CPegApp::OnModeSegEdit()
 void CPegApp::OnModeRevise()
 {
 #pragma tasMSG(TODO: OnModeRevise - Using app main window as parent of dialog)
-    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_ADD_NOTE), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcModeRevise));
+    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_ADD_NOTE), GetSafeHwnd(), DlgProcModeRevise);
 }
 void CPegApp::OnModePrimMend()
 {

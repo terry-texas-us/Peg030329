@@ -90,7 +90,7 @@ void DlgProcEditTrap_CommandsQueryFillGeometryList(HWND hDlg, CPrim* pPrim)
     }
 }
 
-INT_PTR CALLBACK DlgProcEditTrap_CommandsQuery(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK DlgProcEditTrap_CommandsQuery(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam) noexcept
 {
     HWND hWndSegmentTree = ::GetDlgItem(hDlg, IDC_SEGMENT_TREE);
     HWND hWndExtra = ::GetDlgItem(hDlg, IDC_EXTRA_LIST_CTRL);

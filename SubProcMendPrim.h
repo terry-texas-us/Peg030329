@@ -2,4 +2,4 @@
 
 #include <Windows.h>
 
-LRESULT CALLBACK SubProcMendPrim(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK SubProcMendPrim(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam) noexcept;

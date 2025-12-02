@@ -6,14 +6,18 @@
 #include "PegAEsysView.h"
 
 #include "ExpProcs.h"
+#include "Line.h"
 #include "Messages.h"
 #include "ParLines.h"
+#include "Pnt.h"
+#include "Prim.h"
 #include "PrimArc.h"
 #include "PrimLine.h"
 #include "PrimMark.h"
 #include "PrimState.h"
 #include "PrimText.h"
 #include "SafeMath.h"
+#include "Seg.h"
 #include "SegsDet.h"
 #include "SegsTrap.h"
 #include "StringExtra.h"
@@ -23,48 +27,48 @@
 
 namespace lpd
 {
-    EJust	eJust = Center;
-    EElbow	eElbow = Mittered;		// elbow type (0 Mittered 1 Radial)
-    bool	bGenTurnVanes = true;	// turning vanes generation flag
-    double	dSecWid;
-    double	dSecDep;
-    double	dInsRadElFac = 1.5;		// inside radius elbow factor
-    bool	bContSec = false;
-    CPnt	pt[5];
-    CSeg* pEndCapSeg = 0;
+    EJust	eJust{Center};
+    EElbow	eElbow{Mittered};		// elbow type (0 Mittered 1 Radial)
+    bool	bGenTurnVanes{true};	// turning vanes generation flag
+    double	dSecWid{0.0};
+    double	dSecDep{0.0};
+    double	dInsRadElFac{1.5};		// inside radius elbow factor
+    bool	bContSec{false};
+    CPnt	pt[5]{};
+    CSeg* pEndCapSeg{nullptr};
 }
 
-LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam) noexcept
 {
-    CPegView* pView = CPegView::GetActiveView();
+    CPegView* pView{CPegView::GetActiveView()};
 
-    static double dDep[3] = {.0625, .0625, .0625};
-    static double dWid[3] = {.125, .125, .125};
-    static WORD wPrvKeyDwn = 0;
-    static CPnt ptPrv;
-    static CLine lnPar[4];
-    static CSeg* pEndCapSeg = 0;
-    static CPrimMark* pEndCapMark = 0;
-    static int iEndCapId = 0;
+    static double dDep[3]{0.0625, 0.0625, 0.0625};
+    static double dWid[3]{0.125, 0.125, 0.125};
+    static WORD wPrvKeyDwn{0};
+    static CPnt ptPrv{};
+    static CLine lnPar[4]{};
+    static CSeg* pEndCapSeg{nullptr};
+    static CPrimMark* pEndCapMark{nullptr};
+    static int iEndCapId{0};
 
-    CPrim* pLeftLine;
-    CPrim* pRightLine;
-    CLine	lnLead;
-    int 	iRet = 0;
-    CLine	lnCap;
+    CPrim* pLeftLine{nullptr};
+    CPrim* pRightLine{nullptr};
+    CLine	lnLead{};
+    int 	iRet{0};
+    CLine	lnCap{};
 
-    double	dAng;
-    int 	iJus[2];
+    double	dAng{};
+    int 	iJus[2]{};
 
-    double	dSlo[2] = {4., 4.};
+    double	dSlo[2]{4.0, 4.0};
 
     if (anMsg == WM_COMMAND)
     {
-        long lResult = 0;
+        long lResult{0};
 
-        CPegDoc* pDoc = CPegDoc::GetDoc();
+        CPegDoc* pDoc{CPegDoc::GetDoc()};
 
-        CPnt ptCur = app.CursorPosGet();
+        CPnt ptCur{app.CursorPosGet()};
 
         switch (LOWORD(wParam))
         {
@@ -1352,7 +1356,7 @@ void lpd::SetOptions(double* section_width, double* section_depth)
     lpd::dSecWid = *section_width;
     lpd::dSecDep = *section_depth;
 
-    if (::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_DLGPROC_LPD_OPTIONS), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcLPDOptions)) > 0)
+    if (::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_DLGPROC_LPD_OPTIONS), app.GetSafeHwnd(), DlgProcLPDOptions) > 0)
     {
         *section_width = std::max(0., lpd::dSecWid);
         *section_depth = std::max(0., lpd::dSecDep);

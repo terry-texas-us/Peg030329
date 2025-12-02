@@ -26,7 +26,7 @@ CPnt UserAxisSnapLn(const CPnt& ptBeg, const CPnt& ptEnd)
 
 }
 ///<summary>Modifies the user grid and axis constraints.</summary>
-INT_PTR CALLBACK DlgProcSetupConstraintsAxis(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcSetupConstraintsAxis(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
     switch (anMsg)
     {

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include <afxstr.h>
-#include <afxwin.h>
 
 #include <string.h>
 
@@ -21,9 +20,9 @@ void DlgProcFileManageDoLayerColor(HWND hDlg);
 
 char szLayerName[64]{};
 
-INT_PTR CALLBACK DlgProcFileManage(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK DlgProcFileManage(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam) noexcept
 {
-    WORD wNotifyCode = HIWORD(wParam);
+    WORD wNotifyCode{HIWORD(wParam)};
 
     if (nMsg == WM_INITDIALOG)
     {
@@ -438,7 +437,7 @@ void DlgProcFileManageDoTracingInclude(HWND hDlg)
 {
     CPegDoc* pDoc = CPegDoc::GetDoc();
 
-    static DWORD nFilterIndex = 1;
+    static DWORD nFilterIndex{1};
 
     char szFilter[256]{};
     ::LoadString(app.GetInstance(), IDS_OPENFILE_FILTER_TRACINGS, szFilter, sizeof(szFilter));

@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <afxwin.h>
-
 #include "ChildFrm.h"
 
 #ifdef _DEBUG

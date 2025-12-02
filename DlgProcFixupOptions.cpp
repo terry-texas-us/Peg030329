@@ -4,7 +4,7 @@
 #include "SubProcFixup.h"
 #include "UserAxis.h"
 
-INT_PTR CALLBACK DlgProcFixupOptions(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcFixupOptions(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM) noexcept
 {
     switch (nMsg)
     {

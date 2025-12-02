@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 
-LRESULT CALLBACK SubProcFixup(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK SubProcFixup(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 namespace fixup
 {

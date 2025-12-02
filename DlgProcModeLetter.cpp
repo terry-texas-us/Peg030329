@@ -12,11 +12,11 @@
 #include "Seg.h"
 #include "Text.h"
 
-INT_PTR CALLBACK DlgProcModeLetter(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK DlgProcModeLetter(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam) noexcept
 {
     CPegDoc* pDoc = CPegDoc::GetDoc();
 
-    static CPnt ptPvt;
+    static CPnt ptPvt{};
 
     HWND hWndTextCtrl = ::GetDlgItem(hDlg, IDC_TEXT);
 

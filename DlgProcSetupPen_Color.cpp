@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <afxwin.h>
-
 #include <atltypes.h>
 
 #include <string>
@@ -14,7 +12,7 @@
 
 void SetupPenColor_DrawEntire(LPDRAWITEMSTRUCT, int);
 
-INT_PTR CALLBACK DlgProcSetupPenColor(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM  lParam)
+INT_PTR CALLBACK DlgProcSetupPenColor(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM  lParam) noexcept
 {
     std::string szBuf;
     PENCOLOR nPenColor;

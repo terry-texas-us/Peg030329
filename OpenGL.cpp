@@ -194,7 +194,7 @@ void opengl::SetLightSpecular(GLenum nLight, Vecd dSpecular)
 }
 void opengl::SetVertex(const CPnt& pt)
 {
-    static double dPt[3];
+    static double dPt[3]{};
 
     dPt[0] = pt[0];
     dPt[1] = pt[1];

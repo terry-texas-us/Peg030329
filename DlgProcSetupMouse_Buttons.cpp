@@ -1,11 +1,11 @@
 #include "stdafx.h"
 
-extern char		szLeftMouseDown[60];
-extern char		szRightMouseDown[60];
-extern char		szLeftMouseUp[60];
-extern char		szRightMouseUp[60];
+extern char szLeftMouseDown[60];
+extern char	szRightMouseDown[60];
+extern char	szLeftMouseUp[60];
+extern char	szRightMouseUp[60];
 
-INT_PTR CALLBACK DlgProcSetupMouse_Buttons(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcSetupMouse_Buttons(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
     switch (anMsg)
     {

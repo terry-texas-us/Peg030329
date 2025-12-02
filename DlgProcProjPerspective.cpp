@@ -8,7 +8,7 @@
 void DlgProcProjPerspectiveDoOK(HWND);
 void DlgProcProjPerspectiveInit(HWND);
 
-INT_PTR CALLBACK DlgProcProjPerspective(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcProjPerspective(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
     switch (anMsg)
     {

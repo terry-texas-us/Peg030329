@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Windows.h>
-
 #include <afxwin.h>
 
 #include "Pnt.h"
@@ -9,7 +7,9 @@
 class CPegView;
 class CSegs;
 
-LRESULT CALLBACK SubProcTrapAdd(HWND, UINT, WPARAM, LPARAM);
+/// @brief Add segments to trap
+/// @note Convex polygon trap (operation 3) not implemented yet. Area trap (operation 4) needs to be generalized to quad. Making trap invisible marks segments for potential deletion elsewhere.
+LRESULT CALLBACK SubProcTrapAdd(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 namespace trap
 {

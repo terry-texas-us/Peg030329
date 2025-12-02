@@ -10,7 +10,7 @@
 
 void DlgProcRLPDOptionsInit(HWND);
 
-INT_PTR CALLBACK DlgProcRLPDOptions(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcRLPDOptions(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM) noexcept
 {
     char szBuf[32]{};
 

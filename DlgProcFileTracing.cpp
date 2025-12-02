@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <afxwin.h>
-
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 

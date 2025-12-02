@@ -25,14 +25,14 @@
 #define NOMINMAX                 // Prevent Windows.h from defining min/max macros
 #define STRICT                   // Enforce stricter type safety
 
-#include <Windows.h>
+//#include <Windows.h>
 
-#include <afx.h>
+//#include <afx.h>
 //#include <afxadv.h>
 //#include <afxext.h>
 //#include <afxdisp.h>
 //#include <afxtempl.h>
-//#include <afxwin.h>
+#include <afxwin.h>
 //#include <commdlg.h>
 //#include <ddeml.h>
 //#include <direct.h>

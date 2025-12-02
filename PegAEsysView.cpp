@@ -4,7 +4,6 @@
 #include <afxext.h>
 #include <afxmsg_.h>
 #include <afxres.h>
-#include <afxwin.h>
 
 #include <atltypes.h>
 
@@ -198,7 +197,7 @@ BEGIN_MESSAGE_MAP(CPegView, CView)
     ON_UPDATE_COMMAND_UI(ID_VIEW_RENDERED, OnUpdateViewRendered)
     ON_UPDATE_COMMAND_UI(ID_VIEW_WIREFRAME, OnUpdateViewWireframe)
     ON_UPDATE_COMMAND_UI(ID_VIEW_PENWIDTHS, OnUpdateViewPenwidths)
-#pragma
+#pragma warning(pop)
 END_MESSAGE_MAP()
 
 void CPegView::ModelViewPopActive()
@@ -815,22 +814,22 @@ void CPegView::On3dViewsBack()
 }
 void CPegView::On3dViewsIsometric()
 {
-    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_ISOMETRIC), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcProjIsometric));
+    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_ISOMETRIC), GetSafeHwnd(), DlgProcProjIsometric);
     InvalidateRect(NULL, TRUE);
 }
 void CPegView::On3dViewsAxonometric()
 {
-    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_AXONOMETRIC), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcProjAxonometric));
+    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_AXONOMETRIC), GetSafeHwnd(), DlgProcProjAxonometric);
     InvalidateRect(NULL, TRUE);
 }
 void CPegView::On3dViewsOblique()
 {
-    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_OBLIQUE), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcProjOblique));
+    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_OBLIQUE), GetSafeHwnd(), DlgProcProjOblique);
     InvalidateRect(NULL, TRUE);
 }
 void CPegView::On3dViewsPerspective()
 {
-    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_PERSPECTIVE), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcProjPerspective));
+    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_PERSPECTIVE), GetSafeHwnd(), DlgProcProjPerspective);
     InvalidateRect(NULL, TRUE);
 }
 void CPegView::OnViewTrueTypeFonts()
@@ -874,7 +873,7 @@ void CPegView::OnViewRendered()
 }
 void CPegView::OnViewParameters()
 {
-    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_VIEWPARAMS), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcViewParameters));
+    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_VIEWPARAMS), GetSafeHwnd(), DlgProcViewParameters);
 }
 void CPegView::OnViewSolid()
 {
@@ -882,7 +881,7 @@ void CPegView::OnViewSolid()
 }
 void CPegView::OnViewLighting()
 {
-    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_VIEWLIGHTING), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcViewLighting));
+    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_VIEWLIGHTING), GetSafeHwnd(), DlgProcViewLighting);
 }
 void CPegView::OnWindowNormal()
 {
@@ -1007,16 +1006,16 @@ void CPegView::OnSetupDimAngle()
 }
 void CPegView::OnSetupUnits()
 {
-    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_UNITS), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcUnits));
+    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_UNITS), GetSafeHwnd(), DlgProcUnits);
 }
 void CPegView::OnSetupConstraintsAxis()
 {
-    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_CONSTRAINTS_AXIS), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupConstraintsAxis));
+    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_CONSTRAINTS_AXIS), GetSafeHwnd(), DlgProcSetupConstraintsAxis);
     app.StatusLineDisplay();
 }
 void CPegView::OnSetupConstraintsGrid()
 {
-    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_CONSTRAINTS_GRID), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupConstraints));
+    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_CONSTRAINTS_GRID), GetSafeHwnd(), DlgProcSetupConstraints);
     app.StatusLineDisplay();
 }
 void CPegView::OnCursorDefault()
@@ -1033,7 +1032,7 @@ void CPegView::OnCursorCrosshair()
 }
 void CPegView::OnSetupMouseButtons()
 {
-    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_MOUSEKEYS), GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupMouse_Buttons));
+    ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_MOUSEKEYS), GetSafeHwnd(), DlgProcSetupMouse_Buttons);
 }
 void CPegView::OnRelativeMovesEngDown()
 {
@@ -1280,7 +1279,7 @@ void CPegView::OnUpdateViewOdometer(CCmdUI* pCmdUI)
 }
 void CPegView::DisplayOdometer()
 {
-    static UINT fuOptions = ETO_CLIPPED | ETO_OPAQUE;
+    static UINT fuOptions{ETO_CLIPPED | ETO_OPAQUE};
     CPnt pt = app.CursorPosGet();
 
     m_vRelPos = pt - grid::GetOrign();

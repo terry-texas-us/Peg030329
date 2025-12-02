@@ -11,14 +11,14 @@
 #include "Vec.h"
 
 
-INT_PTR CALLBACK DlgProcProjOblique(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcProjOblique(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
-    CPegView* pView = CPegView::GetActiveView();
+    CPegView* pView{CPegView::GetActiveView()};
 
     double	dAng, dPhi, dTheta;
-    CPnt ptProjRefPt;
-    CVec vVwPlnNorm;
-    CVec vVwUp;
+    CPnt ptProjRefPt{};
+    CVec vVwPlnNorm{};
+    CVec vVwUp{};
 
     switch (anMsg)
     {

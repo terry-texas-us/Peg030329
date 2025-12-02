@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <afxwin.h>
-
 #include <atltypes.h>
 
 #include "PegAEsysDoc.h"
@@ -18,7 +16,7 @@
 void SetupPenStyle_DrawEntire(LPDRAWITEMSTRUCT lpDIS, int inflate);
 void SetupPenStyle_Init(HWND);
 
-INT_PTR CALLBACK DlgProcSetupPenStyle(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK DlgProcSetupPenStyle(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam) noexcept
 {
     BOOL bTranslated;
     char szBuf[32]{};

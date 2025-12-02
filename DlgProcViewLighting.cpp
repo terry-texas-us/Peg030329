@@ -2,7 +2,7 @@
 
 #if GL_FUNCTIONALITY
 
-INT_PTR CALLBACK DlgProcViewLighting(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcViewLighting(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM) noexcept
 {
     CPegView* pView = CPegView::GetActiveView();
 
@@ -80,7 +80,7 @@ INT_PTR CALLBACK DlgProcViewLighting(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM
     return (FALSE);
 }
 #else
-INT_PTR CALLBACK DlgProcViewLighting(HWND, UINT, WPARAM, LPARAM)
+INT_PTR CALLBACK DlgProcViewLighting(HWND, UINT, WPARAM, LPARAM) noexcept
 {
     return FALSE;
 }

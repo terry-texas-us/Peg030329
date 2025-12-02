@@ -14,11 +14,11 @@
 void	BlockInsertDoOK(HWND);
 LRESULT	BlockInsertGetCurSel(HWND, int, CString& strName);
 
-CPnt* ptIns = 0;
+CPnt* ptIns{nullptr};
 
-INT_PTR CALLBACK DlgProcBlockInsert(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcBlockInsert(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
-    CPegDoc* pDoc = CPegDoc::GetDoc();
+    CPegDoc* pDoc{CPegDoc::GetDoc()};
 
     switch (anMsg)
     {

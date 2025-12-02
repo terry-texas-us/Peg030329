@@ -8,9 +8,8 @@
 
 void DlgProcPipeSymbolInit(HWND);
 
-INT_PTR CALLBACK DlgProcPipeSymbol(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcPipeSymbol(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
-
     switch (anMsg)
     {
     case WM_INITDIALOG:

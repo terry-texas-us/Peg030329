@@ -14,9 +14,9 @@ void trapFilterByPenColor(PENCOLOR);
 void trapFilterByLineStyle(int);
 void trapFilterByPrimType(CPrim::Type);
 
-INT_PTR CALLBACK DlgProcTrapFilter(HWND ahDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcTrapFilter(HWND ahDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
-    CPegDoc* pDoc = CPegDoc::GetDoc();
+    CPegDoc* pDoc{CPegDoc::GetDoc()};
 
     if (anMsg == WM_INITDIALOG)
     {

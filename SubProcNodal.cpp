@@ -5,31 +5,33 @@
 #include "PegAEsysView.h"
 
 #include "Hatch.h"
+#include "Pnt.h"
 #include "PrimLine.h"
 #include "PrimPolygon.h"
 #include "PrimState.h"
 #include "SafeMath.h"
+#include "Segs.h"
 #include "SegsDet.h"
 #include "SubProcNodal.h"
 #include "UserAxis.h"
 
 namespace nodal
 {
-    bool		bAdd;
-    CObList* UPL = 0;
-    CSegs* SegList = 0;
-    CObList* PrimLis;
+    bool bAdd{};
+    CObList* UPL{nullptr};
+    CSegs* SegList{nullptr};
+    CObList* PrimLis{nullptr};
 }
 
-LRESULT CALLBACK SubProcNodal(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK SubProcNodal(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam) noexcept
 {
-    static	WORD wPrvKeyDwn;
-    static CPnt rPrvPos;
+    static WORD wPrvKeyDwn{};
+    static CPnt rPrvPos{};
 
     if (anMsg == WM_COMMAND)
     {
-        long lResult = 0;
-        CPnt rCurPos = app.CursorPosGet();
+        long lResult{0};
+        CPnt rCurPos{app.CursorPosGet()};
         switch (LOWORD(wParam))
         {
         case ID_OP0:

@@ -6,7 +6,7 @@
 
 class CSeg;
 
-LRESULT CALLBACK SubProcAnnotate(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK SubProcAnnotate(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 namespace annotate
 {

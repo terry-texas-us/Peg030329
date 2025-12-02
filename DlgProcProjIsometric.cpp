@@ -4,14 +4,14 @@
 
 #include "Vec.h"
 
-INT_PTR CALLBACK DlgProcProjIsometric(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcProjIsometric(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
-    static int iLeftRight, iFrontBack, iAboveUnder;
+    static int iLeftRight{0}, iFrontBack{0}, iAboveUnder{0};
 
-    CPegView* pView = CPegView::GetActiveView();
+    CPegView* pView{CPegView::GetActiveView()};
 
-    CVec	vVwUp;
-    CVec	vDirection;
+    CVec	vVwUp{};
+    CVec	vDirection{};
 
     switch (anMsg)
     {

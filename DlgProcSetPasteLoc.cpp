@@ -5,9 +5,9 @@
 #include "Pnt.h"
 #include "SegsTrap.h"
 
-INT_PTR CALLBACK DlgProcSetPasteLoc(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcSetPasteLoc(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
-    CPnt pt;
+    CPnt pt{};
 
     switch (anMsg)
     {

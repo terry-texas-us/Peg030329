@@ -2,4 +2,4 @@
 
 #include <Windows.h>
 
-LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam) noexcept;

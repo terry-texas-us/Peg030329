@@ -11,7 +11,7 @@ class CPrimLine;
 class CPrimMark;
 class CSeg;
 
-LRESULT CALLBACK SubProcLPD(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK SubProcLPD(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 enum	ETransition { None, Begin, End, Both };
 enum	EElbow { Mittered, Radial };

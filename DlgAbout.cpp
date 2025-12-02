@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <afxwin.h>
-
 #include "PegAEsys.h"
 
 // CDlgAbout dialog used for App About

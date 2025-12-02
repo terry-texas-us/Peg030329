@@ -4,7 +4,7 @@
 
 #include "ExpProcs.h"
 
-INT_PTR CALLBACK DlgProcDrawOptions(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcDrawOptions(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
     switch (anMsg)
     {
@@ -25,29 +25,29 @@ INT_PTR CALLBACK DlgProcDrawOptions(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM
 
         case IDC_PEN:
             ::EndDialog(hDlg, TRUE);
-            ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_COLOR), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupPenColor));
+            ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_COLOR), app.GetSafeHwnd(), DlgProcSetupPenColor);
             app.StatusLineDisplay(Pen);
             break;
 
         case IDC_LINE:
             ::EndDialog(hDlg, TRUE);
-            ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_PENSTYLE), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupPenStyle));
+            ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_PENSTYLE), app.GetSafeHwnd(), DlgProcSetupPenStyle);
             app.StatusLineDisplay(Line);
             break;
 
         case IDC_TEXT:
             ::EndDialog(hDlg, TRUE);
-            ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_NOTE), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupNote));
+            ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_NOTE), app.GetSafeHwnd(), DlgProcSetupNote);
             break;
 
         case IDC_FILL:
             ::EndDialog(hDlg, TRUE);
-            ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_HATCH), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupHatch));
+            ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_HATCH), app.GetSafeHwnd(), DlgProcSetupHatch);
             break;
 
         case IDC_CONSTRAINTS:
             ::EndDialog(hDlg, TRUE);
-            ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_CONSTRAINTS_GRID), app.GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupConstraints));
+            ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_CONSTRAINTS_GRID), app.GetSafeHwnd(), DlgProcSetupConstraints);
             break;
 
         default:

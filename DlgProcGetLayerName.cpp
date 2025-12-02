@@ -2,7 +2,7 @@
 
 extern char	szLayerName[64];
 
-INT_PTR CALLBACK DlgProcGetLayerName(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcGetLayerName(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
     switch (anMsg)
     {

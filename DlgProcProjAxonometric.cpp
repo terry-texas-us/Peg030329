@@ -7,15 +7,15 @@
 #include "Vec.h"
 
 
-INT_PTR CALLBACK DlgProcProjAxonometric(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcProjAxonometric(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
-    CPegView* pView = CPegView::GetActiveView();
+    CPegView* pView{CPegView::GetActiveView()};
 
-    CVec	vDirection;
-    CVec	vVwUp;
+    CVec	vDirection{};
+    CVec	vVwUp{};
 
-    CPnt	ptEye;
-    CPnt	ptTarget;
+    CPnt	ptEye{};
+    CPnt	ptTarget{};
 
     switch (anMsg)
     {

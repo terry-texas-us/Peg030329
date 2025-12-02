@@ -12,11 +12,11 @@
 ///Text related attributes for all notes generated will be same as those of the text last picked.
 ///Upon exit attributes restored to their entry values.
 ///</remarks>
-INT_PTR CALLBACK DlgProcModeRevise(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK DlgProcModeRevise(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam) noexcept
 {
     static CFontDef fd;
     static CRefSys rs;
-    static CPrimText* pText = 0;
+    static CPrimText* pText{nullptr};
 
     CPegView* pView = CPegView::GetActiveView();
 

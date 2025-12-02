@@ -6,7 +6,7 @@
 
 class CSeg;
 
-LRESULT CALLBACK SubProcDraw(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK SubProcDraw(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 namespace draw
 {

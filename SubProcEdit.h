@@ -2,4 +2,4 @@
 
 #include <Windows.h>
 
-LRESULT CALLBACK SubProcEdit(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK SubProcEdit(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam) noexcept;

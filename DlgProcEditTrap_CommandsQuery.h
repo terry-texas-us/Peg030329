@@ -28,7 +28,7 @@ void DlgProcEditTrap_CommandsQueryFillExtraList(HWND hDlg, CPrim* pPrim);
  * @param lParam Additional message information.
  * @return BOOL TRUE if the message was processed, FALSE otherwise.
  */
-INT_PTR CALLBACK DlgProcEditTrap_CommandsQuery(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK DlgProcEditTrap_CommandsQuery(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam) noexcept;
 
 /**
  * @brief Fills the geometry list control with data from the given primitive.
