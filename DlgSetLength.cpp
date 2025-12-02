@@ -1,16 +1,11 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
-
 #include <afxstr.h>
 #include <afxwin.h>
 
 #include "PegAEsys.h"
 
 #include "DlgSetLength.h"
-#include "resource.h"
 
 #include "UnitsString.h"
 

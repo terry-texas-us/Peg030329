@@ -1,9 +1,5 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
-
 #include "PegAEsys.h"
 #include "PegAEsysDoc.h"
 
@@ -13,7 +9,6 @@
 #include "PrimState.h"
 #include "PrimText.h"
 #include "RefSys.h"
-#include "resource.h"
 #include "Seg.h"
 #include "Text.h"
 

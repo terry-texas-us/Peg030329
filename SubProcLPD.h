@@ -4,7 +4,6 @@
 
 #include "Pnt.h"
 #include "Prim.h"
-#include "Vec.h"
 
 class CLine;
 class CPegView;

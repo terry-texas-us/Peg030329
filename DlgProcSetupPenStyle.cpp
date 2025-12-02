@@ -1,8 +1,5 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
 #include <afxwin.h>
 
 #include <atltypes.h>
@@ -16,7 +13,6 @@
 #include "Polyline.h"
 #include "Prim.h"
 #include "PrimState.h"
-#include "resource.h"
 #include "Vec.h"
 
 void SetupPenStyle_DrawEntire(LPDRAWITEMSTRUCT lpDIS, int inflate);

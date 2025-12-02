@@ -1,8 +1,5 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
 #include <afxwin.h>
 
 #include "PegAEsysDoc.h"
@@ -11,7 +8,6 @@
 #include "Layer.h"
 #include "Messages.h"
 #include "Preview.h"
-#include "resource.h"
 #include "SegsTrap.h"
 
 /// @brief The current trap is copied to the clipboard. This is done with two independent clipboard formats. 

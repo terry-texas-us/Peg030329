@@ -1,16 +1,11 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
-
 #include <algorithm>
 
 #include "ExpProcs.h"
 #include "Hatch.h"
 #include "Polygon.h"
 #include "PrimState.h"
-#include "resource.h"
 #include "SafeMath.h"
 
 BOOL CALLBACK DlgProcSetupHatch(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)

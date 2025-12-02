@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
 #include <afxext.h>
 #include <afxstr.h>
 #include <afxwin.h>
@@ -12,8 +10,6 @@
 #include "MainFrm.h"
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
-
-#include "resource.h"
 
 void CPegApp::ModeLineDisplay()
 {

@@ -32,7 +32,7 @@
 //#include <afxext.h>
 //#include <afxdisp.h>
 //#include <afxtempl.h>
-
+//#include <afxwin.h>
 //#include <commdlg.h>
 //#include <ddeml.h>
 //#include <direct.h>

@@ -1,16 +1,13 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
+#include <afxstr.h>
 
 #include <algorithm>
+
 #include <string.h>
 
 #include "Prim.h"
-#include "resource.h"
 #include "SegsTrap.h"
-#include <afxstr.h>
 
 HTREEITEM tvAddItem(HWND hTree, HTREEITEM hParent, LPCTSTR pszText, CObject* pOb)
 {

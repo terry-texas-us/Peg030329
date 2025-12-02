@@ -1,8 +1,5 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
 #include <afxwin.h>
 
 #include "PegAEsysDoc.h"
@@ -14,7 +11,6 @@
 #include "Prim.h"
 #include "PrimPolygon.h"
 #include "PrimState.h"
-#include "resource.h"
 #include "Seg.h"
 #include "SegsTrap.h"
 

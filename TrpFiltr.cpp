@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
 #include <afxstr.h>
 
 #include <climits>
@@ -11,7 +9,6 @@
 #include "PegAEsysView.h"
 
 #include "Prim.h"
-#include "resource.h"
 #include "SegsTrap.h"
 
 void trapFilterByPenColor(PENCOLOR);

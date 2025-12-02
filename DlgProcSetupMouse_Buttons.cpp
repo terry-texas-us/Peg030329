@@ -1,11 +1,5 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
-
-#include "resource.h"
-
 extern char		szLeftMouseDown[60];
 extern char		szRightMouseDown[60];
 extern char		szLeftMouseUp[60];

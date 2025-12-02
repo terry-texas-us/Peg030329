@@ -1,37 +1,29 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
-
 #include <corecrt.h>
 #include <string.h>
 
-#include "CharCellDef.h"
-
 #include <cstdlib>
 
+#include "PegAEsys.h"
+#include "PegAEsysDoc.h"
+
+#include "CharCellDef.h"
+#include "ddeCmds.h"
+#include "FileJob.h"
 #include "FontDef.h"
 #include "Layer.h"
 #include "Pnt.h"
 #include "Prim.h"
-#include "RefSys.h"
-#include "Seg.h"
-#include "Vec.h"
-
-
-#include "PegAEsys.h"
-#include "PegAEsysDoc.h"
-#include "PegAEsysView.h"
-
-#include "ddeCmds.h"
-#include "FileJob.h"
 #include "PrimState.h"
 #include "PrimText.h"
+#include "RefSys.h"
+#include "Seg.h"
 #include "SegsDet.h"
 #include "SegsTrap.h"
 #include "Text.h"
 #include "UnitsString.h"
+#include "Vec.h"
 
 using namespace dde;
 

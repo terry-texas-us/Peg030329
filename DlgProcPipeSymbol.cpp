@@ -1,14 +1,9 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
-
 #include <string.h>
 
 #include "PegAEsys.h"
 
-#include "resource.h"
 #include "SubProcPipe.h"
 
 void DlgProcPipeSymbolInit(HWND);

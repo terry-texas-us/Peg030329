@@ -1,14 +1,9 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
-
 #include "PegAEsysView.h"
 
 #include "ExpProcs.h"
 #include "Pnt.h"
-#include "resource.h"
 #include "Vec.h"
 
 

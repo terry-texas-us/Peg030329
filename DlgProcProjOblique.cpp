@@ -1,9 +1,5 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
-
 #include <cfloat>
 #include <cmath>
 
@@ -11,7 +7,6 @@
 
 #include "ExpProcs.h"
 #include "Pnt.h"
-#include "resource.h"
 #include "SafeMath.h"
 #include "Vec.h"
 

@@ -1,8 +1,5 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
 #include <afxwin.h>
 
 #include <atltypes.h>
@@ -20,8 +17,6 @@
 #include "Pnt4.h"
 #include "Prim.h"
 #include "PrimState.h"
-#include "resource.h"
-#include "Vec.h"
 
 using namespace grid;
 

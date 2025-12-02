@@ -1,11 +1,7 @@
 #include "stdafx.h"
 
-#include <Windows.h> // for HWND, HTREEITEM
-
-#include <afx.h>
-#include <afxwin.h> // for CDC
-
-#include <afxstr.h> // for CString
+#include <afxstr.h>
+#include <afxwin.h>
 
 #include <cfloat>
 #include <climits>

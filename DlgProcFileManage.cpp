@@ -1,10 +1,7 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afxwin.h>
-
 #include <afxstr.h>
+#include <afxwin.h>
 
 #include <string.h>
 
@@ -13,15 +10,12 @@
 #include "PegAEsys.h"
 #include "PegAEsysDoc.h"
 
-#include <afx.h>
-
 #include "Block.h"
 #include "DlgProcFileManage.h"
 #include "Layer.h"
 #include "Messages.h"
 #include "Preview.h"
 #include "Prim.h"
-#include "resource.h"
 
 void DlgProcFileManageDoLayerColor(HWND hDlg);
 

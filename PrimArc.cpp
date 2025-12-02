@@ -1,8 +1,5 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
 #include <afxstr.h>
 #include <afxwin.h>
 

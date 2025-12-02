@@ -1,16 +1,10 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
-
 #include <afxstr.h>
 
 #include <algorithm>
 
 #include "PegAEsys.h"
-
-#include "resource.h"
 
 void UnitsDlgProcInit(HWND);
 void UnitsDlgProcDoOK(HWND);

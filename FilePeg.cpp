@@ -1,9 +1,5 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
-
 #include <afxstr.h>
 
 #include "PegAEsysDoc.h"
@@ -27,7 +23,6 @@
 #include "PrimSegRef.h"
 #include "PrimTag.h"
 #include "PrimText.h"
-#include "resource.h"
 #include "Seg.h"
 
 void CFilePeg::Load(CPegDoc* pDoc)

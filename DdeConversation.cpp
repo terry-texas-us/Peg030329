@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
 #include "dde.h"
 
 using namespace dde;

@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+#include <cstdlib>
+#include <string>
+
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
 

@@ -1,5 +1,12 @@
 #include "stdafx.h"
+
+#include <afxstr.h>
+
+#include <corecrt.h>
 #include <io.h>
+#include <string.h>
+
+#include <cstdlib>
 
 void Path_UnquoteSpaces(CString& strPathName)
 {

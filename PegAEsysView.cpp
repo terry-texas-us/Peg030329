@@ -1,14 +1,11 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
-#include <afxwin.h>
-
 #include <afxdlgs.h>
 #include <afxext.h>
 #include <afxmsg_.h>
 #include <afxres.h>
+#include <afxwin.h>
+
 #include <atltypes.h>
 
 #include <string.h>
@@ -43,7 +40,6 @@
 #include "PrimLine.h"
 #include "PrimPolygon.h"
 #include "PrimState.h"
-#include "resource.h"
 #include "SafeMath.h"
 #include "Seg.h"
 #include "Segs.h"

@@ -1,8 +1,5 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
 #include <afxwin.h>
 
 #include <atltypes.h>
@@ -14,7 +11,6 @@
 #include "OwnerDraw.h"
 #include "Prim.h"
 #include "PrimState.h"
-#include "resource.h"
 
 void SetupPenColor_DrawEntire(LPDRAWITEMSTRUCT, int);
 

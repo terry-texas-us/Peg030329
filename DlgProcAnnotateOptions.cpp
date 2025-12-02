@@ -1,11 +1,6 @@
 #include "stdafx.h"
 
-#include "Windows.h"
-
-#include <afx.h>
-
 #include "ExpProcs.h"
-#include "resource.h"
 #include "SubProcAnnotate.h"
 
 BOOL CALLBACK DlgProcAnnotateOptions(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)

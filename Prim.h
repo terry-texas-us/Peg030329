@@ -10,6 +10,7 @@
 
 #include <string>
 
+#include "Line.h"
 #include "Pnt.h"
 #include "Pnt4.h"
 #include "TMat.h"

@@ -1,9 +1,5 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
-
 #include <string.h>
 
 #include <algorithm>
@@ -15,7 +11,6 @@
 #include "Lex.h"
 #include "LexTable.h"
 #include "Messages.h"
-#include "resource.h"
 #include "SafeMath.h"
 #include "UnitsString.h"
 

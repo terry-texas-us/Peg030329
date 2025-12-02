@@ -1,8 +1,5 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
 #include <afxdlgs.h>
 #include <afxmsg_.h>
 #include <afxres.h>
@@ -53,7 +50,6 @@
 #include "PrimSegRef.h"
 #include "PrimText.h"
 #include "RefSys.h"
-#include "resource.h"
 #include "Seg.h"
 #include "Segs.h"
 #include "SegsDet.h"

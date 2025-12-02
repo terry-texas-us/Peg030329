@@ -1,8 +1,5 @@
 #include "stdafx.h"
 
-#include <afx.h>
-#include <Windows.h>
-
 #include <climits>
 #include <cmath>
 #include <string>

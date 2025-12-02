@@ -1,12 +1,7 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
-
-#include <afxwin.h>
-
 #include <afxstr.h>
+#include <afxwin.h>
 
 #include "FileBitmap.h"
 

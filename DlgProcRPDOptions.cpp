@@ -1,14 +1,10 @@
 #include "stdafx.h"
 
-#include "Windows.h"
-#include <afx.h>
-
 #include <algorithm>
 
 #include "PegAEsys.h"
 
 #include "ExpProcs.h"
-#include "resource.h"
 #include "SubProcRLPD.h"
 #include "UnitsString.h"
 

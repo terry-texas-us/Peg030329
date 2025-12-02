@@ -1,13 +1,8 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
-
 #include "PegAEsysView.h"
 
 #include "ExpProcs.h"
-#include "resource.h"
 #include "Vec.h"
 
 void DlgProcProjPerspectiveDoOK(HWND);

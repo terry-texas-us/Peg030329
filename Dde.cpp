@@ -1,9 +1,5 @@
 #include "stdafx.h"
 
-#include <Windows.h>
-
-#include <afx.h>
-
 #include <corecrt.h>
 #include <string.h>
 
@@ -17,7 +13,6 @@
 #include "ddeSys.h"
 #include "lex.h"
 #include "Messages.h"
-#include "resource.h"
 
 using namespace dde;
 
