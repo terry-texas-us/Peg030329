@@ -98,6 +98,8 @@ BOOL CPegView::PreCreateWindow(CREATESTRUCT& cs)
 }
 
 BEGIN_MESSAGE_MAP(CPegView, CView)
+#pragma warning(push)
+#pragma warning(disable: 4191)
     ON_WM_MOUSEMOVE()
     ON_WM_KEYDOWN()
     ON_WM_LBUTTONDOWN()
@@ -106,6 +108,7 @@ BEGIN_MESSAGE_MAP(CPegView, CView)
     ON_WM_RBUTTONUP()
     ON_WM_SETFOCUS()
     ON_WM_SIZE()
+#pragma warning(pop)
     ON_COMMAND(ID_3DVIEWS_TOP, On3dViewsTop)
     ON_COMMAND(ID_3DVIEWS_BOTTOM, On3dViewsBottom)
     ON_COMMAND(ID_3DVIEWS_LEFT, On3dViewsLeft)
@@ -125,6 +128,9 @@ BEGIN_MESSAGE_MAP(CPegView, CView)
     ON_COMMAND(ID_CURSOR_DEFAULT, OnCursorDefault)
     ON_COMMAND(ID_CURSOR_SYMBOL, OnCursorSymbol)
     ON_COMMAND(ID_CURSOR_CROSSHAIR, OnCursorCrosshair)
+    ON_COMMAND(ID_FILE_PLOT_QUARTER, OnFilePlotQuarter)
+    ON_COMMAND(ID_FILE_PLOT_HALF, OnFilePlotHalf)
+    ON_COMMAND(ID_FILE_PLOT_FULL, OnFilePlotFull)
     // Standard printing commands
     ON_COMMAND(ID_FILE_PRINT, OnFilePrint)
     ON_COMMAND(ID_FILE_PRINT_DIRECT, OnFilePrint)
@@ -159,6 +165,7 @@ BEGIN_MESSAGE_MAP(CPegView, CView)
     ON_COMMAND(ID_SETUP_CONSTRAINTS_AXIS, OnSetupConstraintsAxis)
     ON_COMMAND(ID_SETUP_CONSTRAINTS_GRID, OnSetupConstraintsGrid)
     ON_COMMAND(ID_SETUP_MOUSEBUTTONS, OnSetupMouseButtons)
+    ON_COMMAND(ID_VIEW_BACKGROUNDIMAGE, OnViewBackgroundImage)
     ON_COMMAND(ID_VIEW_TRUETYPEFONTS, OnViewTrueTypeFonts)
     ON_COMMAND(ID_VIEW_PENWIDTHS, OnViewPenWidths)
     ON_COMMAND(ID_VIEW_ODOMETER, OnViewOdometer)
@@ -181,18 +188,17 @@ BEGIN_MESSAGE_MAP(CPegView, CView)
     ON_COMMAND(ID_WINDOW_PAN_RIGHT, OnWindowPanRight)
     ON_COMMAND(ID_WINDOW_PAN_UP, OnWindowPanUp)
     ON_COMMAND(ID_WINDOW_PAN_DOWN, OnWindowPanDown)
+#pragma warning(push)
+#pragma warning(disable: 4191)
     ON_UPDATE_COMMAND_UI(ID_VIEW_ODOMETER, OnUpdateViewOdometer)
     ON_UPDATE_COMMAND_UI(ID_VIEW_TRUETYPEFONTS, OnUpdateViewTrueTypeFonts)
-    ON_COMMAND(ID_VIEW_BACKGROUNDIMAGE, OnViewBackgroundImage)
     ON_UPDATE_COMMAND_UI(ID_VIEW_BACKGROUNDIMAGE, OnUpdateViewBackgroundImage)
     ON_UPDATE_COMMAND_UI(ID_BACKGROUNDIMAGE_LOAD, OnUpdateBackgroundimageLoad)
     ON_UPDATE_COMMAND_UI(ID_BACKGROUNDIMAGE_REMOVE, OnUpdateBackgroundimageRemove)
     ON_UPDATE_COMMAND_UI(ID_VIEW_RENDERED, OnUpdateViewRendered)
     ON_UPDATE_COMMAND_UI(ID_VIEW_WIREFRAME, OnUpdateViewWireframe)
     ON_UPDATE_COMMAND_UI(ID_VIEW_PENWIDTHS, OnUpdateViewPenwidths)
-    ON_COMMAND(ID_FILE_PLOT_QUARTER, OnFilePlotQuarter)
-    ON_COMMAND(ID_FILE_PLOT_HALF, OnFilePlotHalf)
-    ON_COMMAND(ID_FILE_PLOT_FULL, OnFilePlotFull)
+#pragma
 END_MESSAGE_MAP()
 
 void CPegView::ModelViewPopActive()
@@ -633,7 +639,7 @@ void CPegView::OnRButtonUp(UINT, CPoint)
 {
     DoCustomMouseClick(szLeftMouseUp);
 }
-void CPegView::OnMouseMove(UINT, CPoint pnt0)
+void CPegView::OnMouseMove(UINT nFlags, CPoint point)
 {
     app.SetModeCursor(app.m_iModeId);
 
@@ -650,7 +656,7 @@ void CPegView::OnMouseMove(UINT, CPoint pnt0)
         pnt[1] = app.m_pntGinEnd;
         pDC->Polyline(pnt, 2);
 
-        app.m_pntGinEnd = pnt0;
+        app.m_pntGinEnd = point;
         pnt[1] = app.m_pntGinEnd;
         pDC->Polyline(pnt, 2);
 
@@ -671,7 +677,7 @@ void CPegView::OnMouseMove(UINT, CPoint pnt0)
         if (pnt[1].x != app.m_pntGinStart.x || pnt[1].y != app.m_pntGinStart.y)
             pDC->Polyline(pnt, 4);
 
-        app.m_pntGinCur = pnt0;
+        app.m_pntGinCur = point;
         pnt[1].x = app.m_pntGinStart.x + (app.m_pntGinCur.x - app.m_pntGinEnd.x);
         pnt[1].y = app.m_pntGinStart.y + (app.m_pntGinCur.y - app.m_pntGinEnd.y);
         pnt[2] = app.m_pntGinCur;
@@ -690,7 +696,7 @@ void CPegView::OnMouseMove(UINT, CPoint pnt0)
 
         pDC->Ellipse(app.m_pntGinStart.x - iRadius, app.m_pntGinStart.y + iRadius,
             app.m_pntGinStart.x + iRadius, app.m_pntGinStart.y - iRadius);
-        app.m_pntGinEnd = pnt0;
+        app.m_pntGinEnd = point;
         iRadiusX = abs(app.m_pntGinEnd.x - app.m_pntGinStart.x);
         iRadiusY = abs(app.m_pntGinEnd.y - app.m_pntGinStart.y);
         iRadius = (int)sqrt((double)(iRadiusX * iRadiusX + iRadiusY * iRadiusY) + .5);
@@ -706,7 +712,7 @@ void CPegView::OnMouseMove(UINT, CPoint pnt0)
         CBrush* pBrushOld = (CBrush*)pDC->SelectStockObject(NULL_BRUSH);
         pDC->Rectangle(app.m_pntGinStart.x, app.m_pntGinStart.y, app.m_pntGinEnd.x, app.m_pntGinEnd.y);
 
-        app.m_pntGinEnd = pnt0;
+        app.m_pntGinEnd = point;
         pDC->Rectangle(app.m_pntGinStart.x, app.m_pntGinStart.y, app.m_pntGinEnd.x, app.m_pntGinEnd.y);
         pDC->SelectObject(pBrushOld);
         pstate.SetROP2(pDC, iDrawMode);

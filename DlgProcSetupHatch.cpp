@@ -8,7 +8,7 @@
 #include "PrimState.h"
 #include "SafeMath.h"
 
-BOOL CALLBACK DlgProcSetupHatch(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcSetupHatch(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {
     short	nStyleId;
 

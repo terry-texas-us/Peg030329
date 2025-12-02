@@ -3,7 +3,7 @@
 #include "ExpProcs.h"
 #include "SubProcPipe.h"
 
-BOOL CALLBACK DlgProcPipeOptions(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcPipeOptions(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM)
 {
     switch (nMsg)
     {

@@ -8,7 +8,7 @@
 
 void DlgProcPipeSymbolInit(HWND);
 
-BOOL CALLBACK DlgProcPipeSymbol(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcPipeSymbol(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {
 
     switch (anMsg)

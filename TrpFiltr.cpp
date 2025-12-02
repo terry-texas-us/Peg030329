@@ -6,7 +6,6 @@
 
 #include "PegAEsys.h"
 #include "PegAEsysDoc.h"
-#include "PegAEsysView.h"
 
 #include "Prim.h"
 #include "SegsTrap.h"
@@ -15,7 +14,7 @@ void trapFilterByPenColor(PENCOLOR);
 void trapFilterByLineStyle(int);
 void trapFilterByPrimType(CPrim::Type);
 
-BOOL CALLBACK DlgProcTrapFilter(HWND ahDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcTrapFilter(HWND ahDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {
     CPegDoc* pDoc = CPegDoc::GetDoc();
 

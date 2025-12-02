@@ -16,7 +16,7 @@ LRESULT	BlockInsertGetCurSel(HWND, int, CString& strName);
 
 CPnt* ptIns = 0;
 
-BOOL CALLBACK DlgProcBlockInsert(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcBlockInsert(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {
     CPegDoc* pDoc = CPegDoc::GetDoc();
 

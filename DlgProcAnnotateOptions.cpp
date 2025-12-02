@@ -3,7 +3,7 @@
 #include "ExpProcs.h"
 #include "SubProcAnnotate.h"
 
-BOOL CALLBACK DlgProcAnnotateOptions(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcAnnotateOptions(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {
     const char* szArrTyp [] = {"Open", "Closed", "Mark", "Hash"};
 

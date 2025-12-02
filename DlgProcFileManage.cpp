@@ -21,7 +21,7 @@ void DlgProcFileManageDoLayerColor(HWND hDlg);
 
 char szLayerName[64]{};
 
-BOOL CALLBACK DlgProcFileManage(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK DlgProcFileManage(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam)
 {
     WORD wNotifyCode = HIWORD(wParam);
 

@@ -7,7 +7,7 @@
 #include "Grid.h"
 #include "SegsTrap.h"
 
-BOOL CALLBACK DlgProcHomePointGo(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcHomePointGo(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {
     WORD wNotifyCode = HIWORD(wParam);
     static CPnt pt;
@@ -115,7 +115,7 @@ BOOL CALLBACK DlgProcHomePointGo(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
     return (FALSE);
 }
 
-BOOL CALLBACK DlgProcHomePointSet(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcHomePointSet(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {
     WORD wNotifyCode = HIWORD(wParam);
     static CPnt pt;

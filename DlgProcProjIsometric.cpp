@@ -4,7 +4,7 @@
 
 #include "Vec.h"
 
-BOOL CALLBACK DlgProcProjIsometric(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcProjIsometric(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {
     static int iLeftRight, iFrontBack, iAboveUnder;
 

@@ -17,7 +17,7 @@
 
 void DlgProcSetupNoteInit(HWND hDlg);
 
-BOOL CALLBACK DlgProcSetupNote(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcSetupNote(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM)
 {
     switch (nMsg)
     {

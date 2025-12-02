@@ -2,6 +2,7 @@
 
 #include "ExpProcs.h"
 #include "Line.h"
+#include "Pnt.h"
 
 double	UserAxis_dInfAng;
 double	UserAxis_dAxOffAng;
@@ -25,7 +26,7 @@ CPnt UserAxisSnapLn(const CPnt& ptBeg, const CPnt& ptEnd)
 
 }
 ///<summary>Modifies the user grid and axis constraints.</summary>
-BOOL CALLBACK DlgProcSetupConstraintsAxis(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcSetupConstraintsAxis(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {
     switch (anMsg)
     {

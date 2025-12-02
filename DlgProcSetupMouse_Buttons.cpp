@@ -5,7 +5,7 @@ extern char		szRightMouseDown[60];
 extern char		szLeftMouseUp[60];
 extern char		szRightMouseUp[60];
 
-BOOL CALLBACK DlgProcSetupMouse_Buttons(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcSetupMouse_Buttons(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {
     switch (anMsg)
     {

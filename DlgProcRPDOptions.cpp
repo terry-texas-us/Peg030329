@@ -10,7 +10,7 @@
 
 void DlgProcRLPDOptionsInit(HWND);
 
-BOOL CALLBACK DlgProcRLPDOptions(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcRLPDOptions(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM)
 {
     char szBuf[32]{};
 

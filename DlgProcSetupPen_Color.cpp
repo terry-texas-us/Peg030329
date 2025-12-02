@@ -14,7 +14,7 @@
 
 void SetupPenColor_DrawEntire(LPDRAWITEMSTRUCT, int);
 
-BOOL CALLBACK DlgProcSetupPenColor(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM  lParam) noexcept
+INT_PTR CALLBACK DlgProcSetupPenColor(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM  lParam)
 {
     std::string szBuf;
     PENCOLOR nPenColor;

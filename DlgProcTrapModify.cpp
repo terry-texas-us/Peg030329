@@ -16,7 +16,7 @@
 
 ///<summary>Modifies attributes of all segment primatives in current trap tocurrent settings.</summary>
 ///<remarks>Trap color index is not modified.</remarks>
-BOOL CALLBACK DlgProcTrapModify(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcTrapModify(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {
     CPegDoc* pDoc = CPegDoc::GetDoc();
 

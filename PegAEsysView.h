@@ -160,7 +160,7 @@ protected:
 public:
     afx_msg void OnBackgroundImageLoad();
     afx_msg void OnBackgroundImageRemove();
-    afx_msg void OnMouseMove(UINT nFlags, CPoint pnt);
+    afx_msg void OnMouseMove(UINT nFlags, CPoint point);
     afx_msg void OnLButtonDown(UINT nFlags, CPoint pnt);
     afx_msg void OnLButtonUp(UINT nFlags, CPoint pnt);
     afx_msg void OnRButtonDown(UINT nFlags, CPoint pnt);

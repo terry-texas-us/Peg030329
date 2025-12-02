@@ -8,7 +8,7 @@
 
 #include "ExpProcs.h"
 
-BOOL CALLBACK DlgProcViewParameters(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcViewParameters(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {
     CPegView* pView = CPegView::GetActiveView();
 

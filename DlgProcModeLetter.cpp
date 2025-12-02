@@ -12,7 +12,7 @@
 #include "Seg.h"
 #include "Text.h"
 
-BOOL CALLBACK DlgProcModeLetter(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK DlgProcModeLetter(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam)
 {
     CPegDoc* pDoc = CPegDoc::GetDoc();
 

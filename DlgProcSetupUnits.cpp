@@ -9,7 +9,7 @@
 void UnitsDlgProcInit(HWND);
 void UnitsDlgProcDoOK(HWND);
 
-BOOL CALLBACK DlgProcUnits(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcUnits(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {	// Modifies the units of measure.
 
     switch (anMsg)

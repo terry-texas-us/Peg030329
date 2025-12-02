@@ -18,7 +18,7 @@
 void SetupPenStyle_DrawEntire(LPDRAWITEMSTRUCT lpDIS, int inflate);
 void SetupPenStyle_Init(HWND);
 
-BOOL CALLBACK DlgProcSetupPenStyle(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK DlgProcSetupPenStyle(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam)
 {
     BOOL bTranslated;
     char szBuf[32]{};

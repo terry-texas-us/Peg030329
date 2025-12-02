@@ -204,7 +204,7 @@ CPnt grid::UserSnapPt(const CPnt& arPt)
 }
 
 // Modifies the user grid and axis constraints.
-BOOL CALLBACK DlgProcSetupConstraints(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcSetupConstraints(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {
     switch (anMsg)
     {

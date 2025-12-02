@@ -4,7 +4,7 @@
 
 #include "ExpProcs.h"
 
-BOOL CALLBACK DlgProcDrawOptions(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcDrawOptions(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {
     switch (anMsg)
     {

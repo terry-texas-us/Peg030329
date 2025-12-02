@@ -11,7 +11,7 @@
 #include "Vec.h"
 
 
-BOOL CALLBACK DlgProcProjOblique(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
+INT_PTR CALLBACK DlgProcProjOblique(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
 {
     CPegView* pView = CPegView::GetActiveView();
 
