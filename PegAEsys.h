@@ -12,6 +12,7 @@
 #include <atltypes.h>
 
 #include <cfloat>
+#include <string>
 
 #include "Pnt.h"
 #include "Prim.h"
@@ -64,7 +65,7 @@ private:
     CPnt		m_ptHomePoint[9];
     WORD		m_wOpHighlighted;
     char* m_pStrokeFontDef;			// 0
-    CString		m_strShadowDir;				// "PegAEsys Shadow Files"
+    std::string	m_strShadowDir;		// "PegAEsys Shadow Files"
 
 public:
     bool		m_bViewStateInfo;
@@ -158,8 +159,8 @@ public:
         ::ModifyMenu(m_hMenu, uPos, MF_BYPOSITION | MF_STRING | MF_POPUP, uIdNewItem, lpNewItem);
     }
     UINT		GetClipboardFormatPegSegs() const { return (m_nClipboardFormatPegSegs); }
-    CString		GetShadowDir() { return m_strShadowDir; }
-    void		SetShadowDir(const CString& strDir);
+    std::string	GetShadowDir() { return m_strShadowDir; }
+    void		SetShadowDir(const std::string& strDir);
 
     // Overrides
 public:

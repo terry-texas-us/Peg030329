@@ -182,7 +182,7 @@ public:
     POSITION	WorkLayerGetTailPosition() const { return m_pLayerWork->GetTailPosition(); }
     void		WorkLayerInit();
     void		WorkLayerSet(CLayer* pLayer);
-    void		WriteShadowFile();
+    void WriteShadowFile();
 
     // Generated message map functions
 public:

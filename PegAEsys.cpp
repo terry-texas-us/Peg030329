@@ -489,7 +489,7 @@ void CPegApp::OnModePrimMend()
     {
         pPrimToMend->Copy(pPrimToMendCopy);
         ptMendPrimBeg = pPrimToMend->SelAtCtrlPt(pView, ptView);
-        dwMendPrimPtId = 1 << CPrim::CtrlPt();
+        dwMendPrimPtId = 1U << static_cast<DWORD>(CPrim::CtrlPt());
 
         SetWindowMode(ID_MODE_PRIM_MEND);
     }
@@ -600,7 +600,7 @@ WORD CPegApp::GetFileTypeFromPath(const CString& strPathName)
     }
     return (CPegDoc::FILE_TYPE_NONE);
 }
-void CPegApp::SetShadowDir(const CString& strDir)
+void CPegApp::SetShadowDir(const std::string& strDir)
 {
     TCHAR szPath[MAX_PATH]{};
 
@@ -610,11 +610,11 @@ void CPegApp::SetShadowDir(const CString& strDir)
     }
     else
     {
-        m_strShadowDir.Empty();
+        m_strShadowDir.clear();
     }
     m_strShadowDir += "\\" + strDir + "\\";
 
-    _mkdir(m_strShadowDir);
+    _mkdir(m_strShadowDir.c_str());
 }
 CPnt CPegApp::CursorPosGet()
 {

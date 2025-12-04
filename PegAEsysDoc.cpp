@@ -1255,29 +1255,30 @@ void CPegDoc::WorkLayerSet(CLayer* pLayer)
 
     app.ModifyMenu(0, strItem);
 }
+
 void CPegDoc::WriteShadowFile()
 {
     if (m_wOpenFileType == FILE_TYPE_PEG)
     {
-        CString strShadowFilePath(app.GetShadowDir());
-        strShadowFilePath += GetTitle();
-        int nExt = strShadowFilePath.Find('.');
-        if (nExt > 0)
+        std::string shadowFilePath(app.GetShadowDir());
+        shadowFilePath += GetTitle();
+        int extensionDot = shadowFilePath.find('.');
+        if (extensionDot > 0)
         {
-            CFileStatus fs;
-            CFile::GetStatus(GetPathName(), fs);
+            CFileStatus fileStatus;
+            CFile::GetStatus(GetPathName(), fileStatus);
 
-            strShadowFilePath.Truncate(nExt);
-            strShadowFilePath += fs.m_mtime.Format("_%Y%m%d%H%M");
-            strShadowFilePath += ".peg";
+            shadowFilePath.resize(extensionDot);
+            shadowFilePath += fileStatus.m_mtime.Format("_%Y%m%d%H%M");
+            shadowFilePath += ".peg";
 
             CFileException e;
-            CFilePeg fp;
-            if (!fp.Open(strShadowFilePath, CFile::modeWrite, &e))
+            CFilePeg filePeg;
+            if (!filePeg.Open(shadowFilePath.c_str(), CFile::modeWrite, &e))
             {
-                fp.Open(strShadowFilePath, CFile::modeCreate | CFile::modeWrite | CFile::shareExclusive, &e);
-                fp.Unload(this);
-                msgWarning(IDS_MSG_FILE_SHADOWED_AS, strShadowFilePath);
+                filePeg.Open(shadowFilePath.c_str(), CFile::modeCreate | CFile::modeWrite | CFile::shareExclusive, &e);
+                filePeg.Unload(this);
+                msgInformation(IDS_MSG_FILE_SHADOWED_AS, shadowFilePath.c_str());
                 return;
             }
             msgWarning(IDS_MSG_SHADOW_FILE_CREATE_FAILURE);
