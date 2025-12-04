@@ -433,6 +433,7 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
             lpd::bContSec = false;
             pEndCapSeg = 0;
             pEndCapMark = 0;
+            [[fallthrough]];
 
         default:
             lResult = !0;

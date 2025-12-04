@@ -305,6 +305,7 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
         case IDM_ESCAPE:
             app.RubberBandingDisable();
             app.ModeLineUnhighlightOp(wPrvOp);
+            [[fallthrough]];
 
         default:
             lResult = !0;

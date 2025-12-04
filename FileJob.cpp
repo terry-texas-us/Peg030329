@@ -755,7 +755,7 @@ void CPrimPolygon::Write(CFile& f, char* p) const
     p[6] = char(m_nPenColor == PENCOLOR_BYLAYER ? mS_nLayerPenColor : m_nPenColor);
     p[7] = char(m_nIntStyle);
     *((short*)&p[8]) = short(m_nIntStyleId);
-    *((short*)&p[10]) = m_wPts;
+    *((short*)&p[10]) = static_cast<short>(m_wPts);
 
     ((CVaxPnt*)&p[12])->Convert(m_ptOrig);
     ((CVaxVec*)&p[24])->Convert(m_vPosXAx);
@@ -890,7 +890,7 @@ CPrimText::CPrimText(char* p, int iVer)
     }
     else
     {
-        m_nPenColor = PENSTYLE(p[6]);
+        m_nPenColor = PENCOLOR(p[6]);
         m_fd.ChrSpacSet(((CVaxFloat*)&p[10])->Convert());
         m_fd.TextPathSet(WORD(p[14]));
         m_fd.TextHorAlignSet(WORD(p[15]));

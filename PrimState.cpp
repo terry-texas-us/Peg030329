@@ -30,8 +30,7 @@ const CPrimState& CPrimState::operator=(const CPrimState& src)
 }
 void CPrimState::Restore(CDC* pDC, int iSaveId)
 {
-    if (iSaveId >= sizeof(psSav) / sizeof(psSav[0]))
-        return;
+    if (static_cast<size_t>(iSaveId) >= (sizeof(psSav) / sizeof(psSav[0]))) { return; }
 
     if (psSav[iSaveId] != 0)
     {

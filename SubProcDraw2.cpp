@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <array>
+
 #include "PegAEsys.h"
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
@@ -26,22 +28,22 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
     static	CPrimLine* pLineBegWallSec{nullptr};
     static	CPrimLine* pLineEndWallSec{nullptr};
     static	CPnt ptPrvPos{};
-    static	CLine lnPar[4]{};
+    static auto lnPar{std::array<CLine, 4>{}};
 
     CSeg* pSeg{nullptr};
-    CLine ln{};
-    CPnt ptEnd{};
-    CPnt ptBeg{};
-    CPnt ptInt{};
+    auto ln{CLine{}};
+    auto ptEnd{CPnt{}};
+    auto ptBeg{CPnt{}};
+    auto ptInt{CPnt{}};
 
-    CPegDoc* pDoc = CPegDoc::GetDoc();
+    auto document{CPegDoc::GetDoc()};
 
     if (anMsg == WM_COMMAND)
     {
-        CPrimLine* pLine;
-        double	dDisBetLns = p2LNdDisBetLns / app.GetScale();
-        long	lResult = 0;
-        CPnt	ptCurPos = app.CursorPosGet();
+        CPrimLine* pLine{nullptr};
+        auto dDisBetLns{p2LNdDisBetLns / app.GetScale()};
+        auto lResult{long{0}};
+        auto ptCurPos{app.CursorPosGet()};
 
         switch (LOWORD(wParam))
         {
@@ -62,7 +64,7 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
         case ID_OP1:										// Search for an endcap in proximity of current location
             pSeg = detsegs.SelSegAndPrimUsingPoint(ptCurPos);
 
-            if (pSeg != 0)
+            if (pSeg != nullptr)
             {
                 ptCurPos = detsegs.DetPt();
                 if (wPrvKeyDwn == 0)
@@ -83,16 +85,16 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
             if (wPrvKeyDwn != 0)
                 app.RubberBandingDisable();
 
-            if (pSegEndWallSec != 0) 					// Into existing wall
+            if (pSegEndWallSec != nullptr) 					// Into existing wall
             {
                 lnPar[0] = lnPar[2];
                 lnPar[1] = lnPar[3];
 
-                ln(ptPrvPos, ptCurPos);
+                ln = CLine{ptPrvPos, ptCurPos};
                 ln.GetParallels(dDisBetLns, p2LNdCenLnEcc, lnPar[2], lnPar[3]);
                 if (bContCorn)
                 {	// Clean up previous set
-                    for (int i = 0; i < 2; i++)
+                    for (size_t i{0}; i < 2; i++)
                     {
                         if (line::Intersection_xy(lnPar[i], lnPar[i + 2], ptInt))
                         {
@@ -102,23 +104,23 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
                         else								// Lines are parallel
                             bContCorn = false;
                     }
-                    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSav);
+                    document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSav);
 
                     pSegSav->RemoveTail();
-                    POSITION pos = pSegSav->GetTailPosition();
+                    auto pos{pSegSav->GetTailPosition()};
                     pLine = static_cast<CPrimLine*>(pSegSav->GetPrev(pos));
                     pLine->SetPt1(lnPar[1][1]);
                     pLine = static_cast<CPrimLine*>(pSegSav->GetPrev(pos));
                     pLine->SetPt1(lnPar[0][1]);
                 }
-                else if (pSegBegWallSec != 0)
+                else if (pSegBegWallSec != nullptr)
                 {
                     pSegSav = pSegBegWallSec;
 
-                    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegBegWallSec);
+                    document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegBegWallSec);
                     ptBeg = pLineBegWallSec->Pt0();
                     ptEnd = pLineBegWallSec->Pt1();
-                    for (int i = 2; i < 4; i++)
+                    for (size_t i = 2; i < 4; i++)
                     {
                         if (line::Intersection_xy(CLine(ptBeg, ptEnd), lnPar[i], ptInt))
                             lnPar[i][0] = ptInt;
@@ -138,24 +140,24 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
                         pLine->SetPt0(lnPar[3][0]);
                     }
                     pSegBegWallSec->AddTail(pLine);
-                    pSegBegWallSec = 0;
+                    pSegBegWallSec = nullptr;
                 }
                 else if (wPrvKeyDwn == ID_OP2)
                 {
                     pSegSav = new CSeg;
-                    pDoc->WorkLayerAddTail(pSegSav);
+                    document->WorkLayerAddTail(pSegSav);
                     pSegSav->AddTail(new CPrimLine(lnPar[2][0], lnPar[3][0]));
                 }
-                pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegEndWallSec);
+                document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegEndWallSec);
                 ptBeg = pLineEndWallSec->Pt0();
                 ptEnd = pLineEndWallSec->Pt1();
 
                 pSegSav->AddTail(new CPrimLine(pstate.PenColor(), pstate.PenStyle(), lnPar[2]));
                 pSegSav->AddTail(new CPrimLine(pstate.PenColor(), pstate.PenStyle(), lnPar[3]));
-                pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegSav);
+                document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegSav);
 
                 pLine = new CPrimLine(*pLineEndWallSec);
-                if (CLine(ptPrvPos, ptCurPos).DirRelOfPt(ptBeg) < 0.)
+                if (CLine{ptPrvPos, ptCurPos}.DirRelOfPt(ptBeg) < 0.)
                 {
                     pLineEndWallSec->SetPt1(lnPar[3][1]);
                     pLine->SetPt0(lnPar[2][1]);
@@ -166,8 +168,8 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
                     pLine->SetPt0(lnPar[3][1]);
                 }
                 pSegEndWallSec->AddTail(pLine);
-                pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegEndWallSec);
-                pSegEndWallSec = 0;
+                document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegEndWallSec);
+                pSegEndWallSec = nullptr;
 
                 app.RubberBandingDisable();
                 app.ModeLineUnhighlightOp(wPrvKeyDwn);
@@ -180,12 +182,12 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
                     ptCurPos = UserAxisSnapLn(ptPrvPos, ptCurPos);
                     lnPar[0] = lnPar[2];
                     lnPar[1] = lnPar[3];
-                    ln(ptPrvPos, ptCurPos);
+                    ln = CLine{ptPrvPos, ptCurPos};
                     ln.GetParallels(dDisBetLns, p2LNdCenLnEcc, lnPar[2], lnPar[3]);
 
                     if (bContCorn)
                     {
-                        for (int i = 0; i < 2; i++)
+                        for (size_t i{0}; i < 2; i++)
                         {
                             if (line::Intersection_xy(lnPar[i], lnPar[i + 2], ptInt))
                             {
@@ -195,24 +197,22 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
                             else									// Lines are parallel
                                 bContCorn = false;
                         }
-                        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSav);
+                        document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSav);
                         delete pSegSav->RemoveTail();
-
-                        POSITION pos = pSegSav->GetTailPosition();
-
+                        auto pos{pSegSav->GetTailPosition()};
                         pLine = static_cast<CPrimLine*>(pSegSav->GetPrev(pos));
                         pLine->SetPt1(lnPar[1][1]);
                         pLine = static_cast<CPrimLine*>(pSegSav->GetPrev(pos));
                         pLine->SetPt1(lnPar[0][1]);
                     }
-                    else if (pSegBegWallSec != 0)
+                    else if (pSegBegWallSec != nullptr)
                     {
                         pSegSav = pSegBegWallSec;
 
-                        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegBegWallSec);
+                        document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegBegWallSec);
                         ptBeg = pLineBegWallSec->Pt0();
                         ptEnd = pLineBegWallSec->Pt1();
-                        for (int i = 2; i < 4; i++)
+                        for (size_t i = 2; i < 4; i++)
                         {
                             if (line::Intersection_xy(CLine(ptBeg, ptEnd), lnPar[i], ptInt))
                                 lnPar[i][0] = ptInt;
@@ -232,19 +232,19 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
                             pLine->SetPt0(lnPar[3][0]);
                         }
                         pSegBegWallSec->AddTail(pLine);
-                        pSegBegWallSec = 0;
+                        pSegBegWallSec = nullptr;
                     }
                     else if (wPrvKeyDwn == ID_OP2)
                     {
                         pSegSav = new CSeg;
-                        pDoc->WorkLayerAddTail(pSegSav);
+                        document->WorkLayerAddTail(pSegSav);
                         pSegSav->AddTail(new CPrimLine(lnPar[2][0], lnPar[3][0]));
                     }
                     pSegSav->AddTail(new CPrimLine(pstate.PenColor(), pstate.PenStyle(), lnPar[2]));
                     pSegSav->AddTail(new CPrimLine(pstate.PenColor(), pstate.PenStyle(), lnPar[3]));
 
                     pSegSav->AddTail(new CPrimLine(lnPar[3][1], lnPar[2][1]));
-                    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegSav);
+                    document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegSav);
                     bContCorn = true;
                 }
                 wPrvKeyDwn = ID_OP2;
@@ -261,10 +261,10 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
                 app.RubberBandingDisable();
                 app.ModeLineUnhighlightOp(wPrvKeyDwn);
                 bContCorn = false;
-                pSegBegWallSec = 0;
-                pLineBegWallSec = 0;
-                pSegEndWallSec = 0;
-                pLineEndWallSec = 0;
+                pSegBegWallSec = nullptr;
+                pLineBegWallSec = nullptr;
+                pSegEndWallSec = nullptr;
+                pLineEndWallSec = nullptr;
             }
             ptPrvPos = ptCurPos;
             break;
@@ -273,10 +273,11 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
             app.RubberBandingDisable();
             app.ModeLineUnhighlightOp(wPrvKeyDwn);
             bContCorn = false;
-            pSegBegWallSec = 0;
-            pLineBegWallSec = 0;
-            pSegEndWallSec = 0;
-            pLineEndWallSec = 0;
+            pSegBegWallSec = nullptr;
+            pLineBegWallSec = nullptr;
+            pSegEndWallSec = nullptr;
+            pLineEndWallSec = nullptr;
+            [[fallthrough]];
 
         default:
             lResult = !0;
