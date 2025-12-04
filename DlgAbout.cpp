@@ -15,14 +15,12 @@ public:
     enum { IDD = IDD_ABOUTBOX };
 
 protected:
-    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+    virtual void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
 
     // Implementation
-protected:
-    DECLARE_MESSAGE_MAP()
 };
 
-CDlgAbout::CDlgAbout() : CDialog(CDlgAbout::IDD)
+CDlgAbout::CDlgAbout() : CDialog{IDD}
 { }
 
 void CDlgAbout::DoDataExchange(CDataExchange* pDX)
@@ -30,12 +28,9 @@ void CDlgAbout::DoDataExchange(CDataExchange* pDX)
     CDialog::DoDataExchange(pDX);
 }
 
-BEGIN_MESSAGE_MAP(CDlgAbout, CDialog)
-END_MESSAGE_MAP()
-
 // App command to run the dialog
 void CPegApp::OnAppAbout()
 {
-    CDlgAbout dlg;
+    auto dlg = CDlgAbout();
     dlg.DoModal();
 }

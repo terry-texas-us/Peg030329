@@ -4,18 +4,19 @@
 
 #include "PegAEsys.h"
 #include "PegAEsysDoc.h"
-#include "PegAEsysView.h"
 
 #include "DlgSetLength.h"
 #include "Line.h"
 #include "Pnt.h"
 #include "PrimLine.h"
 #include "PrimState.h"
+#include "Seg.h"
 #include "SegsDet.h"
 #include "UserAxis.h"
+#include "Vec.h"
 
-double	p2LNdDisBetLns{6.0};		// Distance between parallel line (user units)
-double	p2LNdCenLnEcc{0.0}; 		// Center line eccentricity for parallel lines
+static double p2LNdDisBetLns{6.0};		// Distance between parallel line (user units)
+static double p2LNdCenLnEcc{0.0}; 		// Center line eccentricity for parallel lines
 
 LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam) noexcept
 {
@@ -36,7 +37,7 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
     auto ptBeg{CPnt{}};
     auto ptInt{CPnt{}};
 
-    auto document{CPegDoc::GetDoc()};
+    auto* document{CPegDoc::GetDoc()};
 
     if (anMsg == WM_COMMAND)
     {
@@ -83,8 +84,9 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
 
         case ID_OP2:
             if (wPrvKeyDwn != 0)
+            {
                 app.RubberBandingDisable();
-
+            }
             if (pSegEndWallSec != nullptr) 					// Into existing wall
             {
                 lnPar[0] = lnPar[2];
@@ -101,13 +103,15 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
                             lnPar[i][1] = ptInt;
                             lnPar[i + 2][0] = ptInt;
                         }
-                        else								// Lines are parallel
+                        else
+                        {   // Lines are parallel
                             bContCorn = false;
+                        }
                     }
                     document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSav);
 
                     pSegSav->RemoveTail();
-                    auto pos{pSegSav->GetTailPosition()};
+                    auto* pos = pSegSav->GetTailPosition();
                     pLine = static_cast<CPrimLine*>(pSegSav->GetPrev(pos));
                     pLine->SetPt1(lnPar[1][1]);
                     pLine = static_cast<CPrimLine*>(pSegSav->GetPrev(pos));
@@ -123,9 +127,13 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
                     for (size_t i = 2; i < 4; i++)
                     {
                         if (line::Intersection_xy(CLine(ptBeg, ptEnd), lnPar[i], ptInt))
+                        {
                             lnPar[i][0] = ptInt;
+                        }
                         else										// Lines are parallel
+                        {
                             bContCorn = false;
+                        }
                     }
                     pLine = new CPrimLine(*pLineBegWallSec);
 
@@ -195,11 +203,13 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
                                 lnPar[i + 2][0] = ptInt;
                             }
                             else									// Lines are parallel
+                            {
                                 bContCorn = false;
+                            }
                         }
                         document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSav);
                         delete pSegSav->RemoveTail();
-                        auto pos{pSegSav->GetTailPosition()};
+                        auto* pos = pSegSav->GetTailPosition();
                         pLine = static_cast<CPrimLine*>(pSegSav->GetPrev(pos));
                         pLine->SetPt1(lnPar[1][1]);
                         pLine = static_cast<CPrimLine*>(pSegSav->GetPrev(pos));
@@ -212,12 +222,16 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
                         document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegBegWallSec);
                         ptBeg = pLineBegWallSec->Pt0();
                         ptEnd = pLineBegWallSec->Pt1();
-                        for (size_t i = 2; i < 4; i++)
+                        for (size_t i{2}; i < 4; i++)
                         {
                             if (line::Intersection_xy(CLine(ptBeg, ptEnd), lnPar[i], ptInt))
+                            {
                                 lnPar[i][0] = ptInt;
+                            }
                             else							// Lines are parallel
+                            {
                                 bContCorn = false;
+                            }
                         }
                         pLine = new CPrimLine(*pLineBegWallSec);
 
@@ -282,8 +296,7 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
         default:
             lResult = !0;
         }
-        if (lResult == 0)
-            return (lResult);
+        if (lResult == 0) { return (lResult); }
     }
     return(CallWindowProc(app.GetMainWndProc(), hwnd, anMsg, wParam, lParam));
 }

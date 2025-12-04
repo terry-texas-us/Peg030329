@@ -727,6 +727,7 @@
     <None Include="Micro Modernization Steps.md">
       <Filter>Documents</Filter>
     </None>
+    <None Include=".clang-tidy" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Peg &amp; Tra File Formats.txt">
