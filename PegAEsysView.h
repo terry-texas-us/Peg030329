@@ -98,7 +98,7 @@ public:
 
     void	ModelViewAdjustWnd(double dAspectRatio) { m_mvActive.AdjustWnd(dAspectRatio); }
     void	ModelViewAdjustWnd(double&, double&, double&, double&, double);
-    void	ModelViewGetActive(CModelView& v) { v = m_mvActive; }
+    void	ModelViewGetActive(CModelView& v) const { v = m_mvActive; }
     CVec	ModelViewGetDirection() { return m_mvActive.GetDirection(); }
     CPnt	ModelViewGetEye() { return m_mvActive.GetEye(); }
     double	ModelViewGetFarClipDistance() { return m_mvActive.GetFarClipDistance(); }
@@ -137,13 +137,13 @@ public:
     void	ModelViewSetWnd(double dUMin, double dVMin, double dUMax, double dVMax) { m_mvActive.SetWnd(dUMin, dVMin, dUMax, dVMax); }
 
     /// @brief Determines the number of pages for 1 to 1 print
-    UINT	NumPages(CDC* conext, double scaleFactor, UINT& horizontalPages, UINT& verticalPages);
+    UINT	NumPages(CDC* conext, double scaleFactor, UINT& horizontalPages, UINT& verticalPages) const;
 
-    CPnt	OverGetTarget() { return m_mvOver.GetTarget(); }
-    double	OverGetUExt() { return m_mvOver.GetUExt(); }
-    double	OverGetUMin() { return m_mvOver.GetUMin(); }
-    double	OverGetVExt() { return m_mvOver.GetVExt(); }
-    double	OverGetVMin() { return m_mvOver.GetVMin(); }
+    CPnt	OverGetTarget() const { return m_mvOver.GetTarget(); }
+    double	OverGetUExt() const { return m_mvOver.GetUExt(); }
+    double	OverGetUMin() const { return m_mvOver.GetUMin(); }
+    double	OverGetVExt() const { return m_mvOver.GetVExt(); }
+    double	OverGetVMin() const { return m_mvOver.GetVMin(); }
 
     CPoint	DoProjection(const CPnt4& pt) { return m_vpActive.DoProjection(pt); }
     void	DoProjection(CPoint* pnt, int iPts, CPnt4* pt) { m_vpActive.DoProjection(pnt, iPts, pt); }

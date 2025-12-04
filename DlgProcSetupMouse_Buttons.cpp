@@ -7,7 +7,7 @@ extern std::string rightMouseDown;
 extern std::string leftMouseUp;
 extern std::string rightMouseUp;
 
-void DlgBoxGetItemText(HWND hDlg, int control, std::string& text)
+static void DlgBoxGetItemText(HWND hDlg, int control, std::string& text)
 {
     int textLength{GetWindowTextLength(GetDlgItem(hDlg, control))};
     text.resize(static_cast<size_t>(textLength) + 1);

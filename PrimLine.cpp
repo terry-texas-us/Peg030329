@@ -363,7 +363,7 @@ bool CPrimLine::Write(CFile& fl) const
     FilePeg_WriteWord(fl, static_cast<WORD>(CPrim::Type::Line));
 
     FilePeg_WriteWord(fl, m_nPenColor);
-    FilePeg_WriteWord(fl, m_nPenStyle);
+    FilePeg_WriteWord(fl, static_cast<WORD>(m_nPenStyle));
     m_ln.Write(fl);
 
     return true;

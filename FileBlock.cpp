@@ -14,107 +14,107 @@
 
 CFileBlock::CFileBlock(const CString& strPathName)
 {
-	CFile::Open(strPathName, modeReadWrite | shareDenyNone);
+    CFile::Open(strPathName, modeReadWrite | shareDenyNone);
 }
 void CFileBlock::ReadBlocks(CBlocks& blks)
 {
-	if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_BLOCKS)
-		throw "Exception CFileBlock: Expecting sentinel SECTION_BLOCKS.";  
-	
-	CString strName;
+    if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_BLOCKS)
+        throw "Exception CFileBlock: Expecting sentinel SECTION_BLOCKS.";
 
-	CPrim* pPrim;
+    CString strName;
 
-	WORD wTblSize = FilePeg_ReadWord(*this);
-	for (int i = 0; i < wTblSize; i++)
-	{
-		int iPrims = FilePeg_ReadWord(*this);
+    CPrim* pPrim;
 
-		FilePeg_ReadString(*this, strName);
-		WORD wBlkTypFlgs = FilePeg_ReadWord(*this);
-	
-		CBlock* pBlock = new CBlock(wBlkTypFlgs, ORIGIN);
+    WORD wTblSize = FilePeg_ReadWord(*this);
+    for (int i = 0; i < wTblSize; i++)
+    {
+        int iPrims = FilePeg_ReadWord(*this);
 
-		for (int j = 0; j < iPrims; j++)
-		{
-			FilePeg_ReadPrim(*this, pPrim);
-			pBlock->AddTail(pPrim); 
-		}
-		blks[strName] = pBlock;
-	}
-	if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_END)
-		throw "Exception CFileBlock: Expecting sentinel SECTION_END.";  
+        FilePeg_ReadString(*this, strName);
+        WORD wBlkTypFlgs = FilePeg_ReadWord(*this);
+
+        CBlock* pBlock = new CBlock(wBlkTypFlgs, ORIGIN);
+
+        for (int j = 0; j < iPrims; j++)
+        {
+            FilePeg_ReadPrim(*this, pPrim);
+            pBlock->AddTail(pPrim);
+        }
+        blks[strName] = pBlock;
+    }
+    if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_END)
+        throw "Exception CFileBlock: Expecting sentinel SECTION_END.";
 }
 void CFileBlock::ReadFile(const CString& strPathName, CBlocks& blks)
 {
-	CFileException e;
+    CFileException e;
 
-	if (CFile::Open(strPathName, modeRead | shareDenyNone, &e))
-	{
-		ReadHeader();
-		ReadBlocks(blks);
-	}
+    if (CFile::Open(strPathName, modeRead | shareDenyNone, &e))
+    {
+        ReadHeader();
+        ReadBlocks(blks);
+    }
 }
 void CFileBlock::ReadHeader()
 {
-	if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_HEADER)
-		throw "Exception CFileBlock: Expecting sentinel SECTION_HEADER.";
-	
-	// 	with addition of info where will loop key-value pairs till SECTION_END sentinel
+    if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_HEADER)
+        throw "Exception CFileBlock: Expecting sentinel SECTION_HEADER.";
 
-	if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_END)
-		throw "Exception CFileBlock: Expecting sentinel SECTION_END.";
+    // 	with addition of info where will loop key-value pairs till SECTION_END sentinel
+
+    if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_END)
+        throw "Exception CFileBlock: Expecting sentinel SECTION_END.";
 }
 void CFileBlock::WriteBlock(const CString& strName, CBlock* pBlock)
 {
-	WORD wPrims = 0;
-	
-	ULONGLONG dwCountPosition = GetPosition();
-	
-	FilePeg_WriteWord(*this, wPrims);	
-	FilePeg_WriteString(*this, strName);
-	FilePeg_WriteWord(*this, pBlock->GetBlkTypFlgs());
-	
-	POSITION pos = pBlock->GetHeadPosition();
-	while (pos != 0)
-	{
-		CPrim* pPrim = pBlock->GetNext(pos);
-		if (pPrim->Write(*this))
-			wPrims++;
-	}
-	ULONGLONG dwPosition = GetPosition();
-	Seek(dwCountPosition, begin);
-	FilePeg_WriteWord(*this, wPrims);
-	Seek(dwPosition, begin);
+    WORD wPrims = 0;
+
+    ULONGLONG dwCountPosition = GetPosition();
+
+    FilePeg_WriteWord(*this, wPrims);
+    FilePeg_WriteString(*this, strName);
+    FilePeg_WriteWord(*this, pBlock->GetBlkTypFlgs());
+
+    POSITION pos = pBlock->GetHeadPosition();
+    while (pos != 0)
+    {
+        CPrim* pPrim = pBlock->GetNext(pos);
+        if (pPrim->Write(*this))
+            wPrims++;
+    }
+    ULONGLONG dwPosition = GetPosition();
+    Seek(static_cast<LONGLONG>(dwCountPosition), begin);
+    FilePeg_WriteWord(*this, wPrims);
+    Seek(static_cast<LONGLONG>(dwPosition), begin);
 }
 void CFileBlock::WriteBlocks(CBlocks& blks)
 {
-	FilePeg_WriteWord(*this, CFilePeg::SECTION_BLOCKS);
-	FilePeg_WriteWord(*this, (WORD) blks.GetSize());
+    FilePeg_WriteWord(*this, CFilePeg::SECTION_BLOCKS);
+    FilePeg_WriteWord(*this, (WORD)blks.GetSize());
 
-	CString strKey;
-	CBlock* pBlock;
+    CString strKey;
+    CBlock* pBlock;
 
-	POSITION pos = blks.GetStartPosition();
-	while (pos != NULL)
-	{
-		blks.GetNextAssoc(pos, strKey, pBlock);
-		WriteBlock(strKey, pBlock);
-	}
-	FilePeg_WriteWord(*this, CFilePeg::SECTION_END);
+    POSITION pos = blks.GetStartPosition();
+    while (pos != NULL)
+    {
+        blks.GetNextAssoc(pos, strKey, pBlock);
+        WriteBlock(strKey, pBlock);
+    }
+    FilePeg_WriteWord(*this, CFilePeg::SECTION_END);
 }
 void CFileBlock::WriteFile(const CString& strPathName, CBlocks& blks)
 {
-	CFileException e;
-	
-	CFile::Open(strPathName, modeCreate | modeWrite, &e);
+    CFileException e;
 
-	WriteHeader();
-	WriteBlocks(blks);
+    CFile::Open(strPathName, modeCreate | modeWrite, &e);
+
+    WriteHeader();
+    WriteBlocks(blks);
 }
 void CFileBlock::WriteHeader()
 {
-	FilePeg_WriteWord(*this, CFilePeg::SECTION_HEADER);
+    FilePeg_WriteWord(*this, CFilePeg::SECTION_HEADER);
 
-	FilePeg_WriteWord(*this, CFilePeg::SECTION_END);
+    FilePeg_WriteWord(*this, CFilePeg::SECTION_END);
 }

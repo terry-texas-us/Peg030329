@@ -260,9 +260,9 @@ void CFilePeg::WriteBlocksSection(CPegDoc* pDoc)
                 iPrimCount++;
         }
         ULONGLONG dwPosition = CFile::GetPosition();
-        CFile::Seek(dwCountPosition, CFile::begin);
+        CFile::Seek(static_cast<LONGLONG>(dwCountPosition), CFile::begin);
         FilePeg_WriteWord(*this, iPrimCount);
-        CFile::Seek(dwPosition, CFile::begin);
+        CFile::Seek(static_cast<LONGLONG>(dwPosition), CFile::begin);
     }
 
     FilePeg_WriteWord(*this, SECTION_END);
@@ -329,9 +329,9 @@ void CFilePeg::WriteLayerTable(CPegDoc* pDoc)
     if (iTblSize != pDoc->LayersGetSize())
     {
         ULONGLONG dwPosition = CFile::GetPosition();
-        CFile::Seek(dwTblSizePosition, CFile::begin);
+        CFile::Seek(static_cast<LONGLONG>(dwTblSizePosition), CFile::begin);
         FilePeg_WriteWord(*this, WORD(iTblSize));
-        CFile::Seek(dwPosition, CFile::begin);
+        CFile::Seek(static_cast<LONGLONG>(dwPosition), CFile::begin);
     }
 }
 void CFilePeg::WritePenStyleTable(CPegDoc* pDoc)

@@ -139,7 +139,7 @@ public:
     void		RubberBandingEnable(ERubs eRub);
     void		RubberBandingStartAtEnable(const CPnt& pt, ERubs eRub);
 
-    void		StatusLineDisplay(EStatusLineItem = All);
+    void		StatusLineDisplay(EStatusLineItem = All) const;
 
     char* StrokeFontGet() const { return m_pStrokeFontDef; }
     void		StrokeFontLoad(const CString& strPathName);
@@ -148,7 +148,7 @@ public:
     static WORD GetFileTypeFromPath(const CString& strPathName);
     HINSTANCE	GetInstance() const { return (m_hInstance); }
     WNDPROC		GetMainWndProc() const { return (m_wpMainWnd); }
-    UINT		CheckMenuItem(UINT uId, UINT uCheck) { return (::CheckMenuItem(m_hMenu, uId, uCheck)); }
+    UINT		CheckMenuItem(UINT uId, UINT uCheck) const { return (::CheckMenuItem(m_hMenu, uId, uCheck)); }
     HMENU		GetMenu() const { return (m_hMenu); }
     HWND		GetSafeHwnd() const { return ((AfxGetApp()->m_pMainWnd)->GetSafeHwnd()); }
     HMENU		GetSubMenu(int nPos) const { return (::GetSubMenu(m_hMenu, nPos)); }

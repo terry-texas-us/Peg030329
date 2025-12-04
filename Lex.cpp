@@ -122,7 +122,7 @@ void lex::ConvertValToString(char* acVal, CD* arCD, char* acPic, size_t picBuffe
     {
         *aiLen = iDim;
         acPic[0] = '\'';
-        memmove(&acPic[1], acVal, *aiLen);
+        memmove(&acPic[1], acVal, static_cast<size_t>(*aiLen));
         acPic[++*aiLen] = '\'';
         acPic[++*aiLen] = '\0';
     }
@@ -348,7 +348,7 @@ void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* ap
         {
             iTyp1 = iTokTyp;
             lDef1 = lValues[iValLoc[iTokLoc]];
-            memcpy(cOp1, &lValues[iValLoc[iTokLoc] + 1], HIWORD(lDef1) * 4);
+            memcpy(cOp1, &lValues[iValLoc[iTokLoc] + 1], static_cast<size_t>(HIWORD(lDef1)) * 4);
         }
         else
         {	// Token is an operator .. Pop an operand from operand stack
@@ -357,7 +357,7 @@ void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* ap
             iTyp1 = iOpStkTyp[iOpStkTop];
             lDef1 = lOpStkDef[iOpStkTop];
             iLen1 = HIWORD(lDef1);
-            memcpy(cOp1, &lOpStk[iOpStkTop--][0], iLen1 * 4);
+            memcpy(cOp1, &lOpStk[iOpStkTop--][0], static_cast<size_t>(iLen1) * 4);
 
             if (toktbl[iTokTyp].eClass == Other)
             {	// intrinsics and oddball unary minus/plus
@@ -391,7 +391,7 @@ void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* ap
                 iTyp2 = iOpStkTyp[iOpStkTop];				// Pop second operand from operand stack
                 lDef2 = lOpStkDef[iOpStkTop];
                 iLen2 = HIWORD(lDef2);
-                memcpy(cOp2, &lOpStk[iOpStkTop--][0], iLen2 * 4);
+                memcpy(cOp2, &lOpStk[iOpStkTop--][0], static_cast<size_t>(iLen2) * 4);
                 iTyp = std::min(iTyp2, TOK_REAL);
                 if (iTyp1 < iTyp)						// Convert first operand
                 {
@@ -516,7 +516,7 @@ void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* ap
         iOpStkTop++;						// Increment opernad stack pointer
         iOpStkTyp[iOpStkTop] = iTyp1;		// Push operand onto operand stack
         lOpStkDef[iOpStkTop] = lDef1;
-        memcpy(&lOpStk[iOpStkTop][0], cOp1, HIWORD(lDef1) * 4);
+        memcpy(&lOpStk[iOpStkTop][0], cOp1, static_cast<size_t>(HIWORD(lDef1)) * 4);
         iTokStkId++;
     }
     *aiTyp = iTyp1;
@@ -558,7 +558,7 @@ void lex::Parse(const char* szLine)
 
             iValLoc[iToks] = iValsCount + 1;
             lValues[iValsCount + 1] = iDim + iLen * 65536;
-            memcpy(&lValues[iValsCount + 2], szTok, iDim);
+            memcpy(&lValues[iValsCount + 2], szTok, static_cast<size_t>(iDim));
             iValsCount = iValsCount + 1 + iLen;
             break;
 
@@ -638,7 +638,7 @@ int lex::Scan(char* tokenBuffer, size_t tokenBufferSize, const char* szLine, int
     }
 
     iLen = iTokLoc - iBegLoc + 1;
-    strncpy_s(tokenBuffer, tokenBufferSize, &szLine[iBegLoc], iLen);
+    strncpy_s(tokenBuffer, tokenBufferSize, &szLine[iBegLoc], static_cast<rsize_t>(iLen));
     tokenBuffer[iLen] = '\0';
     TRACE("LinePointer = %d, TokenID = %d\n", iLP, iRetVal);
     if (iRetVal == -1) { iLP = iBegLoc + 1; }

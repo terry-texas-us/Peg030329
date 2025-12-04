@@ -42,7 +42,7 @@ void UnitsDlgProcInit(HWND hDlg)
 
     ::CheckRadioButton(hDlg, IDC_ARCHITECTURAL, IDC_METRIC, iCtrlId);
 
-    SetDlgItemInt(hDlg, IDC_PRECISION, app.GetUnitsPrec(), FALSE);
+    SetDlgItemInt(hDlg, IDC_PRECISION, static_cast<UINT>(app.GetUnitsPrec()), FALSE);
 
     for (size_t i = 0; i < sizeof(strMetricUnits) / sizeof(strMetricUnits[0]); i++)
     {
@@ -57,13 +57,21 @@ void UnitsDlgProcInit(HWND hDlg)
 void UnitsDlgProcDoOK(HWND hDlg)
 {
     if (IsDlgButtonChecked(hDlg, IDC_ARCHITECTURAL))
+    {
         app.SetUnits(Architectural);
+    }
     else if (IsDlgButtonChecked(hDlg, IDC_ENGINEERING))
+    {
         app.SetUnits(Engineering);
+    }
     else if (IsDlgButtonChecked(hDlg, IDC_FEET))
+    {
         app.SetUnits(Feet);
+    }
     else if (IsDlgButtonChecked(hDlg, IDC_INCHES))
+    {
         app.SetUnits(Inches);
+    }
     else
     {	// get units from metric list
         switch (::SendDlgItemMessage(hDlg, IDC_METRIC_UNITS, LB_GETCURSEL, 0, 0L))
@@ -84,10 +92,10 @@ void UnitsDlgProcDoOK(HWND hDlg)
             app.SetUnits(Kilometers);
         }
     }
-    BOOL bTranslated;
-    int iPrec = GetDlgItemInt(hDlg, IDC_PRECISION, &bTranslated, FALSE);
-    if (bTranslated)
-        app.SetUnitsPrec(iPrec);
+    BOOL translated{FALSE};
+    UINT precision{GetDlgItemInt(hDlg, IDC_PRECISION, &translated, FALSE)};
+    int iPrec{static_cast<int>(precision)};
+    if (translated) { app.SetUnitsPrec(iPrec); }
 }
 
 

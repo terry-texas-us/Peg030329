@@ -33,15 +33,15 @@ HDDEDATA dde::SysReqItems(UINT wFmt, HSZ hszTopic, HSZ hszItem)
     {
         if (cbOffset != 0)										// Put in a tab delimiter
         {
-            DdeAddData(hData, (LPBYTE)"\t", 1, cbOffset);
+            DdeAddData(hData, (LPBYTE)"\t", 1, static_cast<DWORD>(cbOffset));
             cbOffset++;
         }
         cb = lstrlen(pItem->pszItemName);						// the string name of the item
-        DdeAddData(hData, (LPBYTE)pItem->pszItemName, cb, cbOffset);
+        DdeAddData(hData, (LPBYTE)pItem->pszItemName, static_cast<DWORD>(cb), static_cast<DWORD>(cbOffset));
         cbOffset += cb;
         pItem = pItem->pNext;
     }
-    DdeAddData(hData, (LPBYTE)"", 1, cbOffset);							// Put a 0 on the end
+    DdeAddData(hData, (LPBYTE)"", 1, static_cast<DWORD>(cbOffset));							// Put a 0 on the end
     // Return a DDE data handle to the data object containing the return data.
     return hData;
 }
@@ -76,7 +76,7 @@ HDDEDATA dde::SysReqProtocols(UINT, HSZ, HSZ hszItem)
 {
     static char sz [] = "Execute Control 1";
 
-    return DdeCreateDataHandle(ServerInfo.dwInstance, (LPBYTE)sz, lstrlen(sz) + 1, 0, hszItem, CF_TEXT, 0);
+    return DdeCreateDataHandle(ServerInfo.dwInstance, (LPBYTE)sz, static_cast<DWORD>(lstrlen(sz) + 1), 0, hszItem, CF_TEXT, 0);
     // Return a DDE data handle to the data object containing the return data.
 }
 // Process a request for the topics list.  Typically the data is returned in CF_TEXT format as a tab
@@ -93,15 +93,15 @@ HDDEDATA dde::SysReqTopics(UINT wFmt, HSZ, HSZ hszItem)
     {
         if (cbOffset != 0)										// Put in a tab delimiter
         {
-            DdeAddData(hData, (LPBYTE)"\t", 1, cbOffset);
+            DdeAddData(hData, (LPBYTE)"\t", 1, static_cast<DWORD>(cbOffset));
             cbOffset++;
         }
         cb = lstrlen(pTopic->pszTopicName); 					// the string name of the topic
-        DdeAddData(hData, (LPBYTE)pTopic->pszTopicName, cb, cbOffset);
+        DdeAddData(hData, (LPBYTE)pTopic->pszTopicName, static_cast<DWORD>(cb), static_cast<DWORD>(cbOffset));
         cbOffset += cb;
         pTopic = pTopic->pNext;
     }
-    DdeAddData(hData, (LPBYTE)"", 1, cbOffset);							// Put a 0 on the end
+    DdeAddData(hData, (LPBYTE)"", 1, static_cast<DWORD>(cbOffset));							// Put a 0 on the end
     // Return a DDE data handle to the data object containing the return data.
     return hData;
 }

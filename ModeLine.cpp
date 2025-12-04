@@ -31,11 +31,11 @@ void CPegApp::ModeLineDisplay()
     for (int i = 0; i < 10; i++)
     {
         AfxExtractSubString(strModeOp, strMode, i + 1, '\n');
-        UINT nLen = strModeOp.GetLength();
+        int nLen = strModeOp.GetLength();
 
         CSize size = context->GetTextExtent(strModeOp, nLen);
 
-        mainFrame->SetPaneInfo(i + 1, ID_OP0 + i, SBPS_NORMAL, size.cx - 2 * nLen);
+        mainFrame->SetPaneInfo(i + 1, static_cast<UINT>(ID_OP0 + i), SBPS_NORMAL, size.cx - 2 * nLen);
         mainFrame->SetPaneText(i + 1, strModeOp);
         if (m_bViewModeInfo && context != nullptr)
         {
@@ -53,7 +53,7 @@ void CPegApp::ModeLineDisplay()
             int iMaxChrs = (rcClient.Width() / 10) / tm.tmAveCharWidth;
 
             CRect rc(i * iMaxChrs * tm.tmAveCharWidth, rcClient.bottom - tm.tmHeight, (i + 1) * iMaxChrs * tm.tmAveCharWidth, rcClient.bottom);
-            context->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, strModeOp, nLen, 0);
+            context->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, strModeOp, static_cast<UINT>(nLen), 0);
 
             context->SetBkColor(crBk);
             context->SetTextColor(crText);

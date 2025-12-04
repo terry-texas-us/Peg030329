@@ -153,7 +153,7 @@ bool filejob_GetNextSeg(CFile& f, int iVersion, char* pBuf, CSeg*& pSeg)
             catch (char* szMessage)
             {
                 msgInformation(szMessage);
-                f.Seek(dwPosition + 32, CFile::begin);
+                f.Seek(static_cast<LONGLONG>(dwPosition + 32), CFile::begin);
             }
         }
     }
@@ -164,7 +164,7 @@ bool filejob_GetNextSeg(CFile& f, int iVersion, char* pBuf, CSeg*& pSeg)
             if (::MessageBox(0, szMessage, 0, MB_ICONERROR | MB_RETRYCANCEL) == IDCANCEL)
                 return false;
         }
-        f.Seek(dwPosition + 32, CFile::begin);
+        f.Seek(static_cast<LONGLONG>(dwPosition + 32), CFile::begin);
     }
     return true;
 }
@@ -184,7 +184,7 @@ bool filejob_GetNextPrim(CFile& f, int iVersion, char* pBuf, CPrim*& pPrim)
 
         if (iLen > 1)
         {
-            UINT nCount = (iLen - 1) * 32;
+            UINT nCount = static_cast<UINT>(iLen - 1) * 32;
 
             if (nCount >= CPrim::BUFFER_SIZE - 32)
                 throw "Exception.FileJob: Primitive buffer overflow.";
@@ -385,7 +385,7 @@ CPrimBSpline::CPrimBSpline(char* p, int iVer)
         m_nPenColor = PENCOLOR(p[6]);
         m_nPenStyle = PENSTYLE(p[7]);
 
-        WORD wPts = *((short*)&p[8]);
+        WORD wPts = static_cast<WORD>(*((short*)&p[8]));
 
         int i = 10;
 
@@ -413,16 +413,16 @@ void CPrimBSpline::Write(CFile& f, char* p) const
         ((CVaxPnt*)&p[i])->Convert(m_pts[w]);
         i += sizeof(CVaxPnt);
     }
-    f.Write(p, p[3] * 32);
+    f.Write(p, static_cast<UINT>(p[3]) * 32);
 }
 CPrimCSpline::CPrimCSpline(char* p)
 {
     m_nPenColor = PENCOLOR(p[6]);
     m_nPenStyle = PENSTYLE(p[7]);
 
-    m_wPtsS = *((short*)&p[8]);
-    WORD wPts = *((short*)&p[10]);
-    m_wEndCndId = *((short*)&p[12]);
+    m_wPtsS = static_cast<WORD>(*((short*)&p[8]));
+    WORD wPts = static_cast<WORD>(*((short*)&p[10]));
+    m_wEndCndId = static_cast<WORD>(*((short*)&p[12]));
     m_TanVec[0] = ((CVaxVec*)&p[14])->Convert();
     m_TanVec[1] = ((CVaxVec*)&p[26])->Convert();
 
@@ -442,9 +442,9 @@ void CPrimCSpline::Write(CFile& f, char* p) const
     p[6] = char(m_nPenColor == PENCOLOR_BYLAYER ? mS_nLayerPenColor : m_nPenColor);
     p[7] = char(m_nPenStyle == PENSTYLE_BYLAYER ? mS_nLayerPenStyle : m_nPenStyle);
 
-    *((short*)&p[8]) = m_wPtsS;
+    *((short*)&p[8]) = static_cast<short>(m_wPtsS);
     *((short*)&p[10]) = (short)m_pts.GetSize();
-    *((short*)&p[12]) = m_wEndCndId;
+    *((short*)&p[12]) = static_cast<short>(m_wEndCndId);
     ((CVaxVec*)&p[14])->Convert(m_TanVec[0]);
     ((CVaxVec*)&p[26])->Convert(m_TanVec[1]);
 
@@ -455,7 +455,7 @@ void CPrimCSpline::Write(CFile& f, char* p) const
         ((CVaxPnt*)&p[i])->Convert(m_pts[w]);
         i += sizeof(CVaxPnt);
     }
-    f.Write(p, p[3] * 32);
+    f.Write(p, static_cast<UINT>(p[3]) * 32);
 }
 CPrimDim::CPrimDim(char* p)
 {
@@ -529,7 +529,7 @@ void CPrimDim::Write(CFile& f, char* p) const
     for (int i = 0; i < *pChrs; i++)
         pChr[i] = m_strText[i];
 
-    f.Write(p, p[3] * 32);
+    f.Write(p, static_cast<UINT>(p[3]) * 32);
 }
 void CPrimInsert::Write(CFile& f, char* p) const
 {
@@ -733,7 +733,7 @@ CPrimPolygon::CPrimPolygon(char* p, int iVer)
         m_nPenColor = PENCOLOR(p[6]);
         m_nIntStyle = char(p[7]);
         m_nIntStyleId = *((short*)&p[8]);
-        m_wPts = *((short*)&p[10]);
+        m_wPts = static_cast<WORD>(*((short*)&p[10]));
         m_ptOrig = ((CVaxPnt*)&p[12])->Convert();
         m_vPosXAx = ((CVaxVec*)&p[24])->Convert();
         m_vPosYAx = ((CVaxVec*)&p[36])->Convert();
@@ -768,7 +768,7 @@ void CPrimPolygon::Write(CFile& f, char* p) const
         ((CVaxPnt*)&p[i])->Convert(m_Pt[w]);
         i += sizeof(CVaxPnt);
     }
-    f.Write(p, p[3] * 32);
+    f.Write(p, static_cast<UINT>(p[3]) * 32);
 }
 void CPrimPolyline::Write(CFile& f, char* p) const
 {
@@ -938,5 +938,5 @@ void CPrimText::Write(CFile& f, char* p) const
     for (int n = 0; n < m_strText.GetLength(); n++)
         pChr[n] = m_strText[n];
 
-    f.Write(p, p[3] * 32);
+    f.Write(p, static_cast<UINT>(p[3]) * 32);
 }

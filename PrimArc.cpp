@@ -913,7 +913,7 @@ bool CPrimArc::Write(CFile& fl) const
 {
     FilePeg_WriteWord(fl, static_cast<WORD>(CPrim::Type::Arc));
     FilePeg_WriteWord(fl, m_nPenColor);
-    FilePeg_WriteWord(fl, m_nPenStyle);
+    FilePeg_WriteWord(fl, static_cast<WORD>(m_nPenStyle));
     m_ptCenter.Write(fl);
     m_vMajAx.Write(fl);
     m_vMinAx.Write(fl);

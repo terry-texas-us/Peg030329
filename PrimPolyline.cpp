@@ -202,7 +202,7 @@ CPnt CPrimPolyline::GoToNxtCtrlPt() const
         if (mS_wEdge == 1)
             mS_wPivotVertex = 1;
         else
-            mS_wPivotVertex = wPts - 1;
+            mS_wPivotVertex = static_cast<WORD>(wPts - 1);
     }
     else if (mS_wPivotVertex == wPts - 1)
     {
@@ -374,7 +374,7 @@ bool CPrimPolyline::Write(CFile& fl) const
 {
     FilePeg_WriteWord(fl, static_cast<WORD>(CPrim::Type::Polyline));
     FilePeg_WriteWord(fl, m_nPenColor);
-    FilePeg_WriteWord(fl, m_nPenStyle);
+    FilePeg_WriteWord(fl, static_cast<WORD>(m_nPenStyle));
     FilePeg_WriteWord(fl, (WORD)m_pts.GetSize());
 
     for (WORD w = 0; w < m_pts.GetSize(); w++)

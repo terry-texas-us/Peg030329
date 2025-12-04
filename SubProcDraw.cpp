@@ -33,7 +33,7 @@ LRESULT CALLBACK SubProcDraw(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 {
     static	WORD	wPts{0};
     static	WORD	wPrvOp{0};
-    static	CPnt	pt[64]{};
+    static	CPnt	pt[63]{};
 
     CPegDoc* pDoc{CPegDoc::GetDoc()};
     CPegView* pView{CPegView::GetActiveView()};

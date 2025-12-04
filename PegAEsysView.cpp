@@ -349,7 +349,7 @@ void CPegView::OnFilePrint()
     m_dPlotScaleFactor = 1.;
     CView::OnFilePrint();
 }
-UINT CPegView::NumPages(CDC* context, double scaleFactor, UINT& horizontalPages, UINT& verticalPages)
+UINT CPegView::NumPages(CDC* context, double scaleFactor, UINT& horizontalPages, UINT& verticalPages) const
 {
     CPnt minExtents{};
     CPnt maxExtents{};

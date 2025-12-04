@@ -91,11 +91,10 @@ char gbl_szExtStr[128]{};
 
 double dPWids [] =
 {
-    0., .0075, .015, .02, .03, .0075, .015, .0225, .03, .0075, .015, .0225, .03, .0075, .015, .0225
+    0., 0.0075, 0.015, 0.02, 0.03, 0.0075, 0.015, 0.0225, 0.03, 0.0075, 0.015, 0.0225, 0.03, 0.0075, 0.015, 0.0225
 };
 
 #include "PegColors.h"
-#include <string.h>
 
 COLORREF* pColTbl = crHotCols;
 
@@ -327,17 +326,17 @@ END_MESSAGE_MAP()
 void CPegApp::OnEditCfImage()
 {
     m_bEditCFImage = !m_bEditCFImage;
-    app.CheckMenuItem(ID_EDIT_CF_IMAGE, MF_BYCOMMAND | (m_bEditCFImage ? MF_CHECKED : MF_UNCHECKED));
+    app.CheckMenuItem(ID_EDIT_CF_IMAGE, static_cast<UINT>(MF_BYCOMMAND | (m_bEditCFImage ? MF_CHECKED : MF_UNCHECKED)));
 }
 void CPegApp::OnEditCfSegments()
 {
     m_bEditCFSegments = !m_bEditCFSegments;
-    app.CheckMenuItem(ID_EDIT_CF_SEGMENTS, MF_BYCOMMAND | (m_bEditCFSegments ? MF_CHECKED : MF_UNCHECKED));
+    app.CheckMenuItem(ID_EDIT_CF_SEGMENTS, static_cast<UINT>(MF_BYCOMMAND | (m_bEditCFSegments ? MF_CHECKED : MF_UNCHECKED)));
 }
 void CPegApp::OnEditCfText()
 {
     m_bEditCFText = !m_bEditCFText;
-    app.CheckMenuItem(ID_EDIT_CF_TEXT, MF_BYCOMMAND | (m_bEditCFText ? MF_CHECKED : MF_UNCHECKED));
+    app.CheckMenuItem(ID_EDIT_CF_TEXT, static_cast<UINT>(MF_BYCOMMAND | (m_bEditCFText ? MF_CHECKED : MF_UNCHECKED)));
 }
 // Subclasses the main window to Trap mode operations.
 void CPegApp::OnModeTrap()
@@ -834,7 +833,7 @@ void CPegApp::ModifyMenu(UINT uPos, LPCTSTR lpNewItem)
 {
     if (m_pMainWnd)
     {
-        HMENU hMenu = ::GetSubMenu(m_hMenu, uPos);
+        HMENU hMenu = ::GetSubMenu(m_hMenu, static_cast<int>(uPos));
         ::ModifyMenu(m_hMenu, uPos, MF_BYPOSITION | MF_STRING | MF_POPUP, UINT_PTR(hMenu), lpNewItem);
 
         m_pMainWnd->DrawMenuBar();
@@ -1117,7 +1116,7 @@ void CPegApp::SetWindowMode(int aiModeId)
     StatusLineDisplay();
     ModeLineDisplay();
 }
-void CPegApp::StatusLineDisplay(EStatusLineItem sli)
+void CPegApp::StatusLineDisplay(EStatusLineItem sli) const
 {
     if (m_bViewStateInfo)
     {
@@ -1226,11 +1225,11 @@ void CPegApp::StrokeFontLoad(const CString& strPathName)
 
         // Open binary resources
         hrsrc = FindResource(NULL, MAKEINTRESOURCE(IDR_PEGSTROKEFONT), "STROKEFONT");
-        fontlen = SizeofResource(NULL, hrsrc);
-        m_pStrokeFontDef = new char[fontlen];
+        fontlen = static_cast<int>(SizeofResource(NULL, hrsrc));
+        m_pStrokeFontDef = new char[static_cast<size_t>(fontlen)];
 
         fontptr = LockResource(LoadResource(NULL, hrsrc));
-        memcpy(m_pStrokeFontDef, fontptr, fontlen);
+        memcpy(m_pStrokeFontDef, fontptr, static_cast<size_t>(fontlen));
 
     }
     else

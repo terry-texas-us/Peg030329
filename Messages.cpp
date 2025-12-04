@@ -12,7 +12,7 @@
 /// @brief Loads a string resource from the string table and returns it as a std::string.
 /// @param resourceIdentifier The resource identifier of the string to load.
 /// @return A std::string containing the loaded resource text. The returned string may be empty if loading fails, and may be truncated if the resource exceeds the internal 256-byte buffer.
-std::string msgLoadStringResource(UINT resourceIdentifier)
+static std::string msgLoadStringResource(UINT resourceIdentifier)
 {
     char resourceString[256]{};
     ::LoadString(app.GetInstance(), resourceIdentifier, resourceString, sizeof(resourceString));
@@ -98,7 +98,7 @@ void msgInformation(UINT messageIdentifier)
 
     if (messageIdentifier == 0)
     {   // Use current mode indentifier.
-        information = msgLoadStringResource(app.m_iModeId);
+        information = msgLoadStringResource(static_cast<UINT>(app.m_iModeId));
 
         size_t pos = information.find("\n");
         if (pos != std::string::npos)

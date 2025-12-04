@@ -116,14 +116,14 @@ void DoEditTrapCopy(CPegView* view)
                 }
             }
         }
-        GLOBALHANDLE hGMem = GlobalAlloc(GHND, strBuf.GetLength() + 1);
+        GLOBALHANDLE hGMem = GlobalAlloc(GHND, static_cast<SIZE_T>(strBuf.GetLength()) + 1);
         if (hGMem == nullptr)
         {
             ::CloseClipboard();
             return;
         }
         LPSTR lpBuffer = (LPSTR)GlobalLock(hGMem);
-        strcpy_s(lpBuffer, strBuf.GetLength() + 1, strBuf);
+        strcpy_s(lpBuffer, static_cast<rsize_t>(strBuf.GetLength() + 1), strBuf);
         GlobalUnlock(hGMem);
         ::SetClipboardData(CF_TEXT, hGMem);
     }
@@ -1479,17 +1479,17 @@ void CPegDoc::OnFileQuery()
 
         if (iMenu == IDR_LAYER)
         {
-            pMenuSub->CheckMenuItem(ID_LAYER_WORK, MF_BYCOMMAND | (pLayer->IsHot() ? MF_CHECKED : MF_UNCHECKED));
-            pMenuSub->CheckMenuItem(ID_LAYER_ACTIVE, MF_BYCOMMAND | (pLayer->IsWarm() ? MF_CHECKED : MF_UNCHECKED));
-            pMenuSub->CheckMenuItem(ID_LAYER_STATIC, MF_BYCOMMAND | (pLayer->IsCold() ? MF_CHECKED : MF_UNCHECKED));
-            pMenuSub->CheckMenuItem(ID_LAYER_HIDDEN, MF_BYCOMMAND | (pLayer->IsOff() ? MF_CHECKED : MF_UNCHECKED));
+            pMenuSub->CheckMenuItem(ID_LAYER_WORK, static_cast<UINT>(MF_BYCOMMAND | (pLayer->IsHot() ? MF_CHECKED : MF_UNCHECKED)));
+            pMenuSub->CheckMenuItem(ID_LAYER_ACTIVE, static_cast<UINT>(MF_BYCOMMAND | (pLayer->IsWarm() ? MF_CHECKED : MF_UNCHECKED)));
+            pMenuSub->CheckMenuItem(ID_LAYER_STATIC, static_cast<UINT>(MF_BYCOMMAND | (pLayer->IsCold() ? MF_CHECKED : MF_UNCHECKED)));
+            pMenuSub->CheckMenuItem(ID_LAYER_HIDDEN, static_cast<UINT>(MF_BYCOMMAND | (pLayer->IsOff() ? MF_CHECKED : MF_UNCHECKED)));
         }
         else
         {
-            pMenuSub->CheckMenuItem(ID_TRACING_OPEN, MF_BYCOMMAND | (pLayer->IsOpened() ? MF_CHECKED : MF_UNCHECKED));
-            pMenuSub->CheckMenuItem(ID_TRACING_MAP, MF_BYCOMMAND | (pLayer->IsMapped() ? MF_CHECKED : MF_UNCHECKED));
-            pMenuSub->CheckMenuItem(ID_TRACING_VIEW, MF_BYCOMMAND | (pLayer->IsViewed() ? MF_CHECKED : MF_UNCHECKED));
-            pMenuSub->CheckMenuItem(ID_TRACING_CLOAK, MF_BYCOMMAND | (pLayer->IsOff() ? MF_CHECKED : MF_UNCHECKED));
+            pMenuSub->CheckMenuItem(ID_TRACING_OPEN, static_cast<UINT>(MF_BYCOMMAND | (pLayer->IsOpened() ? MF_CHECKED : MF_UNCHECKED)));
+            pMenuSub->CheckMenuItem(ID_TRACING_MAP, static_cast<UINT>(MF_BYCOMMAND | (pLayer->IsMapped() ? MF_CHECKED : MF_UNCHECKED)));
+            pMenuSub->CheckMenuItem(ID_TRACING_VIEW, static_cast<UINT>(MF_BYCOMMAND | (pLayer->IsViewed() ? MF_CHECKED : MF_UNCHECKED)));
+            pMenuSub->CheckMenuItem(ID_TRACING_CLOAK, static_cast<UINT>(MF_BYCOMMAND | (pLayer->IsOff() ? MF_CHECKED : MF_UNCHECKED)));
         }
         pMenuSub->TrackPopupMenu(0, point.x, point.y, CWnd::FromHandle(app.GetSafeHwnd()), 0);
         ::DestroyMenu(hMenu);
@@ -1834,7 +1834,7 @@ void CPegDoc::OnTrapCommandsHighlight()
 {
     m_bTrapHighlight = !m_bTrapHighlight;
 
-    app.CheckMenuItem(ID_TRAPCOMMANDS_HIGHLIGHT, MF_BYCOMMAND | (m_bTrapHighlight ? MF_CHECKED : MF_UNCHECKED));
+    app.CheckMenuItem(ID_TRAPCOMMANDS_HIGHLIGHT, static_cast<UINT>(MF_BYCOMMAND | (m_bTrapHighlight ? MF_CHECKED : MF_UNCHECKED)));
     trapsegs.SetIdentify(m_bTrapHighlight);
 
     LPARAM lHint = m_bTrapHighlight ? HINT_SEGS_SAFE_TRAP : HINT_SEGS_SAFE;

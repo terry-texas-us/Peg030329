@@ -202,6 +202,16 @@ void trapFilterByPrimType(CPrim::Type type)
             case CPrim::Type::Mark:
                 filter = (dynamic_cast<CPrimMark*>(primitive) != nullptr);
                 break;
+            case CPrim::Type::Insert:
+                break;
+            case CPrim::Type::Tag:
+                break;
+            case CPrim::Type::CSpline:
+                break;
+            case CPrim::Type::Dim:
+                break;
+            case CPrim::Type::BSpline:
+                break;
             }
             if (filter)
             {

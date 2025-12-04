@@ -564,8 +564,8 @@ bool CPrimPolygon::Write(CFile& fl) const
 {
     FilePeg_WriteWord(fl, static_cast<WORD>(CPrim::Type::Polygon));
     FilePeg_WriteWord(fl, m_nPenColor);
-    FilePeg_WriteWord(fl, m_nIntStyle);  // note polygon style stuffed up into unused pen style on io
-    FilePeg_WriteWord(fl, m_nIntStyleId);
+    FilePeg_WriteWord(fl, static_cast<WORD>(m_nIntStyle));  // note polygon style stuffed up into unused pen style on io
+    FilePeg_WriteWord(fl, static_cast<WORD>(m_nIntStyleId));
     FilePeg_WriteWord(fl, m_wPts);
     m_ptOrig.Write(fl);
     m_vPosXAx.Write(fl);

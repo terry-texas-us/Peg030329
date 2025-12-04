@@ -43,7 +43,7 @@ bool dde::ExecFill(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 {
     char szBuf[8]{};
     strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
-    pstate.SetPolygonIntStyleId(WORD(atoi(szBuf)));
+    pstate.SetPolygonIntStyleId(static_cast<short>(atoi(szBuf)));
     return true;
 }
 ///<summary>Sets the Scale.</summary>
@@ -76,7 +76,7 @@ bool dde::ExecDA(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 ///<summary></summary>
 bool dde::ExecTracingBlank(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs)
 {
-    int iPathKey = uiNargs - 1;
+    int iPathKey = static_cast<int>(uiNargs - 1);
 
     CPegDoc* pDoc = CPegDoc::GetDoc();
     pDoc->LayerBlank(ppArgs[iPathKey]);
@@ -86,7 +86,7 @@ bool dde::ExecTracingBlank(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs)
 ///<summary>Maps a tracing file.</summary>
 bool dde::ExecTracingMap(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs)
 {
-    int iPathKey = uiNargs - 1;
+    int iPathKey = static_cast<int>(uiNargs - 1);
 
     CPegDoc* pDoc = CPegDoc::GetDoc();
     pDoc->TracingMap(ppArgs[iPathKey]);
@@ -96,7 +96,7 @@ bool dde::ExecTracingMap(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs)
 ///<summary>Opens a tracing file.</summary>
 bool dde::ExecTracingOpen(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs)
 {
-    int iPathKey = uiNargs - 1;
+    int iPathKey = static_cast<int>(uiNargs - 1);
 
     CPegDoc* pDoc = CPegDoc::GetDoc();
     pDoc->TracingOpen(ppArgs[iPathKey]);
@@ -106,7 +106,7 @@ bool dde::ExecTracingOpen(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs)
 ///<summary>Views a tracing file.</summary>
 bool dde::ExecTracingView(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs)
 {
-    int iPathKey = uiNargs - 1;
+    int iPathKey = static_cast<int>(uiNargs - 1);
 
     CPegDoc* pDoc = CPegDoc::GetDoc();
     pDoc->TracingView(ppArgs[iPathKey]);
@@ -116,7 +116,7 @@ bool dde::ExecTracingView(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs)
 ///<summary>Gets a tracing file.</summary>
 bool dde::ExecFileGet(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs)
 {
-    int iPathKey = uiNargs - 1;
+    int iPathKey = static_cast<int>(uiNargs - 1);
 
     CPegDoc* pDoc = CPegDoc::GetDoc();
 
@@ -215,13 +215,13 @@ bool dde::ExecSend(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
         {
             *pIdx++;
             int iVkValue = atoi(pIdx);
-            ::PostMessage(hWndTarget, WM_KEYDOWN, iVkValue, 0L);
+            ::PostMessage(hWndTarget, WM_KEYDOWN, static_cast<WPARAM>(iVkValue), 0L);
             while ((*pIdx != 0) && (*pIdx != '}'))
                 pIdx++;
         }
         else
         {
-            ::PostMessage(hWndTarget, WM_CHAR, *pIdx, 0L);
+            ::PostMessage(hWndTarget, WM_CHAR, static_cast<WPARAM>(*pIdx), 0L);
             pIdx++;
         }
     }

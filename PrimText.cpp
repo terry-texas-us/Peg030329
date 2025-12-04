@@ -241,7 +241,7 @@ bool CPrimText::Write(CFile& fl) const
 {
     FilePeg_WriteWord(fl, static_cast<WORD>(CPrim::Type::Text));
     FilePeg_WriteWord(fl, m_nPenColor);
-    FilePeg_WriteWord(fl, m_nPenStyle);
+    FilePeg_WriteWord(fl, static_cast<WORD>(m_nPenStyle));
     m_fd.Write(fl);
     m_rs.Write(fl);
     FilePeg_WriteString(fl, m_strText);

@@ -8,7 +8,6 @@
 #include "Line.h"
 #include "OwnerDraw.h"
 #include "Pnt.h"
-#include "Polyline.h"
 #include "Prim.h"
 #include "PrimState.h"
 #include "Vec.h"
@@ -36,9 +35,11 @@ INT_PTR CALLBACK DlgProcSetupPenStyle(HWND hDlg, UINT nMsg, WPARAM wParam, LPARA
             nPenStyle = PENSTYLE(GetDlgItemInt(hDlg, IDC_PENSTYLES, &bTranslated, TRUE));
             if (bTranslated == 0)
             {
-                bTranslated = ::GetDlgItemText(hDlg, IDC_PENSTYLES, (LPSTR)szBuf, sizeof(szBuf));
-                if (bTranslated != 0)
+                bTranslated = (::GetDlgItemText(hDlg, IDC_PENSTYLES, (LPSTR)szBuf, sizeof(szBuf)) > 0);
+                if (bTranslated)
+                {
                     nPenStyle = CPegDoc::GetDoc()->PenStylesLookup(szBuf);
+                }
                 bTranslated = nPenStyle != PENSTYLE_LookupErr;
             }
             if (bTranslated)
@@ -86,33 +87,33 @@ INT_PTR CALLBACK DlgProcSetupPenStyle(HWND hDlg, UINT nMsg, WPARAM wParam, LPARA
 ///<summary>Draw the pen style number and a sample line showing its appearance.</summary>
 void  SetupPenStyle_DrawEntire(LPDRAWITEMSTRUCT lpDIS, int)
 {
-    CDC dc;
+    CDC dc{};
     dc.Attach(lpDIS->hDC);
 
-    LRESULT lrIndex = ::SendMessage(lpDIS->hwndItem, CB_GETCURSEL, 0, 0);
+    LRESULT lrIndex{::SendMessage(lpDIS->hwndItem, CB_GETCURSEL, 0, 0)};
     if (lrIndex == CB_ERR) { return; }
 
     char szBuf[32]{};
     ::SendMessage(lpDIS->hwndItem, CB_GETLBTEXT, lpDIS->itemID, (LPARAM)(LPCSTR)szBuf);
 
-    PENSTYLE nStyle = CPegDoc::GetDoc()->PenStylesLookup(szBuf);
+    PENSTYLE nStyle{CPegDoc::GetDoc()->PenStylesLookup(szBuf)};
     if (nStyle == PENSTYLE_LookupErr) { return; }
 
-    CRect rc;
+    CRect rc{};
     ::CopyRect(&rc, &lpDIS->rcItem);
 
     dc.SetTextColor(RGB(0, 0, 0));
-    dc.SetBkColor(RGB(255, 255, 255)),
+    dc.SetBkColor(RGB(255, 255, 255));
 
-        dc.ExtTextOut(rc.right - 72, rc.top + 2, ETO_CLIPPED, &rc, szBuf, lstrlen(szBuf), 0);
+    dc.ExtTextOut(rc.right - 72, rc.top + 2, ETO_CLIPPED, &rc, szBuf, static_cast<UINT>(lstrlen(szBuf)), 0);
 
-    PENCOLOR nPenColor = pstate.PenColor();
-    PENSTYLE nPenStyle = pstate.PenStyle();
+    PENCOLOR nPenColor{pstate.PenColor()};
+    PENSTYLE nPenStyle{pstate.PenStyle()};
     pstate.SetPen(&dc, 0, nStyle);
 
     rc.right -= 80;
 
-    CPegView* pView = CPegView::GetActiveView();
+    auto pView = CPegView::GetActiveView();
 
     pView->ViewportPushActive();
     pView->ViewportSet(rc.right + rc.left, rc.bottom + rc.top);
@@ -141,9 +142,9 @@ void  SetupPenStyle_DrawEntire(LPDRAWITEMSTRUCT lpDIS, int)
 }
 void SetupPenStyle_Init(HWND hDlg)
 {
-    HWND hWndComboBox = ::GetDlgItem(hDlg, IDC_PENSTYLES);
+    HWND hWndComboBox{::GetDlgItem(hDlg, IDC_PENSTYLES)};
 
     CPegDoc::GetDoc()->PenStylesFillCB(hWndComboBox);
-    PENSTYLE nPenStyle = pstate.PenStyle();
-    ::SendMessage(hWndComboBox, CB_SETCURSEL, nPenStyle, 0L);
+    PENSTYLE penStyle{pstate.PenStyle()};
+    ::SendMessage(hWndComboBox, CB_SETCURSEL, static_cast<WPARAM>(penStyle), 0L);
 }

@@ -524,7 +524,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
                     ptsBox[0] = Pnt_ProjPtTo(pt[1], pLine->Pt0(), dGap / 2.);
                     ptsBox[1] = Pnt_ProjPtTo(pt[1], pLine->Pt1(), dGap / 2.);
 
-                    double dRel[2];
+                    double dRel[2]{};
 
                     dRel[0] = pLine->RelOfPt(ptsBox[0]);
                     dRel[1] = pLine->RelOfPt(ptsBox[1]);
