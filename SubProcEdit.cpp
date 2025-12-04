@@ -3,10 +3,11 @@
 #include "PegAEsys.h"
 
 #include "DlgProcEditOps.h"
-#include "ExpProcs.h"
 #include "Pnt.h"
 #include "SegsTrap.h"
 #include "TMat.h"
+
+INT_PTR CALLBACK DlgProcEditOps(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 // Edits segments in trap
 LRESULT CALLBACK SubProcEdit(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam) noexcept

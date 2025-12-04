@@ -6,7 +6,6 @@
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
-#include "ExpProcs.h"
 #include "Line.h"
 #include "Messages.h"
 #include "ParLines.h"
@@ -26,6 +25,8 @@
 #include "SubProcRLPD.h"
 #include "UnitsString.h"
 #include "UserAxis.h"
+
+INT_PTR CALLBACK DlgProcRLPDOptions(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 namespace rlpd
 {

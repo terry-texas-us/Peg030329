@@ -100,7 +100,7 @@ public:
     // Operations
 public:
     void		AddTextBlock(char* pszText);
-    int			BlockGetRefCount(const CString& strName) const;
+    INT_PTR		BlockGetRefCount(const CString& blockName) const;
 
     void		BlksGetNextAssoc(POSITION& pos, CString& strKey, CBlock*& pBlock) { m_blks.GetNextAssoc(pos, strKey, pBlock); }
     POSITION	BlksGetStartPosition() { return m_blks.GetStartPosition(); }
@@ -122,8 +122,8 @@ public:
 
     void		DoPrimDelete(const CPnt& pt);
     void		GetExtents(CPnt&, CPnt&, const CTMat&) const;
-    int			GetHotCount() const;
-    int 		GetWarmCount() const;
+    INT_PTR		GetHotCount() const;
+    INT_PTR		GetWarmCount() const;
     void		InitAll();
     bool		FileTypeIsTracing(WORD wType) const;
 

@@ -1,11 +1,13 @@
 #include "stdafx.h"
 
-#include "ExpProcs.h"
 #include "Line.h"
 #include "Pnt.h"
 
 double	UserAxis_dInfAng;
 double	UserAxis_dAxOffAng;
+
+double DlgBoxGetItemDouble(HWND hDlg, int control);
+void DlgBoxSetItemDouble(HWND hDlg, int control, double value);
 
 ///<summary>Set Axis constraint tolerance angle and offset axis constraint offset angle</summary>
 void UserAxisInit()

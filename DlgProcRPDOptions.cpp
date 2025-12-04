@@ -4,9 +4,12 @@
 
 #include "PegAEsys.h"
 
-#include "ExpProcs.h"
 #include "SubProcRLPD.h"
 #include "UnitsString.h"
+
+double DlgBoxGetItemDouble(HWND hDlg, int control);
+void DlgBoxSetItemDouble(HWND hDlg, int control, double value);
+void DlgBoxSetItemUnitsText(HWND hDlg, int control, double value);
 
 void DlgProcRLPDOptionsInit(HWND);
 

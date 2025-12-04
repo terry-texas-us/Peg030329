@@ -5,8 +5,9 @@
 #include "PegAEsysView.h"
 
 #include "DlgProcEditOps.h"
-#include "ExpProcs.h"
 #include "PrimState.h"
+
+INT_PTR CALLBACK DlgProcEditOps(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 extern CTMat tmEditSeg;
 

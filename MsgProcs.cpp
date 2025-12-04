@@ -2,15 +2,12 @@
 
 #include "PegAEsys.h"
 
-#include "ddeGItms.h"
-#include "DlgProcEditOps.h"
-#include "DlgSetLength.h"
-#include "ExpProcs.h"
-#include "FileJob.h"
 #include "UnitsString.h"
 
-CSeg* pGinCurSeg;
-CPrim* pGinCurPrim;
+INT_PTR CALLBACK DlgProcGetLayerName(HWND, UINT, WPARAM, LPARAM) noexcept;
+
+CSeg* pGinCurSeg{nullptr};
+CPrim* pGinCurPrim{nullptr};
 extern CTMat tmEditSeg;
 
 double DlgBoxGetItemDouble(HWND hDlg, int iCtrlId)

@@ -7,7 +7,6 @@
 #include "PegAEsysView.h"
 
 #include "DlgSetText.h"
-#include "ExpProcs.h"
 #include "Messages.h"
 #include "Pnt.h"
 #include "Polygon.h"
@@ -22,6 +21,8 @@
 #include "SubProcAnnotate.h"
 #include "UserAxis.h"
 #include "Vec.h"
+
+INT_PTR CALLBACK DlgProcAnnotateOptions(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 void Polygon_GenPts(const CPnt&, const CVec&, const CVec&, int, CPnt*);
 

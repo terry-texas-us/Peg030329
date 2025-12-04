@@ -2,8 +2,10 @@
 
 #include "PegAEsysView.h"
 
-#include "ExpProcs.h"
 #include "Vec.h"
+
+double DlgBoxGetItemUnitsText(HWND hDlg, int control);
+void DlgBoxSetItemDouble(HWND hDlg, int control, double value);
 
 void DlgProcProjPerspectiveDoOK(HWND);
 void DlgProcProjPerspectiveInit(HWND);

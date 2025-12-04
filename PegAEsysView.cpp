@@ -8,11 +8,14 @@
 #include <atltypes.h>
 
 #include <string.h>
+#include <string_view>
 
 #include <algorithm>
+#include <cctype>
 #include <cfloat>
 #include <cmath>
 #include <cstdlib>
+#include <exception>
 #include <string>
 
 #include "PegAEsys.h"
@@ -25,7 +28,6 @@
 #include "DlgSetLength.h"
 #include "DlgSetScale.h"
 #include "DlgViewZoom.h"
-#include "ExpProcs.h"
 #include "FileBitmap.h"
 #include "Grid.h"
 #include "Layer.h"
@@ -53,10 +55,21 @@
 #define new DEBUG_NEW
 #endif
 
-char szLeftMouseDown[60]{};
-char szRightMouseDown[60]{};
-char szLeftMouseUp[60]{"{13}"}; //default return
-char szRightMouseUp[60]{"{27}"}; //default escape
+INT_PTR CALLBACK DlgProcProjAxonometric(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcProjIsometric(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcProjOblique(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcProjPerspective(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcSetupConstraints(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcSetupConstraintsAxis(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcSetupMouse_Buttons(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcUnits(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcViewLighting(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcViewParameters(HWND, UINT, WPARAM, LPARAM) noexcept;
+
+std::string leftMouseDown{};
+std::string rightMouseDown{};
+std::string leftMouseUp{"{13}"}; // default return
+std::string rightMouseUp{"{27}"}; // default escape
 
 extern CTMat tmEditSeg;
 
@@ -336,22 +349,21 @@ void CPegView::OnFilePrint()
     m_dPlotScaleFactor = 1.;
     CView::OnFilePrint();
 }
-///<summary>Determines the number of pages for 1 to 1 print</summary>
-UINT CPegView::NumPages(CDC* pDC, double dScaleFactor, UINT& nHorzPages, UINT& nVertPages)
+UINT CPegView::NumPages(CDC* context, double scaleFactor, UINT& horizontalPages, UINT& verticalPages)
 {
-    CPnt ptMin;
-    CPnt ptMax;
-    CTMat tm;
+    CPnt minExtents{};
+    CPnt maxExtents{};
+    CTMat identityMatrix{};
 
-    GetDocument()->GetExtents(ptMin, ptMax, tm);
+    GetDocument()->GetExtents(minExtents, maxExtents, identityMatrix);
 
-    double dHorzSizeInches = pDC->GetDeviceCaps(HORZSIZE) / 25.4;
-    double dVertSizeInches = pDC->GetDeviceCaps(VERTSIZE) / 25.4;
+    double dHorzSizeInches = context->GetDeviceCaps(HORZSIZE) / 25.4;
+    double dVertSizeInches = context->GetDeviceCaps(VERTSIZE) / 25.4;
 
-    nHorzPages = Round(((ptMax[0] - ptMin[0]) * dScaleFactor / dHorzSizeInches) + .5);
-    nVertPages = Round(((ptMax[1] - ptMin[1]) * dScaleFactor / dVertSizeInches) + .5);
+    horizontalPages = static_cast<UINT>(Round(((maxExtents[0] - minExtents[0]) * scaleFactor / dHorzSizeInches) + 0.5));
+    verticalPages = static_cast<UINT>(Round(((maxExtents[1] - minExtents[1]) * scaleFactor / dVertSizeInches) + 0.5));
 
-    return nHorzPages * nVertPages;
+    return horizontalPages * verticalPages;
 }
 void CPegView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo)
 {
@@ -624,21 +636,26 @@ void CPegView::OnSetupScale()
 }
 void CPegView::OnLButtonDown(UINT, CPoint)
 {
-    DoCustomMouseClick(szLeftMouseDown);
+    DoCustomMouseClick(leftMouseDown);
 }
+
 void CPegView::OnLButtonUp(UINT, CPoint)
 {
-    DoCustomMouseClick(szLeftMouseUp);
+    if (GetKeyState(VK_SHIFT) < 0)
+    {
+        DoCustomMouseClick(leftMouseUp);
+        return;
+    }
 }
 void CPegView::OnRButtonDown(UINT, CPoint)
 {
-    DoCustomMouseClick(szRightMouseDown);
+    DoCustomMouseClick(rightMouseDown);
 }
 void CPegView::OnRButtonUp(UINT, CPoint)
 {
-    DoCustomMouseClick(szLeftMouseUp);
+    DoCustomMouseClick(rightMouseUp);
 }
-void CPegView::OnMouseMove(UINT nFlags, CPoint point)
+void CPegView::OnMouseMove(UINT, CPoint point)
 {
     app.SetModeCursor(app.m_iModeId);
 
@@ -1230,27 +1247,55 @@ void CPegView::OnHelpKey()
 {
     ::WinHelp(GetSafeHwnd(), "peg.hlp", HELP_KEY, reinterpret_cast<DWORD_PTR>("READY"));
 }
-void CPegView::DoCustomMouseClick(LPTSTR lpCmds)
+
+void CPegView::DoCustomMouseClick(const std::string& customCommand) const
 {
-    HWND hWndTarget = GetSafeHwnd();
-    char* pIdx = &lpCmds[0];
-    while (*pIdx != 0)
+    if (customCommand.empty()) { return; }
+
+    HWND windowHandle{GetSafeHwnd()};
+    size_t pos{0};
+
+    while (pos < customCommand.size())
     {
-        if (*pIdx == '{')
+        if (customCommand[pos] == '{')
         {
-            *pIdx++;
-            int iVkValue = atoi(pIdx);
-            ::PostMessage(hWndTarget, WM_KEYDOWN, iVkValue, 0L);
-            while ((*pIdx != 0) && (*pIdx != '}'))
-                pIdx++;
+            ++pos;  // Skip '{'
+            size_t keyCodeStart{pos};
+            while (pos < customCommand.size() && std::isdigit(static_cast<unsigned char>(customCommand[pos])))
+            {
+                ++pos;
+            }
+            std::string_view keyCodeView{customCommand.data() + keyCodeStart, pos - keyCodeStart};
+            if (!keyCodeView.empty())
+            {
+                try
+                {
+                    int keyValue{std::stoi(std::string{keyCodeView})};
+                    ::PostMessage(windowHandle, WM_KEYDOWN, static_cast<WPARAM>(keyValue), 0L);
+                }
+                catch (const std::exception&)
+                {
+                    // Skip invalid key code (e.g., non-numeric or out-of-range)
+                    OutputDebugStringA("Invalid key code in custom command");
+                }
+            }
+            while (pos < customCommand.size() && customCommand[pos] != '}')
+            {
+                ++pos;
+            }
+            if (pos < customCommand.size())
+            {
+                ++pos; // Skip '}'
+            }
         }
         else
         {
-            ::PostMessage(hWndTarget, WM_CHAR, *pIdx, 0L);
-            pIdx++;
+            ::PostMessage(windowHandle, WM_CHAR, static_cast<WPARAM>(customCommand[pos]), 0L);
+            ++pos;
         }
     }
 }
+
 // Returns a pointer to the currently active view.
 CPegView* CPegView::GetActiveView(void)
 {

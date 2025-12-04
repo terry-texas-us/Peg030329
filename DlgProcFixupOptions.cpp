@@ -1,8 +1,10 @@
 #include "stdafx.h"
 
-#include "ExpProcs.h"
 #include "SubProcFixup.h"
 #include "UserAxis.h"
+
+double DlgBoxGetItemDouble(HWND hDlg, int control);
+void DlgBoxSetItemDouble(HWND hDlg, int control, double value);
 
 INT_PTR CALLBACK DlgProcFixupOptions(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM) noexcept
 {

@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <afxstr.h>
+
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
@@ -156,20 +158,21 @@ void CSeg::InsertBefore(POSITION posPrim, CSeg* pSeg)
         CObList::InsertBefore(posPrim, (CObject*)pPrim);
     }
 }
-int CSeg::GetBlockRefCount(const CString& strBlkNam) const
+
+INT_PTR CSeg::GetBlockRefCount(const CString& blockName) const
 {
-    int iCount{0};
+    INT_PTR count{0};
     POSITION pos{GetHeadPosition()};
     while (pos != nullptr)
     {
-        CPrim* pPrim = GetNext(pos);
-        if (pPrim->Is(CPrim::Type::SegRef))
+        CPrim* primitive{GetNext(pos)};
+        CPrimSegRef* segRef{dynamic_cast<CPrimSegRef*>(primitive)};
+        if (segRef != nullptr)
         {
-            if (static_cast<CPrimSegRef*>(pPrim)->GetName() == strBlkNam)
-                iCount++;
+            if (segRef->GetName() == blockName) { count++; }
         }
     }
-    return (iCount);
+    return (count);
 }
 void CSeg::GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const
 {
@@ -399,7 +402,7 @@ void CSeg::Translate(const CVec& v) const
 }
 void CSeg::Write(CFile& fl)
 {
-    FilePeg_WriteWord(fl, (WORD)GetCount());
+    FilePeg_WriteWord(fl, static_cast<WORD>(GetCount()));
     for (POSITION pos{GetHeadPosition()}; pos != nullptr;)
     {
         CPrim* pPrim = GetNext(pos);

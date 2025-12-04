@@ -5,7 +5,6 @@
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
-#include "ExpProcs.h"
 #include "Line.h"
 #include "Messages.h"
 #include "ParLines.h"
@@ -24,6 +23,8 @@
 #include "SubProcLPD.h"
 #include "UnitsString.h"
 #include "UserAxis.h"
+
+INT_PTR CALLBACK DlgProcLPDOptions(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 namespace lpd
 {

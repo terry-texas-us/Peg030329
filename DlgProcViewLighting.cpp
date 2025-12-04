@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+double DlgBoxGetItemDouble(HWND hDlg, int control);
+void DlgBoxSetItemDouble(HWND hDlg, int control, double value);
+
 #if GL_FUNCTIONALITY
 
 INT_PTR CALLBACK DlgProcViewLighting(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM) noexcept

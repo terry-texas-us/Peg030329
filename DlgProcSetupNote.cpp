@@ -8,10 +8,11 @@
 #include "PegAEsysView.h"
 
 #include "CharCellDef.h"
-#include "ExpProcs.h"
 #include "FontDef.h"
 #include "PrimState.h"
 #include "SafeMath.h"
+
+void DlgBoxSetItemDouble(HWND hDlg, int control, double value);
 
 void DlgProcSetupNoteInit(HWND hDlg);
 

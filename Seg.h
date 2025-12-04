@@ -74,10 +74,10 @@ public:
     /// @returns Pointer to the primitive.
     CPrim* GetAt(POSITION pos) const { return (CPrim*)CObList::GetAt(pos); }
 
-    /// @brief Gets the count of block references with the given name.
-    /// @param strName The block name.
-    /// @returns The count.
-    int GetBlockRefCount(const CString& name) const;
+    /// @brief Counts how many segment reference primitives (CPrimSegRef) in this segment have the specified block name.
+    /// @param blockName The block name to match (provided as a const reference to a CString).
+    /// @return The number of block references whose name equals the provided blockName.
+    INT_PTR GetBlockRefCount(const CString& name) const;
 
     /// @brief Gets the count of primitives in the segment.
     /// @returns The count.

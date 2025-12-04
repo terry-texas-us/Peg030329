@@ -5,11 +5,12 @@
 
 #include "PegAEsysView.h"
 
-#include "ExpProcs.h"
 #include "Pnt.h"
 #include "SafeMath.h"
 #include "Vec.h"
 
+double DlgBoxGetItemDouble(HWND hDlg, int control);
+void DlgBoxSetItemDouble(HWND hDlg, int control, double value);
 
 INT_PTR CALLBACK DlgProcProjOblique(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {

@@ -43,8 +43,8 @@ public: // Methods
     void		BreakPolylines();
     void		BreakSegRefs();
     void		Display(CPegView* pView, CDC* pDC) const;
-    int			GetBlockRefCount(const CString& strName) const;
-    int         GetCount() const { return static_cast<int>(CObList::GetCount()); }
+    INT_PTR		GetBlockRefCount(const CString& blockName) const;
+    INT_PTR     GetCount() const { return CObList::GetCount(); }
     void		GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const;
     int			GetPenStyleRefCount(PENSTYLE nPenStyle) const;
     void		ModifyNotes(const CFontDef& cd, const CCharCellDef& ccd, int iAtt = 0);

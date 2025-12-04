@@ -12,10 +12,10 @@
 /// The standard enhanced metafile and the private PegSegs which is read exclusively by Peg.
 void DoEditTrapCopy(CPegView* view);
 
-UINT CALLBACK OFNHookProcFileTracing(HWND hDlg, UINT uiMsg, WPARAM wParam, LPARAM lParam)
+UINT_PTR CALLBACK OFNHookProcFileTracing(HWND hDlg, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 {
-    CPegDoc* pDoc = CPegDoc::GetDoc();
-    CPegView* pView = CPegView::GetActiveView();
+    auto pDoc{CPegDoc::GetDoc()};
+    auto pView{CPegView::GetActiveView()};
 
     switch (uiMsg)
     {

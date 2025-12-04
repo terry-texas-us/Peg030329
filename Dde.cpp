@@ -45,7 +45,10 @@ DWORD dde::dwInstance = 0;
 ///<summary>Startup our DDE services and do the basic initialization.</summary>
 void dde::Setup(HINSTANCE)
 {
+#pragma warning(push)
+#pragma warning(disable: 4191)
     ServerInfo.pfnStdCallback = (PFNCALLBACK)MakeProcInstance((FARPROC)StdCallback, hInst);
+#pragma warning(pop)    
     ServerInfo.pfnCustomCallback = 0;
 
     DWORD dwFilterFlags = CBF_FAIL_SELFCONNECTIONS;
@@ -528,32 +531,32 @@ HDDEDATA dde::MakeCFText(UINT wFmt, LPSTR lpszStr, HSZ hszItem)
     if (wFmt != CF_TEXT)
         return 0;
 
-    return (DdeCreateDataHandle(dwInstance, (LPBYTE)lpszStr, lstrlen(lpszStr) + 1, 0, hszItem, CF_TEXT, 0));
+    return (DdeCreateDataHandle(dwInstance, (LPBYTE)lpszStr, lstrlen(lpszStr) + 1u, 0, hszItem, CF_TEXT, 0));
 }
 ///<summary>Create a data item containing the names of all the formats supplied in a list.</summary>
 // Returns: A DDE data handle to a list of the format names.
 HDDEDATA dde::MakeDataFromFormatList(LPWORD pFmt, WORD wFmt, HSZ hszItem)
 {
-    int cb;
+    DWORD cb{0};
     char buf[256]{};
 
     HDDEDATA hData = DdeCreateDataHandle(ServerInfo.dwInstance, 0, 0, 0, hszItem, wFmt, 0); // Empty data object to fill
-    int cbOffset = 0;
+    DWORD cbOffset{0};
 
     while (*pFmt)						// Walk the format list
     {
         if (cbOffset != 0)				// Put in a tab delimiter 
         {
-            DdeAddData(hData, (LPBYTE)"\t", 1, cbOffset);
+            DdeAddData(hData, (LPBYTE)"\t", 1u, cbOffset);
             cbOffset++;
         }
         GetCFNameFromId(*pFmt, buf, sizeof(buf));		// the string name of the format
-        cb = lstrlen(buf);
+        cb = static_cast<DWORD>(lstrlen(buf));
         DdeAddData(hData, (LPBYTE)buf, cb, cbOffset);
         cbOffset += cb;
         pFmt++;
     }
-    DdeAddData(hData, (LPBYTE)"", 1, cbOffset);							// Put a 0 on the end
+    DdeAddData(hData, (LPBYTE)"", 1u, cbOffset);							// Put a 0 on the end
     return hData;
 }
 ///<summary>Post an advise request about an item</summary>
@@ -601,7 +604,7 @@ bool dde::ProcessExecRequest(PTOPICINFO pTopic, HDDEDATA hData)
         {
             if (pCI && pCI->pResultItem)
                 // Current conversation has a results item to pass the error string back in
-                pCI->pResultItem->hData = DdeCreateDataHandle(ServerInfo.dwInstance, (LPBYTE)szResult, lstrlen(szResult) + 1, 0, pCI->pResultItem->hszItemName, CF_TEXT, 0);
+                pCI->pResultItem->hData = DdeCreateDataHandle(ServerInfo.dwInstance, (LPBYTE)szResult, lstrlen(szResult) + 1u, 0, pCI->pResultItem->hszItemName, CF_TEXT, 0);
 
             goto PER_exit;
         }
@@ -622,7 +625,7 @@ bool dde::ProcessExecRequest(PTOPICINFO pTopic, HDDEDATA hData)
 
             if (pCI && pCI->pResultItem)
                 // Current conversation has a results item to pass the result string back in
-                pCI->pResultItem->hData = DdeCreateDataHandle(ServerInfo.dwInstance, (LPBYTE)szResult, lstrlen(szResult) + 1, 0, pCI->pResultItem->hszItemName, CF_TEXT, 0);
+                pCI->pResultItem->hData = DdeCreateDataHandle(ServerInfo.dwInstance, (LPBYTE)szResult, lstrlen(szResult) + 1u, 0, pCI->pResultItem->hszItemName, CF_TEXT, 0);
 
             if (!bResult)
                 goto PER_exit;

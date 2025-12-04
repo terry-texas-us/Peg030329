@@ -1,19 +1,29 @@
 #include "stdafx.h"
 
-extern char szLeftMouseDown[60];
-extern char	szRightMouseDown[60];
-extern char	szLeftMouseUp[60];
-extern char	szRightMouseUp[60];
+#include <string>
+
+extern std::string leftMouseDown;
+extern std::string rightMouseDown;
+extern std::string leftMouseUp;
+extern std::string rightMouseUp;
+
+void DlgBoxGetItemText(HWND hDlg, int control, std::string& text)
+{
+    int textLength{GetWindowTextLength(GetDlgItem(hDlg, control))};
+    text.resize(static_cast<size_t>(textLength) + 1);
+    UINT controlTextLength{::GetDlgItemText(hDlg, control, text.data(), textLength + 1)};
+    text.resize(static_cast<size_t>(controlTextLength));
+}
 
 INT_PTR CALLBACK DlgProcSetupMouse_Buttons(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
     switch (anMsg)
     {
     case WM_INITDIALOG:
-        SetDlgItemText(hDlg, IDC_LEFT_DOWN, szLeftMouseDown);
-        SetDlgItemText(hDlg, IDC_LEFT_UP, szLeftMouseUp);
-        SetDlgItemText(hDlg, IDC_RIGHT_DOWN, szRightMouseDown);
-        SetDlgItemText(hDlg, IDC_RIGHT_UP, szRightMouseUp);
+        SetDlgItemText(hDlg, IDC_LEFT_DOWN, leftMouseDown.data());
+        SetDlgItemText(hDlg, IDC_LEFT_UP, leftMouseUp.data());
+        SetDlgItemText(hDlg, IDC_RIGHT_DOWN, rightMouseDown.data());
+        SetDlgItemText(hDlg, IDC_RIGHT_UP, rightMouseUp.data());
         return (TRUE);
 
     case WM_COMMAND:
@@ -21,12 +31,14 @@ INT_PTR CALLBACK DlgProcSetupMouse_Buttons(HWND hDlg, UINT anMsg, WPARAM wParam,
         switch (LOWORD(wParam))
         {
         case IDOK:
-            ::GetDlgItemText(hDlg, IDC_LEFT_DOWN, szLeftMouseDown, sizeof(szLeftMouseDown));
-            ::GetDlgItemText(hDlg, IDC_LEFT_UP, szLeftMouseUp, sizeof(szLeftMouseUp));
-            ::GetDlgItemText(hDlg, IDC_RIGHT_DOWN, szRightMouseDown, sizeof(szRightMouseDown));
-            ::GetDlgItemText(hDlg, IDC_RIGHT_UP, szRightMouseUp, sizeof(szRightMouseUp));
-            [[fallthrough]]; // Intentional fallthrough
+        {
+            DlgBoxGetItemText(hDlg, IDC_LEFT_DOWN, leftMouseDown);
+            DlgBoxGetItemText(hDlg, IDC_LEFT_UP, leftMouseUp);
+            DlgBoxGetItemText(hDlg, IDC_RIGHT_DOWN, rightMouseDown);
+            DlgBoxGetItemText(hDlg, IDC_RIGHT_UP, rightMouseUp);
 
+            [[fallthrough]]; // Intentional fallthrough
+        }
         case IDCANCEL:
             ::EndDialog(hDlg, TRUE);
             return (TRUE);
@@ -35,4 +47,3 @@ INT_PTR CALLBACK DlgProcSetupMouse_Buttons(HWND hDlg, UINT anMsg, WPARAM wParam,
     }
     return (FALSE);
 }
-

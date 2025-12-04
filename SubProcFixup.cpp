@@ -4,7 +4,6 @@
 #include "PegAEsys.h"
 #include "PegAEsysDoc.h"
 
-#include "ExpProcs.h"
 #include "Grid.h"
 #include "Line.h"
 #include "Messages.h"
@@ -17,6 +16,8 @@
 #include "SubProcFixup.h"
 #include "UserAxis.h"
 #include "Vec.h"
+
+INT_PTR CALLBACK DlgProcFixupOptions(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 namespace fixup
 {

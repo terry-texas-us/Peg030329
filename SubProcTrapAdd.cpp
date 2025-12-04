@@ -4,7 +4,7 @@
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
-#include "ExpProcs.h"
+#include "DlgProcTrapModify.h"
 #include "Line.h"
 #include "Messages.h"
 #include "PrimState.h"

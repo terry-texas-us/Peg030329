@@ -12,8 +12,8 @@
 #include "Seg.h"
 #include "SegsTrap.h"
 
-///<summary>Modifies attributes of all segment primatives in current trap tocurrent settings.</summary>
-///<remarks>Trap color index is not modified.</remarks>
+/// @brief Modifies attributes of all segment primatives in current trap tocurrent settings.
+/// @note Trap color index is not modified.
 INT_PTR CALLBACK DlgProcTrapModify(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
     CPegDoc* pDoc{CPegDoc::GetDoc()};

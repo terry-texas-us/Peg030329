@@ -4,9 +4,11 @@
 #include <cmath>
 
 #include "DlgProcEditOps.h"
-#include "ExpProcs.h"
 #include "TMat.h"
 #include "Vec.h"
+
+double DlgBoxGetItemDouble(HWND hDlg, int control);
+void DlgBoxSetItemDouble(HWND hDlg, int control, double value);
 
 namespace dlgproceditops
 {

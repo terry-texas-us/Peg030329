@@ -461,9 +461,6 @@
     <ClInclude Include="DlgViewZoom.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ExpProcs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="FileBitmap.h">
       <Filter>Header Files</Filter>
     </ClInclude>

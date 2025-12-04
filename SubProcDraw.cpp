@@ -4,7 +4,6 @@
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
-#include "ExpProcs.h"
 #include "Hatch.h"
 #include "Messages.h"
 #include "Pnt.h"
@@ -18,6 +17,9 @@
 #include "SafeMath.h"
 #include "SubProcDraw.h"
 #include "UserAxis.h"
+
+INT_PTR CALLBACK DlgProcBlockInsert(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcDrawOptions(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 namespace draw
 {
@@ -52,7 +54,7 @@ LRESULT CALLBACK SubProcDraw(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
             return 0;
 
         case ID_OP0:
-            ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_DRAW_OPTIONS), hwnd, reinterpret_cast<DLGPROC>(DlgProcDrawOptions));
+            ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_DRAW_OPTIONS), hwnd, DlgProcDrawOptions);
             app.StatusLineDisplay();
             break;
 

@@ -3,10 +3,12 @@
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
 
-#include "ExpProcs.h"
 #include "Grid.h"
 #include "Pnt.h"
 #include "SegsTrap.h"
+
+double DlgBoxGetItemUnitsText(HWND hDlg, int control);
+void DlgBoxSetItemUnitsText(HWND hDlg, int control, double value);
 
 INT_PTR CALLBACK DlgProcHomePointGo(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {

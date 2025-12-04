@@ -1,7 +1,10 @@
 #include "stdafx.h"
 
-#include "ExpProcs.h"
 #include "SubProcPipe.h"
+
+double DlgBoxGetItemDouble(HWND hDlg, int control);
+void DlgBoxSetItemDouble(HWND hDlg, int control, double value);
+void DlgBoxSetItemUnitsText(HWND hDlg, int control, double value);
 
 INT_PTR CALLBACK DlgProcPipeOptions(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM) noexcept
 {

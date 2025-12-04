@@ -23,3 +23,5 @@ void	DlgProcFileManageInit(HWND);
 
 LRESULT	GetCurSel(HWND hDlg, int iListId, CString& strName);
 INT_PTR	pGetLayerName();
+
+INT_PTR CALLBACK DlgProcFileManage(HWND, UINT, WPARAM, LPARAM) noexcept;

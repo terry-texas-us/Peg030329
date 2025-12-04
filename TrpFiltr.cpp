@@ -8,6 +8,14 @@
 #include "PegAEsysDoc.h"
 
 #include "Prim.h"
+#include "PrimArc.h"
+#include "PrimLine.h"
+#include "PrimMark.h"
+#include "PrimPolygon.h"
+#include "PrimPolyline.h"
+#include "PrimSegRef.h"
+#include "PrimText.h"
+
 #include "SegsTrap.h"
 
 void trapFilterByPenColor(PENCOLOR);
@@ -157,48 +165,48 @@ void trapFilterByPenColor(PENCOLOR nPenColor)
 }
 void trapFilterByPrimType(CPrim::Type type)
 {
-    CPegDoc* pDoc = CPegDoc::GetDoc();
+    CPegDoc* document{CPegDoc::GetDoc()};
 
-    POSITION pos = trapsegs.GetHeadPosition();
-    while (pos != 0)
+    POSITION pos{trapsegs.GetHeadPosition()};
+    while (pos != nullptr)
     {
-        bool bFilter = FALSE;
+        bool filter{false};
 
-        CSeg* pSeg = trapsegs.GetNext(pos);
+        CSeg* segment = trapsegs.GetNext(pos);
 
-        POSITION posPrim = pSeg->GetHeadPosition();
-        while (posPrim != 0)
+        POSITION posPrimitive = segment->GetHeadPosition();
+        while (posPrimitive != nullptr)
         {
-            CPrim* pPrim = pSeg->GetNext(posPrim);
+            CPrim* primitive{segment->GetNext(posPrimitive)};
 
-            switch (static_cast<CPrim::Type>(type))
+            switch (type)
             {
             case CPrim::Type::Line:
-                bFilter = pPrim->Is(CPrim::Type::Line);
+                filter = (dynamic_cast<CPrimLine*>(primitive) != nullptr);
                 break;
             case CPrim::Type::Arc:
-                bFilter = pPrim->Is(CPrim::Type::Arc);
+                filter = (dynamic_cast<CPrimArc*>(primitive) != nullptr);
                 break;
             case CPrim::Type::SegRef:
-                bFilter = pPrim->Is(CPrim::Type::SegRef);
+                filter = (dynamic_cast<CPrimSegRef*>(primitive) != nullptr);
                 break;
             case CPrim::Type::Text:
-                bFilter = pPrim->Is(CPrim::Type::Text);
+                filter = (dynamic_cast<CPrimText*>(primitive) != nullptr);
                 break;
             case CPrim::Type::Polygon:
-                bFilter = pPrim->Is(CPrim::Type::Polygon);
+                filter = (dynamic_cast<CPrimPolygon*>(primitive) != nullptr);
                 break;
             case CPrim::Type::Polyline:
-                bFilter = pPrim->Is(CPrim::Type::Polyline);
+                filter = (dynamic_cast<CPrimPolyline*>(primitive) != nullptr);
                 break;
             case CPrim::Type::Mark:
-                bFilter = pPrim->Is(CPrim::Type::Mark);
+                filter = (dynamic_cast<CPrimMark*>(primitive) != nullptr);
                 break;
             }
-            if (bFilter)
+            if (filter)
             {
-                trapsegs.Remove(pSeg);
-                pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+                trapsegs.Remove(segment);
+                document->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, segment);
                 break;
             }
         }

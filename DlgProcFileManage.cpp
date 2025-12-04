@@ -38,13 +38,14 @@ INT_PTR CALLBACK DlgProcFileManage(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM l
         case IDC_BLOCKS_LIST:
             if (wNotifyCode == LBN_SELCHANGE)
             {
-                CString strName;
-                GetCurSel(hDlg, IDC_BLOCKS_LIST, strName);
-                CBlock* pBlock;
-                pDoc->BlksLookup(strName, pBlock);
-                SetDlgItemInt(hDlg, IDC_SEGS, (UINT)pBlock->GetCount(), FALSE);
-                SetDlgItemInt(hDlg, IDC_REFERENCES, pDoc->BlockGetRefCount(strName), FALSE);
-                WndProcPreviewUpdate(hDlg, pBlock);
+                CString blockName{};
+                GetCurSel(hDlg, IDC_BLOCKS_LIST, blockName);
+                CBlock* block{nullptr};
+                pDoc->BlksLookup(blockName, block);
+                if (block == nullptr) { break; }
+                SetDlgItemInt(hDlg, IDC_SEGS, static_cast<UINT>(block->GetCount()), FALSE);
+                SetDlgItemInt(hDlg, IDC_REFERENCES, static_cast<UINT>(pDoc->BlockGetRefCount(blockName)), FALSE);
+                WndProcPreviewUpdate(hDlg, block);
             }
             break;
 
@@ -66,9 +67,9 @@ INT_PTR CALLBACK DlgProcFileManage(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM l
                 ::SendDlgItemMessage(hDlg, IDC_LAYSTATIC, BM_SETCHECK, pLayer->IsCold(), 0L);
                 ::SendDlgItemMessage(hDlg, IDC_LAYHIDDEN, BM_SETCHECK, pLayer->IsOff(), 0L);
 
-                SetDlgItemInt(hDlg, IDC_SEGS, pLayer->GetCount(), FALSE);
+                SetDlgItemInt(hDlg, IDC_SEGS, static_cast<UINT>(pLayer->GetCount()), FALSE);
                 SetDlgItemInt(hDlg, IDC_COLOR_ID, pLayer->PenColor(), TRUE);
-                ::SendMessage(::GetDlgItem(hDlg, IDC_PENSTYLE), CB_SETCURSEL, pLayer->PenStyle(), TRUE);
+                ::SendMessage(::GetDlgItem(hDlg, IDC_PENSTYLE), CB_SETCURSEL, static_cast<WPARAM>(pLayer->PenStyle()), TRUE);
 
                 CPrim::LayerPenColor() = pLayer->PenColor();
                 CPrim::LayerPenStyle() = pLayer->PenStyle();
@@ -152,7 +153,7 @@ INT_PTR CALLBACK DlgProcFileManage(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM l
                 ::SendDlgItemMessage(hDlg, IDC_TRAVIEW, BM_SETCHECK, pLayer->IsViewed(), 0L);
                 ::SendDlgItemMessage(hDlg, IDC_TRACLOAK, BM_SETCHECK, pLayer->IsOff(), 0L);
 
-                SetDlgItemInt(hDlg, IDC_SEGS, pLayer->GetCount(), FALSE);
+                SetDlgItemInt(hDlg, IDC_SEGS, static_cast<UINT>(pLayer->GetCount()), FALSE);
                 WndProcPreviewUpdate(hDlg, pLayer);
             }
             break;

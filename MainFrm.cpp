@@ -22,7 +22,10 @@
 IMPLEMENT_DYNAMIC(CMainFrame, CMDIFrameWnd)
 
 BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWnd)
+#pragma warning(push)
+#pragma warning(disable: 4191)
     ON_WM_CREATE()
+#pragma warning(pop)
     ON_WM_DESTROY()
 END_MESSAGE_MAP()
 

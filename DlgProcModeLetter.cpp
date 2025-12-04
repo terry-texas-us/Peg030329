@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include <string>
+
 #include "PegAEsys.h"
 #include "PegAEsysDoc.h"
 
@@ -32,27 +34,26 @@ INT_PTR CALLBACK DlgProcModeLetter(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM l
         {
         case IDOK:
         {
-            CCharCellDef ccd;
+            CCharCellDef ccd{};
             pstate.GetCharCellDef(ccd);
             CRefSys rs(ptPvt, ccd);
 
-            CFontDef fd;
+            CFontDef fd{};
             pstate.GetFontDef(fd);
 
-            int iLen = ::GetWindowTextLength(hWndTextCtrl);
-            if (iLen != 0)
+            int textLength{::GetWindowTextLength(hWndTextCtrl)};
+            if (textLength != 0)
             {
-                char* pszText = new char[iLen + 1];
-                ::GetWindowText(hWndTextCtrl, pszText, iLen + 1);
+                std::string text(textLength + 1U, '\0');
+
+                ::GetWindowText(hWndTextCtrl, text.data(), textLength + 1);
                 ::SetWindowText(hWndTextCtrl, "");
 
-                CSeg* pSeg = new CSeg(new CPrimText(fd, rs, pszText));
-                pDoc->WorkLayerAddTail(pSeg);
-                pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
-
-                delete [] pszText;
+                auto segment = new CSeg{new CPrimText{fd, rs, text.c_str()}};
+                pDoc->WorkLayerAddTail(segment);
+                pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, segment);
             }
-            ptPvt = text_GetNewLinePos(fd, rs, 1., 0);
+            ptPvt = text_GetNewLinePos(fd, rs, 1.0, 0);
             ::SetFocus(hWndTextCtrl);
             return (TRUE);
         }

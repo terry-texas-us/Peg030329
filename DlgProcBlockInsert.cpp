@@ -26,27 +26,32 @@ INT_PTR CALLBACK DlgProcBlockInsert(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM
     {
         ptIns = new CPnt(app.CursorPosGet());
 
-        CString strKey;
-        CBlock* pBlock;
+        CString key{};
+        CBlock* block{nullptr};
 
-        POSITION pos = pDoc->BlksGetStartPosition();
-        while (pos != NULL)
+        POSITION pos{pDoc->BlksGetStartPosition()};
+        while (pos != nullptr)
         {
-            pDoc->BlksGetNextAssoc(pos, strKey, pBlock);
-            if (!pBlock->IsAnonymous())
-                ::SendDlgItemMessage(hDlg, IDC_BLOCKS_LIST, LB_ADDSTRING, 0, (LPARAM)(LPCTSTR)strKey);
+            pDoc->BlksGetNextAssoc(pos, key, block);
+            if (!block->IsAnonymous())
+            {
+                ::SendDlgItemMessage(hDlg, IDC_BLOCKS_LIST, LB_ADDSTRING, 0, (LPARAM)(LPCTSTR)key);
+            }
         }
         ::SendDlgItemMessage(hDlg, IDC_BLOCKS_LIST, LB_SETCURSEL, 0, 0L);
 
         if (pDoc->BlksIsEmpty())
+        {
             WndProcPreviewClear(hDlg);
+        }
         else
         {
             pos = pDoc->BlksGetStartPosition();
-            pDoc->BlksGetNextAssoc(pos, strKey, pBlock);
-            SetDlgItemInt(hDlg, IDC_SEGS, (UINT)pBlock->GetCount(), FALSE);
-            SetDlgItemInt(hDlg, IDC_REFERENCES, pDoc->BlockGetRefCount(strKey), FALSE);
-            WndProcPreviewUpdate(hDlg, pBlock);
+            pDoc->BlksGetNextAssoc(pos, key, block);
+
+            SetDlgItemInt(hDlg, IDC_SEGS, static_cast<UINT>(block->GetCount()), FALSE);
+            SetDlgItemInt(hDlg, IDC_REFERENCES, static_cast<UINT>(pDoc->BlockGetRefCount(key)), FALSE);
+            WndProcPreviewUpdate(hDlg, block);
         }
         return (TRUE);
     }
@@ -56,13 +61,14 @@ INT_PTR CALLBACK DlgProcBlockInsert(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM
         case IDC_BLOCKS_LIST:
             if (HIWORD(wParam) == LBN_SELCHANGE)
             {
-                CBlock* pBlock;
-                CString strName;
-                BlockInsertGetCurSel(hDlg, IDC_BLOCKS_LIST, strName);
-                pDoc->BlksLookup(strName, pBlock);
-                SetDlgItemInt(hDlg, IDC_SEGS, (UINT)pBlock->GetCount(), FALSE);
-                SetDlgItemInt(hDlg, IDC_REFERENCES, pDoc->BlockGetRefCount(strName), FALSE);
-                WndProcPreviewUpdate(hDlg, pBlock);
+                CBlock* block{nullptr};
+                CString blockName;
+                BlockInsertGetCurSel(hDlg, IDC_BLOCKS_LIST, blockName);
+                pDoc->BlksLookup(blockName, block);
+                if (block == nullptr) { break; }
+                SetDlgItemInt(hDlg, IDC_SEGS, static_cast<UINT>(block->GetCount()), FALSE);
+                SetDlgItemInt(hDlg, IDC_REFERENCES, static_cast<UINT>(pDoc->BlockGetRefCount(blockName)), FALSE);
+                WndProcPreviewUpdate(hDlg, block);
             }
             break;
 

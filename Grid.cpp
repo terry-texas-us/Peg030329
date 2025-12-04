@@ -10,13 +10,15 @@
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
 
-#include "ExpProcs.h"
 #include "Grid.h"
 #include "Line.h"
 #include "Pnt.h"
 #include "Pnt4.h"
 #include "Prim.h"
 #include "PrimState.h"
+
+double DlgBoxGetItemUnitsText(HWND hDlg, int control);
+void DlgBoxSetItemUnitsText(HWND hDlg, int control, double value);
 
 using namespace grid;
 

@@ -2,11 +2,13 @@
 
 #include <algorithm>
 
-#include "ExpProcs.h"
 #include "Hatch.h"
 #include "Polygon.h"
 #include "PrimState.h"
 #include "SafeMath.h"
+
+double DlgBoxGetItemDouble(HWND hDlg, int control);
+void DlgBoxSetItemDouble(HWND hDlg, int control, double value);
 
 INT_PTR CALLBACK DlgProcSetupHatch(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {
@@ -15,7 +17,7 @@ INT_PTR CALLBACK DlgProcSetupHatch(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
     switch (anMsg)
     {
     case WM_INITDIALOG:
-        SetDlgItemInt(hDlg, IDC_FIL_AREA_HAT_ID, pstate.PolygonIntStyleId(), FALSE);
+        SetDlgItemInt(hDlg, IDC_FIL_AREA_HAT_ID, static_cast<UINT>(pstate.PolygonIntStyleId()), FALSE);
         DlgBoxSetItemDouble(hDlg, IDC_FIL_AREA_HAT_X_SCAL, hatch::dXAxRefVecScal);
         DlgBoxSetItemDouble(hDlg, IDC_FIL_AREA_HAT_Y_SCAL, hatch::dYAxRefVecScal);
         DlgBoxSetItemDouble(hDlg, IDC_FIL_AREA_HAT_ROT_ANG, hatch::dOffAng / RADIAN);

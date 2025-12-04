@@ -7,6 +7,8 @@
 
 #include <atltypes.h>
 
+#include <string>
+
 #include "ModelView.h"
 #include "Pnt.h"
 #include "Pnt4.h"
@@ -86,9 +88,11 @@ public:
     CVec	GetRelPos() const { return m_vRelPos; }
     bool	GetViewTrueTypeFonts() const { return m_bViewTrueTypeFonts; }
     void	DisplayOdometer();
-
-    void	DoCustomMouseClick(LPTSTR lpCmds);
     void	DoCameraRotate(int iDir);
+
+    /// @brief Parses a command string and posts keyboard messages to the view's window. Plain characters are posted as WM_CHAR messages; sequences of decimal digits enclosed in '{' and '}' are parsed and posted as WM_KEYDOWN with the numeric key code.
+    /// @param customCommand Input sequence containing literal characters and optional key codes in braces (for example: "a{13}b"). Characters not inside braces are sent as WM_CHAR; digits immediately following '{' are parsed as a decimal key code and sent as WM_KEYDOWN. Empty brace groups generate no message.
+    void	DoCustomMouseClick(const std::string& customCommand) const;
     void	DoWindowPan(double dRatio);
     void	DoWindowPan0(int iDir);
 
@@ -132,7 +136,8 @@ public:
     void	ModelViewSetVwUp(const CVec& v) { m_mvActive.SetVwUp(v);  m_mvActive.BuildTransformMatrix(); }
     void	ModelViewSetWnd(double dUMin, double dVMin, double dUMax, double dVMax) { m_mvActive.SetWnd(dUMin, dVMin, dUMax, dVMax); }
 
-    UINT	NumPages(CDC* pDC, double dScaleFactor, UINT& nHorzPages, UINT& nVertPages);
+    /// @brief Determines the number of pages for 1 to 1 print
+    UINT	NumPages(CDC* conext, double scaleFactor, UINT& horizontalPages, UINT& verticalPages);
 
     CPnt	OverGetTarget() { return m_mvOver.GetTarget(); }
     double	OverGetUExt() { return m_mvOver.GetUExt(); }
@@ -160,11 +165,15 @@ protected:
 public:
     afx_msg void OnBackgroundImageLoad();
     afx_msg void OnBackgroundImageRemove();
-    afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-    afx_msg void OnLButtonDown(UINT nFlags, CPoint pnt);
-    afx_msg void OnLButtonUp(UINT nFlags, CPoint pnt);
-    afx_msg void OnRButtonDown(UINT nFlags, CPoint pnt);
-    afx_msg void OnRButtonUp(UINT nFlags, CPoint pnt);
+    afx_msg void OnMouseMove(UINT flags, CPoint point);
+    afx_msg void OnLButtonDown(UINT flags, CPoint point);
+
+    /// @brief  It handles the release of the left mouse button, with special behavior if the Shift key is held down during the release.
+    /// @param  flags  The flags associated with the mouse event.
+    /// @param  point  The position of the mouse cursor at the time of the event.
+    afx_msg void OnLButtonUp(UINT flags, CPoint point);
+    afx_msg void OnRButtonDown(UINT flags, CPoint point);
+    afx_msg void OnRButtonUp(UINT flags, CPoint point);
     afx_msg void OnSetFocus(CWnd* pWndOld);
     afx_msg void OnSize(UINT nType, int cx, int cy);
     afx_msg void OnSetupScale();

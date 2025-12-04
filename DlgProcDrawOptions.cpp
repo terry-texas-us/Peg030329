@@ -2,7 +2,11 @@
 
 #include "PegAEsys.h"
 
-#include "ExpProcs.h"
+INT_PTR CALLBACK DlgProcSetupConstraints(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcSetupHatch(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcSetupNote(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcSetupPenColor(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcSetupPenStyle(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 INT_PTR CALLBACK DlgProcDrawOptions(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
 {

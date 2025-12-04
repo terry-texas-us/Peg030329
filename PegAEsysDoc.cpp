@@ -26,7 +26,7 @@
 #include "Block.h"
 #include "CharCellDef.h"
 #include "ddeGItms.h"
-#include "ExpProcs.h"
+#include "DlgProcFileManage.h"
 #include "FileBlock.h"
 #include "FileJob.h"
 #if ODA_FUNCTIONALITY
@@ -61,7 +61,18 @@
 extern double gbl_dExtNum;
 extern char gbl_szExtStr[128];
 
-UINT CALLBACK OFNHookProcFileTracing(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK DlgProcDrawOptions(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcEditTrap_CommandsQuery(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcHomePointGo(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcHomePointSet(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcSetPasteLoc(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcSetupHatch(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcSetupNote(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcSetupPenColor(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcSetupPenStyle(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcTrapFilter(HWND, UINT, WPARAM, LPARAM) noexcept;
+
+UINT_PTR CALLBACK OFNHookProcFileTracing(HWND hdlg, UINT uiMsg, WPARAM wParam, LPARAM lParam);
 
 void ffaReadFile(const CString& strPathName);
 void mfGetAll(CFile& f, const CVec& vTrns);
@@ -465,26 +476,27 @@ void CPegDoc::AddTextBlock(char* pszText)
         pText++;
     }
 }
-int CPegDoc::BlockGetRefCount(const CString& strBlkNam) const
+
+INT_PTR CPegDoc::BlockGetRefCount(const CString& blockName) const
 {
-    int iCount = 0;
+    INT_PTR count{0};
 
-    for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
+    for (INT_PTR i = 0; i < m_layers.GetSize(); i++)
     {
-        CLayer* pLayer = m_layers.GetAt(i);
-        iCount += pLayer->GetBlockRefCount(strBlkNam);
+        CLayer* layer{m_layers.GetAt(i)};
+        count += layer->GetBlockRefCount(blockName);
     }
 
-    CString strKey;
-    CBlock* pBlock;
+    CString key{};
+    CBlock* block{nullptr};
 
-    POSITION pos = m_blks.GetStartPosition();
-    while (pos != NULL)
+    POSITION pos{m_blks.GetStartPosition()};
+    while (pos != nullptr)
     {
-        m_blks.GetNextAssoc(pos, strKey, pBlock);
-        iCount += pBlock->GetBlockRefCount(strBlkNam);
+        m_blks.GetNextAssoc(pos, key, block);
+        count += block->GetBlockRefCount(blockName);
     }
-    return (iCount);
+    return (count);
 }
 bool CPegDoc::BlksLookup(CString strKey, CBlock*& pBlock) const
 {
@@ -597,16 +609,16 @@ void CPegDoc::GetExtents(CPnt& ptMin, CPnt& ptMax, const CTMat& tm) const
             pLayer->GetExtents(ptMin, ptMax, tm);
     }
 }
-int CPegDoc::GetHotCount() const
+INT_PTR CPegDoc::GetHotCount() const
 {
-    int iCount = 0;
+    INT_PTR count{0};
 
-    for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
+    for (INT_PTR i = 0; i < m_layers.GetSize(); i++)
     {
-        CLayer* pLayer = m_layers.GetAt(i);
-        if (pLayer->IsHot()) { iCount += pLayer->GetCount(); }
+        CLayer* layer{m_layers.GetAt(i)};
+        if (layer->IsHot()) { count += layer->GetCount(); }
     }
-    return iCount;
+    return count;
 }
 
 int CPegDoc::PenStylesFillCB(HWND hwnd) const
@@ -655,16 +667,16 @@ CPenStyle* CPegDoc::PenStylesGetAtSafe(int i)
     return (m_PenStyles[iType]);
 }
 
-int CPegDoc::GetWarmCount() const
+INT_PTR CPegDoc::GetWarmCount() const
 {
-    int iCount = 0;
+    INT_PTR count{0};
 
-    for (int i = 0; i < static_cast<int>(m_layers.GetSize()); i++)
+    for (INT_PTR i = 0; i < m_layers.GetSize(); i++)
     {
-        CLayer* pLayer = m_layers.GetAt(i);
-        if (pLayer->IsWarm()) { iCount += pLayer->GetCount(); }
+        CLayer* layer{m_layers.GetAt(i)};
+        if (layer->IsWarm()) { count += layer->GetCount(); }
     }
-    return iCount;
+    return count;
 }
 
 void CPegDoc::InitAll()
@@ -2094,7 +2106,7 @@ void CPegDoc::OnFileTracing()
     of.lpstrTitle = "Tracing File";
     of.Flags = OFN_EXPLORER | OFN_ENABLETEMPLATE | OFN_ENABLEHOOK | OFN_HIDEREADONLY | OFN_FILEMUSTEXIST;
     of.lpstrDefExt = "tra";
-    of.lpfnHook = reinterpret_cast<LPOFNHOOKPROC>(OFNHookProcFileTracing);
+    of.lpfnHook = OFNHookProcFileTracing;
     of.lpTemplateName = MAKEINTRESOURCE(IDD_TRACING_EX);
 
     if (GetOpenFileName(&of))

@@ -4,7 +4,6 @@
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
-#include "ExpProcs.h"
 #include "PrimArc.h"
 #include "PrimLine.h"
 #include "PrimState.h"
@@ -12,6 +11,9 @@
 #include "SegsDet.h"
 #include "SubProcPipe.h"
 #include "UserAxis.h"
+
+INT_PTR CALLBACK DlgProcPipeOptions(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcPipeSymbol(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 namespace pipe
 {

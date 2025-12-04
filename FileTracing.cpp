@@ -82,7 +82,7 @@ void CFileTracing::WriteSegs(CLayer* pLayer)
 {
     FilePeg_WriteWord(*this, CFilePeg::SECTION_SEGMENTS);
 
-    FilePeg_WriteWord(*this, (WORD)pLayer->GetCount());
+    FilePeg_WriteWord(*this, static_cast<WORD>(pLayer->GetCount()));
 
     POSITION pos = pLayer->GetHeadPosition();
     while (pos != 0)

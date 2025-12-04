@@ -32,7 +32,6 @@
 #include "Dde.h"
 #include "Directory.h"
 #include "DlgProcEditOps.h"
-#include "ExpProcs.h"
 #include "FontDef.h"
 #if ODA_FUNCTIONALITY
 #include "FileOpenDWG.h"
@@ -72,6 +71,9 @@
 #include "TMat.h"
 #include "UnitsString.h"
 #include "UserAxis.h"
+
+INT_PTR CALLBACK DlgProcModeLetter(HWND, UINT, WPARAM, LPARAM) noexcept;
+INT_PTR CALLBACK DlgProcModeRevise(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 LRESULT CALLBACK WndProcKeyPlan(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WndProcPreview(HWND, UINT, WPARAM, LPARAM);
