@@ -383,6 +383,7 @@
     <ResourceCompile Include="res\PegAEsys.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".clang-format" />
     <None Include=".clang-tidy" />
     <None Include="cpp.hint" />
     <None Include="Job File Format.md" />

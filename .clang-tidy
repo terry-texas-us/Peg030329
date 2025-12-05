@@ -1,3 +1,9 @@
-#Checks: '*,-clang-analyzer-*,-llvm-include-order,-clang-diagnostic-c++98-compat'
-Checks: 'modernize-use-auto'  # Temporary: focus on single check
+Checks:
+'*,
+-clang-analyzer-*,
+-altera-unroll-loops,
+-clang-diagnostic-c++98-compat, 
+-clang-diagnostic-pragma-once-outside-header
+-llvm-include-order,
+-llvmlibc*'
 HeaderFilterRegex: '.*'

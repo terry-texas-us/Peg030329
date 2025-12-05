@@ -728,6 +728,7 @@
       <Filter>Documents</Filter>
     </None>
     <None Include=".clang-tidy" />
+    <None Include=".clang-format" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Peg &amp; Tra File Formats.txt">
