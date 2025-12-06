@@ -7,6 +7,7 @@
 
 #include "Block.h"
 #include "FilePeg.h"
+#include "Pnt4.h"
 #include "Prim.h"
 #include "PrimLine.h"
 #include "PrimPolyline.h"
@@ -290,16 +291,16 @@ int CSeg::RemoveEmptyNotes()
     }
     return (iCount);
 }
-CPrim* CSeg::SelPrimUsingPoint(CPegView* pView, const CPnt4& pt, double& dPicApert, CPnt& pDetPt)
+CPrim* CSeg::SelPrimUsingPoint(CPegView* view, const CPnt4& pointInView, double& aperture, CPnt& detectedPoint)
 {
     POSITION pos{GetHeadPosition()};
     while (pos != nullptr)
     {
-        CPrim* pPrim = GetNext(pos);
-        if (pPrim->SelUsingPoint(pView, pt, dPicApert, pDetPt))
+        auto* primitive = GetNext(pos);
+        if (primitive->SelUsingPoint(view, pointInView, aperture, detectedPoint))
         {
-            dPicApert = Pnt4_DistanceTo_xy(pt, CPnt4(pDetPt, 1.));
-            return (pPrim);
+            aperture = Pnt4_DistanceTo_xy(pointInView, CPnt4(detectedPoint, 1.));
+            return (primitive);
         }
     }
     return nullptr;

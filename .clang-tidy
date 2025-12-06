@@ -1,9 +1,3 @@
-Checks:
-'*,
--clang-analyzer-*,
--altera-unroll-loops,
--clang-diagnostic-c++98-compat, 
--clang-diagnostic-pragma-once-outside-header
--llvm-include-order,
--llvmlibc*'
+Checks: >-
+  '*, -clang-diagnostic-c++98-*, -llvm-*, -llvmlibc-*'
 HeaderFilterRegex: '.*'

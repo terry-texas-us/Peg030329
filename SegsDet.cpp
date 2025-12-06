@@ -113,7 +113,7 @@ CSeg* CSegsDet::SelSegAndPrimUsingPoint(const CPnt& point) {
 
   const CTMat inverseModelViewMatrix = activeView->ModelViewGetMatrixInverse();
 
-  double dPicApert = m_dPicApertSiz;
+  double aperture = m_dPicApertSiz;
 
   CPrimPolygon::EdgeToEvaluate() = 0;
 
@@ -124,7 +124,7 @@ CSeg* CSegsDet::SelSegAndPrimUsingPoint(const CPnt& point) {
   POSITION pos = GetHeadPosition();
   while (pos != nullptr) {
     auto* segment = GetNext(pos);
-    auto* detectedPrimitive = segment->SelPrimUsingPoint(activeView, pointInView, dPicApert, detectedPoint);
+    auto* detectedPrimitive = segment->SelPrimUsingPoint(activeView, pointInView, aperture, detectedPoint);
     if (detectedPrimitive != nullptr) {
       m_pDetSeg = segment;
       m_pDetPrim = detectedPrimitive;

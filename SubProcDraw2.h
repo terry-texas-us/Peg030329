@@ -68,6 +68,7 @@ struct SubProcDraw2State {
   /// @brief Searches for a segment at the given cursor position and updates the provided references and related application state.
   /// @param cursorPosition Reference to a CPnt used as the input search point. If a segment is found, this is updated to the detected point and the application's cursor position is set.
   /// @param segment Reference to a CSeg* that will be updated to the segment selected at cursorPosition. Will be set to nullptr if no segment is found.
+  /// @note The detected primitve could be left or right line of a wall section, an endcap line, or a simple line. The special case of endcap lines is not handled here.
   void HandleEndcapSearch(CPnt& cursorPosition, CSeg*& segment);
 
   /// @brief Finalize and apply changes when the cursor exits a wall during construction: update the end wall section, create and attach the end line primitive, update document views, and adjust construction and application state.

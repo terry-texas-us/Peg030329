@@ -54,18 +54,14 @@ void SubProcDraw2State::CorrectPreviousLinesAtCorner(CommandContext& context) {
 
   auto setPrevPoint = [&](const CPnt& point) {
     context.linePrimitive = static_cast<CPrimLine*>(saveSegment->GetPrev(pos));
-    if (context.linePrimitive != nullptr) {
-      context.linePrimitive->SetPt1(point);
-    }
+    if (context.linePrimitive != nullptr) { context.linePrimitive->SetPt1(point); }
   };
   setPrevPoint(parallelLines[RIGHT_PREV][1]);
   setPrevPoint(parallelLines[LEFT_PREV][1]);
 }
 
 void SubProcDraw2State::ProcessCommon(CommandContext& context, CPnt& cursorPosition, CLine& line, bool isSnapped) {
-  if (isSnapped) {
-    cursorPosition = UserAxisSnapLn(previousPosition, cursorPosition);
-  }
+  if (isSnapped) { cursorPosition = UserAxisSnapLn(previousPosition, cursorPosition); }
   parallelLines[LEFT_PREV] = parallelLines[LEFT_NEW];
   parallelLines[RIGHT_PREV] = parallelLines[RIGHT_NEW];
   line = CLine{previousPosition, cursorPosition};
@@ -98,24 +94,30 @@ void SubProcDraw2State::HandleSetDistanceBetweenLines() {
   CDlgSetLength SetLengthDialog;
   SetLengthDialog.m_strTitle = "Set Distance Between Lines";
   SetLengthDialog.m_dLength = distanceBetweenLines / app.GetScale();
-  if (SetLengthDialog.DoModal() == IDOK) {
-    distanceBetweenLines = SetLengthDialog.m_dLength * app.GetScale();
-  }
+  if (SetLengthDialog.DoModal() == IDOK) { distanceBetweenLines = SetLengthDialog.m_dLength * app.GetScale(); }
 }
 
 void SubProcDraw2State::HandleEndcapSearch(CPnt& cursorPosition, CSeg*& segment) {
   segment = detsegs.SelSegAndPrimUsingPoint(cursorPosition);
 
-  if (segment != nullptr) {
-    cursorPosition = detsegs.DetPt();
-    if (previousKeyDown == 0) {  // Starting at existing wall
-      beginWallSectionSegment = segment;
-      beginWallSectionLine = static_cast<CPrimLine*>(detsegs.DetPrim());
-    } else {  // Ending at existing wall
-      endWallSectionSegment = segment;
-      endWallSectionLine = static_cast<CPrimLine*>(detsegs.DetPrim());
+  if (segment == nullptr) { return; }
+  cursorPosition = detsegs.DetPt();
+  if (auto* detectedPrimitive = detsegs.DetPrim()) {
+    if (auto* linePrimitive = dynamic_cast<CPrimLine*>(detectedPrimitive)) {
+      // Line primitive detected .. don't know if it a simple line or part of a wall yet.
+      if (previousKeyDown == 0) {
+        // Starting on existing line
+        beginWallSectionSegment = segment;
+        beginWallSectionLine = linePrimitive;
+      } else {
+        // Ending on existing wall
+        endWallSectionSegment = segment;
+        endWallSectionLine = linePrimitive;
+      }
+      app.CursorPosSet(cursorPosition);
+    } else {
+      segment = nullptr;  // Not a line primitive
     }
-    app.CursorPosSet(cursorPosition);
   }
 }
 
@@ -185,9 +187,7 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
 
   if (anMsg == WM_COMMAND) {
     context.document = CPegDoc::GetDoc();
-    if (context.document == nullptr) {
-      return (CallWindowProc(app.GetMainWndProc(), hwnd, anMsg, wParam, lParam));
-    }
+    if (context.document == nullptr) { return (CallWindowProc(app.GetMainWndProc(), hwnd, anMsg, wParam, lParam)); }
     context.beginPoint = CPnt{};
     context.endPoint = CPnt{};
     context.intersectionPoint = CPnt{};
@@ -213,9 +213,7 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
         break;
 
       case ID_OP2:  // Handle line drawing operation
-        if (state.previousKeyDown != 0) {
-          app.RubberBandingDisable();
-        }
+        if (state.previousKeyDown != 0) { app.RubberBandingDisable(); }
         if (state.endWallSectionSegment != nullptr) {
           state.IntoExitingWall(context, cursorPosition, line);
         } else {
@@ -225,9 +223,7 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
         break;
 
       case IDM_RETURN:  // Finish current operation
-        if (state.previousKeyDown != 0) {
-          state.Reset();
-        }
+        if (state.previousKeyDown != 0) { state.Reset(); }
         state.previousPosition = cursorPosition;
         break;
 
@@ -238,9 +234,7 @@ LRESULT CALLBACK SubProcDraw2(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
       default:  // Forward unhandled messages
         result = !0;
     }
-    if (result == 0) {
-      return (result);
-    }
+    if (result == 0) { return (result); }
   }
   return (CallWindowProc(app.GetMainWndProc(), hwnd, anMsg, wParam, lParam));
 }

@@ -3,4 +3,7 @@ ReflowComments: Never
 PointerAlignment: Left
 ColumnLimit: 120
 SortIncludes: false
+AllowShortIfStatementsOnASingleLine: true
+AllowShortBlocksOnASingleLine: true
+AllowShortFunctionsOnASingleLine: true
 

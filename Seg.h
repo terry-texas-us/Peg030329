@@ -142,13 +142,13 @@ public:
     /// @returns Pointer to the selected primitive, or null if none found.
     CPrim* SelPrimAtCtrlPt(CPegView* view, const CPnt4& pointInView, CPnt* controlPoint) const;
 
-    /// @brief Selects a primitive using a point.
-    /// @param view Pointer to the view.
-    /// @param point The point.
-    /// @param aperture Aperture distance.
-    /// @param detectedPoint Detected point.
-    /// @returns Pointer to the selected primitive.
-    CPrim* SelPrimUsingPoint(CPegView* view, const CPnt4& point, double& aperture, CPnt& detectedPoint);
+    /// @brief Selects a primitive in the given view using a point specified in view coordinates.
+    /// @param view Pointer to the view/context used for the selection (CPegView*).
+    /// @param pointInView The point in view coordinates used to perform the hit test (const CPnt4&).
+    /// @param aperture Reference to the selection tolerance (double&); used as the hit-test radius and may be updated to reflect the aperture actually used or required for the selection.
+    /// @param detectedPoint Output parameter that receives the point on the selected primitive where the hit occurred (CPnt&).
+    /// @return Pointer to the selected CPrim if a hit was found; otherwise nullptr.
+    CPrim* SelPrimUsingPoint(CPegView* view, const CPnt4& pointInView, double& aperture, CPnt& detectedPoint);
 
     /// @brief Selects primitives using a rectangle.
     /// @param view Pointer to the view.
