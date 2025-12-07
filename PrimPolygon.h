@@ -33,7 +33,7 @@ public:	// Constructors and destructor
     CPrimPolygon(AD_DB_HANDLE, PAD_ENT_HDR, PAD_ENT);
 #endif
     CPrimPolygon(WORD, CPnt*);
-    CPrimPolygon(WORD, CPnt, const CVec&, const CVec&, const CPnt*);
+    CPrimPolygon(size_t numberOfPoints, CPnt origin, const CVec& xAxis, const CVec& yAxis, const CPnt* points);
 
     CPrimPolygon(const CPrimPolygon& src);
 public: // Operators

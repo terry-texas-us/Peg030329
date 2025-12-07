@@ -46,14 +46,14 @@ public: // Methods - absolute virtuals
     void	GetExtents(CPnt&, CPnt&, const CTMat&) const;
     CPnt	GoToNxtCtrlPt() const;
     bool	Is(CPrim::Type type) const { return type == CPrim::Type::BSpline; }
-    bool	IsInView(CPegView* pView) const;
+    bool	IsInView(CPegView* view) const;
     bool	IsPtACtrlPt(CPegView*, const CPnt4&) const { return false; }
     void	Read(CFile&);
-    CPnt	SelAtCtrlPt(CPegView* pView, const CPnt4&) const;
+    CPnt	SelAtCtrlPt(CPegView* view, const CPnt4&) const;
     bool	SelUsingLine(CPegView*, const CLine&, CPnts&) { return false; }
-    bool	SelUsingPoint(CPegView* pView, const CPnt4&, double, CPnt&);
-    bool	SelUsingRect(CPegView* pView, const CPnt&, const CPnt&);
-    void	SetPt(WORD w, const CPnt& pt) { m_pts[w] = pt; }
+    bool	SelUsingPoint(CPegView* view, const CPnt4&, double, CPnt&);
+    bool	SelUsingRect(CPegView* view, const CPnt&, const CPnt&);
+    void	SetPoint(size_t i, const CPnt& point) { m_pts[i] = point; }
     void	Transform(const CTMat&);
     void	Translate(const CVec&);
     void	TranslateUsingMask(const CVec&, const DWORD);

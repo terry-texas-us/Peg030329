@@ -1,24 +1,25 @@
 #pragma once
 
 #include <Windows.h>
+#include <vector>
 
 #include "Pnt.h"
 
 class CSeg;
 
 class CDrawHandler {
-  enum EArcGen { StartPoint = 1, CenterPoint };
+  enum EArcGen { ThreePoint = 1, StartCenterEndPoint };
   enum ESplnGen { BSpline, CSpline };
   enum ESplnEndCnd { Fixed, Relaxed, Cyclic, Anticyclic };
 
  private:
-  WORD wPts{0};
+  size_t numberOfPoints{0};
   WORD previousKeyDown{0};
-  CPnt pt[63]{};
+  std::vector<CPnt> pt{4};
 
-  EArcGen eArcGenId{StartPoint};
-  ESplnGen eSplnGenId{BSpline};
-  ESplnEndCnd eSplnEndCndId{Relaxed};
+  EArcGen eArcGenId{EArcGen::ThreePoint};
+  ESplnGen eSplnGenId{ESplnGen::BSpline};
+  ESplnEndCnd eSplnEndCndId{ESplnEndCnd::Relaxed};
 
   /// @brief Displays the modal Draw Options dialog and updates the application's status line.
   /// @param hwnd Handle to the parent window for the dialog.
@@ -79,20 +80,20 @@ class CDrawHandler {
   /// @param pt Pointer to an array of CPnt points representing the vertices of the fill area. The array must contain at least wPts points (the function reads the first three points to determine the plane and uses the array to build the polygon).
   /// @return The value of wPts (the number of points).
 
-  WORD EndFillAreaDef(WORD wPts, CPnt* pt);
+  size_t EndFillAreaDef(size_t wPts, std::vector<CPnt>& pts);
 
   /// @brief Finish creating a polyline segment from an array of points, add it to the document's work layer, and notify views.
   /// @param numberOfPoints The number of points in the polyline. This value is cast to WORD, so it should be non?negative and within the WORD range.
   /// @param points Pointer to the first element of an array of CPnt structures containing the polyline vertices. The array must contain at least numberOfPoints elements.
   /// @return Pointer to the newly created CSeg representing the polyline that was added to the document's work layer.
-  CSeg* EndPolylineDef(int numberOfPoints, CPnt* points);
+  CSeg* EndPolylineDef(size_t numberOfPoints, std::vector<CPnt>& points);
 
   /// @brief Finalize a spline definition. If the spline type is draw::BSpline and there are more than two control points, allocates a new B-spline segment, appends it to the document work layer, and requests view updates.
   /// @param splineType The spline generation type (ESplnGen). Only BSpline is handled by this function.
   /// @param numberOfControlPoints The number of control points provided; a new segment is created only when this value is greater than 2.
   /// @param controlPoints Pointer to an array of CPnt control points used to construct the spline.
   /// @return Pointer to the newly created CSeg representing the spline, or nullptr if no segment was created.
-  CSeg* EndSplineDef(ESplnGen splineType, int numberOfControlPoints, CPnt* controlPoints);
+  CSeg* EndSplineDef(ESplnGen splineType, size_t numberOfControlPoints, std::vector<CPnt>& controlPoints);
 
  public:
   /// @brief Handles Windows messages for the drawing handler: processes WM_COMMAND command IDs by invoking the appropriate operation or control handlers (including help), handles WM_MOUSEMOVE to update drawing state, and forwards messages that are not handled to the original window procedure.

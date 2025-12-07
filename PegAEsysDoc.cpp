@@ -1264,7 +1264,7 @@ void CPegDoc::WriteShadowFile()
     {
         std::string shadowFilePath(app.GetShadowDir());
         shadowFilePath += GetTitle();
-        int extensionDot = shadowFilePath.find('.');
+        size_t extensionDot = shadowFilePath.find('.');
         if (extensionDot > 0)
         {
             CFileStatus fileStatus;

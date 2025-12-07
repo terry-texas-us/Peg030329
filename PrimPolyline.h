@@ -4,14 +4,16 @@
 
 #include <afx.h>
 #include <afxstr.h>
-#include <afxwin.h> // for MFC CString, WORD, DWORD, HWND, HTREEITEM, CDC, CFile
+#include <afxwin.h>
 
-#include "Line.h" // for CLine member
-#include "Pnt.h" // for CPnt
-#include "Pnt4.h" // for CPnt4
-#include "Prim.h" // for CPrim base class
-#include "TMat.h" // for CTMat
-#include "Vec.h" // for CVec
+#include <vector>
+
+#include "Line.h"
+#include "Pnt.h"
+#include "Pnt4.h"
+#include "Prim.h"
+#include "TMat.h"
+#include "Vec.h"
 
 class CPegView;
 
@@ -27,12 +29,12 @@ public:	// Constructors and destructor
 #if ODA_FUNCTIONALITY
     CPrimPolyline(PAD_ENT);
 #endif
-    CPrimPolyline(CPnts& pts);
-    CPrimPolyline(WORD wPts, CPnt* pPts);
+    CPrimPolyline(CPnts& points);
+    CPrimPolyline(size_t numberOfPoints, std::vector<CPnt>& points);
 
-    CPrimPolyline(const CPrimPolyline&);
+    CPrimPolyline(const CPrimPolyline& other);
 public: // Operators
-    const CPrimPolyline& operator=(const CPrimPolyline&);
+    const CPrimPolyline& operator=(const CPrimPolyline& other);
 
     ~CPrimPolyline() { }
 

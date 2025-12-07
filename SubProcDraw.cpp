@@ -1,8 +1,12 @@
 #include "stdafx.h"
 
+#include <algorithm>
+
 #include "PegAEsys.h"
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
+
+#include "SubProcDraw.h"
 
 #include "Hatch.h"
 #include "Messages.h"
@@ -15,7 +19,6 @@
 #include "PrimPolyline.h"
 #include "PrimState.h"
 #include "SafeMath.h"
-#include "SubProcDraw.h"
 #include "UserAxis.h"
 
 INT_PTR CALLBACK DlgProcBlockInsert(HWND, UINT, WPARAM, LPARAM) noexcept;
@@ -135,26 +138,29 @@ void CDrawHandler::HandleOp2(CPnt cursorPosition) {
 void CDrawHandler::HandleOp3(CPnt cursorPosition) {
   if (previousKeyDown != ID_OP3) {
     previousKeyDown = app.ModeLineHighlightOp(ID_OP3);
-    wPts = 1;
+    numberOfPoints = 1;
     pt[0] = cursorPosition;
     app.RubberBandingStartAtEnable(cursorPosition, Lines);
   } else {
     auto* view = CPegView::GetActiveView();
     CDC* deviceContext = (view == nullptr) ? nullptr : view->GetDC();
-    if (wPts < sizeof(pt) / sizeof(pt[0])) {
-      app.RubberBandingDisable();
-      pt[wPts] = cursorPosition;
-      if (pt[wPts - 1] != pt[wPts]) {
-        CLine(pt[wPts - 1], pt[wPts]).Display(view, deviceContext);
-        app.RubberBandingStartAtEnable(pt[wPts], Lines);
-        wPts++;
-      } else {
-        EndFillAreaDef(wPts, pt);
-        app.ModeLineUnhighlightOp(previousKeyDown);
-        wPts = 0;
-      }
-    } else
-      msgInformation(IDS_MSG_TOO_MANY_PTS);
+
+    if (numberOfPoints >= pt.size()) {
+      size_t newSize = std::max(pt.size() * 2, numberOfPoints + 1);
+      pt.resize(newSize);
+    }
+    app.RubberBandingDisable();
+    pt[numberOfPoints] = cursorPosition;
+    if (pt[numberOfPoints - 1] != pt[numberOfPoints]) {
+      CLine(pt[numberOfPoints - 1], pt[numberOfPoints]).Display(view, deviceContext);
+      app.RubberBandingStartAtEnable(pt[numberOfPoints], Lines);
+      numberOfPoints++;
+    } else {
+      EndFillAreaDef(numberOfPoints, pt);
+      app.ModeLineUnhighlightOp(previousKeyDown);
+      numberOfPoints = 0;
+      pt.resize(4);
+    }
   }
 }
 
@@ -162,27 +168,28 @@ void CDrawHandler::HandleOp4(CPnt cursorPosition) {
   auto* document = CPegDoc::GetDoc();
   if (previousKeyDown != ID_OP4) {
     previousKeyDown = app.ModeLineHighlightOp(ID_OP4);
-    wPts = 1;
+    numberOfPoints = 1;
     pt[0] = cursorPosition;
     app.RubberBandingStartAtEnable(pt[0], Lines);
   } else {
-    pt[wPts] = cursorPosition;
-    if (pt[wPts - 1] != pt[wPts]) {
-      if (wPts == 1) {
+    pt[numberOfPoints] = cursorPosition;
+    if (pt[numberOfPoints - 1] != pt[numberOfPoints]) {
+      if (numberOfPoints == 1) {
         app.RubberBandingEnable(Quads);
-        wPts++;
+        numberOfPoints++;
       } else {
         app.RubberBandingDisable();
         pt[3] = pt[0] + CVec(pt[1], pt[2]);
 
         CSeg* segment = new CSeg;
 
-        for (int i = 0; i < 4; i++) segment->AddTail(new CPrimLine(pt[i], pt[(i + 1) % 4]));
+        for (size_t i = 0; i < 4; i++) segment->AddTail(new CPrimLine(pt[i], pt[(i + 1) % 4]));
 
         document->WorkLayerAddTail(segment);
         document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, segment);
         app.ModeLineUnhighlightOp(previousKeyDown);
-        wPts = 0;
+        numberOfPoints = 0;
+        pt.resize(4);
       }
     } else {
       app.RubberBandingDisable();
@@ -195,29 +202,31 @@ void CDrawHandler::HandleOp5(CPnt cursorPosition) {
   auto* document = CPegDoc::GetDoc();
   if (previousKeyDown != ID_OP5) {
     previousKeyDown = app.ModeLineHighlightOp(ID_OP5);
-    wPts = 1;
+    numberOfPoints = 1;
     pt[0] = cursorPosition;
     app.RubberBandingStartAtEnable(cursorPosition, Lines);
   } else {
-    pt[wPts] = cursorPosition;
-    if (pt[wPts - 1] != pt[wPts]) {
-      if (wPts == 1) {
+    pt[numberOfPoints] = cursorPosition;
+    if (pt[numberOfPoints - 1] != pt[numberOfPoints]) {
+      if (numberOfPoints == 1) {
         app.RubberBandingDisable();
-        pt[++wPts] = pt[1];
+        pt[++numberOfPoints] = pt[1];
       } else {
-        if (eArcGenId == StartPoint) {
-          CPrimArc* pArc = new CPrimArc(pt[0], pt[1], pt[2]);
-          if (pArc->GetSwpAng() != 0.) {
-            CSeg* segment = new CSeg(pArc);
+        if (eArcGenId == EArcGen::ThreePoint) {
+          CPrimArc* arcPrimitive = new CPrimArc(pt[0], pt[1], pt[2]);
+          if (arcPrimitive->GetSwpAng() != 0.0) {
+            CSeg* segment = new CSeg(arcPrimitive);
             document->WorkLayerAddTail(segment);
             document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, segment);
           } else {
-            delete pArc;
+            delete arcPrimitive;
             msgInformation(IDS_MSG_PTS_COLINEAR);
           }
+        } else if (eArcGenId == EArcGen::StartCenterEndPoint) {
         }
         app.ModeLineUnhighlightOp(previousKeyDown);
-        wPts = 0;
+        numberOfPoints = 0;
+        pt.resize(4);
       }
     } else
       msgInformation(IDS_MSG_PTS_COINCIDE);
@@ -229,31 +238,37 @@ void CDrawHandler::HandleOp6(CPnt cursorPosition) {
   CDC* deviceContext = (view == nullptr) ? nullptr : view->GetDC();
   if (previousKeyDown != ID_OP6) {  // Initial control point
     previousKeyDown = app.ModeLineHighlightOp(ID_OP6);
-    wPts = 1;
+    numberOfPoints = 1;
     pt[0] = cursorPosition;
     app.RubberBandingStartAtEnable(cursorPosition, Lines);
   } else {
-    if (wPts < sizeof(pt) / sizeof(pt[0])) {
-      if (wPts == 1)
-        app.RubberBandingDisable();
-      else {  // rubber banding for splines required display
-        // in main window proc. It is erased here and displayed there.
-        int iDrawMode = pstate.SetROP2(deviceContext, R2_XORPEN);
-        CPrimBSpline BSp(WORD(wPts + 1), pt);
-        BSp.Display(view, deviceContext);
-        pstate.SetROP2(deviceContext, iDrawMode);
-      }
-      pt[wPts] = cursorPosition;
-      if (pt[wPts - 1] != pt[wPts]) {
-        wPts++;
-        pt[wPts] = pt[wPts - 1];
-      } else {
-        EndSplineDef(eSplnGenId, wPts, pt);
-        app.ModeLineUnhighlightOp(previousKeyDown);
-        wPts = 0;
-      }
-    } else  // Too many control points
-      msgInformation(IDS_MSG_TOO_MANY_PTS);
+    // Ensure vector can grow dynamically for OP6
+    if (numberOfPoints >= pt.size()) {
+      size_t newSize = std::max(pt.size() * 2, numberOfPoints + 1);
+      pt.resize(newSize);
+    }
+
+    if (numberOfPoints == 1)
+      app.RubberBandingDisable();
+    else {  // rubber banding for splines required display
+      // in main window proc. It is erased here and displayed there.
+      int iDrawMode = pstate.SetROP2(deviceContext, R2_XORPEN);
+      CPrimBSpline BSp(WORD(numberOfPoints + 1), pt.data());
+      BSp.Display(view, deviceContext);
+      pstate.SetROP2(deviceContext, iDrawMode);
+    }
+    pt[numberOfPoints] = cursorPosition;
+    if (pt[numberOfPoints - 1] != pt[numberOfPoints]) {
+      numberOfPoints++;
+      // ensure space for the duplicated last point
+      if (numberOfPoints >= pt.size()) pt.resize(numberOfPoints + 1);
+      pt[numberOfPoints] = pt[numberOfPoints - 1];
+    } else {
+      EndSplineDef(eSplnGenId, numberOfPoints, pt);
+      app.ModeLineUnhighlightOp(previousKeyDown);
+      numberOfPoints = 0;
+      pt.resize(4);
+    }
   }
 }
 
@@ -285,17 +300,17 @@ void CDrawHandler::HandleOp8(CPnt cursorPosition) {
   auto* document = CPegDoc::GetDoc();
   if (previousKeyDown != ID_OP8) {
     previousKeyDown = app.ModeLineHighlightOp(ID_OP8);
-    wPts = 1;
+    numberOfPoints = 1;
     pt[0] = cursorPosition;
     app.RubberBandingStartAtEnable(cursorPosition, Lines);
   } else {
-    pt[wPts] = cursorPosition;
-    if (pt[wPts - 1] != cursorPosition) {
-      if (wPts == 1) {
+    pt[numberOfPoints] = cursorPosition;
+    if (pt[numberOfPoints - 1] != cursorPosition) {
+      if (numberOfPoints == 1) {
         pt[2] = pt[0];
         app.RubberBandingDisable();
         app.CursorPosSet(pt[0]);
-        wPts++;
+        numberOfPoints++;
       } else {
         CVec majorAxis(pt[0], pt[1]);
         CVec minorAxis(pt[0], pt[2]);
@@ -304,7 +319,8 @@ void CDrawHandler::HandleOp8(CPnt cursorPosition) {
         document->WorkLayerAddTail(segment);
         document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, segment);
         app.ModeLineUnhighlightOp(previousKeyDown);
-        wPts = 0;
+        numberOfPoints = 0;
+        pt.resize(4);
       }
     } else
       msgInformation(IDS_MSG_PTS_COINCIDE);
@@ -321,21 +337,23 @@ void CDrawHandler::HandleOp9(HWND hwnd) {
 void CDrawHandler::HandleReturn() {
   app.RubberBandingDisable();
   if (previousKeyDown == ID_OP3) {
-    EndFillAreaDef(wPts, pt);
+    EndFillAreaDef(numberOfPoints, pt);
   } else if (previousKeyDown == ID_OP6) {
-    EndSplineDef(eSplnGenId, wPts, pt);
+    EndSplineDef(eSplnGenId, numberOfPoints, pt);
   }
   app.ModeLineUnhighlightOp(previousKeyDown);
-  wPts = 0;
+  numberOfPoints = 0;
+  pt.resize(4);
 }
 
 /// @brief Finalize the current polyline drawing action: disable rubber-banding, end the polyline definition if OP3 was previously active, unhighlight the mode-line operation, and reset the working point count.
 void CDrawHandler::HandleShiftReturn() {
   app.RubberBandingDisable();
-  if (previousKeyDown == ID_OP3) { EndPolylineDef(wPts, pt); }
+  if (previousKeyDown == ID_OP3) { EndPolylineDef(numberOfPoints, pt); }
 
   app.ModeLineUnhighlightOp(previousKeyDown);
-  wPts = 0;
+  numberOfPoints = 0;
+  pt.resize(4);
 }
 
 void CDrawHandler::HandleEscape() {
@@ -352,25 +370,25 @@ void CDrawHandler::HandleEscape() {
 
 void CDrawHandler::HandleMouseMove(CPnt cursorPosition, CDC* deviceContext) {
   auto* view = CPegView::GetActiveView();
-  if (previousKeyDown == ID_OP5 && wPts == 2) {
+  if (previousKeyDown == ID_OP5 && numberOfPoints == 2) {
     int iDrawMode = pstate.SetROP2(deviceContext, R2_XORPEN);
-    if (eArcGenId == StartPoint) {
+    if (eArcGenId == EArcGen::ThreePoint) {
       CPrimArc(pt[0], pt[1], pt[2]).Display(view, deviceContext);
       pt[2] = cursorPosition;
       CPrimArc(pt[0], pt[1], pt[2]).Display(view, deviceContext);
     }
     pstate.SetROP2(deviceContext, iDrawMode);
-  } else if (previousKeyDown == ID_OP6 && wPts >= 2) {
+  } else if (previousKeyDown == ID_OP6 && numberOfPoints >= 2) {
     int iDrawMode = pstate.SetROP2(deviceContext, R2_XORPEN);
 
-    CPrimBSpline BSp(WORD(wPts + 1), pt);
-    if (pt[wPts - 1] != pt[wPts]) BSp.Display(view, deviceContext);
-    pt[wPts] = cursorPosition;
-    BSp.SetPt(wPts, pt[wPts]);
-    if (pt[wPts - 1] != pt[wPts]) BSp.Display(view, deviceContext);
+    CPrimBSpline splinePrimitive(WORD(numberOfPoints + 1), pt.data());
+    if (pt[numberOfPoints - 1] != pt[numberOfPoints]) splinePrimitive.Display(view, deviceContext);
+    pt[numberOfPoints] = cursorPosition;
+    splinePrimitive.SetPoint(numberOfPoints, pt[numberOfPoints]);
+    if (pt[numberOfPoints - 1] != pt[numberOfPoints]) splinePrimitive.Display(view, deviceContext);
 
     pstate.SetROP2(deviceContext, iDrawMode);
-  } else if (previousKeyDown == ID_OP8 && wPts == 2) {
+  } else if (previousKeyDown == ID_OP8 && numberOfPoints == 2) {
     int iDrawMode = pstate.SetROP2(deviceContext, R2_XORPEN);
     CVec majorAxis(pt[0], pt[1]);
     CVec minorAxis(pt[0], pt[2]);
@@ -386,7 +404,7 @@ void CDrawHandler::HandleMouseMove(CPnt cursorPosition, CDC* deviceContext) {
   }
 }
 
-WORD CDrawHandler::EndFillAreaDef(WORD numberOfPoints, CPnt* points) {
+size_t CDrawHandler::EndFillAreaDef(size_t numberOfPoints, std::vector<CPnt>& points) {
   auto* document = CPegDoc::GetDoc();
 
   if (numberOfPoints >= 3) {  // Determine plane in which fill area lies
@@ -406,31 +424,34 @@ WORD CDrawHandler::EndFillAreaDef(WORD numberOfPoints, CPnt* points) {
 
     // Project reference origin to plane
 
-    auto* segment = new CSeg(new CPrimPolygon(numberOfPoints, points[numberOfPoints], xAxis, yAxis, points));
+    auto* polygonPrimitive = new CPrimPolygon(numberOfPoints, points[numberOfPoints], xAxis, yAxis, points.data());
+    auto* segment = new CSeg(polygonPrimitive);
     document->WorkLayerAddTail(segment);
     document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, segment);
   }
   return (numberOfPoints);
 }
 
-CSeg* CDrawHandler::EndPolylineDef(int numberOfPoints, CPnt* points) {
+CSeg* CDrawHandler::EndPolylineDef(size_t numberOfPoints, std::vector<CPnt>& points) {
   auto* document = CPegDoc::GetDoc();
 
-  auto* newSegment = new CSeg(new CPrimPolyline(static_cast<WORD>(numberOfPoints), points));
+  auto* polylinePrimitive = new CPrimPolyline(numberOfPoints, points);
+  auto* newSegment = new CSeg(polylinePrimitive);
   document->WorkLayerAddTail(newSegment);
   document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, newSegment);
 
   return (newSegment);
 }
 
-CSeg* CDrawHandler::EndSplineDef(ESplnGen splineType, int numberOfControlPoints, CPnt* controlPoints) {
+CSeg* CDrawHandler::EndSplineDef(ESplnGen splineType, size_t numberOfControlPoints, std::vector<CPnt>& controlPoints) {
   auto* document = CPegDoc::GetDoc();
 
   CSeg* newSegment = nullptr;
 
   if (numberOfControlPoints > 2) {
     if (splineType == BSpline) {
-      newSegment = new CSeg(new CPrimBSpline(static_cast<WORD>(numberOfControlPoints), controlPoints));
+      auto* splinePrimitive = new CPrimBSpline(static_cast<WORD>(numberOfControlPoints), controlPoints.data());
+      newSegment = new CSeg(splinePrimitive);
       document->WorkLayerAddTail(newSegment);
       document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, newSegment);
     }
