@@ -775,6 +775,9 @@
     <None Include="res\Mode_Apps.CUR">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="Help Peg.pdf">
+      <Filter>Documents</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Peg &amp; Tra File Formats.txt">
