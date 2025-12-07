@@ -6,13 +6,13 @@
 #include <afxstr.h>
 #include <afxwin.h>
 
-#include "resource.h"
+#include "res\resource.h"
 
 class CDlgSetAngle: public CDialog
 {
-    DECLARE_DYNAMIC(CDlgSetAngle)
+  DECLARE_DYNAMIC(CDlgSetAngle)
 
-public:
+ public:
     CDlgSetAngle(CWnd* pParent = NULL);   // standard constructor
     virtual ~CDlgSetAngle();
 

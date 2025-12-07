@@ -3,7 +3,7 @@
 #include <afx.h>
 #include <afxwin.h>
 
-#include "resource.h"
+#include "res\resource.h"
 
 class CDlgSetScale: public CDialog
 {

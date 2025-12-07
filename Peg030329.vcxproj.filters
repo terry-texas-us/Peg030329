@@ -405,6 +405,9 @@
     <ClCompile Include="WndProcPreview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DlgSetMarkStyle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractView.h">
@@ -701,6 +704,12 @@
     <ClInclude Include="Viewport.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="res\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgSetMarkStyle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="res\PegAEsys.rc">
@@ -729,6 +738,43 @@
     </None>
     <None Include=".clang-tidy" />
     <None Include=".clang-format" />
+    <None Include="res\Simplex.psf" />
+    <None Include="res\Mode_Annotate.CUR">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Mode_Cut.CUR">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Mode_Dimension.CUR">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Mode_Draw.CUR">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Mode_Draw2.CUR">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Mode_Edit.CUR">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Mode_Fixup.CUR">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Mode_Nodal.CUR">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Mode_NodalR.CUR">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Mode_Trap.CUR">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Mode_TrapR.CUR">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Mode_Apps.CUR">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Peg &amp; Tra File Formats.txt">
@@ -743,5 +789,16 @@
     <Text Include="res\Pens\Widths.txt">
       <Filter>Resource Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\PegAEsys.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\PegAEsysDoc.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Toolbar.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -25,10 +25,8 @@ void DlgProcEditTrap_CommandsQueryFillExtraList(HWND hDlg, CPrim* pPrim)
     HWND hWndExtra = ::GetDlgItem(hDlg, IDC_EXTRA_LIST_CTRL);
 
     LVITEM lvi{};
-
     lvi.mask = LVIF_TEXT | LVIF_STATE;
-
-    char szBuf[64]{};
+    lvi.iSubItem = 0;
 
     int iItem = 0;
 
@@ -36,19 +34,38 @@ void DlgProcEditTrap_CommandsQueryFillExtraList(HWND hDlg, CPrim* pPrim)
     pPrim->FormatExtra(str);
 
     int nOff = 0;
-    for (int nDel = str.Mid(nOff).Find(';'); nDel != -1;)
-    {
-        lvi.iItem = iItem;
-        strcpy_s(szBuf, sizeof(szBuf), str.Mid(nOff, nDel));
-        lvi.pszText = szBuf;
-        ListView_InsertItem(hWndExtra, &lvi);
-        nOff += nDel + 1;
-        nDel = str.Mid(nOff).Find('\t');
-        int nLen = std::min(nDel, static_cast<int>(sizeof(szBuf)) - 1);
-        strcpy_s(szBuf, sizeof(szBuf), str.Mid(nOff, nLen));
-        ListView_SetItemText(hWndExtra, iItem++, 1, szBuf);
-        nOff += nDel + 1;
-        nDel = str.Mid(nOff).Find(';');
+    const int strLen = str.GetLength();
+    while (nOff < strLen) {
+      // find property name terminated by ';'
+      int nameEnd = str.Find(';', nOff);
+      if (nameEnd == -1) break;  // no more complete property entries
+
+      CString name = str.Mid(nOff, nameEnd - nOff);
+
+      lvi.iItem = iItem;
+      // ListView_InsertItem reads the text immediately, CString stays valid for this call
+      lvi.pszText = const_cast<LPTSTR>((LPCTSTR)name);
+      ListView_InsertItem(hWndExtra, &lvi);
+
+      // advance to value
+      nOff = nameEnd + 1;
+      if (nOff >= strLen) break;
+
+      // value ends at tab or end-of-string
+      int valEnd = str.Find('\t', nOff);
+      CString value;
+      if (valEnd == -1)
+        value = str.Mid(nOff);  // remainder is the final value
+      else
+        value = str.Mid(nOff, valEnd - nOff);
+
+      ListView_SetItemText(hWndExtra, iItem, 1, const_cast<LPTSTR>((LPCTSTR)value));
+      ++iItem;
+
+      if (valEnd == -1) break;  // parsed final value, no trailing tab -> done
+
+      // advance past tab to next property
+      nOff = valEnd + 1;
     }
 }
 

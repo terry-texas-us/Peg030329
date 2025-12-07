@@ -6,7 +6,7 @@
 #include <afxstr.h>
 #include <afxwin.h>
 
-#include "resource.h"
+#include "res\resource.h"
 
 class CDlgSetLength: public CDialog
 {

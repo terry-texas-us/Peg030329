@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="AbstractView.cpp" />
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="DlgSetMarkStyle.cpp" />
     <ClCompile Include="CharCellDef.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="CutPaste.cpp" />
@@ -282,6 +283,7 @@
   <ItemGroup>
     <ClInclude Include="AbstractView.h" />
     <ClInclude Include="Block.h" />
+    <ClInclude Include="DlgSetMarkStyle.h" />
     <ClInclude Include="CharCellDef.h" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="Dde.h" />
@@ -346,6 +348,7 @@
     <ClInclude Include="PrimText.h" />
     <ClInclude Include="RefSys.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="res\resource.h" />
     <ClInclude Include="SafeMath.h" />
     <ClInclude Include="Seg.h" />
     <ClInclude Include="Segs.h" />
@@ -394,13 +397,31 @@
     <None Include="Peg &amp; Tra File Formats.docx" />
     <None Include="Peg &amp; Tra File Formats.md" />
     <None Include="Peg &amp; Tra File Formats.pdf" />
+    <None Include="res\Mode_Annotate.CUR" />
+    <None Include="res\Mode_Apps.CUR" />
+    <None Include="res\Mode_Cut.CUR" />
+    <None Include="res\Mode_Dimension.CUR" />
+    <None Include="res\Mode_Draw.CUR" />
+    <None Include="res\Mode_Draw2.CUR" />
+    <None Include="res\Mode_Edit.CUR" />
+    <None Include="res\Mode_Fixup.CUR" />
+    <None Include="res\Mode_Nodal.CUR" />
+    <None Include="res\Mode_NodalR.CUR" />
+    <None Include="res\Mode_Trap.CUR" />
+    <None Include="res\Mode_TrapR.CUR" />
     <None Include="res\PegAEsys.rc2" />
+    <None Include="res\Simplex.psf" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Job File Format.txt" />
     <Text Include="Peg &amp; Tra File Formats (extracted FilePeg comments).txt" />
     <Text Include="Peg &amp; Tra File Formats.txt" />
     <Text Include="res\Pens\Widths.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\PegAEsys.ico" />
+    <Image Include="res\PegAEsysDoc.ico" />
+    <Image Include="res\Toolbar.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

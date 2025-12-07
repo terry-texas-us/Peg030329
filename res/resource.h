@@ -60,6 +60,8 @@
 #define IDD_PRINT_EX                    163
 #define IDR_MENU1                       164
 #define IDR_TRACING                     164
+#define IDD_DIALOG2                     171
+#define IDD_SET_MARK_STYLE              172
 #define IDC_ENGINEERING                 1000
 #define IDC_ARCHITECTURAL               1001
 #define IDC_FEET                        1002
@@ -278,6 +280,12 @@
 #define IDC_CURRENTVIEW                 1366
 #define IDC_EXTENTS                     1367
 #define IDC_TOFIT                       1368
+#define IDC_RADIO_MARK_STYLE_0          1369
+#define IDC_RADIO_MARK_STYLE_1          1370
+#define IDC_RADIO_MARK_STYLE_2          1371
+#define IDC_RADIO_MARK_STYLE_3          1372
+#define IDC_CHECK2                      1373
+#define IDC_RADIO_MARK_STYLE_4          1374
 #define IDS_MSG_NO_DET_SEGS_IN_VIEW     3792
 #define IDS_MSG_ZERO_LENGTH_STRING      3793
 #define IDS_MSG_PRIM_ADDED_TO_DEL_SEGS  3794
@@ -533,14 +541,15 @@
 #define ID_RELATIVEMOVES_ENG_UP         4642
 #define ID_RELATIVEMOVES_ENG_UPROTATE   4643
 #define ID_SHIFT_RETURN                 4645
+#define ID_SETUP_MARKSTYLE              4646
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        165
-#define _APS_NEXT_COMMAND_VALUE         4646
-#define _APS_NEXT_CONTROL_VALUE         1369
+#define _APS_NEXT_RESOURCE_VALUE        175
+#define _APS_NEXT_COMMAND_VALUE         4647
+#define _APS_NEXT_CONTROL_VALUE         1374
 #define _APS_NEXT_SYMED_VALUE           109
 #endif
 #endif

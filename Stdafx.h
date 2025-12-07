@@ -63,7 +63,7 @@
 #include "odio.h"
 #endif
 
-#include "resource.h"
+#include "res\resource.h"
 
 //#include "AbstractView.h"
 //#include "Block.h"

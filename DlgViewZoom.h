@@ -7,7 +7,7 @@
 
 #include <atltypes.h>
 
-#include "Resource.h"
+#include "res\Resource.h"
 
 class CDataExchange;
 
