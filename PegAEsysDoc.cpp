@@ -26,6 +26,7 @@
 #include "Block.h"
 #include "CharCellDef.h"
 #include "ddeGItms.h"
+#include "DlgSetMarkStyle.h"
 #include "DlgProcFileManage.h"
 #include "FileBlock.h"
 #include "FileJob.h"
@@ -426,6 +427,7 @@ BEGIN_MESSAGE_MAP(CPegDoc, CDocument)
     ON_COMMAND(ID_SETUP_FILL_SOLID, OnSetupFillSolid)
     ON_COMMAND(ID_SETUP_FILL_PATTERN, OnSetupFillPattern)
     ON_COMMAND(ID_SETUP_FILL_HATCH, OnSetupFillHatch)
+    ON_COMMAND(ID_SETUP_MARKSTYLE, OnSetupMarkStyle)
     ON_COMMAND(ID_SETUP_NOTE, OnSetupNote)
     ON_COMMAND(ID_SETUP_SAVEPOINT, OnSetupSavePoint)
     ON_COMMAND(ID_SETUP_GOTOPOINT, OnSetupGotoPoint)
@@ -1950,6 +1952,24 @@ void CPegDoc::OnSetupFillHatch()
     CWnd* pWnd = AfxGetApp()->GetMainWnd();
     ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_SETUP_HATCH), pWnd->GetSafeHwnd(), reinterpret_cast<DLGPROC>(DlgProcSetupHatch));
 }
+void CPegDoc::OnSetupMarkStyle() {
+  CDlgSetMarkStyle dlg;
+  // Preload dialog from global state and document
+  dlg.m_nMarkStyle = pstate.MarkStyle();
+  dlg.m_dMarkSize = GetMarkSize();
+
+  if (dlg.DoModal() == IDOK) {
+    // Apply to global primitive state
+    pstate.SetMarkStyle(static_cast<short>(dlg.m_nMarkStyle));
+    // Store into document
+    SetMarkSize(dlg.m_dMarkSize);
+
+    // Refresh UI
+    UpdateAllViews(NULL, 0L, NULL);
+    app.StatusLineDisplay();
+  }
+}
+
 void CPegDoc::OnSetupNote()
 {
     CWnd* pWnd = AfxGetApp()->GetMainWnd();

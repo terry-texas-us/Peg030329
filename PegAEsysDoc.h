@@ -249,6 +249,7 @@ class CPegDoc : public CDocument {
   afx_msg void OnSetupFillPattern();
   afx_msg void OnSetupFillSolid();
   afx_msg void OnSetupGotoPoint();
+  afx_msg void OnSetupMarkStyle();
   afx_msg void OnSetupNote();
   afx_msg void OnSetupOptionsDraw();
   afx_msg void OnSetupPenColor();
