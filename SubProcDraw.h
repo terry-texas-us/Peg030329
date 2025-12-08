@@ -13,9 +13,17 @@ class CDrawHandler {
   enum ESplnEndCnd { Fixed, Relaxed, Cyclic, Anticyclic };
 
  private:
-  size_t numberOfPoints{0};
-  WORD previousKeyDown{0};
-  std::vector<CPnt> pt{4};
+  struct GeometryState {
+    size_t numberOfPoints{0};
+    WORD previousKeyDown{0};
+    std::vector<CPnt> points{4};
+
+    void reset() {
+      numberOfPoints = 0;
+      previousKeyDown = 0;
+      points.resize(4);
+    }
+  } state;
 
   EArcGen eArcGenId{EArcGen::ThreePoint};
   ESplnGen eSplnGenId{ESplnGen::BSpline};

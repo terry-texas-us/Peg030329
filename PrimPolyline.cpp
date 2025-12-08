@@ -33,10 +33,10 @@ CPrimPolyline::CPrimPolyline(size_t numberOfPoints, std::vector<CPnt>& points) {
   m_nPenColor = pstate.PenColor();
   m_nPenStyle = pstate.PenStyle();
 
-  m_pts.SetSize(numberOfPoints);
+  m_pts.SetSize(static_cast<INT_PTR>(numberOfPoints));
 
   m_wFlags = 0;
-  for (size_t i = 0; i < numberOfPoints; i++) { m_pts[i] = points[i]; }
+  for (size_t i = 0; i < numberOfPoints; i++) { m_pts[static_cast<INT_PTR>(i)] = points[i]; }
 }
 CPrimPolyline::CPrimPolyline(const CPrimPolyline& other) {
   m_nPenColor = other.m_nPenColor;

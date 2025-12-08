@@ -11,7 +11,10 @@ class CDlgSetMarkStyle : public CDialog {
   CDlgSetMarkStyle(CWnd* pParent = nullptr);  // standard constructor
   virtual ~CDlgSetMarkStyle();
 
-// Dialog Data
+  CDlgSetMarkStyle(const CDlgSetMarkStyle&) = delete;
+  CDlgSetMarkStyle& operator=(const CDlgSetMarkStyle&) = delete;
+
+  // Dialog Data
 #ifdef AFX_DESIGN_TIME
   enum { IDD = IDD_SET_MARK_STYLE };
 #endif

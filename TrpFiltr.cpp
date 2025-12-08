@@ -70,7 +70,7 @@ INT_PTR CALLBACK DlgProcTrapFilter(HWND ahDlg, UINT anMsg, WPARAM wParam, LPARAM
 
                 if (bTranslated == 0)
                 {
-                    bTranslated = ::GetDlgItemText(ahDlg, IDC_TRAP_FILTER_LINE_LIST, (LPSTR)szBuf, sizeof(szBuf));
+                    bTranslated = (::GetDlgItemText(ahDlg, IDC_TRAP_FILTER_LINE_LIST, static_cast<LPSTR>(szBuf), sizeof(szBuf)) != 0);
                     if (bTranslated != 0)
                         iLineId = pDoc->PenStylesLookup(szBuf);
                     bTranslated = iLineId != SHRT_MAX;
