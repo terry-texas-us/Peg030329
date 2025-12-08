@@ -53,7 +53,7 @@ namespace lpd
     /// @param segment Output reference that receives the pointer to the segment that contains the found mark. Set to nullptr (0) if no match is found.
     /// @param mark_primitive Output reference that receives the pointer to the found CPrimMark (only marks with PenColor == 15 and MarkStyle == 8 are considered). Set to nullptr (0) if no match is found.
     /// @return true if a matching mark was found at the given point (in which case segment and mark_primitive are set to the found objects); false otherwise (segment and mark_primitive are set to nullptr).
-    /// @notes Only check for actual end-cap marker is by attributes. No error processing for invalid width or depth values.
+    /// @note Only check for actual end-cap marker is by attributes. No error processing for invalid width or depth values.
     /// Segment data contains whatever primative follows marker (hopefully this is associated end-cap line).
     bool	SelEndCapUsingPoint(CPegView* view, const CPnt& model_point, CSeg*& segment, CPrimMark*& mark_primitive);
     void	SetOptions(double*, double*);

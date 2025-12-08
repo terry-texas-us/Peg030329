@@ -31,6 +31,7 @@ public:
     virtual void AssertValid() const;
     virtual void Dump(CDumpContext& dc) const;
 #endif
+    virtual void ActivateFrame(int nCmdShow = -1);
 
     // Generated message map functions
 protected:

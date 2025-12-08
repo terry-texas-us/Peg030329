@@ -31,7 +31,7 @@ namespace dde
 		WORD	wFmt;
 		LPSTR	pszName;
 	} CFTAGNAME, * PCFTAGNAME;
-	CFTAGNAME CFNames [];
+    extern CFTAGNAME CFNames[];
 
 	// Definition for a DDE execute command procession function
 	typedef bool (EXECCMDFN)(struct _TOPICINFO* pTopic, LPSTR pszResultString, UINT uiResultSize, UINT uiNargs, LPSTR* ppArgs);

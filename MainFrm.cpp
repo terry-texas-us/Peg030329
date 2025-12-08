@@ -33,6 +33,7 @@ static UINT indicators[] = {
     ID_SEPARATOR,  // status line indicator
     ID_OP0,       ID_OP1, ID_OP2, ID_OP3, ID_OP4, ID_OP5, ID_OP6, ID_OP7, ID_OP8, ID_OP9,
 };
+static int numberOfIndicators = sizeof(indicators) / sizeof(UINT);
 
 // CMainFrame construction/destruction
 
@@ -65,13 +66,14 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct) {
     TRACE0("Failed to create toolbar\n");
     return -1;  // fail to create
   }
-  if (!m_wndStatusBar.Create(this) || !m_wndStatusBar.SetIndicators(indicators, sizeof(indicators) / sizeof(UINT))) {
-    TRACE0("Failed to create status bar\n");
-    return -1;  // fail to create
-  }
   m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
   EnableDocking(CBRS_ALIGN_ANY);
   DockControlBar(&m_wndToolBar);
+
+  if (!m_wndStatusBar.Create(this) || !m_wndStatusBar.SetIndicators(indicators, numberOfIndicators)) {
+    TRACE0("Failed to create status bar\n");
+    return -1;  // fail to create
+  }
 
   app.m_wpMainWnd = reinterpret_cast<WNDPROC>(::GetWindowLongPtr(m_hWnd, GWLP_WNDPROC));
 

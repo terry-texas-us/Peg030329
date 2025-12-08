@@ -16,10 +16,10 @@
 /// @return The DPI value (horizontal dots per inch) as a UINT for the specified window or screen. Returns 96 if the DPI cannot be determined.
 static UINT GetWindowDpi(HWND hwnd) {
   UINT dpi = 96;
-  HMODULE user32Module = ::GetModuleHandleW(L"user32.dll");
+  HMODULE user32Module = ::GetModuleHandle(_T("user32.dll"));
   if (user32Module != nullptr) {
     typedef UINT(WINAPI * GetDpiForWindow_t)(HWND);
-    auto GetDpiForWindow = (GetDpiForWindow_t)::GetProcAddress(user32Module, "GetDpiForWindow");
+    auto GetDpiForWindow = reinterpret_cast<GetDpiForWindow_t>(::GetProcAddress(user32Module, _T("GetDpiForWindow")));
     if (GetDpiForWindow != nullptr && hwnd != nullptr && ::IsWindow(hwnd)) {
       dpi = GetDpiForWindow(hwnd);
     } else {
@@ -46,25 +46,25 @@ static int ScaleWidthForDpi(HWND hwnd, int baseWidth) {
 
 /// @brief Draws a line of text into a pane area of the given view using the provided device context and font.
 /// @param context Pointer to the device context (CDC) used for drawing. If nullptr, the function returns immediately.
-/// @param activeView Pointer to the view (CPegView) whose client rectangle is used to compute the pane area. If nullptr, the function returns immediately.
+/// @param view Pointer to the view (CPegView) whose client rectangle is used to compute the pane area. If nullptr, the function returns immediately.
 /// @param paneIndex Zero-based index of the pane in which to draw the text; used to compute the left and right boundaries for the pane.
 /// @param paneText The text to draw (CString).
-/// @param fontApp Font (CFont) to select into the device context for drawing the text.
+/// @param font Font (CFont) to select into the device context for drawing the text.
 /// @param textColor COLORREF specifying the text color to use while drawing.
-static void DrawPaneText(CDC* context, CPegView* activeView, int paneIndex, const CString& paneText, CFont* fontApp,
-                         COLORREF textColor) {
-  if (context == nullptr || activeView == nullptr) return;
+static void DrawPaneTextInView(CDC* context, CPegView* view, int paneIndex, const CString& paneText, CFont* font,
+                               COLORREF textColor) {
+  if (context == nullptr || view == nullptr) return;
 
-  auto* oldFont = context->SelectObject(fontApp);
-  UINT oldTextAlign = context->SetTextAlign(TA_LEFT | TA_TOP);
-  COLORREF oldTextColor = context->SetTextColor(textColor);
-  COLORREF oldBkColor = context->SetBkColor(~AppGetTextCol());
+  auto* oldFont = context->SelectObject(font);
+  auto oldTextAlignment = context->SetTextAlign(TA_LEFT | TA_TOP);
+  auto oldTextColor = context->SetTextColor(textColor);
+  auto oldBackgroundColor = context->SetBkColor(~AppGetTextCol());
 
   TEXTMETRIC metrics;
   context->GetTextMetrics(&metrics);
 
   CRect clientArea;
-  activeView->GetClientRect(&clientArea);
+  view->GetClientRect(&clientArea);
 
   int maxCharacters = (clientArea.Width() / 10) / metrics.tmAveCharWidth;
 
@@ -77,9 +77,9 @@ static void DrawPaneText(CDC* context, CPegView* activeView, int paneIndex, cons
   int paneTextLength = static_cast<int>(paneText.GetLength());
   context->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, paneText, paneTextLength, nullptr);
 
-  context->SetBkColor(oldBkColor);
+  context->SetBkColor(oldBackgroundColor);
   context->SetTextColor(oldTextColor);
-  context->SetTextAlign(oldTextAlign);
+  context->SetTextAlign(oldTextAlignment);
   context->SelectObject(oldFont);
 }
 
@@ -98,13 +98,13 @@ void CPegApp::ModeLineDisplay() {
   CString strMode;
   if (!strMode.LoadString(m_hInstance, (UINT)m_iModeId)) { return; }
 
-  CString strModeOp;
+  CString paneText;
 
   for (int i = 0; i < 10; i++) {
-    AfxExtractSubString(strModeOp, strMode, i + 1, '\n');
-    int nLen = strModeOp.GetLength();
+    AfxExtractSubString(paneText, strMode, i + 1, '\n');
+    int nLen = paneText.GetLength();
 
-    CSize size = context->GetTextExtent(strModeOp, nLen);
+    CSize size = context->GetTextExtent(paneText, nLen);
 
     // compute base width in pixels and scale by current DPI so panes remain readable on high-DPI displays
     int baseWidth = size.cx - 2 * nLen;
@@ -113,10 +113,10 @@ void CPegApp::ModeLineDisplay() {
     HWND hwnd = (mainFrame != nullptr) ? mainFrame->GetSafeHwnd() : nullptr;
     int scaledWidth = ScaleWidthForDpi(hwnd, baseWidth);
 
-    mainFrame->SetPaneInfo(i + 1, static_cast<UINT>(ID_OP0 + i), SBPS_NORMAL, scaledWidth);
-    mainFrame->SetPaneText(i + 1, strModeOp);
+    mainFrame->SetPaneInfo(i + 1, static_cast<UINT>(ID_OP0 + i), SBPS_POPOUT, scaledWidth);
+    mainFrame->SetPaneText(i + 1, paneText);
     if (m_bViewModeInfo && context != nullptr) {
-      DrawPaneText(context, activeView, i, strModeOp, m_pFontApp, AppGetTextCol());
+      DrawPaneTextInView(context, activeView, i, paneText, m_pFontApp, AppGetTextCol());
     }
   }
 }
@@ -131,7 +131,7 @@ WORD CPegApp::ModeLineHighlightOp(WORD wOp) {
   int i = m_wOpHighlighted - ID_OP0;
 
   CMainFrame* frame = (CMainFrame*)(AfxGetApp()->m_pMainWnd);
-  frame->SetPaneStyle(i + 1, SBPS_POPOUT);
+  frame->SetPaneStyle(i + 1, SBPS_NORMAL);
 
   if (m_bViewModeInfo) {
     CString paneText = frame->GetPaneText(i + 1);
@@ -141,7 +141,7 @@ WORD CPegApp::ModeLineHighlightOp(WORD wOp) {
 
     if (context == nullptr) return wOp;
 
-    DrawPaneText(context, activeView, i, paneText, m_pFontApp, RGB(255, 0, 0));
+    DrawPaneTextInView(context, activeView, i, paneText, m_pFontApp, RGB(255, 0, 0));
   }
   return (wOp);
 }
@@ -154,7 +154,7 @@ void CPegApp::ModeLineUnhighlightOp(WORD& wOp) {
   int i = wOp - ID_OP0;
 
   CMainFrame* frame = (CMainFrame*)(AfxGetApp()->m_pMainWnd);
-  frame->SetPaneStyle(i + 1, SBPS_NORMAL);
+  frame->SetPaneStyle(i + 1, SBPS_POPOUT);
 
   if (m_bViewModeInfo) {
     CString paneText = frame->GetPaneText(i + 1);
@@ -167,7 +167,7 @@ void CPegApp::ModeLineUnhighlightOp(WORD& wOp) {
       return;
     }
 
-    DrawPaneText(context, activeView, i, paneText, m_pFontApp, AppGetTextCol());
+    DrawPaneTextInView(context, activeView, i, paneText, m_pFontApp, AppGetTextCol());
   }
   wOp = 0;
 }
