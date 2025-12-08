@@ -20,7 +20,7 @@ class CVec;
 class CSegs: public CObList
 {
 public: // Constructors and destructor
-    CSegs() { };
+    CSegs() { }
 
     virtual ~CSegs() { }
 

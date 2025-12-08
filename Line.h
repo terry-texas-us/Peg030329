@@ -42,7 +42,7 @@ public:	// Constructors and destructor
     CLine(const CPnt& pt0, const CPnt& pt1) { m_pt[0] = pt0; m_pt[1] = pt1; }
     CLine(const CLine& ln) { m_pt[0] = ln.m_pt[0]; m_pt[1] = ln.m_pt[1]; }
 
-    ~CLine() { };
+    ~CLine() { }
 
 public:	// Operators
 

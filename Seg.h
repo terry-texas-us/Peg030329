@@ -39,7 +39,7 @@ public:
     CSeg& operator=(const CSeg& other);
 
     /// @brief Constructor from a block.
-    /// @param blk The block to initialize from.
+    /// @param block The block to initialize from.
     CSeg(const CBlock& block);
 
     /// @brief Adds primitives to the tree view control.
@@ -60,12 +60,12 @@ public:
     void BreakSegRefs();
 
     /// @brief Displays the segment.
-    /// @param pView Pointer to the view.
-    /// @param pDC Pointer to the device context.
+    /// @param view Pointer to the view.
+    /// @param context Pointer to the device context.
     void Display(CPegView* view, CDC* context);
 
     /// @brief Finds and removes a primitive.
-    /// @param pPrim Pointer to the primitive to remove.
+    /// @param primitive Pointer to the primitive to remove.
     /// @returns The position of the removed primitive.
     POSITION FindAndRemovePrim(CPrim* primitive);
 
@@ -75,7 +75,7 @@ public:
     CPrim* GetAt(POSITION pos) const { return (CPrim*)CObList::GetAt(pos); }
 
     /// @brief Counts how many segment reference primitives (CPrimSegRef) in this segment have the specified block name.
-    /// @param blockName The block name to match (provided as a const reference to a CString).
+    /// @param block The block name to match (provided as a const reference to a CString).
     /// @return The number of block references whose name equals the provided blockName.
     INT_PTR GetBlockRefCount(const CString& name) const;
 
@@ -164,15 +164,15 @@ public:
     void Square();
 
     /// @brief Transforms the segment.
-    /// @param tm Transformation matrix.
-    void Transform(const CTMat& tmtransformMatrix);
+    /// @param transformMatrix Transformation matrix.
+    void Transform(const CTMat& transformMatrix);
 
     /// @brief Translates the segment.
     /// @param translation Translation vector.
     void Translate(const CVec& translation) const;
 
     /// @brief Writes the segment to a file.
-    /// @param fl The file.
+    /// @param file The file.
     void Write(CFile& file);
 
     /// @brief Writes the segment to a file with buffer.

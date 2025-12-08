@@ -27,7 +27,7 @@ public: // Constructors and destructors
 #endif
     CViewport(const CViewport& src);
 
-    ~CViewport() { };
+    ~CViewport() { }
 
     CViewport& operator=(const CViewport& src);
 

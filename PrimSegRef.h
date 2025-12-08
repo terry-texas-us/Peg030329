@@ -37,7 +37,7 @@ public: // Constructors and destructor
 #endif
     CPrimSegRef(const CPrimSegRef&);
 
-    virtual ~CPrimSegRef() { };
+    virtual ~CPrimSegRef() { }
 
 public: // Operators
     const CPrimSegRef& operator=(const CPrimSegRef&);

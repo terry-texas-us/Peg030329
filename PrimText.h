@@ -34,7 +34,7 @@ public:	// Constructors and destructor
     CPrimText(const CFontDef& fd, const CRefSys& rs, const char* pszText);
     CPrimText(const CPrimText&);
 
-    ~CPrimText() { };
+    ~CPrimText() { }
 
 public: // Operators
     const CPrimText& operator=(const CPrimText&);

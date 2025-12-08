@@ -204,7 +204,7 @@ HDDEDATA WINAPI dde::StdCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hsz1, H
     }
     return (HDDEDATA)0;
 }
-//<summary>Process a generic callback.</summary>
+/// @brief Process a generic callback.
 bool dde::DoCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hszTopic, HSZ hszItem, HDDEDATA hData, HDDEDATA* phReturnData)
 {
     PTOPICINFO pTopic = TopicFind(hszTopic);

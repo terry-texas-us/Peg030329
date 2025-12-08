@@ -59,7 +59,7 @@ void DlgProcEditTrap_CommandsQueryFillExtraList(HWND hDlg, CPrim* pPrim)
       else
         value = str.Mid(nOff, valEnd - nOff);
 
-      ListView_SetItemText(hWndExtra, iItem, 1, const_cast<LPTSTR>((LPCTSTR)value));
+      ListView_SetItemText(hWndExtra, iItem, 1, const_cast<LPTSTR>((LPCTSTR)value))
       ++iItem;
 
       if (valEnd == -1) break;  // parsed final value, no trailing tab -> done
@@ -93,15 +93,15 @@ void DlgProcEditTrap_CommandsQueryFillGeometryList(HWND hDlg, CPrim* pPrim)
         nOff += nDel + 1;
         nDel = strBuf.Mid(nOff).Find(';');
         strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
-        ListView_SetItemText(hWndGeometry, iItem, 1, szBuf);
+        ListView_SetItemText(hWndGeometry, iItem, 1, szBuf)
         nOff += nDel + 1;
         nDel = strBuf.Mid(nOff).Find(';');
         strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
-        ListView_SetItemText(hWndGeometry, iItem, 2, szBuf);
+        ListView_SetItemText(hWndGeometry, iItem, 2, szBuf)
         nOff += nDel + 1;
         nDel = strBuf.Mid(nOff).Find('\t');
         strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
-        ListView_SetItemText(hWndGeometry, iItem++, 3, szBuf);
+        ListView_SetItemText(hWndGeometry, iItem++, 3, szBuf)
         nOff += nDel + 1;
         nDel = strBuf.Mid(nOff).Find(';');
     }

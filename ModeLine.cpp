@@ -74,7 +74,7 @@ static void DrawPaneTextInView(CDC* context, CPegView* view, int paneIndex, cons
   int bottom = clientArea.bottom;
   CRect rc(left, top, right, bottom);
 
-  int paneTextLength = static_cast<int>(paneText.GetLength());
+  UINT paneTextLength = static_cast<UINT>(paneText.GetLength());
   context->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, paneText, paneTextLength, nullptr);
 
   context->SetBkColor(oldBackgroundColor);

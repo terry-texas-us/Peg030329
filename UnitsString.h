@@ -31,12 +31,12 @@ std::string UnitsString_FormatAsArchitectural(double length);
 /// @return A std::string containing the value formatted in engineering notation with the specified precision.
 std::string UnitsString_FormatAsEngineering(double length, int precision);
 
-/// @brief Formats a length value as a simple string based on the specified units. 
-/// @param length
-/// @param minWidth 
-/// @param precision 
-/// @param units 
-/// @return
+/// @brief Creates a simple, human-readable string representation of a length value using the specified units.
+/// @param length The length value to format.
+/// @param minWidth Minimum width of the resulting string; the output is padded if necessary to reach this width.
+/// @param precision Number of digits to display after the decimal point (controls rounding).
+/// @param units Enumeration value specifying the units to use for formatting (affects the unit label and any conversion applied).
+/// @return A formatted string representing the length with the chosen units, respecting the specified precision and minimum width.
 std::string	UnitsString_FormatAsSimple(double length, int minWidth, int precision, EUnits units);
 
 /// @brief Calculates the greatest common divisor (GCD) of two integers.
@@ -45,13 +45,13 @@ std::string	UnitsString_FormatAsSimple(double length, int minWidth, int precisio
 /// @return The non-negative greatest common divisor of the two arguments. If one argument is zero, returns the absolute value of the other; if both are zero, returns 0.
 int	UnitsString_GCD(int aiNmb1, int aiNmb2);
 
-/// @brief 
-/// @param  
-/// @return 
-double UnitsString_ParseLength(char*);
+/// @brief Parses a length string with an optional unit suffix and returns the length converted to the application's internal scale.
+/// @param length Pointer to a null-terminated C string containing a numeric length optionally followed by a unit suffix. Recognized suffixes (case-insensitive): ' (feet, may be followed by inches), mm (millimeters), m (meters), cm (centimeters), d (decimeters), k (kilometers). If no recognized suffix is present, the numeric value is treated as inches. The pointer must be valid for reading; the function does not modify the string.
+/// @return The parsed length converted to the application's internal units: the value converted to inches according to the suffix (or treated as inches if none) and then divided by app.GetScale().
+double UnitsString_ParseLength(char* length);
 
-/// @brief 
-/// @param  
-/// @param  
-/// @return 
-double UnitsString_ParseLength(EUnits, char*);
+/// @brief Parses a length expression string and returns its value converted to the application's internal length units (inches adjusted by app.GetScale()).
+/// @param eUnits The unit system of the input length expression. Determines the conversion factor applied. Supported values include: Architectural, Engineering, Feet, Inches, Meters, Millimeters, Centimeters, Decimeters, and Kilometers.
+/// @param length A null-terminated C string containing the length expression to parse. The string is processed by the lexer/evaluator functions (lex::Parse, lex::EvalTokenStream).
+/// @return The parsed length as a double expressed in the application's internal units (the function converts input units to inches and then divides by app.GetScale()). On parse/evaluation error the function displays a message box and returns 0.0.
+double UnitsString_ParseLength(EUnits, char* length);
