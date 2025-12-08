@@ -10,7 +10,7 @@
 #include "Polygon.h"
 #include "SafeMath.h"
 
-HBITMAP CDlgViewZoom::m_hbmKeyplan = NULL;
+HBITMAP CDlgViewZoom::m_hbmKeyplan = nullptr;
 CRect CDlgViewZoom::m_rcWnd = CRect();
 bool CDlgViewZoom::bKeyplan = false;
 
@@ -172,9 +172,9 @@ void CDlgViewZoom::OnBnClickedMoreless() {
     CRect rcDef;
 
     GetDlgItem(IDC_LESS_AREA)->GetWindowRect(&rcDef);
-    SetWindowPos(0, 0, 0, atoi(szBuf), rcDef.Height(), SWP_NOZORDER | SWP_NOMOVE);
+    SetWindowPos(nullptr, 0, 0, atoi(szBuf), rcDef.Height(), SWP_NOZORDER | SWP_NOMOVE);
   } else {
-    SetWindowPos(0, 0, 0, atoi(szBuf), atoi(szBuf + 6), SWP_NOZORDER | SWP_NOMOVE);
+    SetWindowPos(nullptr, 0, 0, atoi(szBuf), atoi(szBuf + 6), SWP_NOZORDER | SWP_NOMOVE);
   }
   bKeyplan = !bKeyplan;
   GetDlgItem(IDC_KEYPLAN_AREA)->EnableWindow(bKeyplan);
@@ -214,7 +214,7 @@ void CDlgViewZoom::OnBnClickedSave() {
 void CDlgViewZoom::Refresh() {
   CPegDoc* pDoc = CPegDoc::GetDoc();
   CPegView* pView = CPegView::GetActiveView();
-  CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+  CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
   char szBuf[16]{};
   GetDlgItem(IDC_LESS_AREA)->GetWindowText(szBuf, sizeof(szBuf));
@@ -223,8 +223,8 @@ void CDlgViewZoom::Refresh() {
     GetDlgItem(IDC_MORELESS)->SetWindowText("&Less");
 
     CDC dcMem;
-    dcMem.CreateCompatibleDC(NULL);
-    if (m_hbmKeyplan == 0) {
+    dcMem.CreateCompatibleDC(nullptr);
+    if (m_hbmKeyplan == nullptr) {
       CRect rcKey;
       GetDlgItem(IDC_KEYPLAN_AREA)->GetClientRect(&rcKey);
       m_hbmKeyplan = CreateCompatibleBitmap(pDC->GetSafeHdc(), rcKey.right, rcKey.bottom);
@@ -252,7 +252,7 @@ void CDlgViewZoom::Refresh() {
     CPrim::SpecPolygonStyle() = -1;
 
     //::DeleteDC(hDCMem);
-    GetDlgItem(IDC_KEYPLAN_AREA)->InvalidateRect(0, TRUE);
+    GetDlgItem(IDC_KEYPLAN_AREA)->InvalidateRect(nullptr, TRUE);
 
     pView->ModelViewPopActive();
     pView->ViewportPopActive();
@@ -261,7 +261,7 @@ void CDlgViewZoom::Refresh() {
 
     CRect rcLessArea;
     GetDlgItem(IDC_LESS_AREA)->GetWindowRect(&rcLessArea);
-    SetWindowPos(0, 0, 0, atoi(szBuf), rcLessArea.Height(), SWP_NOZORDER | SWP_NOMOVE);
+    SetWindowPos(nullptr, 0, 0, atoi(szBuf), rcLessArea.Height(), SWP_NOZORDER | SWP_NOMOVE);
   }
 }
 void CDlgViewZoom::OnEnChangeRatio() {

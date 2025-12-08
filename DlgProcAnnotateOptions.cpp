@@ -35,7 +35,7 @@ INT_PTR CALLBACK DlgProcAnnotateOptions(HWND hDlg, UINT anMsg, WPARAM wParam, LP
             annotate::iArrowTyp = (int) ::SendDlgItemMessage(hDlg, IDC_ANN_ARR_TYP, CB_GETCURSEL, 0, 0L) + 1;
             annotate::dArrowSiz = DlgBoxGetItemDouble(hDlg, IDC_ANN_ARR_SIZ);
             annotate::dBubRad = DlgBoxGetItemDouble(hDlg, IDC_ANN_BUB_RAD);
-            annotate::wBubFacets = (WORD)GetDlgItemInt(hDlg, IDC_ANN_BUB_FACETS, 0, FALSE);
+            annotate::wBubFacets = (WORD)GetDlgItemInt(hDlg, IDC_ANN_BUB_FACETS, nullptr, FALSE);
             [[fallthrough]]; // Intentional fallthrough
 
         case IDCANCEL:

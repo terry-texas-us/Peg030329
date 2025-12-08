@@ -34,7 +34,7 @@ INT_PTR CALLBACK DlgProcSetupPenColor(HWND hDlg, UINT anMsg, WPARAM wParam, LPAR
         switch (LOWORD(wParam))
         {
         case IDOK:
-            nPenColor = (PENCOLOR) ::GetDlgItemInt(hDlg, IDC_COL_LIST, 0, FALSE);
+            nPenColor = (PENCOLOR)::GetDlgItemInt(hDlg, IDC_COL_LIST, nullptr, FALSE);
             pstate.SetPenColor(nPenColor);
             [[fallthrough]]; // Intentional fallthrough
 
@@ -94,7 +94,7 @@ void  SetupPenColor_DrawEntire(LPDRAWITEMSTRUCT lpDIS, int inflate)
     dc.SetTextColor(RGB(0, 0, 0));
     dc.SetBkColor(RGB(255, 255, 255));
 
-    dc.ExtTextOut(rc.right - 16, rc.top + 2, ETO_CLIPPED, &rc, buffer.c_str(), length, 0);
+    dc.ExtTextOut(rc.right - 16, rc.top + 2, ETO_CLIPPED, &rc, buffer.c_str(), length, nullptr);
 
     ::InflateRect(&rc, inflate - 2, inflate - 2);
     rc.right -= 24;

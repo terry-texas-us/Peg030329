@@ -135,13 +135,13 @@ bool dde::ExecFileGet(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs)
         fj.ReadSegs(pLayer);
         detsegs.AddTail(pLayer);
 
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEGS_SAFE, &trapsegs);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE, &trapsegs);
 
         trapsegs.RemoveAll();
         trapsegs.AddTail(pLayer);
         trapsegs.Translate(vTrns);
 
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEGS_SAFE_TRAP, &trapsegs);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE_TRAP, &trapsegs);
     }
     return true;
 }
@@ -197,7 +197,7 @@ bool dde::ExecNote(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
 
     CSeg* pSeg = new CSeg(new CPrimText(fd, rs, ppArgs[0]));
     pDoc->WorkLayerAddTail(pSeg);
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG, pSeg);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG, pSeg);
 
     ptPvt = text_GetNewLinePos(fd, rs, 1., 0);
     app.CursorPosSet(ptPvt);

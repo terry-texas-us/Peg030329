@@ -51,7 +51,7 @@ INT_PTR CALLBACK DlgProcModeLetter(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM l
 
                 auto segment = new CSeg{new CPrimText{fd, rs, text.c_str()}};
                 pDoc->WorkLayerAddTail(segment);
-                pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, segment);
+                pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, segment);
             }
             ptPvt = text_GetNewLinePos(fd, rs, 1.0, 0);
             ::SetFocus(hWndTextCtrl);
@@ -64,7 +64,7 @@ INT_PTR CALLBACK DlgProcModeLetter(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM l
         break;
 
     case WM_SIZE:
-        ::SetWindowPos(hWndTextCtrl, 0, 0, 0, LOWORD(lParam), HIWORD(lParam), SWP_NOZORDER | SWP_NOMOVE);
+      ::SetWindowPos(hWndTextCtrl, nullptr, 0, 0, LOWORD(lParam), HIWORD(lParam), SWP_NOZORDER | SWP_NOMOVE);
         break;
     }
     return (FALSE);

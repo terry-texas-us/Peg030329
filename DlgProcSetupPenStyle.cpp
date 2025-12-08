@@ -105,7 +105,7 @@ void  SetupPenStyle_DrawEntire(LPDRAWITEMSTRUCT lpDIS, int)
     dc.SetTextColor(RGB(0, 0, 0));
     dc.SetBkColor(RGB(255, 255, 255));
 
-    dc.ExtTextOut(rc.right - 72, rc.top + 2, ETO_CLIPPED, &rc, szBuf, static_cast<UINT>(lstrlen(szBuf)), 0);
+    dc.ExtTextOut(rc.right - 72, rc.top + 2, ETO_CLIPPED, &rc, szBuf, static_cast<UINT>(lstrlen(szBuf)), nullptr);
 
     PENCOLOR nPenColor{pstate.PenColor()};
     PENSTYLE nPenStyle{pstate.PenStyle()};

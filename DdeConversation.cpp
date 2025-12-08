@@ -29,13 +29,13 @@ PCONVERSATIONINFO dde::ConversationFind(HSZ hszTopic)
 
         pCI = pCI->pNext;
     }
-    return 0;
+    return nullptr;
 }
 /// @brief Remove a conversation from our list.
 bool dde::ConversationRemove(HCONV hConv, HSZ hszTopic)
 {
     PCONVERSATIONINFO pCI = ServerInfo.pConvList;
-    PCONVERSATIONINFO pPrevCI = 0;
+  PCONVERSATIONINFO pPrevCI = nullptr;
 
     // Try to find the info in the list
     while (pCI)

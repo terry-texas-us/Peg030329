@@ -28,7 +28,7 @@ INT_PTR CALLBACK DlgProcTrapModify(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
         {
         case IDOK:
             DlgProcTrapModifyDoOK(hDlg);
-            pDoc->UpdateAllViews(NULL, 0L, NULL);
+          pDoc->UpdateAllViews(nullptr, 0L, nullptr);
             [[fallthrough]]; // Intentional fallthrough
 
         case IDCANCEL:
@@ -66,12 +66,12 @@ void DlgProcTrapModifyDoOK(HWND hDlg)
 void DlgProcTrapModifyPolygons()
 {
     POSITION pos = trapsegs.GetHeadPosition();
-    while (pos != 0)
+  while (pos != nullptr)
     {
         CSeg* pSeg = trapsegs.GetNext(pos);
 
         POSITION posPrim = pSeg->GetHeadPosition();
-        while (posPrim != 0)
+        while (posPrim != nullptr)
         {
             CPrim* pPrim = pSeg->GetNext(posPrim);
 

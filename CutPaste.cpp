@@ -15,7 +15,7 @@ void mfGetAll(CFile& f, const CVec& vTrns)
 
     if (!trapsegs.IsEmpty())
     {
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEGS_SAFE, &trapsegs);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE, &trapsegs);
         trapsegs.RemoveAll();
     }
     char* pBuf = new char[CPrim::BUFFER_SIZE];
@@ -29,5 +29,5 @@ void mfGetAll(CFile& f, const CVec& vTrns)
     delete [] pBuf;
 
     trapsegs.Translate(vTrns);
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEGS_SAFE_TRAP, &trapsegs);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE_TRAP, &trapsegs);
 }

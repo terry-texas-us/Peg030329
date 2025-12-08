@@ -32,7 +32,7 @@ CFTAGNAME dde::CFNames [] =
     {CF_PENDATA, 	{const_cast<LPSTR>("PENDATA")}},
     {CF_RIFF,		{const_cast<LPSTR>("RIFF")}},
     {CF_WAVE,		{const_cast<LPSTR>("WAVE")}},
-    {0,				{0}}
+    {0,				{nullptr}}
 };
 // Local data 
 SERVERINFO dde::ServerInfo;
@@ -49,7 +49,7 @@ void dde::Setup(HINSTANCE)
 #pragma warning(disable: 4191)
     ServerInfo.pfnStdCallback = (PFNCALLBACK)MakeProcInstance((FARPROC)StdCallback, hInst);
 #pragma warning(pop)    
-    ServerInfo.pfnCustomCallback = 0;
+    ServerInfo.pfnCustomCallback = nullptr;
 
     DWORD dwFilterFlags = CBF_FAIL_SELFCONNECTIONS;
 
@@ -66,16 +66,16 @@ void dde::Setup(HINSTANCE)
     ServerInfo.hszServiceName = DdeCreateStringHandle(ServerInfo.dwInstance, "PegAEsys", CP_WINANSI);
 
     // Register the name of the service
-    DdeNameService(ServerInfo.dwInstance, ServerInfo.hszServiceName, (HSZ)0, DNS_REGISTER);
+    DdeNameService(ServerInfo.dwInstance, ServerInfo.hszServiceName, (HSZ)nullptr, DNS_REGISTER);
 
     // Add each System!Item pair
-    ItemAdd(SZDDESYS_TOPIC, SZDDESYS_ITEM_FORMATS, SysFormatList, SysReqFormats, 0);
-    ItemAdd(SZDDESYS_TOPIC, SZDDESYS_ITEM_HELP, SysFormatList, SysReqHelp, 0);
-    ItemAdd(SZDDESYS_TOPIC, SZDDESYS_ITEM_SYSITEMS, SysFormatList, SysReqItems, 0);
-    ItemAdd(SZDDESYS_TOPIC, SZDDE_ITEM_ITEMLIST, SysFormatList, SysReqItems, 0);
-    ItemAdd(SZDDESYS_TOPIC, SZDDESYS_ITEM_TOPICS, SysFormatList, SysReqTopics, 0);
+    ItemAdd(SZDDESYS_TOPIC, SZDDESYS_ITEM_FORMATS, SysFormatList, SysReqFormats, nullptr);
+    ItemAdd(SZDDESYS_TOPIC, SZDDESYS_ITEM_HELP, SysFormatList, SysReqHelp, nullptr);
+    ItemAdd(SZDDESYS_TOPIC, SZDDESYS_ITEM_SYSITEMS, SysFormatList, SysReqItems, nullptr);
+    ItemAdd(SZDDESYS_TOPIC, SZDDE_ITEM_ITEMLIST, SysFormatList, SysReqItems, nullptr);
+    ItemAdd(SZDDESYS_TOPIC, SZDDESYS_ITEM_TOPICS, SysFormatList, SysReqTopics, nullptr);
 
-    ItemAdd(SZDDESYS_TOPIC, "Protocols", SysFormatList, SysReqProtocols, 0);
+    ItemAdd(SZDDESYS_TOPIC, "Protocols", SysFormatList, SysReqProtocols, nullptr);
 
     ExecCmdAdd(SZDDESYS_TOPIC, "TracingOpen", ExecTracingOpen, 1, 2);
     ExecCmdAdd(SZDDESYS_TOPIC, "TracingMap", ExecTracingMap, 1, 2);
@@ -84,17 +84,17 @@ void dde::Setup(HINSTANCE)
     // Add each General!Item pair
     DimAngZInfo = ItemAdd("General", "DimAngZ", MyFormats, DimAngZRequest, DimAngZPoke);
     DimLenInfo = ItemAdd("General", "DimLen", MyFormats, DimLenRequest, DimLenPoke);
-    EngAngZInfo = ItemAdd("General", "EngAngZ", MyFormats, EngAngZRequest, 0);
-    EngLenInfo = ItemAdd("General", "EngLen", MyFormats, EngLenRequest, 0);
-    ExtNumInfo = ItemAdd("General", "ExtNum", MyFormats, ExtNumRequest, 0);
-    ExtStrInfo = ItemAdd("General", "ExtStr", MyFormats, ExtStrRequest, 0);
-    RelPosZInfo = ItemAdd("General", "RelPosZ", MyFormats, RelPosZRequest, 0);
-    RelPosYInfo = ItemAdd("General", "RelPosY", MyFormats, RelPosYRequest, 0);
-    RelPosXInfo = ItemAdd("General", "RelPosX", MyFormats, RelPosXRequest, 0);
+    EngAngZInfo = ItemAdd("General", "EngAngZ", MyFormats, EngAngZRequest, nullptr);
+    EngLenInfo = ItemAdd("General", "EngLen", MyFormats, EngLenRequest, nullptr);
+    ExtNumInfo = ItemAdd("General", "ExtNum", MyFormats, ExtNumRequest, nullptr);
+    ExtStrInfo = ItemAdd("General", "ExtStr", MyFormats, ExtStrRequest, nullptr);
+    RelPosZInfo = ItemAdd("General", "RelPosZ", MyFormats, RelPosZRequest, nullptr);
+    RelPosYInfo = ItemAdd("General", "RelPosY", MyFormats, RelPosYRequest, nullptr);
+    RelPosXInfo = ItemAdd("General", "RelPosX", MyFormats, RelPosXRequest, nullptr);
     ScaleInfo = ItemAdd("General", "Scale", MyFormats, ScaleRequest, ScalePoke);
 
     // Add Topic for command execute connections
-    TopicAdd("Commands", 0, 0, 0);
+    TopicAdd("Commands", nullptr, nullptr, nullptr);
 
     // Add each Command!Item pair
     ExecCmdAdd("Commands", "TracingBlank", ExecTracingBlank, 1, 2);
@@ -122,7 +122,7 @@ void dde::Uninitialize()
     PITEMINFO pItem;
 
     // Unregister the service name
-    DdeNameService(ServerInfo.dwInstance, ServerInfo.hszServiceName, 0, DNS_UNREGISTER);
+    DdeNameService(ServerInfo.dwInstance, ServerInfo.hszServiceName, (HSZ)nullptr, DNS_UNREGISTER);
     // Free the name handle
     DdeFreeStringHandle(ServerInfo.dwInstance, ServerInfo.hszServiceName);
 
@@ -131,14 +131,14 @@ void dde::Uninitialize()
     while (pTopic)
     {
         DdeFreeStringHandle(ServerInfo.dwInstance, pTopic->hszTopicName);
-        pTopic->hszTopicName = 0;
+        pTopic->hszTopicName = nullptr;
 
         // Free any item handles owned by topic
         pItem = pTopic->pItemList;
         while (pItem)
         {
             DdeFreeStringHandle(ServerInfo.dwInstance, pItem->hszItemName);
-            pItem->hszItemName = 0;
+            pItem->hszItemName = nullptr;
 
             pItem = pItem->pNext;
         }
@@ -155,14 +155,14 @@ void dde::Uninitialize()
     // Free any proc instances we created
     if (ServerInfo.pfnCustomCallback)
     {
-        ServerInfo.pfnCustomCallback = 0;
+        ServerInfo.pfnCustomCallback = nullptr;
     }
-    ServerInfo.pfnStdCallback = 0;
+    ServerInfo.pfnStdCallback = nullptr;
 }
 // DDE callback function called from DDEML
 HDDEDATA WINAPI dde::StdCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, DWORD dwData1, DWORD dwData2)
 {
-    HDDEDATA hDdeData = 0;
+    HDDEDATA hDdeData = nullptr;
 
     switch (wType)
     {
@@ -197,12 +197,12 @@ HDDEDATA WINAPI dde::StdCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hsz1, H
         [[fallthrough]]; // Fall Through to allow the custom callback a chance
 
     default:
-        if (ServerInfo.pfnCustomCallback != 0)
+        if (ServerInfo.pfnCustomCallback != nullptr)
         {
             return(ServerInfo.pfnCustomCallback(wType, wFmt, hConv, hsz1, hsz2, hData, dwData1, dwData2));
         }
     }
-    return (HDDEDATA)0;
+    return (HDDEDATA)nullptr;
 }
 /// @brief Process a generic callback.
 bool dde::DoCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hszTopic, HSZ hszItem, HDDEDATA hData, HDDEDATA* phReturnData)
@@ -306,7 +306,7 @@ bool dde::DoCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hszTopic, HSZ hszIt
         if (pfnRequest)
             *phReturnData = (*pfnRequest)(wFmt, hszTopic, hszItem);
         else
-            *phReturnData = (HDDEDATA)0;
+            *phReturnData = (HDDEDATA)nullptr;
         break;
 
     default:
@@ -363,7 +363,7 @@ HDDEDATA dde::DoWildConnect(HSZ hszTopic)
 
     int iTopics = 0;
 
-    if (hszTopic == 0)					// Count all the topics we have
+    if (hszTopic == nullptr)					// Count all the topics we have
     {
         pTopic = ServerInfo.pTopicList;
         while (pTopic)
@@ -387,16 +387,16 @@ HDDEDATA dde::DoWildConnect(HSZ hszTopic)
         }
     }
     if (!iTopics)						// No match or no topics at all. No Connect.
-        return (HDDEDATA)0;
+        return (HDDEDATA)nullptr;
 
     // Big enough for all the HSZPAIRS we'll be sending back plus space for a 0 entry on the end
-    hData = DdeCreateDataHandle(ServerInfo.dwInstance, 0, (iTopics + 1) * sizeof(HSZPAIR), 0, 0, 0, 0);
+    hData = DdeCreateDataHandle(ServerInfo.dwInstance, nullptr, (iTopics + 1) * sizeof(HSZPAIR), 0, 0, 0, 0);
 
     if (!hData) 						// Failed to create mem object!
-        return (HDDEDATA)0;
+        return (HDDEDATA)nullptr;
 
     pHszPair = (PHSZPAIR)DdeAccessData(hData, 0);
-    if (hszTopic == 0)		// all the topics (includes the system topic)
+    if (hszTopic == nullptr)		// all the topics (includes the system topic)
     {
         pTopic = ServerInfo.pTopicList;
         while (pTopic)
@@ -413,23 +413,23 @@ HDDEDATA dde::DoWildConnect(HSZ hszTopic)
         pHszPair->hszTopic = hszTopic;
         pHszPair++;
     }
-    pHszPair->hszSvc = 0;				// Terminator on the end
-    pHszPair->hszTopic = 0;
+    pHszPair->hszSvc = nullptr;				// Terminator on the end
+    pHszPair->hszTopic = nullptr;
     DdeUnaccessData(hData);
 
     return hData;
 }
 PEXECCMDFNINFO dde::ExecCmdAdd(const char* pszTopic, const char* pszCmdName, PEXECCMDFN pExecCmdFn, UINT uiMinArgs, UINT uiMaxArgs)
 {
-    PEXECCMDFNINFO pCmd = 0;
+    PEXECCMDFNINFO pCmd = nullptr;
     PEXECCMDFNINFO pHead;
 
     PTOPICINFO pTopic = TopicFind(pszTopic);
 
     if (!pTopic)						// Do Not already have this topic.	We need to add this as a new topic
-        pTopic = TopicAdd(pszTopic, 0, 0, 0);
+      pTopic = TopicAdd(pszTopic, 0, nullptr, 0);
 
-    if (!pTopic) return 0;				// failed
+    if (!pTopic) return nullptr;				// failed
 
     pCmd = ExecCmdFind(pTopic, pszCmdName);
 
@@ -442,7 +442,7 @@ PEXECCMDFNINFO dde::ExecCmdAdd(const char* pszTopic, const char* pszCmdName, PEX
     else
     {	// New command item
         pCmd = (PEXECCMDFNINFO) new char[sizeof(EXECCMDFNINFO)];
-        if (!pCmd) return 0;
+      if (!pCmd) return nullptr;
 
         ::ZeroMemory(pCmd, sizeof(EXECCMDFNINFO));
         pCmd->pszCmdName = const_cast<LPSTR>(pszCmdName);
@@ -483,7 +483,7 @@ bool dde::ExecCmdRemove(LPSTR pszTopic, LPSTR pszCmdName)
     if (!pTopic)						// See if we have this topic
         return false;
 
-    PEXECCMDFNINFO pPrevCmd = 0;
+    PEXECCMDFNINFO pPrevCmd = nullptr;
     PEXECCMDFNINFO pCmd = pTopic->pCmdList;
 
     while (pCmd)
@@ -528,8 +528,7 @@ LPSTR dde::GetCFNameFromId(WORD wFmt, LPSTR lpBuf, size_t iSize)
 // Return a string in CF_TEXT format
 HDDEDATA dde::MakeCFText(UINT wFmt, LPSTR lpszStr, HSZ hszItem)
 {
-    if (wFmt != CF_TEXT)
-        return 0;
+    if (wFmt != CF_TEXT) return nullptr;
 
     return (DdeCreateDataHandle(dwInstance, (LPBYTE)lpszStr, lstrlen(lpszStr) + 1u, 0, hszItem, CF_TEXT, 0));
 }

@@ -23,9 +23,10 @@ HDDEDATA dde::SysReqItems(UINT wFmt, HSZ hszTopic, HSZ hszItem)
     PTOPICINFO pTopic = TopicFind(hszTopic);
 
     if (!pTopic)												// No system topic
-        return 0;
+      return nullptr;
 
-    HDDEDATA hData = DdeCreateDataHandle(ServerInfo.dwInstance, 0, 0, 0, hszItem, wFmt, 0); // Empty data object to fill
+    HDDEDATA hData =
+        DdeCreateDataHandle(ServerInfo.dwInstance, nullptr, 0, 0, hszItem, wFmt, 0);  // Empty data object to fill
     int cbOffset = 0;
     PITEMINFO pItem = pTopic->pItemList;
 
@@ -54,7 +55,7 @@ HDDEDATA dde::SysReqFormats(UINT wFmt, HSZ, HSZ hszItem)
 
     wFormats[0] = 0; 										// Start with an empty list
 
-    DdeCreateDataHandle(ServerInfo.dwInstance, 0, 0, 0, hszItem, wFmt, 0); // Empty data object to fill
+    DdeCreateDataHandle(ServerInfo.dwInstance, nullptr, 0, 0, hszItem, wFmt, 0);  // Empty data object to fill
 
     PTOPICINFO pTopic = ServerInfo.pTopicList;
     while (pTopic)												// Walk the topic list
@@ -85,7 +86,8 @@ HDDEDATA dde::SysReqTopics(UINT wFmt, HSZ, HSZ hszItem)
 {
     int cb;
 
-    HDDEDATA hData = DdeCreateDataHandle(ServerInfo.dwInstance, 0, 0, 0, hszItem, wFmt, 0); // Empty data object to fill
+    HDDEDATA hData =
+        DdeCreateDataHandle(ServerInfo.dwInstance, nullptr, 0, 0, hszItem, wFmt, 0);  // Empty data object to fill
     int cbOffset = 0;
     PTOPICINFO pTopic = ServerInfo.pTopicList;
 

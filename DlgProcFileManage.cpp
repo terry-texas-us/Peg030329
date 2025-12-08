@@ -211,7 +211,7 @@ void DlgProcFileManageDoLayerActive(HWND hDlg)
     {
         CLayer* pLayer = pDoc->LayersGet(strName);
 
-        if (pLayer == 0)
+        if (pLayer == nullptr)
         {
         }
         else
@@ -225,7 +225,7 @@ void DlgProcFileManageDoLayerActive(HWND hDlg)
             else
             {
                 pLayer->SetStateWarm();
-                pDoc->UpdateAllViews(NULL, CPegDoc::HINT_LAYER_SAFE, pLayer);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_LAYER_SAFE, pLayer);
             }
         }
     }
@@ -251,7 +251,7 @@ void DlgProcFileManageDoLayerDelete(HWND hDlg)
             msgWarning(IDS_MSG_LAYER_NO_DELETE_WORK, strName);
         else
         {
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_LAYER_ERASE, pLayer);
+          pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_LAYER_ERASE, pLayer);
             pDoc->LayersRemoveAt(iLayerId);
             ::SendDlgItemMessage(hDlg, IDC_LAY, LB_DELETESTRING, (WPARAM)lrCurSel, 0L);
         }
@@ -277,7 +277,7 @@ void DlgProcFileManageDoLayerHidden(HWND hDlg)
         }
         else
         {
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_LAYER_ERASE, pLayer);
+          pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_LAYER_ERASE, pLayer);
             pLayer->SetStateOff();
         }
     }
@@ -354,7 +354,7 @@ void DlgProcFileManageDoLayerStatic(HWND hDlg)
         else
         {
             pLayer->SetStateCold();
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_LAYER_SAFE, pLayer);
+          pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_LAYER_SAFE, pLayer);
         }
     }
 }
@@ -374,7 +374,7 @@ void DlgProcFileManageDoLayerWork(HWND hDlg)
         CLayer* pLayer = pDoc->LayersGet(strName);
 
         pDoc->WorkLayerSet(pLayer);
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_LAYER_SAFE, pLayer);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_LAYER_SAFE, pLayer);
     }
 }
 
@@ -412,7 +412,7 @@ void DlgProcFileManageDoTracingExclude(HWND hDlg)
     if (lrCurSel != LB_ERR)
     {
         CLayer* pLayer = pDoc->LayersGet(strName);
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_LAYER_ERASE, pLayer);
+      pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_LAYER_ERASE, pLayer);
         pDoc->LayersRemove(strName);
         ::SendDlgItemMessage(hDlg, IDC_TRA, LB_DELETESTRING, (WPARAM)lrCurSel, 0L);
     }
@@ -446,7 +446,7 @@ void DlgProcFileManageDoTracingInclude(HWND hDlg)
     OPENFILENAME of{};
 
     of.lStructSize = sizeof(OPENFILENAME);
-    of.hwndOwner = 0;
+    of.hwndOwner = nullptr;
     of.hInstance = app.GetInstance();
     of.lpstrFilter = szFilter;
     of.nFilterIndex = nFilterIndex;
@@ -466,7 +466,7 @@ void DlgProcFileManageDoTracingInclude(HWND hDlg)
 
         strName = strName.Mid(of.nFileOffset);
 
-        if (pDoc->LayersGet(strName) == 0)
+        if (pDoc->LayersGet(strName) == nullptr)
         {
             if (pDoc->TracingMap(strName))
             {
@@ -567,7 +567,7 @@ void DlgProcFileManageInit(HWND hDlg)
     CBlock* pBlock{};
 
     POSITION pos = pDoc->BlksGetStartPosition();
-    while (pos != NULL)
+    while (pos != nullptr)
     {
         pDoc->BlksGetNextAssoc(pos, strKey, pBlock);
         if (!pBlock->IsAnonymous())
@@ -599,9 +599,9 @@ void DlgProcFileManageDoLayerColor(HWND hDlg)
         int iLayerId = pDoc->LayersLookup(strName);
         CLayer* pLayer = pDoc->LayersGetAt(iLayerId);
 
-        PENCOLOR nPenColor = (PENCOLOR) ::GetDlgItemInt(hDlg, IDC_COLOR_ID, 0, FALSE);
+        PENCOLOR nPenColor = (PENCOLOR)::GetDlgItemInt(hDlg, IDC_COLOR_ID, nullptr, FALSE);
         pLayer->SetPenColor(nPenColor);
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_LAYER_SAFE, pLayer);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_LAYER_SAFE, pLayer);
 
         CPrim::LayerPenColor() = pLayer->PenColor();
         CPrim::LayerPenStyle() = pLayer->PenStyle();

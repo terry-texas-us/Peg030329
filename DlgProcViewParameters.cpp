@@ -30,7 +30,7 @@ INT_PTR CALLBACK DlgProcViewParameters(HWND hDlg, UINT anMsg, WPARAM wParam, LPA
             ::GetDlgItemText(hDlg, IDC_FAR, szBuf, sizeof(szBuf));
             pView->ModelViewSetFarClipDistance(atof(szBuf));
 
-            pView->InvalidateRect(NULL, TRUE);
+            pView->InvalidateRect(nullptr, TRUE);
             [[fallthrough]]; // Intentional fallthrough
 
         case IDCANCEL:

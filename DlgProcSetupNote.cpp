@@ -31,7 +31,7 @@ INT_PTR CALLBACK DlgProcSetupNote(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM) n
         case IDOK:
         {
             CPegView* pView = CPegView::GetActiveView();
-            CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+          CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
             app.SetEditSegBeg(app.CursorPosGet());
 

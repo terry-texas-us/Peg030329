@@ -40,7 +40,7 @@ void Directory_ExamineFile(char* oldfile, char* newfile)
     {
         if (oldfile[i] == oldpathchar) oldfile[i] = pathchar;
     }
-    if (strchr(oldfile, pathchar) != 0)
+    if (strchr(oldfile, pathchar) != nullptr)
     {	// file has some degree of path designation
         if (_access(oldfile, kExistenceOnly) == 0)
         {
@@ -59,7 +59,7 @@ void Directory_ExamineFile(char* oldfile, char* newfile)
     }
     else
     {
-        if (strchr(oldfile, ':') != 0)
+      if (strchr(oldfile, ':') != nullptr)
         {	// path with drive id
             return;
         }

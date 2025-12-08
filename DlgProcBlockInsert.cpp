@@ -75,7 +75,7 @@ INT_PTR CALLBACK DlgProcBlockInsert(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM
         case IDC_PURGE:
             pDoc->BlksRemoveUnused();
             delete ptIns;
-            ptIns = 0;
+            ptIns = nullptr;
             ::EndDialog(hDlg, TRUE);
             return (TRUE);
 
@@ -85,7 +85,7 @@ INT_PTR CALLBACK DlgProcBlockInsert(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM
 
         case IDCANCEL:
             delete ptIns;
-            ptIns = 0;
+          ptIns = nullptr;
             ::EndDialog(hDlg, TRUE);
             return (TRUE);
         }
@@ -103,7 +103,7 @@ void BlockInsertDoOK(HWND hDlg)
 
         CSeg* pSeg = new CSeg(pSegRef);
         pDoc->WorkLayerAddTail(pSeg);
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG, pSeg);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG, pSeg);
     }
 }
 LRESULT BlockInsertGetCurSel(HWND hDlg, int iListId, CString& strTitle)

@@ -41,7 +41,7 @@ UINT_PTR CALLBACK OFNHookProcFileTracing(HWND hDlg, UINT uiMsg, WPARAM wParam, L
             {
                 CLayer* pLayer = pDoc->LayersGet(psz);
 
-                if (pLayer != 0)
+                if (pLayer != nullptr)
                     WndProcPreviewUpdate(hDlg, pLayer);
                 else
                 {
@@ -75,7 +75,7 @@ UINT_PTR CALLBACK OFNHookProcFileTracing(HWND hDlg, UINT uiMsg, WPARAM wParam, L
             CLayer* pLayer = pDoc->WorkLayerGet();
 
             pDoc->TracingLoadLayer(szFilePath, pLayer);
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_LAYER_SAFE, pLayer);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_LAYER_SAFE, pLayer);
             return (TRUE);
         }
 

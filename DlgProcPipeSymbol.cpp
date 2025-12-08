@@ -42,10 +42,10 @@ void DlgProcPipeSymbolInit(HWND hDlg)
 
     char* context = nullptr;
     pName = strtok_s(szNames, "\t", &context);
-    while (pName != 0)
+    while (pName != nullptr)
     {
         ::SendDlgItemMessage(hDlg, IDC_LIST, LB_ADDSTRING, 0, (LPARAM)(LPCSTR)pName);
-        pName = strtok_s(0, "\t", &context);
+        pName = strtok_s(nullptr, "\t", &context);
     }
     ::SendDlgItemMessage(hDlg, IDC_LIST, LB_SETCURSEL, pipe::wCurSymId, 0L);
 }

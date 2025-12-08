@@ -29,7 +29,7 @@ INT_PTR CALLBACK DlgProcSetupHatch(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
         {
         case IDOK:
             pstate.SetPolygonIntStyle(POLYGON_HATCH);
-            nStyleId = short(GetDlgItemInt(hDlg, IDC_FIL_AREA_HAT_ID, 0, FALSE));
+          nStyleId = short(GetDlgItemInt(hDlg, IDC_FIL_AREA_HAT_ID, nullptr, FALSE));
             pstate.SetPolygonIntStyleId(nStyleId);
             hatch::dXAxRefVecScal = std::max(0.01, DlgBoxGetItemDouble(hDlg, IDC_FIL_AREA_HAT_X_SCAL));
             hatch::dYAxRefVecScal = std::max(0.01, DlgBoxGetItemDouble(hDlg, IDC_FIL_AREA_HAT_Y_SCAL));
