@@ -209,7 +209,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
           vXAx *= .6;
           CRefSys rs(pt[1], vXAx, vYAx);
 
-          if (strlen(annotate::szCurTxt) > 0) {
+          if (_tcslen(annotate::szCurTxt) > 0) {
             int iPrimState = pstate.Save();
             pstate.SetPenColor(2);
 
@@ -408,7 +408,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
 
             int iPrimState = pstate.Save();
 
-            if (strlen(annotate::szCurTxt) > 0) {
+            if (_tcslen(annotate::szCurTxt) > 0) {
               double dAng = pLine->GetAngAboutZAx();
               if (dAng > .25 * TWOPI && dAng < .75 * TWOPI) dAng += PI;
 

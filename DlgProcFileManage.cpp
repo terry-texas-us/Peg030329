@@ -89,7 +89,7 @@ INT_PTR CALLBACK DlgProcFileManage(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM l
       case IDC_LAYNEW:
         szLayerName[0] = 0;
         if (pGetLayerName()) {
-          if (strlen(szLayerName) > 0) {
+          if (_tcslen(szLayerName) > 0) {
             CLayer* pLayer = new CLayer(szLayerName);
             pDoc->LayersAdd(pLayer);
             ::SendDlgItemMessage(hDlg, IDC_LAY, LB_ADDSTRING, 0, (LPARAM)(LPCSTR)szLayerName);
@@ -283,7 +283,7 @@ void DlgProcFileManageDoLayerRename(HWND hDlg) {
     else {
       strcpy_s(szLayerName, sizeof(szLayerName), strName.GetString());
       if (pGetLayerName()) {
-        if (strlen(szLayerName) > 0) {
+        if (_tcslen(szLayerName) > 0) {
           strName = szLayerName;
           pLayer->SetName(strName);
 

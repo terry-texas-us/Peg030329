@@ -74,7 +74,7 @@ INT_PTR CALLBACK DlgProcSetupNote(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM) n
             fd.TextFontSet(szBuf);
 
             WORD wPrec =
-                (strcmp(szBuf, "Simplex.psf") != 0) ? CFontDef::PREC_TRUETYPEFONT : CFontDef::PREC_PEGSTROKEFONT;
+                (_tcscmp(szBuf, _T("Simplex.psf")) != 0) ? CFontDef::PREC_TRUETYPEFONT : CFontDef::PREC_PEGSTROKEFONT;
             fd.TextPrecSet(wPrec);
           }
           pstate.SetFontDef(pDC, fd);

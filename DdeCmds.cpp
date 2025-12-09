@@ -41,7 +41,7 @@ bool dde::ExecNoteHT(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
 bool dde::ExecFill(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
   TCHAR szBuf[8]{};
   strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
-  pstate.SetPolygonIntStyleId(static_cast<short>(atoi(szBuf)));
+  pstate.SetPolygonIntStyleId(static_cast<short>(_ttoi(szBuf)));
   return true;
 }
 ///<summary>Sets the Scale.</summary>
@@ -140,7 +140,7 @@ bool dde::ExecGotoPoint(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
 
   strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 
-  int iStakeId = atoi(szBuf);
+  int iStakeId = _ttoi(szBuf);
   app.CursorPosSet(app.HomePointGet(iStakeId));
 
   return true;
@@ -151,7 +151,7 @@ bool dde::ExecPen(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
 
   strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 
-  pstate.SetPenColor(PENCOLOR(atoi(szBuf)));
+  pstate.SetPenColor(PENCOLOR(_ttoi(szBuf)));
   app.StatusLineDisplay(Pen);
 
   return true;
@@ -162,7 +162,7 @@ bool dde::ExecLine(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
 
   strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 
-  pstate.SetPenStyle(PENSTYLE(atoi(szBuf)));
+  pstate.SetPenStyle(PENSTYLE(_ttoi(szBuf)));
   app.StatusLineDisplay(Line);
 
   return true;
@@ -196,7 +196,7 @@ bool dde::ExecSend(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
   while (*pIdx != 0) {
     if (*pIdx == '{') {
       *pIdx++;
-      int iVkValue = atoi(pIdx);
+      int iVkValue = _ttoi(pIdx);
       ::PostMessage(hWndTarget, WM_KEYDOWN, static_cast<WPARAM>(iVkValue), 0L);
       while ((*pIdx != 0) && (*pIdx != '}')) pIdx++;
     } else {
@@ -212,7 +212,7 @@ bool dde::ExecSetPoint(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
 
   strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 
-  int iStakeId = atoi(szBuf);
+  int iStakeId = _ttoi(szBuf);
 
   app.HomePointSave(iStakeId, app.CursorPosGet());
 

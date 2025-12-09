@@ -13,7 +13,7 @@ void Path_UnquoteSpaces(CString& strPathName) {
 
   TCHAR* pPathName = new TCHAR[MAX_PATH];
   strcpy_s(pPathName, MAX_PATH, strPathName);
-  size_t n = strlen(pPathName) - 1;
+  size_t n = _tcslen(pPathName) - 1;
   while (n != 0 && pPathName[n] != '\\') { n--; }
   pPathName[n] = 0;
   strPathName = &pPathName[1];
@@ -33,10 +33,10 @@ void Directory_ExamineFile(TCHAR* oldfile, TCHAR* newfile) {
   static TCHAR oldpathchar = '/';
 
   // replace path characters, if present, with proper ones for platform
-  for (int i = 0; i < int(strlen(oldfile)); i++) {
+  for (int i = 0; i < int(_tcslen(oldfile)); i++) {
     if (oldfile[i] == oldpathchar) oldfile[i] = pathchar;
   }
-  if (strchr(oldfile, pathchar) != nullptr) {  // file has some degree of path designation
+  if (_tcschr(oldfile, pathchar) != nullptr) {  // file has some degree of path designation
     if (_access(oldfile, kExistenceOnly) == 0) {
       strcpy_s(newfile, sizeof(newfile), oldfile);
       return;
@@ -50,7 +50,7 @@ void Directory_ExamineFile(TCHAR* oldfile, TCHAR* newfile) {
   if (_access(oldfile, kExistenceOnly) == 0) {  // its in current diretory
     return;
   } else {
-    if (strchr(oldfile, ':') != nullptr) {  // path with drive id
+    if (_tcschr(oldfile, ':') != nullptr) {  // path with drive id
       return;
     }
     TCHAR* envptr = nullptr;
@@ -67,7 +67,7 @@ void Directory_ExamineFile(TCHAR* oldfile, TCHAR* newfile) {
       *cptr = 0;
       strcpy_s(testpath, sizeof(testpath), envptr);
       *cptr = holdch; /* put it back */
-      int iTest = (int)strlen(testpath);
+      int iTest = (int)_tcslen(testpath);
       if (testpath[iTest - 1] != pathchar) { /* append / or \ */
         testpath[iTest] = pathchar;
         testpath[iTest + 1] = 0;

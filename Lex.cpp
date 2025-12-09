@@ -183,7 +183,7 @@ void lex::ConvertValTyp(int aiTyp, int aiTypReq, long* alDef, void* apVal) {
   long* piVal = (long*)apVal;
 
   if (aiTyp == TOK_STRING) {
-    char szVal[256]{};
+    TCHAR szVal[256]{};
 
     strcpy_s(szVal, sizeof(szVal), (char*)apVal);
     if (aiTypReq == TOK_INTEGER) {
@@ -478,7 +478,7 @@ void lex::Parse(const char* szLine) {
       case TOK_INTEGER:
         iValLoc[iToks] = iValsCount;
         lValues[iValsCount++] = MAKELONG(1, 1);
-        lValues[iValsCount++] = atoi(szTok);
+        lValues[iValsCount++] = _ttoi(szTok);
         break;
 
       case TOK_REAL:

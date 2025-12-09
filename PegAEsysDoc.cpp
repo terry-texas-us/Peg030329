@@ -412,7 +412,7 @@ void CPegDoc::AddTextBlock(TCHAR* pszText) {
   TCHAR* context = nullptr;
   TCHAR* pText = strtok_s(pszText, "\r", &context);
   while (pText != 0) {
-    if (strlen(pText) > 0) {
+    if (_tcslen(pText) > 0) {
       CSeg* pSeg = new CSeg(new CPrimText(fd, rs, pText));
       WorkLayerAddTail(pSeg);
       UpdateAllViews(NULL, HINT_SEG, pSeg);
@@ -1819,8 +1819,8 @@ void CPegDoc::OnPensTranslate() {
 
       while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0) {
         TCHAR* context = nullptr;
-        pCol[w] = PENCOLOR(atoi(strtok_s(pBuf, ",", &context)));
-        pColNew[w++] = PENCOLOR(atoi(strtok_s(0, "\n", &context)));
+        pCol[w] = PENCOLOR(_ttoi(strtok_s(pBuf, ",", &context)));
+        pColNew[w++] = PENCOLOR(_ttoi(strtok_s(0, "\n", &context)));
       }
       CPegDoc::GetDoc()->PenTranslation(wCols, pColNew, pCol);
 

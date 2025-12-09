@@ -174,9 +174,9 @@ void CDlgViewZoom::OnBnClickedMoreless() {
     CRect rcDef;
 
     GetDlgItem(IDC_LESS_AREA)->GetWindowRect(&rcDef);
-    SetWindowPos(nullptr, 0, 0, atoi(szBuf), rcDef.Height(), SWP_NOZORDER | SWP_NOMOVE);
+    SetWindowPos(nullptr, 0, 0, _ttoi(szBuf), rcDef.Height(), SWP_NOZORDER | SWP_NOMOVE);
   } else {
-    SetWindowPos(nullptr, 0, 0, atoi(szBuf), atoi(szBuf + 6), SWP_NOZORDER | SWP_NOMOVE);
+    SetWindowPos(nullptr, 0, 0, _ttoi(szBuf), _ttoi(szBuf + 6), SWP_NOZORDER | SWP_NOMOVE);
   }
   bKeyplan = !bKeyplan;
   GetDlgItem(IDC_KEYPLAN_AREA)->EnableWindow(bKeyplan);
@@ -263,7 +263,7 @@ void CDlgViewZoom::Refresh() {
 
     CRect rcLessArea;
     GetDlgItem(IDC_LESS_AREA)->GetWindowRect(&rcLessArea);
-    SetWindowPos(nullptr, 0, 0, atoi(szBuf), rcLessArea.Height(), SWP_NOZORDER | SWP_NOMOVE);
+    SetWindowPos(nullptr, 0, 0, _ttoi(szBuf), rcLessArea.Height(), SWP_NOZORDER | SWP_NOMOVE);
   }
 }
 void CDlgViewZoom::OnEnChangeRatio() {

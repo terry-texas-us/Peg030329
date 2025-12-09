@@ -707,12 +707,12 @@ void CPegApp::PenStylesLoad(const CString& strFileName) {
     double* pLen = new double[wLensMax];
     TCHAR* context = nullptr;
     while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0) {
-      int iId = atoi(strtok_s(pBuf, "=", &context));
+      int iId = _ttoi(strtok_s(pBuf, "=", &context));
       strName = strtok_s(0, ",", &context);
       strDescription = strtok_s(0, "\n", &context);
       fl.ReadString(pBuf, sizeof(pBuf) - 1);
 
-      WORD wLens = WORD(atoi(strtok_s(pBuf, ",\n", &context)));
+      WORD wLens = WORD(_ttoi(strtok_s(pBuf, ",\n", &context)));
 
       if (wLens > wLensMax) {
         delete[] pLen;
@@ -767,11 +767,11 @@ void CPegApp::PenColorsLoad(const CString& strFileName) {
       pRed = strtok_s(0, ",", &context);
       pGreen = strtok_s(0, ",", &context);
       pBlue = strtok_s(0, ",", &context);
-      crHotCols[atoi(pId)] = RGB(atoi(pRed), atoi(pGreen), atoi(pBlue));
+      crHotCols[_ttoi(pId)] = RGB(_ttoi(pRed), _ttoi(pGreen), _ttoi(pBlue));
       pRed = strtok_s(0, ",", &context);
       pGreen = strtok_s(0, ",", &context);
       pBlue = strtok_s(0, "\n", &context);
-      crWarmCols[atoi(pId)] = RGB(atoi(pRed), atoi(pGreen), atoi(pBlue));
+      crWarmCols[_ttoi(pId)] = RGB(_ttoi(pRed), _ttoi(pGreen), _ttoi(pBlue));
     }
   }
 }
@@ -1067,7 +1067,7 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli) const {
     if (sli == All || sli == DimLen) {  // print DimLen
       rc.SetRect(73 * tm.tmAveCharWidth, rcClient.top, 90 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
       UnitsString_FormatLength(szBuf, sizeof(szBuf), GetUnits(), GetDimLen());
-      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT)strlen(szBuf), 0);
+      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT)_tcslen(szBuf), 0);
     }
     if (sli == All || sli == DimAng) {  // print DimAngle
       rc.SetRect(92 * tm.tmAveCharWidth, rcClient.top, 107 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
