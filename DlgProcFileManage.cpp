@@ -211,7 +211,7 @@ void DlgProcFileManageDoLayerActive(HWND hDlg) {
 
 // Selected layer is deleted.
 // Hot layer must be warm'ed before it may be deleted.
-// Layer "0" may never be deleted.
+// Layer `0` may never be deleted.
 void DlgProcFileManageDoLayerDelete(HWND hDlg) {
   CPegDoc* pDoc = CPegDoc::GetDoc();
 
@@ -281,7 +281,7 @@ void DlgProcFileManageDoLayerRename(HWND hDlg) {
     if (iLayerId == 0)
       msgWarning(IDS_MSG_LAYER_NO_RENAME_0);
     else {
-      strcpy_s(szLayerName, sizeof(szLayerName), strName.GetString());
+      _tcscpy_s(szLayerName, sizeof(szLayerName), strName.GetString());
       if (pGetLayerName()) {
         if (_tcslen(szLayerName) > 0) {
           strName = szLayerName;
@@ -397,9 +397,9 @@ void DlgProcFileManageDoTracingInclude(HWND hDlg) {
   of.lpstrFile = new TCHAR[MAX_PATH];
   of.lpstrFile[0] = 0;
   of.nMaxFile = MAX_PATH;
-  of.lpstrTitle = "Include Tracing";
+  of.lpstrTitle = _T("Include Tracing");
   of.Flags = OFN_HIDEREADONLY;
-  of.lpstrDefExt = "tra";
+  of.lpstrDefExt = _T("tra");
 
   if (GetOpenFileName(&of)) {
     nFilterIndex = of.nFilterIndex;
@@ -466,7 +466,7 @@ void DlgProcFileManageInit(HWND hDlg) {
   ::GetWindowText(hDlg, szBuf, MAX_PATH);
 
   CString strName = szBuf;
-  strName += " - ";
+  strName += _T(" - ");
   strName += pDoc->GetPathName();
   ::SetWindowText(hDlg, strName);
 

@@ -98,11 +98,11 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
 
           iEndCapId = (wPrvKeyDwn == 0) ? 1 : -1;  // 1 (start) and -1 (end)
 
-          std::string strMes("Cross sectional dimension (Width by Depth) is ");
+          std::string strMes(_T("Cross sectional dimension (Width by Depth) is "));
           UnitsString_FormatLength(szLen, sizeof(szLen), std::max(app.GetUnits(), Inches), dWid[1], 0, 2);
           strMes += szLen;
           UnitsString_FormatLength(szWid, sizeof(szWid), std::max(app.GetUnits(), Inches), dDep[1], 0, 2);
-          strMes += " by ";
+          strMes += _T(" by ");
           strMes += szWid;
           msgSetPaneText(strMes);
           app.CursorPosSet(ptPrv);
@@ -289,7 +289,7 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
         break;
 
       case ID_OP7:  //	Search for an endcap in proximity of current location
-        // dialog to "Select direction", 'Up.Down.'
+        // dialog to `Select direction`, `Up.Down.`
         if (iRet >= 0) {
           if (pEndCapMark == 0)  // No end-cap consideration
           {
@@ -723,11 +723,11 @@ void lpd::GenSizeNote(CPnt arPt, double adAng, double adWid,
   TCHAR pSize[16]{};
 
   UnitsString_FormatLength(pSize, sizeof(pSize), std::max(app.GetUnits(), Inches), adWid, 0, 2);
-  strcpy_s(pNote, sizeof(pNote), string_TrimLeadingSpace(pSize));
-  strcat_s(pNote, sizeof(pNote), "/");
+  _tcscpy_s(pNote, sizeof(pNote), string_TrimLeadingSpace(pSize));
+  _tcscat_s(pNote, sizeof(pNote), _T("/"));
 
   UnitsString_FormatLength(pSize, sizeof(pSize), std::max(app.GetUnits(), Inches), adDep, 0, 2);
-  strcat_s(pNote, sizeof(pNote), string_TrimLeadingSpace(pSize));
+  _tcscat_s(pNote, sizeof(pNote), string_TrimLeadingSpace(pSize));
 
   CPegView* pView = CPegView::GetActiveView();
   CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();

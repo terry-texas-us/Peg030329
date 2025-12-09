@@ -54,7 +54,7 @@ const CPrimPolyline& CPrimPolyline::operator=(const CPrimPolyline& other) {
 }
 
 void CPrimPolyline::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const {
-  tvAddItem(hTree, hParent, "<Polyline>", (CObject*)this);
+  tvAddItem(hTree, hParent, _T("<Polyline>"), (CObject*)this);
 }
 
 CPrim*& CPrimPolyline::Copy(CPrim*& pPrim) const {
@@ -84,7 +84,7 @@ void CPrimPolyline::Display(CPegView* pView, CDC* pDC) const {
   }
 }
 void CPrimPolyline::DisRep(const CPnt& ptPic) const {
-  std::string strRep = "<Polyline Edge> ";
+  std::string strRep = _T("<Polyline Edge> ");
 
   WORD wPts = WORD(m_pts.GetSize());
 
@@ -107,7 +107,7 @@ void CPrimPolyline::DisRep(const CPnt& ptPic) const {
     TCHAR szBuf[24]{};
     UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), dLen);
     strRep += szBuf;
-    sprintf_s(szBuf, sizeof(szBuf), " @ %6.2f degrees", dAng / RADIAN);
+    sprintf_s(szBuf, sizeof(szBuf), _T(" @ %6.2f degrees"), dAng / RADIAN);
     strRep += szBuf;
     msgSetPaneText(strRep);
 
@@ -120,14 +120,14 @@ void CPrimPolyline::DisRep(const CPnt& ptPic) const {
 void CPrimPolyline::FormatGeometry(CString& str) const {
   std::stringstream ss;
 
-  for (WORD w = 0; w < m_pts.GetSize(); w++) { ss << "Point;" << m_pts[w].ToStdString() << "\n"; }
+  for (WORD w = 0; w < m_pts.GetSize(); w++) { ss << _T("Point;") << m_pts[w].ToStdString() << _T("\n"); }
   str = ss.str().c_str();
 }
 void CPrimPolyline::FormatExtra(CString& str) const {
   std::stringstream ss;
-  ss << "Color;" << StdFormatPenColor() << "\t"
-     << "Style;" << StdFormatPenStyle() << "\t"
-     << "Points;" << m_pts.GetSize();
+  ss << _T("Color;") << StdFormatPenColor() << _T("\t")
+     << _T("Style;") << StdFormatPenStyle() << _T("\t")
+     << _T("Points;") << m_pts.GetSize();
 
   str = ss.str().c_str();
 }

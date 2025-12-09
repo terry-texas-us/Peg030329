@@ -20,8 +20,8 @@ bool ParLines_CleanCorners(CLine* ln1, CLine* ln2) {
 }
 ///<summary>Generates coordinate sets for parallel lines.</summary>
 // Notes:	Eccentricity is a function of the width of the line.
-//			"Left" is dEcc * dWid to the left of the lead and
-//			"right" is dWid right of left.
+//			`Left` is dEcc * dWid to the left of the lead and
+//			`right` is dWid right of left.
 // Parameters:	dEcc	eccentricity of lines to lead line (see note)
 //				dWid	distance between lines
 //				lnLead	lead line

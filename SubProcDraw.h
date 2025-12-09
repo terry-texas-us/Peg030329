@@ -65,7 +65,7 @@ class CDrawHandler {
   /// @param cursorPosition The current cursor position supplied by the caller; used as the next point for the arc or as the rubber-band position while selecting points.
   void HandleOp8(CPnt cursorPosition);
 
-  /// @brief Checks the current document for available blocks and, if any exist, opens the modal "Insert Block" dialog.
+  /// @brief Checks the current document for available blocks and, if any exist, opens the modal `Insert Block` dialog.
   /// @param hwnd Handle to the owner/parent window for the dialog; used as the dialog's parent when displaying the modal dialog.
   void HandleOp9(HWND hwnd);
 

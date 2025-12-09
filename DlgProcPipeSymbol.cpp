@@ -37,10 +37,10 @@ void DlgProcPipeSymbolInit(HWND hDlg) {
   ::LoadString(app.GetInstance(), IDS_SUBPROC_PIPE_SYMBOL_NAMES, szNames, 256);
 
   TCHAR* context = nullptr;
-  pName = strtok_s(szNames, "\t", &context);
+  pName = _tcstok_s(szNames, _T("\t"), &context);
   while (pName != nullptr) {
     ::SendDlgItemMessage(hDlg, IDC_LIST, LB_ADDSTRING, 0, (LPARAM)(LPCSTR)pName);
-    pName = strtok_s(nullptr, "\t", &context);
+    pName = _tcstok_s(nullptr, _T("\t"), &context);
   }
   ::SendDlgItemMessage(hDlg, IDC_LIST, LB_SETCURSEL, pipe::wCurSymId, 0L);
 }

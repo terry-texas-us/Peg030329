@@ -92,7 +92,7 @@ void SubProcDraw2State::UpdateIntersections(CPnt& intersectionPoint) {
 
 void SubProcDraw2State::HandleSetDistanceBetweenLines() {
   CDlgSetLength SetLengthDialog;
-  SetLengthDialog.m_strTitle = "Set Distance Between Lines";
+  SetLengthDialog.m_strTitle = _T("Set Distance Between Lines");
   SetLengthDialog.m_dLength = distanceBetweenLines / app.GetScale();
   if (SetLengthDialog.DoModal() == IDOK) { distanceBetweenLines = SetLengthDialog.m_dLength * app.GetScale(); }
 }

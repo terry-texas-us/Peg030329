@@ -19,7 +19,7 @@ double CVaxFloat::Convert() const {
 
   if (bExp == 0) {
     if (bSign != 0) {  // floating-reserved operand (error condition)
-      throw "CVaxFloat: Conversion to MS - Reserve operand fault";
+      throw _T("CVaxFloat: Conversion to MS - Reserve operand fault");
     }
   } else if (bExp == 1) {  // this is a valid vax exponent but because the vax places the hidden
                            // leading 1 to the right of the binary point we have a problem ..

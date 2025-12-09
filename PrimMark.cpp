@@ -56,7 +56,7 @@ const CPrimMark& CPrimMark::operator=(const CPrimMark& src) {
   return (*this);
 }
 void CPrimMark::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const {
-  tvAddItem(hTree, hParent, "<Mark>", (CObject*)this);
+  tvAddItem(hTree, hParent, _T("<Mark>"), (CObject*)this);
 }
 CPrim*& CPrimMark::Copy(CPrim*& pPrim) const {
   pPrim = new CPrimMark(*this);
@@ -146,19 +146,19 @@ void CPrimMark::Display(CPegView* view, CDC* context) const {
 
 void CPrimMark::DisRep(const CPnt&) const {
   std::stringstream ss;
-  ss << "<Mark>" << " Color: " << StdFormatPenColor() << " Style: " << std::setw(3) << std::setfill('0')
+  ss << _T("<Mark>") << _T(" Color: ") << StdFormatPenColor() << _T(" Style: ") << std::setw(3) << std::setfill('0')
      << m_nMarkStyle;
   std::string str = ss.str();
   msgSetPaneText(str);
 }
 void CPrimMark::FormatExtra(CString& str) const {
   std::stringstream ss;
-  ss << "Color;" << StdFormatPenColor() << "\t" << "Style;" << std::setw(3) << std::setfill('0') << m_nMarkStyle;
+  ss << _T("Color;") << StdFormatPenColor() << _T("\t") << _T("Style;") << std::setw(3) << std::setfill('0') << m_nMarkStyle;
   str = ss.str().c_str();
 }
 void CPrimMark::FormatGeometry(CString& str) const {
   std::stringstream ss;
-  ss << "Point;" << m_pt.ToStdString();
+  ss << _T("Point;") << m_pt.ToStdString();
   str = ss.str().c_str();
 }
 CPnt CPrimMark::GetCtrlPt() const {

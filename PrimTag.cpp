@@ -25,7 +25,7 @@ const CPrimTag& CPrimTag::operator=(const CPrimTag& src) {
 }
 
 void CPrimTag::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const {
-  tvAddItem(hTree, hParent, "<Tag>", (CObject*)this);
+  tvAddItem(hTree, hParent, _T("<Tag>"), (CObject*)this);
 }
 CPrim*& CPrimTag::Copy(CPrim*& pPrim) const {
   pPrim = new CPrimTag(*this);
@@ -42,22 +42,22 @@ void CPrimTag::Display(CPegView*, CDC* pDC) const {
   }
 }
 void CPrimTag::DisRep(const CPnt&) const {
-  std::string str = "<Tag>";
-  str += " Color: " + StdFormatPenColor();
-  str += " Style: " + StdFormatPenStyle();
+  std::string str = _T("<Tag>");
+  str += _T(" Color: ") + StdFormatPenColor();
+  str += _T(" Style: ") + StdFormatPenStyle();
   msgSetPaneText(str);
 }
 void CPrimTag::FormatExtra(CString& str) const {
   std::stringstream ss;
 
-  ss << "Color;" << StdFormatPenColor() << "\t"
-     << "Style;" << StdFormatPenStyle();
+  ss << _T("Color;") << StdFormatPenColor() << _T("\t")
+     << _T("Style;") << StdFormatPenStyle();
 
   str = ss.str().c_str();
 }
 void CPrimTag::FormatGeometry(CString& str) const {
   std::stringstream ss;
-  ss << "Point; " << m_Pt.ToStdString();
+  ss << _T("Point; ") << m_Pt.ToStdString();
   str = ss.str().c_str();
 }
 CPnt CPrimTag::GetCtrlPt() const {

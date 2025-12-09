@@ -32,7 +32,7 @@ void CFilePeg::Load(CPegDoc* pDoc) {
   ReadEntitiesSection(pDoc);
 }
 void CFilePeg::ReadBlocksSection(CPegDoc* pDoc) {
-  if (FilePeg_ReadWord(*this) != SECTION_BLOCKS) throw "Exception CFilePeg: Expecting sentinel SECTION_BLOCKS.";
+  if (FilePeg_ReadWord(*this) != SECTION_BLOCKS) throw _T("Exception CFilePeg: Expecting sentinel SECTION_BLOCKS.");
 
   CPrim* pPrim;
   CString strName;
@@ -56,10 +56,10 @@ void CFilePeg::ReadBlocksSection(CPegDoc* pDoc) {
       pBlock->AddTail(pPrim);
     }
   }
-  if (FilePeg_ReadWord(*this) != SECTION_END) throw "Exception CFilePeg: Expecting sentinel SECTION_END.";
+  if (FilePeg_ReadWord(*this) != SECTION_END) throw _T("Exception CFilePeg: Expecting sentinel SECTION_END.");
 }
 void CFilePeg::ReadEntitiesSection(CPegDoc* pDoc) {
-  if (FilePeg_ReadWord(*this) != SECTION_SEGMENTS) throw "Exception CFilePeg: Expecting sentinel SECTION_SEGMENTS.";
+  if (FilePeg_ReadWord(*this) != SECTION_SEGMENTS) throw _T("Exception CFilePeg: Expecting sentinel SECTION_SEGMENTS.");
 
   CPrim* pPrim;
 
@@ -85,17 +85,17 @@ void CFilePeg::ReadEntitiesSection(CPegDoc* pDoc) {
     } else
       pDoc->TracingLoadLayer(pLayer->GetName(), pLayer);
   }
-  if (FilePeg_ReadWord(*this) != SECTION_END) throw "Exception CFilePeg: Expecting sentinel SECTION_END.";
+  if (FilePeg_ReadWord(*this) != SECTION_END) throw _T("Exception CFilePeg: Expecting sentinel SECTION_END.");
 }
 void CFilePeg::ReadHeaderSection(CPegDoc*) {
-  if (FilePeg_ReadWord(*this) != SECTION_HEADER) throw "Exception CFilePeg: Expecting sentinel SECTION_HEADER.";
+  if (FilePeg_ReadWord(*this) != SECTION_HEADER) throw _T("Exception CFilePeg: Expecting sentinel SECTION_HEADER.");
 
   // 	with addition of info here will loop key-value pairs till SECTION_END sentinel
 
-  if (FilePeg_ReadWord(*this) != SECTION_END) throw "Exception CFilePeg: Expecting sentinel SECTION_END.";
+  if (FilePeg_ReadWord(*this) != SECTION_END) throw _T("Exception CFilePeg: Expecting sentinel SECTION_END.");
 }
 void CFilePeg::ReadLayerTable(CPegDoc* pDoc) {
-  if (FilePeg_ReadWord(*this) != TABLE_LAYER) throw "Exception CFilePeg: Expecting sentinel TABLE_LAYER.";
+  if (FilePeg_ReadWord(*this) != TABLE_LAYER) throw _T("Exception CFilePeg: Expecting sentinel TABLE_LAYER.");
 
   CString strName;
   CString strPenStyleName;
@@ -111,7 +111,7 @@ void CFilePeg::ReadLayerTable(CPegDoc* pDoc) {
 
     if ((wStateFlgs & CLayer::STATE_FLG_INTERNAL) != CLayer::STATE_FLG_INTERNAL) {
       // HACK is this correct
-      if (strName.Find('.') == -1) strName += ".jb1";
+      if (strName.Find('.') == -1) strName += _T(".jb1");
     }
     PENCOLOR nPenColor = PENCOLOR(FilePeg_ReadWord(*this));
     FilePeg_ReadString(*this, strPenStyleName);
@@ -128,10 +128,10 @@ void CFilePeg::ReadLayerTable(CPegDoc* pDoc) {
       if (pLayer->IsHot()) pDoc->WorkLayerSet(pLayer);
     }
   }
-  if (FilePeg_ReadWord(*this) != TABLE_END) throw "Exception CFilePeg: Expecting sentinel TABLE_END.";
+  if (FilePeg_ReadWord(*this) != TABLE_END) throw _T("Exception CFilePeg: Expecting sentinel TABLE_END.");
 }
 void CFilePeg::ReadLnTypsTable(CPegDoc* pDoc) {
-  if (FilePeg_ReadWord(*this) != TABLE_LTYPE) throw "Exception CFilePeg: Expecting sentinel TABLE_LTYPE.";
+  if (FilePeg_ReadWord(*this) != TABLE_LTYPE) throw _T("Exception CFilePeg: Expecting sentinel TABLE_LTYPE.");
 
   CString strName;
   CString strDescr;
@@ -159,23 +159,23 @@ void CFilePeg::ReadLnTypsTable(CPegDoc* pDoc) {
   }
   delete[] dDash;
 
-  if (FilePeg_ReadWord(*this) != TABLE_END) throw "Exception CFilePeg: Expecting sentinel TABLE_END.";
+  if (FilePeg_ReadWord(*this) != TABLE_END) throw _T("Exception CFilePeg: Expecting sentinel TABLE_END.");
 }
 void CFilePeg::ReadTablesSection(CPegDoc* pDoc) {
-  if (FilePeg_ReadWord(*this) != SECTION_TABLES) throw "Exception CFilePeg: Expecting sentinel SECTION_TABLES.";
+  if (FilePeg_ReadWord(*this) != SECTION_TABLES) throw _T("Exception CFilePeg: Expecting sentinel SECTION_TABLES.");
 
   ReadVPortTable(pDoc);
   ReadLnTypsTable(pDoc);
   ReadLayerTable(pDoc);
 
-  if (FilePeg_ReadWord(*this) != SECTION_END) throw "Exception CFilePeg: Expecting sentinel SECTION_END.";
+  if (FilePeg_ReadWord(*this) != SECTION_END) throw _T("Exception CFilePeg: Expecting sentinel SECTION_END.");
 }
 void CFilePeg::ReadVPortTable(CPegDoc*) {
-  if (FilePeg_ReadWord(*this) != TABLE_VPORT) throw "Exception CFilePeg: Expecting sentinel TABLE_VPORT.";
+  if (FilePeg_ReadWord(*this) != TABLE_VPORT) throw _T("Exception CFilePeg: Expecting sentinel TABLE_VPORT.");
 
   FilePeg_ReadWord(*this);
 
-  if (FilePeg_ReadWord(*this) != TABLE_END) throw "Exception CFilePeg: Expecting sentinel TABLE_END.";
+  if (FilePeg_ReadWord(*this) != TABLE_END) throw _T("Exception CFilePeg: Expecting sentinel TABLE_END.");
 }
 void CFilePeg::Unload(CPegDoc* pDoc) {
   CFile::SetLength(0);
@@ -185,7 +185,7 @@ void CFilePeg::Unload(CPegDoc* pDoc) {
   WriteTablesSection(pDoc);
   WriteBlocksSection(pDoc);
   WriteEntitiesSection(pDoc);
-  FilePeg_WriteString(*this, "EOF");
+  FilePeg_WriteString(*this, _T("EOF"));
 
   CFile::Flush();
 }

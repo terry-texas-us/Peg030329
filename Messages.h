@@ -15,7 +15,7 @@ int msgConfirm(UINT messageIdentifier, const CString& additionalText);
 void msgInformation(const CString& strMes);
 
 /// @brief Loads a string message from resources and displays it as informational text on the status bar. Special handling is done if messageIdentifier is 0.
-/// @param messageIdentifier If messageIdentifier is 0, it uses a special mode-based identifier (app.m_iModeId) and truncates the message at the first "\n". Otherwise, it uses the provided identifier directly.
+/// @param messageIdentifier If messageIdentifier is 0, it uses a special mode-based identifier (app.m_iModeId) and truncates the message at the first `\n`. Otherwise, it uses the provided identifier directly.
 void msgInformation(UINT messageIdentifier = 0);
 
 /// @brief Displays an informational message identified by the specified identifier, optionally including additional text.

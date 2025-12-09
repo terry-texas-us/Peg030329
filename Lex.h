@@ -126,14 +126,12 @@ static tokent toktbl[] = {
 void BreakExpression(int& iLoc, int& iEnd, int* aiTyp, int* aiTokLoc);
 void ConvertStringToVal(int iTyp, long lDef, char* szVal, long* lDefReq, void* p);
 
-/// <summary>
-/// Converts a value to its string representation based on type.
-/// </summary>
-/// <param name="acVal">Pointer to the value data.</param>
-/// <param name="arCD">Pointer to the value descriptor.</param>
-/// <param name="acPic">Buffer to store the resulting string.</param>
-/// <param name="picBufferSize">Size of the acPic buffer.</param>
-/// <param name="aiLen">Output: length of the resulting string.</param>
+/// @brief Serialize a value described by a CD descriptor into a textual representation placed in the provided output buffer.
+/// @param acVal Pointer to the binary value(s) to convert. For numeric types this points to raw bytes (4 bytes per integer, 8 bytes per double); for strings it points to the character data.
+/// @param arCD Pointer to a CD descriptor that describes the value: arCD->lTyp selects the token/type (e.g. TOK_STRING, TOK_INTEGER, TOK_REAL, TOK_LENGTH_OPERAND, TOK_AREA_OPERAND) and arCD->lDef encodes dimension and element length (LOWORD = dimension, HIWORD = element count/length).
+/// @param acPic Output character buffer where the textual representation is written. The function writes brackets for arrays/matrices, quotes for strings, and numeric text for integers and reals.
+/// @param picBufferSize Size of acPic in bytes. The function uses this to limit writes, but callers should ensure the buffer is large enough for the expected output.
+/// @param aiLen Pointer to an int that receives the length of the produced text (number of characters written, not counting a terminating NUL). The function sets *aiLen to the output length; the buffer may or may not be NUL-terminated in all branches.
 void ConvertValToString(char*, CD*, char*, size_t picBufferSize, int*);
 
 void ConvertValTyp(int, int, long*, void*);

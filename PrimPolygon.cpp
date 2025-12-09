@@ -111,7 +111,7 @@ const CPrimPolygon& CPrimPolygon::operator=(const CPrimPolygon& other) {
 }
 CPrimPolygon::~CPrimPolygon() { delete[] m_Pt; }
 void CPrimPolygon::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const {
-  tvAddItem(hTree, hParent, "<Polygon>", (CObject*)this);
+  tvAddItem(hTree, hParent, _T("<Polygon>"), (CObject*)this);
 }
 CPrim*& CPrimPolygon::Copy(CPrim*& pPrim) const {
   pPrim = new CPrimPolygon(*this);
@@ -153,7 +153,7 @@ void CPrimPolygon::Display(CPegView* pView, CDC* pDC) const {
     //	}
     //	else
     //	{	// must assume the polygon is concave or complex
-    //		TRACE("tessing concave polygon, number of verticies: %d\n", m_wPts);
+    //		TRACE(_T("tessing concave polygon, number of verticies: %d\n"), m_wPts);
     //		GLUtesselator *tess;
     //		tess = gluNewTess();
     //
@@ -202,7 +202,7 @@ void CPrimPolygon::Display(CPegView* pView, CDC* pDC) const {
   }
 }
 void CPrimPolygon::DisRep(const CPnt& ptPic) const {
-  std::string strRep("<Polygon Edge> ");
+  std::string strRep(_T("<Polygon Edge> "));
 
   if (mS_wEdge > 0 && mS_wEdge <= m_wPts) {
     CPnt* pBegPt = &m_Pt[mS_wEdge - 1];
@@ -224,7 +224,7 @@ void CPrimPolygon::DisRep(const CPnt& ptPic) const {
     UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), dLen);
     strRep += szBuf;
     std::stringstream ss;
-    ss << " @ " << std::fixed << std::setprecision(2) << std::setw(6) << dAng / RADIAN << " degrees";
+    ss << _T(" @ ") << std::fixed << std::setprecision(2) << std::setw(6) << dAng / RADIAN << _T(" degrees");
     strRep += ss.str();
     msgSetPaneText(strRep);
 
@@ -236,24 +236,24 @@ void CPrimPolygon::DisRep(const CPnt& ptPic) const {
 }
 void CPrimPolygon::FormatGeometry(CString& str) const {
   std::stringstream ss;
-  ss << "Hatch Origin;" << m_ptOrig.ToStdString() << "\n"
-     << "X Axis;" << m_vPosXAx.ToStdString() << "\n"
-     << "Y Axis;" << m_vPosYAx.ToStdString() << "\n";
+  ss << _T("Hatch Origin;") << m_ptOrig.ToStdString() << _T("\n")
+     << _T("X Axis;") << m_vPosXAx.ToStdString() << _T("\n")
+     << _T("Y Axis;") << m_vPosYAx.ToStdString() << _T("\n");
 
-  for (WORD w = 0; w < m_wPts; w++) { ss << "Vertex;" << m_Pt[w].ToStdString() << "\n"; }
+  for (WORD w = 0; w < m_wPts; w++) { ss << _T("Vertex;") << m_Pt[w].ToStdString() << _T("\n"); }
   str = ss.str().c_str();
 }
 
 CString CPrimPolygon::FormatIntStyle() const {
-  CString strStyle[] = {"Hollow", "Solid", "Pattern", "Hatch"};
+  CString strStyle[] = {_T("Hollow"), _T("Solid"), _T("Pattern"), _T("Hatch")};
 
-  CString str = (m_nIntStyle >= 0 && m_nIntStyle <= 3) ? strStyle[m_nIntStyle] : CString("Invalid!");
+  CString str = (m_nIntStyle >= 0 && m_nIntStyle <= 3) ? strStyle[m_nIntStyle] : CString(_T("Invalid!"));
 
   return (str);
 }
 void CPrimPolygon::FormatExtra(CString& str) const {
   std::stringstream ss;
-  ss << "Color;" << StdFormatPenColor() << "\t" << "Style;" << StdFormatPenStyle() << "\t" << "Points;" << m_wPts;
+  ss << _T("Color;") << StdFormatPenColor() << _T("\t") << _T("Style;") << StdFormatPenStyle() << _T("\t") << _T("Points;") << m_wPts;
   str = ss.str().c_str();
 }
 CPnt CPrimPolygon::GetCtrlPt() const {

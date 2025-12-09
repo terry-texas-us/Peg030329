@@ -7,9 +7,9 @@ using namespace dde;
 ///<summary>Return the Help info</summary>
 HDDEDATA dde::SysReqHelp(UINT wFmt, HSZ, HSZ hszItem) {
   static TCHAR sz[] =
-      "DDE Help for the PegAEsys Service.\r\n\t"
-      "Request or advise on 'General!<item>' to get the current value.\r\n\t"
-      "Items are:  RelPosX, RelPosY, RelPosZ,...";
+      _T("DDE Help for the PegAEsys Service.\r\n\t")
+      _T("Request or advise on 'General!<item>' to get the current value.\r\n\t")
+      _T("Items are:  RelPosX, RelPosY, RelPosZ,...");
 
   return MakeCFText(wFmt, sz, hszItem);
 }
@@ -71,7 +71,7 @@ HDDEDATA dde::SysReqFormats(UINT wFmt, HSZ, HSZ hszItem) {
 // Process a request for the list of protocols supported by the server.  The default is to return the
 // 'Execute Control 1' protocol.
 HDDEDATA dde::SysReqProtocols(UINT, HSZ, HSZ hszItem) {
-  static TCHAR sz[] = "Execute Control 1";
+  static TCHAR sz[] = _T("Execute Control 1");
 
   return DdeCreateDataHandle(ServerInfo.dwInstance, (LPBYTE)sz, static_cast<DWORD>(lstrlen(sz) + 1), 0, hszItem,
                              CF_TEXT, 0);

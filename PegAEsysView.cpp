@@ -68,8 +68,8 @@ INT_PTR CALLBACK DlgProcViewParameters(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 std::string leftMouseDown{};
 std::string rightMouseDown{};
-std::string leftMouseUp{"{13}"};   // default return
-std::string rightMouseUp{"{27}"};  // default escape
+std::string leftMouseUp{_T("{13}")};   // default return
+std::string rightMouseUp{_T("{27}")};  // default escape
 
 extern CTMat tmEditSeg;
 
@@ -820,7 +820,7 @@ void CPegView::OnViewWindow() {
 void CPegView::OnSetupDimLength() {
   CDlgSetLength dlg;
 
-  dlg.m_strTitle = "Set Dimension Length";
+  dlg.m_strTitle = _T("Set Dimension Length");
   dlg.m_dLength = app.GetDimLen();
   if (dlg.DoModal() == IDOK) {
     app.SetDimLen(dlg.m_dLength);
@@ -831,7 +831,7 @@ void CPegView::OnSetupDimLength() {
 void CPegView::OnSetupDimAngle() {
   CDlgSetAngle dlg;
 
-  dlg.m_strTitle = "Set Dimension Angle";
+  dlg.m_strTitle = _T("Set Dimension Angle");
   dlg.m_dAngle = app.GetDimAngZ();
   if (dlg.DoModal() == IDOK) {
     app.SetDimAngZ(dlg.m_dAngle);
@@ -1028,7 +1028,7 @@ void CPegView::OnPrimPerpJump() {
     }
   }
 }
-void CPegView::OnHelpKey() { ::WinHelp(GetSafeHwnd(), "peg.hlp", HELP_KEY, reinterpret_cast<DWORD_PTR>("READY")); }
+void CPegView::OnHelpKey() { ::WinHelp(GetSafeHwnd(), _T("peg.hlp"), HELP_KEY, reinterpret_cast<DWORD_PTR>(_T("READY"))); }
 
 void CPegView::DoCustomMouseClick(const std::string& customCommand) const {
   if (customCommand.empty()) { return; }
@@ -1048,7 +1048,7 @@ void CPegView::DoCustomMouseClick(const std::string& customCommand) const {
           ::PostMessage(windowHandle, WM_KEYDOWN, static_cast<WPARAM>(keyValue), 0L);
         } catch (const std::exception&) {
           // Skip invalid key code (e.g., non-numeric or out-of-range)
-          OutputDebugStringA("Invalid key code in custom command");
+          OutputDebugStringA(_T("Invalid key code in custom command"));
         }
       }
       while (pos < customCommand.size() && customCommand[pos] != '}') { ++pos; }
@@ -1140,8 +1140,8 @@ void CPegView::DisplayOdometer() {
 void CPegView::OnUpdateViewTrueTypeFonts(CCmdUI* pCmdUI) { pCmdUI->SetCheck(m_bViewTrueTypeFonts); }
 
 void CPegView::OnBackgroundImageLoad() {
-  CFileDialog dlg(TRUE, "bmp", "*.bmp");
-  dlg.m_ofn.lpstrTitle = "Load Background Image";
+  CFileDialog dlg(TRUE, _T("bmp"), _T("*.bmp"));
+  dlg.m_ofn.lpstrTitle = _T("Load Background Image");
 
   if (dlg.DoModal() == IDOK) {
     CFileBitmap fbmp(dlg.GetPathName());

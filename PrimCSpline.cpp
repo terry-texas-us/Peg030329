@@ -42,7 +42,7 @@ const CPrimCSpline& CPrimCSpline::operator=(const CPrimCSpline& src) {
   return (*this);
 }
 void CPrimCSpline::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const {
-  tvAddItem(hTree, hParent, "<CSpline>", (CObject*)this);
+  tvAddItem(hTree, hParent, _T("<CSpline>"), (CObject*)this);
 }
 CPrim*& CPrimCSpline::Copy(CPrim*& pPrim) const {
   pPrim = new CPrimCSpline(*this);
@@ -60,14 +60,14 @@ void CPrimCSpline::Display(CPegView*, CDC* pDC) const {
 }
 void CPrimCSpline::FormatGeometry(CString& str) const {
   std::string geometry;
-  for (WORD w = 0; w < m_pts.GetSize(); w++) { geometry += "Control Point;" + m_pts[w].ToStdString(); }
+  for (WORD w = 0; w < m_pts.GetSize(); w++) { geometry += _T("Control Point;") + m_pts[w].ToStdString(); }
   str = geometry.c_str();
 }
 void CPrimCSpline::FormatExtra(CString& str) const {
   std::string extra;
-  extra = "Color;" + StdFormatPenColor() + "\t";
-  extra += "Style;" + StdFormatPenStyle() + "\t";
-  extra += "Control Points;" + std::to_string(m_pts.GetSize());
+  extra = _T("Color;") + StdFormatPenColor() + _T("\t");
+  extra += _T("Style;") + StdFormatPenStyle() + _T("\t");
+  extra += _T("Control Points;") + std::to_string(m_pts.GetSize());
   str = extra.c_str();
 }
 CPnt CPrimCSpline::GetCtrlPt() const {

@@ -23,9 +23,9 @@ double CPrim::mS_dPicApertSiz = 0.02;
 std::string CPrim::StdFormatPenColor() const {
   std::string str;
   if (m_nPenColor == PENCOLOR_BYLAYER) {
-    str = "ByLayer";
+    str = _T("ByLayer");
   } else if (m_nPenColor == PENCOLOR_BYBLOCK)
-    str = "ByBlock";
+    str = _T("ByBlock");
   else { str = std::to_string(m_nPenColor); }
   return str;
 }
@@ -33,11 +33,11 @@ std::string CPrim::StdFormatPenColor() const {
 std::string CPrim::StdFormatPenStyle() const {
   std::string str;
   if (m_nPenStyle == PENSTYLE_BYLAYER) {
-    str = "ByLayer";
+    str = _T("ByLayer");
   }
 
   else if (m_nPenStyle == PENSTYLE_BYBLOCK) {
-    str = "ByBlock";
+    str = _T("ByBlock");
   } else {
     str = std::to_string(m_nPenStyle);
   }

@@ -90,8 +90,8 @@ class CPegView : public CView {
   void DisplayOdometer();
   void DoCameraRotate(int iDir);
 
-  /// @brief Parses a command string and posts keyboard messages to the view's window. Plain characters are posted as WM_CHAR messages; sequences of decimal digits enclosed in '{' and '}' are parsed and posted as WM_KEYDOWN with the numeric key code.
-  /// @param customCommand Input sequence containing literal characters and optional key codes in braces (for example: "a{13}b"). Characters not inside braces are sent as WM_CHAR; digits immediately following '{' are parsed as a decimal key code and sent as WM_KEYDOWN. Empty brace groups generate no message.
+  /// @brief Parses a command string and posts keyboard messages to the view's window. Plain characters are posted as WM_CHAR messages; sequences of decimal digits enclosed in `{` and `}` are parsed and posted as WM_KEYDOWN with the numeric key code.
+  /// @param customCommand Input sequence containing literal characters and optional key codes in braces (for example: `a{13}b`). Characters not inside braces are sent as WM_CHAR; digits immediately following `{` are parsed as a decimal key code and sent as WM_KEYDOWN. Empty brace groups generate no message.
   void DoCustomMouseClick(const std::string& customCommand) const;
   void DoWindowPan(double dRatio);
   void DoWindowPan0(int iDir);

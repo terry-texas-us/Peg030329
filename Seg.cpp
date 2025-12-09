@@ -53,7 +53,7 @@ void CSeg::AddPrimsToTreeViewControl(HWND hTree, HTREEITEM hParent) const {
   }
 }
 HTREEITEM CSeg::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const {
-  HTREEITEM hti = tvAddItem(hTree, hParent, "<Segment>", (CObject*)this);
+  HTREEITEM hti = tvAddItem(hTree, hParent, _T("<Segment>"), (CObject*)this);
   AddPrimsToTreeViewControl(hTree, hti);
   return hti;
 }

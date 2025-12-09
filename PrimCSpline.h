@@ -42,7 +42,7 @@ class CPrimCSpline : public CPrim {
   void Assign(CPrim* pPrim) { *this = *static_cast<CPrimCSpline*>(pPrim); }
   CPrim*& Copy(CPrim*&) const;
   void Display(CPegView* pView, CDC* pDC) const;
-  void DisRep(const CPnt&) const { msgSetPaneText("C-Spline - "); }
+  void DisRep(const CPnt&) const { msgSetPaneText(_T("C-Spline - ")); }
   void GetAllPts(CPnts& pts) {
     pts.SetSize(0);
     pts.Copy(m_pts);

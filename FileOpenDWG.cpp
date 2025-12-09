@@ -16,7 +16,7 @@ AD_OBJHANDLE CFileOpenDWG::ms_objecthandle = {0, 0, 0, 0, 0, 0, 0, 0};
 #endif
 
 #if defined(_DEBUG)
-void myloadometer(short percent) { TRACE("Load Progress: %d\n", percent); }
+void myloadometer(short percent) { TRACE(_T("Load Progress: %d\n"), percent); }
 #endif  // _DEBUG
 
 #if ODA_FUNCTIONALITY
@@ -46,7 +46,7 @@ CFileOpenDWG::~CFileOpenDWG() {
 #if ODA_FUNCTIONALITY
 ///<summary>Creates a new DWG or DXF file.</summary>
 bool CFileOpenDWG::Create(TCHAR* szPathKey, WORD wType) {
-  // adNewFile adds the normal entries for a default "empty file" in AutoCAD, including layer 0,
+  // adNewFile adds the normal entries for a default `empty file` in AutoCAD, including layer 0,
   // linetypes CONTINUOUS, BYLAYER and BYBLOCK, dimstyle STANDARD, shapefile STANDARD, regapp ACAD,
   // and the standard objects.
 
@@ -68,7 +68,7 @@ bool CFileOpenDWG::Create(TCHAR* szPathKey, WORD wType) {
 #if ODA_FUNCTIONALITY
 bool CFileOpenDWG::Initialize(short* nError) {
   m_bInitialized = false;
-  m_bInitialized = (adInitAd2(app.m_strAppPath + "\\adinit.dat", nError) == 1);
+  m_bInitialized = (adInitAd2(app.m_strAppPath + _T("\\adinit.dat"), nError) == 1);
   if (m_bInitialized) {
 #if defined(_DEBUG)
     adSetAd2LoadometerFn(myloadometer);
@@ -76,7 +76,7 @@ bool CFileOpenDWG::Initialize(short* nError) {
     adSetupDwgRead();
     adSetupDxfRead();
   } else {
-    msgInformation("Initialization data not loaded. (adinit.dat file must reside in same directory as application.)");
+    msgInformation(_T("Initialization data not loaded. (adinit.dat file must reside in same directory as application.)"));
   }
   return m_bInitialized;
 }
@@ -88,18 +88,18 @@ void CFileOpenDWG::Load(TCHAR* szPathKey) {
 #if defined(_DEBUG)
   short nRet = adDwgSmellsBad(szPathKey);
   if (nRet == -1) {
-    TRACE("File: %s is pre-Release 11\n", szPathKey);
+    TRACE(_T("File: %s is pre-Release 11\n"), szPathKey);
   } else if (nRet == 0) {
-    TRACE("File: %s passed pre-test\n", szPathKey);
+    TRACE(_T("File: %s passed pre-test\n"), szPathKey);
   } else {
-    TRACE("File: %s has error(s) -> %s\n", szPathKey, adErrorStr(adError()));
+    TRACE(_T("File: %s has error(s) -> %s\n"), szPathKey, adErrorStr(adError()));
   }
 #endif  // _DEBUG
   m_hdb = adLoadFile(szPathKey, AD_PRELOAD_ALL, 1);
 
   if (m_hdb == 0) {
-    TRACE("Error opening file %s\n", szPathKey);
-    TRACE("  error code is %d: %s\n", adError(), adErrorStr(adError()));
+    TRACE(_T("Error opening file %s\n"), szPathKey);
+    TRACE(_T("  error code is %d: %s\n"), adError(), adErrorStr(adError()));
     return;
   }
   m_dhd = adHeaderPointer(m_hdb);
@@ -121,7 +121,7 @@ void CFileOpenDWG::ReadBlock(AD_DB_HANDLE hdb, PAD_BLKH blkh, PAD_ENT_HDR henhd)
   CBlock* pBlock;
   CPegDoc::GetDoc()->BlksLookup(blkh->name, pBlock);
 
-  TRACE("Loading Block %s entity definitions ...\n", blkh->name);
+  TRACE(_T("Loading Block %s entity definitions ...\n"), blkh->name);
 
   if ((blkh->flag & AD_BLOCK_XREF) == AD_BLOCK_XREF) {
     // external reference blocks have no entities. It points to a block in an external
@@ -135,7 +135,7 @@ void CFileOpenDWG::ReadBlock(AD_DB_HANDLE hdb, PAD_BLKH blkh, PAD_ENT_HDR henhd)
       AD_LAY lay;
       adSeekLayer(hdb, henhd->entlayerobjhandle, &lay);
 
-      if (henhd->xdblob != AD_VMNULL) { TRACE("Extended data in block not loaded\n"); }
+      if (henhd->xdblob != AD_VMNULL) { TRACE(_T("Extended data in block not loaded\n")); }
       CPrim* pPrim = ReadEntity(blkh->entitylist);
 
 #pragma tasMSG(TODO : There may be more to entity)
@@ -147,7 +147,7 @@ void CFileOpenDWG::ReadBlock(AD_DB_HANDLE hdb, PAD_BLKH blkh, PAD_ENT_HDR henhd)
         if (henhd->enttype == AD_ENT_INSERT) adSeekBlockheader(hdb, blkh->objhandle, blkh);
 
         if (pPrim == 0) {  // entity not loaded
-          TRACE("Entity %d not loaded\n", henhd->enttype);
+          TRACE(_T("Entity %d not loaded\n"), henhd->enttype);
         } else {
           PENCOLOR nPenColor = henhd->entcolor;
 
@@ -207,45 +207,45 @@ void CFileOpenDWG::ReadBlocks(AD_DB_HANDLE hdb) {
 ///</summary>
 void CFileOpenDWG::ReadBlockTable(AD_DB_HANDLE hdb) {
   if (adStartBlockheaderGet(hdb) == 0) {
-    TRACE("adStartBlockheaderGet error: %s\n", adErrorStr(adError()));
+    TRACE(_T("adStartBlockheaderGet error: %s\n"), adErrorStr(adError()));
     return;
   }
   long lNumBlockHeaders = adNumBlockheaders(hdb);
 
   for (long lBlockHeader = 0; lBlockHeader < lNumBlockHeaders - 2; lBlockHeader++) {
     if (adGetBlockheader(hdb, &m_htb->blkh) == 0) {
-      TRACE("adGetBlockheader error: %s\n", adErrorStr(adError()));
+      TRACE(_T("adGetBlockheader error: %s\n"), adErrorStr(adError()));
       continue;
     }
     if (!m_htb->blkh.purgedflag) {
       if (adStartEntityGet(m_htb->blkh.entitylist) == 0) {
-        TRACE("adStartEntityGet error: %s\n", adErrorStr(adError()));
+        TRACE(_T("adStartEntityGet error: %s\n"), adErrorStr(adError()));
         continue;
       }
       if (adGetEntity(m_htb->blkh.entitylist, m_henhd, m_hen) == 0) {
-        TRACE("adGetEntity error: %s\n", adErrorStr(adError()));
+        TRACE(_T("adGetEntity error: %s\n"), adErrorStr(adError()));
         continue;
       }
       if (m_henhd->enttype != AD_ENT_BLOCK) {
-        TRACE("Block table error: First entity is not a block entity\n");
+        TRACE(_T("Block table error: First entity is not a block entity\n"));
         continue;
       }
       if ((m_htb->blkh.flag & AD_BLOCK_ANONYMOUS) == AD_BLOCK_ANONYMOUS) {
         TCHAR szBuf[8]{};
         _itoa_s(lBlockHeader, szBuf, sizeof(szBuf), 10);
-        strcat_s(m_htb->blkh.name, sizeof(m_htb->blkh.name), szBuf);
+        _tcscat_s(m_htb->blkh.name, sizeof(m_htb->blkh.name), szBuf);
         adReplaceBlockheader(hdb, &m_htb->blkh);
       }
       if ((m_htb->blkh.flag & AD_BLOCK_XREF) == AD_BLOCK_XREF) {
         TCHAR szBuf[256]{};
         Directory_ExamineFile(m_hen->block.xrefpath, szBuf);
-        strcpy_s(m_hen->block.xrefpath, sizeof(m_hen->block.xrefpath), szBuf);
+        _tcscpy_s(m_hen->block.xrefpath, sizeof(m_hen->block.xrefpath), szBuf);
       }
       CBlock* pBlock;
       if (CPegDoc::GetDoc()->BlksLookup(m_htb->blkh.name, pBlock)) {
         TCHAR szBuf[8]{};
         _itoa_s(lBlockHeader, szBuf, sizeof(szBuf), 10);
-        strcat_s(m_htb->blkh.name, sizeof(m_htb->blkh.name), szBuf);
+        _tcscat_s(m_htb->blkh.name, sizeof(m_htb->blkh.name), szBuf);
         adReplaceBlockheader(hdb, &m_htb->blkh);
       }
       CPnt ptBase(m_hen->block.base[0], m_hen->block.base[1], m_hen->block.base[2]);
@@ -261,14 +261,14 @@ void CFileOpenDWG::ReadEntities() {
   CPegView* pView = CPegView::GetActiveView();
 
   short nBlockType[] = {AD_PAPERSPACE_HANDLE, AD_MODELSPACE_HANDLE};
-  const CString strBlockName[] = {"Paperspace", "Modelspace"};
+  const CString strBlockName[] = {_T("Paperspace"), _T("Modelspace")};
 
   AD_OBJHANDLE blkobjhandle;
 
   for (short entset = 0; entset < 2; entset++) {
     adGetBlockHandle(m_hdb, blkobjhandle, nBlockType[entset]);
 
-    TRACE("Loading %s entity definitions ...\n", strBlockName[entset]);
+    TRACE(_T("Loading %s entity definitions ...\n"), strBlockName[entset]);
 
     int iExtendedData = 0;
     long lNumEntities = adNumEntities(m_hdb, blkobjhandle);
@@ -288,7 +288,7 @@ void CFileOpenDWG::ReadEntities() {
         if (!adSeekLayer(m_hdb, m_henhd->entlayerobjhandle, &lay)) continue;
         CLayer* pLayer = CPegDoc::GetDoc()->LayersGet(lay.name);
 
-        if (lay.xrefindex != -1) { TRACE("Entity from a xRef\n"); }
+        if (lay.xrefindex != -1) { TRACE(_T("Entity from a xRef\n")); }
         CPrim* pPrim = ReadEntity(entlist);
 
         if (m_henhd->xdblob != AD_VMNULL) { iExtendedData++; }
@@ -300,7 +300,7 @@ void CFileOpenDWG::ReadEntities() {
           } else if (m_henhd->enttype == AD_ENT_DIMENSION) {
             iDimensionEnts++;
           } else {
-            TRACE("Entity %d not loaded\n", m_henhd->enttype);
+            TRACE(_T("Entity %d not loaded\n"), m_henhd->enttype);
           }
 
           lNumEntities--;
@@ -349,11 +349,11 @@ void CFileOpenDWG::ReadEntities() {
       }
     } while (nSuccess == 1);
 
-    TRACE("%d Extended data in entity header not loaded\n", iExtendedData);
-    TRACE("%d of %d entitities loaded\n", lNumEntities, adNumEntities(m_hdb, blkobjhandle));
-    TRACE("      %d Attrib entities not loaded\n", iAttribEnts);
-    TRACE("      %d SeqEnd entities not loaded\n", iSeqEndEnts);
-    TRACE("      %d Dimension entities not loaded\n", iDimensionEnts);
+    TRACE(_T("%d Extended data in entity header not loaded\n"), iExtendedData);
+    TRACE(_T("%d of %d entitities loaded\n"), lNumEntities, adNumEntities(m_hdb, blkobjhandle));
+    TRACE(_T("      %d Attrib entities not loaded\n"), iAttribEnts);
+    TRACE(_T("      %d SeqEnd entities not loaded\n"), iSeqEndEnts);
+    TRACE(_T("      %d Dimension entities not loaded\n"), iDimensionEnts);
   }
 }
 #endif
@@ -407,7 +407,7 @@ CPrim* CFileOpenDWG::ReadEntity(AD_VMADDR entlist) {
     default:  // proxies
 
       if (m_henhd->enttype == adOle2frameEnttype(m_hdb)) {
-        TRACE("AD_OLE2FRAME entity\n");
+        TRACE(_T("AD_OLE2FRAME entity\n"));
         if (m_hen->ole2frame.databytes != 0L) {}
       } else if (m_henhd->enttype == adLwplineEnttype(m_hdb)) {
         pPrim = new CPrimPolyline(m_hen);
@@ -416,14 +416,14 @@ CPrim* CFileOpenDWG::ReadEntity(AD_VMADDR entlist) {
         pPrim = new CPrimPolygon(m_hdb, m_henhd, m_hen);
         break;
       } else if (m_henhd->enttype == adImageEnttype(m_hdb)) {
-        TRACE("AD_IMAGE entity\n");
+        TRACE(_T("AD_IMAGE entity\n"));
       } else {  // regular proxy
-        TRACE("entclassid: %d\n", m_hen->proxyent.entclassid);
-        TRACE("appclassid: %d\n", m_hen->proxyent.appclassid);
-        TRACE("entdatabits: %ld\n", m_hen->proxyent.entdatabits);
+        TRACE(_T("entclassid: %d\n"), m_hen->proxyent.entclassid);
+        TRACE(_T("appclassid: %d\n"), m_hen->proxyent.appclassid);
+        TRACE(_T("entdatabits: %ld\n"), m_hen->proxyent.entdatabits);
         if (m_hen->proxyent.entdatabits != 0L) { /* writebindatablob(m_hen->proxyent.entdatablob);*/
         }
-        TRACE("objids: %ld\n", m_hen->proxyent.numobjids);
+        TRACE(_T("objids: %ld\n"), m_hen->proxyent.numobjids);
         if (m_hen->proxyent.numobjids != 0L) {
           /*
                     PAD_BLOB_CTRL bcptr = adStartBlobRead(m_hen->proxyent.objidblob);
@@ -431,7 +431,7 @@ CPrim* CFileOpenDWG::ReadEntity(AD_VMADDR entlist) {
                     {
                         AD_TYPEDOBJHANDLE objidhandle;
                         adReadProxyEntityObjid(bcptr, &objidhandle);
-                        TRACE("obj ID handle: \n");
+                       TRACE(_T("obj ID handle: \n"));
                         // locprinthandle(objidhandle.typedhandle);
                     }
                     adEndBlobRead(bcptr);
@@ -476,11 +476,11 @@ CPrim* CFileOpenDWG::ReadEntityPolyline(AD_VMADDR entlist) {
 
 #if ODA_FUNCTIONALITY
 void CFileOpenDWG::ReadHeaderSection() {
-  TRACE("Loading header section ..\n");
+  TRACE(_T("Loading header section ..\n"));
 
   if (m_dhd->tilemode == 1) {
     // Use tiled viewports only .. displaying only those entities in model space
-    TRACE("Old style tiled viewports of modelspace\n");
+    TRACE(_T("Old style tiled viewports of modelspace\n"));
   } else {
     // Use floating viewports using the active layout (*paper_space)
 
@@ -530,7 +530,7 @@ void CFileOpenDWG::ReadHeaderSection() {
 
 #if ODA_FUNCTIONALITY
 void CFileOpenDWG::ReadLayerTable() {
-  TRACE("Loading layer definitions ...\n");
+  TRACE(_T("Loading layer definitions ...\n"));
 
   adStartLayerGet(m_hdb);
 
@@ -539,7 +539,7 @@ void CFileOpenDWG::ReadLayerTable() {
 
     if (m_htb->lay.purgedflag) continue;
 
-    TRACE("  %s\n", m_htb->lay.name);
+    TRACE(_T("  %s\n"), m_htb->lay.name);
 
     if (CPegDoc::GetDoc()->LayersLookup(m_htb->lay.name) < 0) {
       CLayer* pLayer = new CLayer(m_htb->lay.name);
@@ -564,7 +564,7 @@ void CFileOpenDWG::ReadLayerTable() {
 
 #if ODA_FUNCTIONALITY
 void CFileOpenDWG::ReadLnTypsTable() {
-  TRACE("Loading line type definitions ...\n");
+  TRACE(_T("Loading line type definitions ...\n"));
 
   adStartLinetypeGet(m_hdb);
 
@@ -596,14 +596,14 @@ void CFileOpenDWG::ReadLnTypsTable() {
 
 #if ODA_FUNCTIONALITY
 void CFileOpenDWG::ReadVPortTable() {
-  TRACE("Loading view port definitions ...\n");
+  TRACE(_T("Loading view port definitions ...\n"));
 
   adStartVportGet(m_hdb);
 
   for (int i = 0; i < int(adNumVports(m_hdb)); i++) {
     adGetVport(m_hdb, &m_htb->vport);
     if (!m_htb->vport.purgedflag) {
-      TRACE("Viewport %s\n", m_htb->vport.name);
+      TRACE(_T("Viewport %s\n"), m_htb->vport.name);
 
       if (m_htb->vport.xdblob != AD_VMNULL) {
         AD_XD m_hxd;
@@ -628,7 +628,7 @@ void CFileOpenDWG::WriteBlocksSection() {
     pDoc->BlksGetNextAssoc(pos, strKey, pBlock);
 
     adSetDefaultBlockheader(&m_htb->blkh);
-    strcpy_s(m_htb->blkh.name, sizeof(m_htb->blkh.name), strKey.GetString());
+    _tcscpy_s(m_htb->blkh.name, sizeof(m_htb->blkh.name), strKey.GetString());
     adGenerateObjhandle(m_hdb, m_htb->blkh.objhandle);
     adAddBlockheader(m_hdb, &m_htb->blkh);
   }
@@ -637,7 +637,7 @@ void CFileOpenDWG::WriteBlocksSection() {
     pDoc->BlksGetNextAssoc(pos, strKey, pBlock);
 
     TCHAR szName[64]{};
-    strcpy_s(szName, sizeof(szName), strKey.GetString());
+    _tcscpy_s(szName, sizeof(szName), strKey.GetString());
 
     AD_OBJHANDLE blkobjhandle;
     if (adFindBlockheaderByName(m_hdb, szName, blkobjhandle) == 0) continue;
@@ -650,7 +650,7 @@ void CFileOpenDWG::WriteBlocksSection() {
 
       CPnt pt = pBlock->GetBasePt();
       pt.Get(m_hen->block.base);
-      strcpy_s(m_hen->block.name2, sizeof(m_hen->block.name2), strKey.GetString());
+      _tcscpy_s(m_hen->block.name2, sizeof(m_hen->block.name2), strKey.GetString());
 
       adAddEntityToList(m_hdb, entlist, m_henhd, m_hen);
     }
@@ -669,7 +669,7 @@ void CFileOpenDWG::WriteEntities() {
   CPegDoc* pDoc = CPegDoc::GetDoc();
 
   AD_OBJHANDLE blkobjhandle;
-  adFindBlockheaderByName(m_hdb, "*MODEL_SPACE", blkobjhandle);
+  adFindBlockheaderByName(m_hdb, _T("*MODEL_SPACE"), blkobjhandle);
   AD_VMADDR mspaceentlist = adEntityList(m_hdb, blkobjhandle);
 
   int iTblSize = pDoc->LayersGetSize();
@@ -678,7 +678,7 @@ void CFileOpenDWG::WriteEntities() {
     CLayer* pLayer = pDoc->LayersGetAt(i);
 
     TCHAR szName[64]{};
-    strcpy_s(szName, sizeof(szName), pLayer->GetName());
+    _tcscpy_s(szName, sizeof(szName), pLayer->GetName());
     adFindLayerByName(m_hdb, szName, CFileOpenDWG::ms_objecthandle);
 
     POSITION pos = pLayer->GetHeadPosition();
@@ -694,7 +694,7 @@ void CFileOpenDWG::WriteEntities() {
 void CFileOpenDWG::WriteLayerTable() {
   CPegDoc* pDoc = CPegDoc::GetDoc();
 
-  // layer "0" table entry created by toolkit .. not added here .. modify some defaults
+  // layer `0` table entry created by toolkit .. not added here .. modify some defaults
   CLayer* pLayer = pDoc->LayersGetAt(0);
 
   adStartLayerGet(m_hdb);
@@ -713,7 +713,7 @@ void CFileOpenDWG::WriteLayerTable() {
 void CFileOpenDWG::WriteLayer(const CString& strName, PENCOLOR nColor) {
   adSetDefaultLayer(m_hdb, &m_htb->lay);
 
-  strcpy_s(m_htb->lay.name, sizeof(m_htb->lay.name), strName.GetString());
+  _tcscpy_s(m_htb->lay.name, sizeof(m_htb->lay.name), strName.GetString());
   m_htb->lay.color = nColor;
 
 #pragma tasMSG(TODO : Need to modify default pen style)
@@ -740,8 +740,8 @@ void CFileOpenDWG::WritePenStyleTable() {
 void CFileOpenDWG::WritePenStyle(CPenStyle* pPenStyle) {
   adSetDefaultLinetype(&m_htb->ltype);
 
-  strcpy_s(m_htb->ltype.name, sizeof(m_htb->ltype.name), pPenStyle->GetName().GetString());
-  strcpy_s(m_htb->ltype.text, sizeof(m_htb->ltype.text), pPenStyle->GetDescription().GetString());
+  _tcscpy_s(m_htb->ltype.name, sizeof(m_htb->ltype.name), pPenStyle->GetName().GetString());
+  _tcscpy_s(m_htb->ltype.text, sizeof(m_htb->ltype.text), pPenStyle->GetDescription().GetString());
 
   WORD wDefLen = pPenStyle->GetDefLen();
 
@@ -827,7 +827,7 @@ CPrimArc::CPrimArc(PAD_ENT_HDR henhd, PAD_ENT hen) {
     if (dStAng != 0.) {
       m_vMajAx.RotAboutArbAx(vNorm, dStAng);
       m_vMinAx.RotAboutArbAx(vNorm, dStAng);
-      if (hen->ellipse.minortomajorratio != 1.) { TRACE("Ellipse: Non radial with start parameter not 0\n"); }
+      if (hen->ellipse.minortomajorratio != 1.) { TRACE(_T("Ellipse: Non radial with start parameter not 0\n")); }
     }
   } else {
     CPnt ptCP(hen->arc.pt0[0], hen->arc.pt0[1], hen->arc.pt0[2]);
@@ -873,10 +873,10 @@ bool CPrimArc::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD
 
   TCHAR szName[64]{};
   if (m_nPenStyle == PENSTYLE_BYLAYER) {
-    strcpy_s(szName, sizeof(szName), "ByLayer");
+    _tcscpy_s(szName, sizeof(szName), _T("ByLayer"));
   } else {
     CPenStyle* pPenStyle = CPegDoc::GetDoc()->PenStylesGetAt(m_nPenStyle);
-    strcpy_s(szName, sizeof(szName), pPenStyle->GetName().GetString());
+    _tcscpy_s(szName, sizeof(szName), pPenStyle->GetName().GetString());
   }
   adFindLinetypeByName(hdb, szName, henhd->entltypeobjhandle);
 
@@ -917,7 +917,7 @@ CPrimInsert::CPrimInsert(AD_DB_HANDLE hdb, PAD_ENT_HDR henhd, PAD_ENT hen) {
   m_vScale(hen->insert.xscale, hen->insert.yscale, hen->insert.zscale);
   m_dRotation = hen->insert.rotang;
 
-  if (henhd->extrusion[2] < 0.) { TRACE("Insert (block - %s) Entity Norm[2] = %f\n", blkh.name, henhd->extrusion[2]); }
+  if (henhd->extrusion[2] < 0.) { TRACE(_T("Insert (block - %s) Entity Norm[2] = %f\n"), blkh.name, henhd->extrusion[2]); }
 
   m_vX = Prim_ComputeArbitraryAxis(m_vZ);
   m_vY = m_vZ ^ m_vX;
@@ -948,14 +948,14 @@ bool CPrimInsert::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, 
 
   TCHAR szName[64]{};
   if (m_nPenStyle == PENSTYLE_BYLAYER) {
-    strcpy_s(szName, sizeof(szName), "ByLayer");
+    _tcscpy_s(szName, sizeof(szName), _T("ByLayer"));
   } else {
     CPenStyle* pPenStyle = CPegDoc::GetDoc()->PenStylesGetAt(m_nPenStyle);
-    strcpy_s(szName, sizeof(szName), pPenStyle->GetName().GetString());
+    _tcscpy_s(szName, sizeof(szName), pPenStyle->GetName().GetString());
   }
   adFindLinetypeByName(hdb, szName, henhd->entltypeobjhandle);
 
-  strcpy_s(szName, sizeof(szName), m_strName.GetString());
+  _tcscpy_s(szName, sizeof(szName), m_strName.GetString());
 
   adFindBlockheaderByName(hdb, szName, hen->insert.blockheaderobjhandle);
   m_pt.Get(hen->insert.pt0);
@@ -995,10 +995,10 @@ bool CPrimLine::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PA
 
   TCHAR szName[64]{};
   if (m_nPenStyle == PENSTYLE_BYLAYER) {
-    strcpy_s(szName, sizeof(szName), "ByLayer");
+    _tcscpy_s(szName, sizeof(szName), _T("ByLayer"));
   } else {
     CPenStyle* pPenStyle = CPegDoc::GetDoc()->PenStylesGetAt(m_nPenStyle);
-    strcpy_s(szName, sizeof(szName), pPenStyle->GetName().GetString());
+    _tcscpy_s(szName, sizeof(szName), pPenStyle->GetName().GetString());
   }
   adFindLinetypeByName(hdb, szName, henhd->entltypeobjhandle);
 
@@ -1166,7 +1166,7 @@ CPrimPolygon::CPrimPolygon(AD_DB_HANDLE hdb, PAD_ENT_HDR henhd, PAD_ENT hen) {
             pt(dPt[0], dPt[1], 0.);
             pta.Add(pt);
           } else if (bEdgeType == AD_HATCH_PATHTYPE_CIRCARC) {
-            TRACE("  Edge Type: Circular Arc\n");
+            TRACE(_T("  Edge Type: Circular Arc\n"));
             double dCenter[2];
             double dRadius;
             double dStartAng;
@@ -1178,7 +1178,7 @@ CPrimPolygon::CPrimPolygon(AD_DB_HANDLE hdb, PAD_ENT_HDR henhd, PAD_ENT hen) {
             adReadBlobDouble(bcptr, &dEndAng);
             adReadBlobShort(bcptr, &nIsClockWise);
           } else if (bEdgeType == AD_HATCH_PATHTYPE_ELLIPARC) {
-            TRACE("  Edge Type: Elliptical Arc\n");
+            TRACE(_T("  Edge Type: Elliptical Arc\n"));
             double dCenter[2];
             double dMajorAxis[2];
             double minmajratio;
@@ -1192,7 +1192,7 @@ CPrimPolygon::CPrimPolygon(AD_DB_HANDLE hdb, PAD_ENT_HDR henhd, PAD_ENT hen) {
             adReadBlobDouble(bcptr, &dEndAng);
             adReadBlobShort(bcptr, &nIsClockWise);
           } else if (bEdgeType == AD_HATCH_PATHTYPE_SPLINE) {
-            TRACE("  Edge Type: Spline\n");
+            TRACE(_T("  Edge Type: Spline\n"));
             long dDegree;
             short nIsRational;
             short nIsPeriodic;
@@ -1354,15 +1354,15 @@ bool CPrimSegRef::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, 
 
   TCHAR szName[64]{};
   if (m_nPenStyle == PENSTYLE_BYLAYER) {
-    strcpy_s(szName, sizeof(szName), "ByLayer");
+    _tcscpy_s(szName, sizeof(szName), _T("ByLayer"));
   } else {
     CPenStyle* pPenStyle = CPegDoc::GetDoc()->PenStylesGetAt(m_nPenStyle);
-    strcpy_s(szName, sizeof(szName), pPenStyle->GetName().GetString());
+    _tcscpy_s(szName, sizeof(szName), pPenStyle->GetName().GetString());
   }
   adFindLinetypeByName(hdb, szName, henhd->entltypeobjhandle);
   m_vZ.Get(henhd->extrusion);
 
-  strcpy_s(szName, sizeof(szName), m_strName.GetString());
+  _tcscpy_s(szName, sizeof(szName), m_strName.GetString());
 
   adFindBlockheaderByName(hdb, szName, hen->insert.blockheaderobjhandle);
   m_pt.Get(hen->insert.pt0);
@@ -1400,10 +1400,10 @@ CPrimText::CPrimText(AD_DB_HANDLE hdb, PAD_ENT_HDR henhd, PAD_ENT hen) {
   CString strFont = shptb.file;
   int nExt = strFont.ReverseFind('.');
   if (nExt != -1) {
-    if (strFont.Mid(nExt).CompareNoCase(".shx") == 0) {
+    if (strFont.Mid(nExt).CompareNoCase(_T(".shx") == 0) {
       strFont.Truncate(nExt);
       for (int n = nExt; n < 8; n++) { strFont += '_'; }
-      strFont += ".ttf";
+      strFont += _T(".ttf";
     }
   }
   WORD wHorAlign;
@@ -1530,10 +1530,10 @@ bool CPrimText::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PA
 
   TCHAR szName[64]{};
   if (m_nPenStyle == PENSTYLE_BYLAYER) {
-    strcpy_s(szName, sizeof(szName), "ByLayer");
+    _tcscpy_s(szName, sizeof(szName), _T("ByLayer"));
   } else {
     CPenStyle* pPenStyle = CPegDoc::GetDoc()->PenStylesGetAt(m_nPenStyle);
-    strcpy_s(szName, sizeof(szName), pPenStyle->GetName().GetString());
+    _tcscpy_s(szName, sizeof(szName), pPenStyle->GetName().GetString());
   }
   adFindLinetypeByName(hdb, szName, henhd->entltypeobjhandle);
 
@@ -1545,7 +1545,7 @@ bool CPrimText::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PA
 
   hen->text.tdata.height = m_rs.DirY().Length();
   hen->text.tdata.rotang = Vec_Angle_xy(m_rs.DirX());
-  strcpy_s(hen->text.textstr, sizeof(hen->text.textstr), m_strText.GetString());
+  _tcscpy_s(hen->text.textstr, sizeof(hen->text.textstr), m_strText.GetString());
 
   adAddEntityToList(hdb, entlist, henhd, hen);
 

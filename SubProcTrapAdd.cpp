@@ -28,7 +28,7 @@ LRESULT CALLBACK SubProcTrapAdd(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lPar
     case WM_COMMAND:
       switch (LOWORD(wParam)) {
         case ID_HELP_KEY:
-          WinHelp(hwnd, "peg.hlp", HELP_KEY, reinterpret_cast<DWORD_PTR>("TRAP"));
+          WinHelp(hwnd, _T("peg.hlp"), HELP_KEY, reinterpret_cast<DWORD_PTR>(_T("TRAP")));
           return 0;
 
         case ID_OP0:

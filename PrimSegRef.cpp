@@ -63,7 +63,7 @@ void CPrimSegRef::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const {
   CBlock* pBlock;
   if (CPegDoc::GetDoc()->BlksLookup(m_strName, pBlock) == 0) { return; }
 
-  HTREEITEM hti = tvAddItem(hTree, hParent, "<SegRef>", (CObject*)this);
+  HTREEITEM hti = tvAddItem(hTree, hParent, _T("<SegRef>"), (CObject*)this);
 
   ((CSeg*)pBlock)->AddPrimsToTreeViewControl(hTree, hti);
 }
@@ -100,19 +100,19 @@ void CPrimSegRef::Display(CPegView* pView, CDC* pDC) const {
   mspace.Return();
 }
 void CPrimSegRef::DisRep(const CPnt&) const {
-  std::string str = "<SegRef>";
-  str += " Color: " + StdFormatPenColor();
-  str += " Style: " + StdFormatPenStyle();
-  str += " Segment Name: " + m_strName;
+  std::string str = _T("<SegRef>");
+  str += _T(" Color: ") + StdFormatPenColor();
+  str += _T(" Style: ") + StdFormatPenStyle();
+  str += _T(" Segment Name: ") + m_strName;
   msgSetPaneText(str);
 }
 void CPrimSegRef::FormatExtra(CString& str) const {
   std::stringstream ss;
 
-  ss << "Color;" << StdFormatPenColor() << "\t"
-     << "Style;" << StdFormatPenStyle() << "\t"
-     << "Segment Name;" << m_strName.GetString() << "\t"
-     << "Rotation Angle;" << m_dRotation;
+  ss << _T("Color;") << StdFormatPenColor() << _T("\t")
+     << _T("Style;") << StdFormatPenStyle() << _T("\t")
+     << _T("Segment Name;") << m_strName.GetString() << _T("\t")
+     << _T("Rotation Angle;") << m_dRotation;
 
   str = ss.str().c_str();
 }
@@ -120,9 +120,9 @@ void CPrimSegRef::FormatExtra(CString& str) const {
 void CPrimSegRef::FormatGeometry(CString& str) const {
   std::stringstream ss;
 
-  ss << "Insertion Point;" << m_pt.ToStdString() << "\t"
-     << "Normal;" << m_vZ.ToStdString() << "\t"
-     << "Scale;" << m_vScale.ToStdString();
+  ss << _T("Insertion Point;") << m_pt.ToStdString() << _T("\t")
+     << _T("Normal;") << m_vZ.ToStdString() << _T("\t")
+     << _T("Scale;") << m_vScale.ToStdString();
 
   str = ss.str().c_str();
 }

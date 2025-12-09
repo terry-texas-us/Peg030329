@@ -82,18 +82,18 @@ void DlgProcEditTrap_CommandsQueryFillGeometryList(HWND hDlg, CPrim* pPrim) {
   int nOff = 0;
   for (int nDel = strBuf.Mid(nOff).Find(';'); nDel != -1;) {
     lvi.iItem = iItem;
-    strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
+    _tcscpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
     lvi.pszText = szBuf;
     ListView_InsertItem(hWndGeometry, &lvi);
     nOff += nDel + 1;
     nDel = strBuf.Mid(nOff).Find(';');
-    strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
+    _tcscpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
     ListView_SetItemText(hWndGeometry, iItem, 1, szBuf) nOff += nDel + 1;
     nDel = strBuf.Mid(nOff).Find(';');
-    strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
+    _tcscpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
     ListView_SetItemText(hWndGeometry, iItem, 2, szBuf) nOff += nDel + 1;
     nDel = strBuf.Mid(nOff).Find('\t');
-    strcpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
+    _tcscpy_s(szBuf, sizeof(szBuf), strBuf.Mid(nOff, nDel));
     ListView_SetItemText(hWndGeometry, iItem++, 3, szBuf) nOff += nDel + 1;
     nDel = strBuf.Mid(nOff).Find(';');
   }
@@ -114,23 +114,23 @@ INT_PTR CALLBACK DlgProcEditTrap_CommandsQuery(HWND hDlg, UINT nMsg, WPARAM wPar
       lvc.fmt = LVCFMT_LEFT;
       lvc.cx = 75;
       lvc.iSubItem = 0;
-      lvc.pszText = (LPTSTR) "Property";
+      lvc.pszText = (LPTSTR) _T("Property");
       ListView_InsertColumn(hWndExtra, 0, &lvc);
       lvc.iSubItem = 1;
-      lvc.pszText = (LPTSTR) "Value";
+      lvc.pszText = (LPTSTR) _T("Value");
       ListView_InsertColumn(hWndExtra, 1, &lvc);
 
       lvc.iSubItem = 0;
-      lvc.pszText = (LPTSTR) "Property";
+      lvc.pszText = (LPTSTR) _T("Property");
       ListView_InsertColumn(hWndGeometry, 0, &lvc);
       lvc.iSubItem = 1;
-      lvc.pszText = (LPTSTR) "X-Axis";
+      lvc.pszText = (LPTSTR) _T("X-Axis");
       ListView_InsertColumn(hWndGeometry, 1, &lvc);
       lvc.iSubItem = 2;
-      lvc.pszText = (LPTSTR) "Y-Axis";
+      lvc.pszText = (LPTSTR) _T("Y-Axis");
       ListView_InsertColumn(hWndGeometry, 2, &lvc);
       lvc.iSubItem = 3;
-      lvc.pszText = (LPTSTR) "Z-Axis";
+      lvc.pszText = (LPTSTR) _T("Z-Axis");
       ListView_InsertColumn(hWndGeometry, 3, &lvc);
 
       TreeView_Expand(hWndSegmentTree, htiSegmentList, TVE_EXPAND);

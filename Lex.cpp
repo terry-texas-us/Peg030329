@@ -98,11 +98,11 @@ void lex::BreakExpression(int& iLoc, int& iEnd, int* aiTyp, int* aiTokLoc) {
     iPrvTyp = iTyp;
     iTyp = TokType(++iLoc);
   }
-  if (iOpnPars > 0) throw "Unbalanced parentheses";
+  if (iOpnPars > 0) throw _T("Unbalanced parentheses");
 
   while (iOpStkTop > 1) aiTyp[iEnd++] = iOpStkTyp[iOpStkTop--];
 
-  if (iEnd == 0) throw "Syntax error";
+  if (iEnd == 0) throw _T("Syntax error");
 }
 
 void lex::ConvertValToString(char* acVal, CD* arCD, char* acPic, size_t picBufferSize, int* aiLen) {
@@ -150,8 +150,8 @@ void lex::ConvertValToString(char* acVal, CD* arCD, char* acPic, size_t picBuffe
           iLoc = 1;
           // pCvtDoubToFltDecTxt(*dVal, 7, iLoc, cVal);
           char* context = nullptr;
-          szpVal = strtok_s(cVal, " ", &context);
-          strcpy_s(&acPic[iLnLoc], picBufferSize - iLnLoc, szpVal);
+          szpVal = _tcstok_s(cVal, " ", &context);
+          _tcscpy_s(&acPic[iLnLoc], picBufferSize - iLnLoc, szpVal);
           iLnLoc += (int)strlen(szpVal);
         } else if (lTyp == TOK_LENGTH_OPERAND) {
 #pragma tasMSG(TODO : Length to length string)
@@ -185,7 +185,7 @@ void lex::ConvertValTyp(int aiTyp, int aiTypReq, long* alDef, void* apVal) {
   if (aiTyp == TOK_STRING) {
     TCHAR szVal[256]{};
 
-    strcpy_s(szVal, sizeof(szVal), (char*)apVal);
+    _tcscpy_s(szVal, sizeof(szVal), (char*)apVal);
     if (aiTypReq == TOK_INTEGER) {
       piVal[0] = atoi(szVal);
       *alDef = MAKELONG(1, 1);
@@ -218,7 +218,7 @@ void lex::ConvertValTyp(int aiTyp, int aiTypReq, long* alDef, void* apVal) {
 //				alDefReq	dimension (lo word) and length (hi word) of result
 //				aVal		result
 void lex::ConvertStringToVal(int aiTyp, long alDef, char* aszVal, long* alDefReq, void* aVal) {
-  if (LOWORD(alDef) <= 0) throw "Empty string";
+  if (LOWORD(alDef) <= 0) throw _T("Empty string");
 
   char szTok[64]{};
   int iNxt = 0;
@@ -233,7 +233,7 @@ void lex::ConvertStringToVal(int aiTyp, long alDef, char* aszVal, long* alDefReq
     else if (iTyp == TOK_REAL)
       *pVal = (long)atof(szTok);
     else
-      throw "String format conversion error";
+      throw _T("String format conversion error");
     *alDefReq = MAKELONG(1, 1);
   } else {
     double* pVal = (double*)aVal;
@@ -243,7 +243,7 @@ void lex::ConvertStringToVal(int aiTyp, long alDef, char* aszVal, long* alDefReq
     else if (iTyp == TOK_REAL)
       *pVal = atof(szTok);
     else
-      throw "String format conversion error";
+      throw _T("String format conversion error");
     *alDefReq = MAKELONG(1, 2);
   }
 }
@@ -296,13 +296,13 @@ void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* ap
     int iTokLoc = iExprTokLoc[iTokStkId];
     if (toktbl[iTokTyp].eClass == Identifier) {
       // symbol table stuff if desired
-      throw "Identifier token class not implemented";
+      throw _T("Identifier token class not implemented");
     } else if (toktbl[iTokTyp].eClass == Constant) {
       iTyp1 = iTokTyp;
       lDef1 = lValues[iValLoc[iTokLoc]];
       memcpy(cOp1, &lValues[iValLoc[iTokLoc] + 1], static_cast<size_t>(HIWORD(lDef1)) * 4);
     } else {  // Token is an operator .. Pop an operand from operand stack
-      if (iOpStkTop == 0) throw "Operand stack is empty";
+      if (iOpStkTop == 0) throw _T("Operand stack is empty");
 
       iTyp1 = iOpStkTyp[iOpStkTop];
       lDef1 = lOpStkDef[iOpStkTop];
@@ -312,7 +312,7 @@ void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* ap
       if (toktbl[iTokTyp].eClass == Other) {  // intrinsics and oddball unary minus/plus
         if (iTyp1 == TOK_STRING) {
           iDim1 = LOWORD(lDef1);
-          strcpy_s(szTok, sizeof(szTok), cOp1);
+          _tcscpy_s(szTok, sizeof(szTok), cOp1);
           if (iTokTyp == TOK_TOINTEGER) {
             iTyp1 = TOK_INTEGER;
             ConvertStringToVal(TOK_INTEGER, lDef1, szTok, &lDef1, cOp1);
@@ -322,13 +322,13 @@ void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* ap
           } else if (iTokTyp == TOK_STRING)
             ;
           else
-            throw "String operand conversions error: unknown";
+            throw _T("String operand conversions error: unknown");
         } else if (iTyp1 == TOK_INTEGER)
           UnaryOp(iTokTyp, &iTyp1, &lDef1, lOp1, bufferSize);
         else
           UnaryOp(iTokTyp, &iTyp1, &lDef1, dOp1, bufferSize);
       } else if (toktbl[iTokTyp].eClass == BinaryArithOp) {  // Binary arithmetic operator
-        if (iOpStkTop == 0) throw "Binary Arithmetic: Only one operand.";
+        if (iOpStkTop == 0) throw _T("Binary Arithmetic: Only one operand.");
         iTyp2 = iOpStkTyp[iOpStkTop];  // Pop second operand from operand stack
         lDef2 = lOpStkDef[iOpStkTop];
         iLen2 = HIWORD(lDef2);
@@ -353,8 +353,8 @@ void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* ap
             iDim1 = LOWORD(lDef1);
             iDim2 = LOWORD(lDef2);
             iDim = iDim2 + iDim1;
-            strcat_s(cOp2, sizeof(cOp2), cOp1);
-            strcpy_s(cOp1, sizeof(cOp1), cOp2);
+            _tcscat_s(cOp2, sizeof(cOp2), cOp1);
+            _tcscpy_s(cOp1, sizeof(cOp1), cOp2);
             iLen1 = 1 + (iDim - 1) / 4;
             lDef1 = MAKELONG(iDim, iLen1);
           } else {
@@ -364,13 +364,13 @@ void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* ap
               dOp1[0] += dOp2[0];
           }
         } else if (iTokTyp == TOK_BINARY_MINUS) {
-          if (iTyp1 == TOK_STRING) throw "Can not subtract strings";
+          if (iTyp1 == TOK_STRING) throw _T("Can not subtract strings");
           if (iTyp1 == TOK_INTEGER)
             lOp1[0] = lOp2[0] - lOp1[0];
           else
             dOp1[0] = dOp2[0] - dOp1[0];
         } else if (iTokTyp == TOK_MULTIPLY) {
-          if (iTyp1 == TOK_STRING) throw "Can not mutiply strings";
+          if (iTyp1 == TOK_STRING) throw _T("Can not mutiply strings");
           if (iTyp1 == TOK_INTEGER)
             lOp1[0] *= lOp2[0];
           else {
@@ -381,17 +381,17 @@ void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* ap
             else if (iTyp1 == TOK_LENGTH_OPERAND && iTyp2 == TOK_LENGTH_OPERAND)
               iTyp1 = TOK_AREA_OPERAND;
             else
-              throw "Invalid mix of multiplicands";
+              throw _T("Invalid mix of multiplicands");
 
             dOp1[0] *= dOp2[0];
           }
         } else if (iTokTyp == TOK_DIVIDE) {
-          if (iTyp1 == TOK_STRING) throw "Can not divide strings";
+          if (iTyp1 == TOK_STRING) throw _T("Can not divide strings");
           if (iTyp1 == TOK_INTEGER) {
-            if (lOp1[0] == 0) throw "Attempting to divide by 0";
+            if (lOp1[0] == 0) throw _T("Attempting to divide by 0");
             lOp1[0] = lOp2[0] / lOp1[0];
           } else if (iTyp1 <= iTyp2) {
-            if (dOp1[0] == 0.) throw "Attempting to divide by 0.";
+            if (dOp1[0] == 0.) throw _T("Attempting to divide by 0.");
             if (iTyp1 == iTyp2)
               iTyp1 = TOK_REAL;
             else if (iTyp1 == TOK_REAL)
@@ -400,30 +400,30 @@ void lex::EvalTokenStream(char*, int* aiTokId, long* alDef, int* aiTyp, void* ap
               iTyp1 = TOK_LENGTH_OPERAND;
             dOp1[0] = dOp2[0] / dOp1[0];
           } else
-            throw "Division type error";
+            throw _T("Division type error");
         } else if (iTokTyp == TOK_EXPONENTIATE) {
           if (iTyp1 == TOK_INTEGER) {
             if ((lOp1[0] >= 0 && lOp1[0] > DBL_MAX_10_EXP) || (lOp1[0] < 0 && lOp1[0] < DBL_MIN_10_EXP))
-              throw "Exponentiation error";
+              throw _T("Exponentiation error");
 
             lOp1[0] = (int)pow(lOp2[0], lOp1[0]);
           } else if (iTyp1 == TOK_REAL) {
             int iExp = (int)dOp1[0];
 
             if ((iExp >= 0 && iExp > DBL_MAX_10_EXP) || (iExp < 0 && iExp < DBL_MIN_10_EXP))
-              throw "Exponentiation error";
+              throw _T("Exponentiation error");
             dOp1[0] = pow(dOp2[0], dOp1[0]);
           }
         }
       } else if (toktbl[iTokTyp].eClass == BinaryRelatOp) {
         // if support for binary relational operators desired (== != > >= < <=)
-        throw "Binary relational operators not implemented";
+        throw _T("Binary relational operators not implemented");
       } else if (toktbl[iTokTyp].eClass == BinaryLogicOp) {
         // if support for binary logical operators desired (& |)
-        throw "Binary logical operators not implemented";
+        throw _T("Binary logical operators not implemented");
       } else if (toktbl[iTokTyp].eClass == UnaryLogicOp) {
         // if support for unary logical operator desired (!)
-        throw "Unary logical operator not implemented";
+        throw _T("Unary logical operator not implemented");
       }
     }
     iOpStkTop++;                   // Increment opernad stack pointer
@@ -545,7 +545,7 @@ int lex::Scan(char* tokenBuffer, size_t tokenBufferSize, const char* szLine, int
   iLen = iTokLoc - iBegLoc + 1;
   strncpy_s(tokenBuffer, tokenBufferSize, &szLine[iBegLoc], static_cast<rsize_t>(iLen));
   tokenBuffer[iLen] = '\0';
-  TRACE("LinePointer = %d, TokenID = %d\n", iLP, iRetVal);
+  TRACE(_T("LinePointer = %d, TokenID = %d\n"), iLP, iRetVal);
   if (iRetVal == -1) { iLP = iBegLoc + 1; }
   return (iRetVal);
 }
@@ -575,14 +575,14 @@ void lex::UnaryOp(int aiTokTyp, int* aiTyp, long* alDef, double* adOp, size_t bu
 
     case TOK_ACOS:
       if (fabs(adOp[0]) > 1.)
-        throw "Math error: acos of a value greater than 1.";
+        throw _T("Math error: acos of a value greater than 1.");
       else
         adOp[0] = acos(adOp[0]) / RADIAN;
       break;
 
     case TOK_ASIN:
       if (fabs(adOp[0]) > 1.)
-        throw "Math error: asin of a value greater than 1.";
+        throw _T("Math error: asin of a value greater than 1.");
       else
         adOp[0] = asin(adOp[0]) / RADIAN;
       break;
@@ -609,14 +609,14 @@ void lex::UnaryOp(int aiTokTyp, int* aiTyp, long* alDef, double* adOp, size_t bu
 
     case TOK_LN:
       if (adOp[0] <= 0.)
-        throw "Math error: ln of a non-positive number";
+        throw _T("Math error: ln of a non-positive number");
       else
         adOp[0] = log(adOp[0]);
       break;
 
     case TOK_LOG:
       if (adOp[0] <= 0.)
-        throw "Math error: log of a non-positive number";
+        throw _T("Math error: log of a non-positive number");
       else
         adOp[0] = log10(adOp[0]);
       break;
@@ -627,7 +627,7 @@ void lex::UnaryOp(int aiTokTyp, int* aiTyp, long* alDef, double* adOp, size_t bu
 
     case TOK_SQRT:
       if (adOp[0] < 0.)
-        throw "Math error: sqrt of a negative number";
+        throw _T("Math error: sqrt of a negative number");
       else
         adOp[0] = sqrt(adOp[0]);
       break;
@@ -642,12 +642,12 @@ void lex::UnaryOp(int aiTokTyp, int* aiTyp, long* alDef, double* adOp, size_t bu
       cd.lDef = *alDef;
       ConvertValToString((char*)adOp, &cd, szTok, sizeof(szTok), &iDim);
       iLen = 1 + (iDim - 1) / 4;
-      strcpy_s((char*)adOp, bufferSize, szTok);
+      _tcscpy_s((char*)adOp, bufferSize, szTok);
       *alDef = MAKELONG(iDim, iLen);
       break;
 
     default:
-      throw "Unknown operation";
+      throw _T("Unknown operation");
   }
 }
 void lex::UnaryOp(int aiTokTyp, int* aiTyp, long* alDef, long* alOp, size_t bufferSize) {
@@ -683,12 +683,12 @@ void lex::UnaryOp(int aiTokTyp, int* aiTyp, long* alDef, long* alOp, size_t buff
       cd.lDef = *alDef;
       ConvertValToString((char*)alOp, &cd, szTok, sizeof(szTok), &iDim);
       iLen = 1 + (iDim - 1) / 4;
-      strcpy_s((char*)alOp, bufferSize, szTok);
+      _tcscpy_s((char*)alOp, bufferSize, szTok);
       *alDef = MAKELONG(iDim, iLen);
       break;
 
     default:
-      throw "Unknown operation";
+      throw _T("Unknown operation");
   }
 }
 ///<summary>Scan a buffer for a given character.</summary>

@@ -115,7 +115,7 @@ extern CPnt ptMendPrimBeg;
 // CPegApp construction
 
 CPegApp::CPegApp() {
-  SetShadowDir("PegAEsys Shadow Files");
+  SetShadowDir(_T("PegAEsys Shadow Files"));
 
   m_bEditCFImage = false;
   m_bEditCFSegments = true;
@@ -206,7 +206,7 @@ BOOL CPegApp::InitInstance() {
   wc.hCursor = ::LoadCursor(0, IDC_CROSS);
   wc.hbrBackground = (HBRUSH)::GetStockObject(BLACK_BRUSH);
   wc.lpszMenuName = 0;
-  wc.lpszClassName = "View";
+  wc.lpszClassName = _T("View");
 
   if (!::RegisterClass(&wc)) return (FALSE);
 
@@ -219,15 +219,15 @@ BOOL CPegApp::InitInstance() {
   wc.hCursor = ::LoadCursor(0, IDC_CROSS);
   wc.hbrBackground = (HBRUSH)::GetStockObject(BLACK_BRUSH);
   wc.lpszMenuName = 0;
-  wc.lpszClassName = "Preview";
+  wc.lpszClassName = _T("Preview");
 
   if (!::RegisterClass(&wc)) return (FALSE);
 
-  HatchesLoad(m_strAppPath + "\\..\\..\\res\\Hatches\\DefaultSet.txt");
-  PenWidthsLoad(m_strAppPath + "\\..\\..\\res\\Pens\\Widths.txt");
-  PenColorsLoad(m_strAppPath + "\\..\\..\\res\\Pens\\Colors\\Default.txt");
-  PenStylesLoad(m_strAppPath + "\\..\\..\\res\\Pens\\LineTypes.txt");
-  StrokeFontLoad("");
+  HatchesLoad(m_strAppPath + _T("\\..\\..\\res\\Hatches\\DefaultSet.txt"));
+  PenWidthsLoad(m_strAppPath + _T("\\..\\..\\res\\Pens\\Widths.txt"));
+  PenColorsLoad(m_strAppPath + _T("\\..\\..\\res\\Pens\\Colors\\Default.txt"));
+  PenStylesLoad(m_strAppPath + _T("\\..\\..\\res\\Pens\\LineTypes.txt"));
+  StrokeFontLoad(_T(""));
 
   CPegView* pView = CPegView::GetActiveView();
   CDC* pDC = pView->GetDC();
@@ -255,7 +255,7 @@ BOOL CPegApp::InitInstance() {
   dde::Setup(m_hInstance);
 
   // This is the private data format used to pass segs from one instance of peg to another
-  m_nClipboardFormatPegSegs = RegisterClipboardFormat("PegSegs");
+  m_nClipboardFormatPegSegs = RegisterClipboardFormat(_T("PegSegs"));
 
   return TRUE;
 }
@@ -444,8 +444,8 @@ void CPegApp::OnFileRun() {
   TCHAR szFilter[256]{};
   ::LoadString(app.GetInstance(), IDS_OPENFILE_FILTER_APPS, szFilter, sizeof(szFilter));
 
-  CFileDialog dlg(TRUE, "exe", "*.exe", OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, szFilter);
-  dlg.m_ofn.lpstrTitle = "Run Application";
+  CFileDialog dlg(TRUE, _T("exe"), _T("*.exe"), OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, szFilter);
+  dlg.m_ofn.lpstrTitle = _T("Run Application");
 
   if (dlg.DoModal() == IDOK) {
     CString strFile = dlg.GetFileName();
@@ -476,7 +476,7 @@ void CPegApp::OnFileRun() {
     return;
   }
 }
-void CPegApp::OnHelpContents() { ::WinHelp(app.GetSafeHwnd(), "peg.hlp", HELP_CONTENTS, 0L); }
+void CPegApp::OnHelpContents() { ::WinHelp(app.GetSafeHwnd(), _T("peg.hlp"), HELP_CONTENTS, 0L); }
 void CPegApp::PenWidthsLoad(const CString& fileName) {
   std::ifstream file(fileName);
   if (!file.is_open()) { return; }
@@ -509,21 +509,21 @@ WORD CPegApp::GetFileTypeFromPath(const CString& strPathName) {
   if (nExt != -1) {
     CString strExt = strPathName.Mid(nExt);
 
-    if (strExt.CompareNoCase(".blk") == 0)
+    if (strExt.CompareNoCase(_T(".blk")) == 0)
       return (CPegDoc::FILE_TYPE_BLOCK);
-    else if (strExt.CompareNoCase(".dwg") == 0)
+    else if (strExt.CompareNoCase(_T(".dwg")) == 0)
       return (CPegDoc::FILE_TYPE_DWG);
-    else if (strExt.CompareNoCase(".dxf") == 0)
+    else if (strExt.CompareNoCase(_T(".dxf")) == 0)
       return (CPegDoc::FILE_TYPE_DXF);
-    else if (strExt.CompareNoCase(".ffa") == 0)
+    else if (strExt.CompareNoCase(_T(".ffa")) == 0)
       return (CPegDoc::FILE_TYPE_FFA);
-    else if (strExt.CompareNoCase(".peg") == 0)
+    else if (strExt.CompareNoCase(_T(".peg")) == 0)
       return (CPegDoc::FILE_TYPE_PEG);
-    else if (strExt.CompareNoCase(".tra") == 0)
+    else if (strExt.CompareNoCase(_T(".tra")) == 0)
       return (CPegDoc::FILE_TYPE_TRACING);
-    else if (strExt.CompareNoCase(".jb1") == 0)
+    else if (strExt.CompareNoCase(_T(".jb1")) == 0)
       return (CPegDoc::FILE_TYPE_JOB);
-    else if (strExt.CompareNoCase(".bmp") == 0)
+    else if (strExt.CompareNoCase(_T(".bmp")) == 0)
       return (CPegDoc::FILE_TYPE_BMP);
   }
   return (CPegDoc::FILE_TYPE_NONE);
@@ -536,7 +536,7 @@ void CPegApp::SetShadowDir(const std::string& strDir) {
   } else {
     m_strShadowDir.clear();
   }
-  m_strShadowDir += "\\" + strDir + "\\";
+  m_strShadowDir += _T("\\") + strDir + _T("\\");
 
   _mkdir(m_strShadowDir.c_str());
 }
@@ -598,7 +598,7 @@ void CPegApp::HatchesLoad(const CString& strFileName) {
   int iNmbEnts{0};
   int iNmbStrsId{0};
 
-  TCHAR szValDel[] = ",\0";
+  TCHAR szValDel[] = _T(",\0");
   int iHatId{0};
   int iNmbHatLns{0};
   int iTblId{0};
@@ -615,13 +615,13 @@ void CPegApp::HatchesLoad(const CString& strFileName) {
       iNmbEnts = 0;
       dTotStrsLen = 0.;
       TCHAR* context = nullptr;
-      TCHAR* pTok = strtok_s(szLn, szValDel, &context);
+      TCHAR* pTok = _tcstok_s(szLn, szValDel, &context);
       while (pTok != 0) {
         hatch::fTableValue[iTblId] = float(atof(pTok));
         iNmbEnts++;
         if (iNmbEnts >= 6) dTotStrsLen = dTotStrsLen + hatch::fTableValue[iTblId];
         iTblId++;
-        pTok = strtok_s(0, szValDel, &context);
+        pTok = _tcstok_s(0, szValDel, &context);
       }
       hatch::fTableValue[iNmbStrsId++] = float(iNmbEnts - 5);
       hatch::fTableValue[iNmbStrsId] = float(dTotStrsLen);
@@ -707,19 +707,19 @@ void CPegApp::PenStylesLoad(const CString& strFileName) {
     double* pLen = new double[wLensMax];
     TCHAR* context = nullptr;
     while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0) {
-      int iId = _ttoi(strtok_s(pBuf, "=", &context));
-      strName = strtok_s(0, ",", &context);
-      strDescription = strtok_s(0, "\n", &context);
+      int iId = _ttoi(_tcstok_s(pBuf, _T("="), &context));
+      strName = _tcstok_s(0, _T(","), &context);
+      strDescription = _tcstok_s(0, _T("\n"), &context);
       fl.ReadString(pBuf, sizeof(pBuf) - 1);
 
-      WORD wLens = WORD(_ttoi(strtok_s(pBuf, ",\n", &context)));
+      WORD wLens = WORD(_ttoi(_tcstok_s(pBuf, _T(",\n"), &context)));
 
       if (wLens > wLensMax) {
         delete[] pLen;
         pLen = new double[wLens];
         wLensMax = wLens;
       }
-      for (WORD w = 0; w < wLens; w++) pLen[w] = atof(strtok_s(0, ",\n", &context));
+      for (WORD w = 0; w < wLens; w++) pLen[w] = atof(_tcstok_s(0, _T(",\n"), &context));
 
       pDoc->PenStylesInsert(iId, new CPenStyle(strName, strDescription, wLens, pLen));
     }
@@ -759,18 +759,18 @@ void CPegApp::PenColorsLoad(const CString& strFileName) {
     TCHAR pBuf[128]{};
     LPSTR pId, pRed, pGreen, pBlue;
 
-    while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0 && _strnicmp(pBuf, "<Colors>", 8) != 0);
+    while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != nullptr && _strnicmp(pBuf, _T("<Colors>"), 8) != 0);
 
     TCHAR* context = nullptr;
-    while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0 && *pBuf != '<') {
-      pId = strtok_s(pBuf, "=", &context);
-      pRed = strtok_s(0, ",", &context);
-      pGreen = strtok_s(0, ",", &context);
-      pBlue = strtok_s(0, ",", &context);
+    while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != nullptr && *pBuf != '<') {
+      pId = _tcstok_s(pBuf, _T("="), &context);
+      pRed = _tcstok_s(0, _T(","), &context);
+      pGreen = _tcstok_s(0, _T(","), &context);
+      pBlue = _tcstok_s(0, _T(","), &context);
       crHotCols[_ttoi(pId)] = RGB(_ttoi(pRed), _ttoi(pGreen), _ttoi(pBlue));
-      pRed = strtok_s(0, ",", &context);
-      pGreen = strtok_s(0, ",", &context);
-      pBlue = strtok_s(0, "\n", &context);
+      pRed = _tcstok_s(0, _T(","), &context);
+      pGreen = _tcstok_s(0, _T(","), &context);
+      pBlue = _tcstok_s(0, _T("\n"), &context);
       crWarmCols[_ttoi(pId)] = RGB(_ttoi(pRed), _ttoi(pGreen), _ttoi(pBlue));
     }
   }
@@ -1022,22 +1022,22 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli) const {
 
     if (sli == All || sli == WorkCnt) {  // print num in work
       rc.SetRect(0, rcClient.top, 8 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-      std::string str = std::to_string(CPegDoc::GetDoc()->GetHotCount() + CPegDoc::GetDoc()->GetWarmCount()) + "  ";
+      std::string str = std::to_string(CPegDoc::GetDoc()->GetHotCount() + CPegDoc::GetDoc()->GetWarmCount()) + _T("  ");
       pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
     }
     if (sli == All || sli == TrapCnt) {  // print num in trap
       rc.SetRect(10 * tm.tmAveCharWidth, rcClient.top, 19 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-      std::string str = " " + std::to_string(trapsegs.GetCount()) + "  ";
+      std::string str = _T(" ") + std::to_string(trapsegs.GetCount()) + _T("  ");
       pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
     }
     if (sli == All || sli == Pen) {  // print pen  info
       rc.SetRect(21 * tm.tmAveCharWidth, rcClient.top, 27 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-      std::string str = "P " + std::to_string(pstate.PenColor()) + " ";
+      std::string str = _T("P ") + std::to_string(pstate.PenColor()) + _T(" ");
       pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
     }
     if (sli == All || sli == Line) {  // print line info
       rc.SetRect(29 * tm.tmAveCharWidth, rcClient.top, 35 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
-      std::string str = "L " + std::to_string(pstate.PenStyle());
+      std::string str = _T("L ") + std::to_string(pstate.PenStyle());
       pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
     }
     if (sli == All || sli == TextHeight) {  // print text height
@@ -1045,14 +1045,14 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli) const {
       pstate.GetCharCellDef(ccd);
       rc.SetRect(37 * tm.tmAveCharWidth, rcClient.top, 47 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
       std::stringstream ss;
-      ss << "T " << std::fixed << std::setprecision(2) << ccd.ChrHgtGet();
+      ss << _T("T ") << std::fixed << std::setprecision(2) << ccd.ChrHgtGet();
       std::string str = ss.str();
       pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
     }
     if (sli == All || sli == Scale) {  //print scale
       rc.SetRect(49 * tm.tmAveCharWidth, rcClient.top, 59 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
       std::stringstream ss;
-      ss << "1: " << std::fixed << std::setprecision(2) << GetScale();
+      ss << _T("1: ") << std::fixed << std::setprecision(2) << GetScale();
       std::string str = ss.str();
       pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
     }
@@ -1060,7 +1060,7 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli) const {
       rc.SetRect(61 * tm.tmAveCharWidth, rcClient.top, 71 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
       double dRatio = pView->GetWidthInInches() / pView->ModelViewGetUExt();
       std::stringstream ss;
-      ss << "@ " << std::fixed << std::setprecision(3) << dRatio;
+      ss << _T("@ ") << std::fixed << std::setprecision(3) << dRatio;
       std::string str = ss.str();
       pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
     }
@@ -1072,7 +1072,7 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli) const {
     if (sli == All || sli == DimAng) {  // print DimAngle
       rc.SetRect(92 * tm.tmAveCharWidth, rcClient.top, 107 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
       std::stringstream ss;
-      ss << ">> " << std::fixed << std::setprecision(4) << GetDimAngZ();
+      ss << _T(">> ") << std::fixed << std::setprecision(4) << GetDimAngZ();
       std::string str = ss.str();
       pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
     }
@@ -1092,7 +1092,7 @@ void CPegApp::StrokeFontLoad(const CString& strPathName) {
     LPVOID fontptr;
 
     // Open binary resources
-    hrsrc = FindResource(NULL, MAKEINTRESOURCE(IDR_PEGSTROKEFONT), "STROKEFONT");
+    hrsrc = FindResource(NULL, MAKEINTRESOURCE(IDR_PEGSTROKEFONT), _T("STROKEFONT"));
     fontlen = static_cast<int>(SizeofResource(NULL, hrsrc));
     m_pStrokeFontDef = new TCHAR[static_cast<size_t>(fontlen)];
 

@@ -18,18 +18,18 @@ using namespace dde;
 
 // Standard format name lookup table
 // String names for standard Windows Clipboard formats
-CFTAGNAME dde::CFNames[] = {{CF_TEXT, {const_cast<LPSTR>("TEXT")}},
-                            {CF_BITMAP, {const_cast<LPSTR>("BITMAP")}},
-                            {CF_METAFILEPICT, {const_cast<LPSTR>("METAFILEPICT")}},
-                            {CF_SYLK, {const_cast<LPSTR>("SYLK")}},
-                            {CF_DIF, {const_cast<LPSTR>("DIF")}},
-                            {CF_TIFF, {const_cast<LPSTR>("TIFF")}},
-                            {CF_OEMTEXT, {const_cast<LPSTR>("OEMTEXT")}},
-                            {CF_DIB, {const_cast<LPSTR>("DIB")}},
-                            {CF_PALETTE, {const_cast<LPSTR>("PALETTE")}},
-                            {CF_PENDATA, {const_cast<LPSTR>("PENDATA")}},
-                            {CF_RIFF, {const_cast<LPSTR>("RIFF")}},
-                            {CF_WAVE, {const_cast<LPSTR>("WAVE")}},
+CFTAGNAME dde::CFNames[] = {{CF_TEXT, {const_cast<LPSTR>(_T("TEXT"))}},
+                            {CF_BITMAP, {const_cast<LPSTR>(_T("BITMAP"))}},
+                            {CF_METAFILEPICT, {const_cast<LPSTR>(_T("METAFILEPICT"))}},
+                            {CF_SYLK, {const_cast<LPSTR>(_T("SYLK"))}},
+                            {CF_DIF, {const_cast<LPSTR>(_T("DIF"))}},
+                            {CF_TIFF, {const_cast<LPSTR>(_T("TIFF"))}},
+                            {CF_OEMTEXT, {const_cast<LPSTR>(_T("OEMTEXT"))}},
+                            {CF_DIB, {const_cast<LPSTR>(_T("DIB"))}},
+                            {CF_PALETTE, {const_cast<LPSTR>(_T("PALETTE"))}},
+                            {CF_PENDATA, {const_cast<LPSTR>(_T("PENDATA"))}},
+                            {CF_RIFF, {const_cast<LPSTR>(_T("RIFF"))}},
+                            {CF_WAVE, {const_cast<LPSTR>(_T("WAVE"))}},
                             {0, {nullptr}}};
 // Local data
 SERVERINFO dde::ServerInfo;
@@ -51,13 +51,13 @@ void dde::Setup(HINSTANCE) {
 
   UINT uiResult = DdeInitialize(&ServerInfo.dwInstance, ServerInfo.pfnStdCallback, dwFilterFlags, 0L);
   if (uiResult != DMLERR_NO_ERROR) {
-    msgWarning(IDS_MSG_DDE_INIT_FAILURE, "PegAEsys");
+    msgWarning(IDS_MSG_DDE_INIT_FAILURE, _T("PegAEsys"));
     ::DestroyWindow(app.GetSafeHwnd());
     return;
   }
   dwInstance = ServerInfo.dwInstance;
 
-  ServerInfo.lpszServiceName = const_cast<TCHAR*>("PegAEsys");
+  ServerInfo.lpszServiceName = const_cast<TCHAR*>(_T("PegAEsys"));
   ServerInfo.hszServiceName = DdeCreateStringHandle(ServerInfo.dwInstance, _T("PegAEsys"), CP_WINANSI);
 
   // Register the name of the service
@@ -136,8 +136,8 @@ void dde::Uninitialize() {
     }
     pTopic = pTopic->pNext;
   }
-  TopicRemove("Commands");
-  TopicRemove("General");
+  TopicRemove(_T("Commands"));
+  TopicRemove(_T("General"));
   TopicRemove(SZDDESYS_TOPIC);
 
   // Release DDEML
@@ -414,10 +414,10 @@ PEXECCMDFNINFO dde::ExecCmdAdd(const TCHAR* pszTopic, const TCHAR* pszCmdName, P
     pCmd->pNext = pTopic->pCmdList;
     pTopic->pCmdList = pCmd;
 
-    // If this was the first command added to the list, add the 'Result' command too.
+    // If this was the first command added to the list, add the `Result` command too.
     // This supports the Execute Control 1 protocol.
 
-    ExecCmdAdd(pszTopic, "Result", SysResultExecCmd, 1, 1);
+    ExecCmdAdd(pszTopic, _T("Result"), SysResultExecCmd, 1, 1);
   }
   return pCmd;
 }
@@ -514,7 +514,7 @@ void dde::PostAdvise(PITEMINFO pItemInfo) {
 // DDE Execute command parser
 
 ///<summary>Process a DDE execute command line.</summary>
-// Notes:	Support for the 'Execute Control 1' protocol is provided allowing
+// Notes:	Support for the `Execute Control 1` protocol is provided allowing
 //			return information to be sent back to the caller.
 // Returns: true if no errors occur in parsing or executing the commands.
 //			false if any error occurs.
@@ -608,13 +608,13 @@ bool dde::ParseCmd(LPSTR* ppszCmdLine, PTOPICINFO pTopic, LPSTR pszError, UINT u
   LPSTR pCmd = lex::SkipWhiteSpace(*ppszCmdLine);
 
   if (!lex::ScanForChar('[', &pCmd)) {  // Scan for a command leading
-    strncpy_s(pszError, uiErrorSize, "Missing '['", _TRUNCATE);
+    strncpy_s(pszError, uiErrorSize, _T("Missing '['"), _TRUNCATE);
     return false;
   }
 
   pExecFnInfo = ScanForCommand(pTopic->pCmdList, &pCmd);
   if (!pExecFnInfo) {  // Not a valid command
-    strncpy_s(pszError, uiErrorSize, "Invalid Command", _TRUNCATE);
+    strncpy_s(pszError, uiErrorSize, _T("Invalid Command"), _TRUNCATE);
     return false;
   }
   *ppOp++ = pExecFnInfo->pFn;  // Add the function pointer to the opcode list
@@ -630,20 +630,20 @@ bool dde::ParseCmd(LPSTR* ppszCmdLine, PTOPICINFO pTopic, LPSTR pszError, UINT u
     } while (cTerm == ',');
 
     if ((cTerm != ')') && (!lex::ScanForChar(')', &pCmd))) {  // Do not have a terminating ) character
-      strncpy_s(pszError, uiErrorSize, "Missing ')'", _TRUNCATE);
+      strncpy_s(pszError, uiErrorSize, _T("Missing ')'"), _TRUNCATE);
       return false;
     }
   }
   if (!lex::ScanForChar(']', &pCmd)) {  // Do not have a terminating ] character
-    strncpy_s(pszError, uiErrorSize, "Missing ']'", _TRUNCATE);
+    strncpy_s(pszError, uiErrorSize, _T("Missing ']'"), _TRUNCATE);
     return false;
   }
   if (uiNargs < pExecFnInfo->uiMinArgs) {
-    strncpy_s(pszError, uiErrorSize, "Too few arguments", _TRUNCATE);
+    strncpy_s(pszError, uiErrorSize, _T("Too few arguments"), _TRUNCATE);
     return false;
   }
   if (uiNargs > pExecFnInfo->uiMaxArgs) {
-    strncpy_s(pszError, uiErrorSize, "Too many arguments", _TRUNCATE);
+    strncpy_s(pszError, uiErrorSize, _T("Too many arguments"), _TRUNCATE);
     return false;
   }
   *ppOp++ = 0;  // Terminate this op list with a 0

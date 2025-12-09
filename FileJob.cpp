@@ -125,14 +125,14 @@ bool filejob_GetNextSeg(CFile& f, int iVersion, char* pBuf, CSeg*& pSeg) {
     for (WORD w = 1; w < wPrims; w++) {
       try {
         dwPosition = f.GetPosition();
-        if (!filejob_GetNextPrim(f, iVersion, pBuf, pPrim)) throw "Exception.FileJob: Unexpected end of file.";
+        if (!filejob_GetNextPrim(f, iVersion, pBuf, pPrim)) throw _T("Exception.FileJob: Unexpected end of file.");
         pSeg->AddTail(pPrim);
-      } catch (char* szMessage) {
+      } catch (TCHAR* szMessage) {
         msgInformation(szMessage);
         f.Seek(static_cast<LONGLONG>(dwPosition + 32), CFile::begin);
       }
     }
-  } catch (char* szMessage) {
+  } catch (TCHAR* szMessage) {
     if (dwPosition >= 96) {
       if (::MessageBox(0, szMessage, 0, MB_ICONERROR | MB_RETRYCANCEL) == IDCANCEL) return false;
     }
@@ -148,14 +148,14 @@ bool filejob_GetNextPrim(CFile& f, int iVersion, char* pBuf, CPrim*& pPrim) {
 
     int iLen = (iVersion == 1) ? pBuf[6] : pBuf[3];
 
-    if (!filejob_IsValidPrimitive(*pTyp)) throw "Exception.FileJob: Invalid primitive type.";
+    if (!filejob_IsValidPrimitive(*pTyp)) throw _T("Exception.FileJob: Invalid primitive type.");
 
     if (iLen > 1) {
       UINT nCount = static_cast<UINT>(iLen - 1) * 32;
 
-      if (nCount >= CPrim::BUFFER_SIZE - 32) throw "Exception.FileJob: Primitive buffer overflow.";
+      if (nCount >= CPrim::BUFFER_SIZE - 32) throw _T("Exception.FileJob: Primitive buffer overflow.");
 
-      if (f.Read(&pBuf[32], nCount) < nCount) throw "Exception.FileJob: Unexpected end of file.";
+      if (f.Read(&pBuf[32], nCount) < nCount) throw _T("Exception.FileJob: Unexpected end of file.");
     }
   } while (*pTyp <= 0 || pBuf[5] == 33);
 
@@ -213,7 +213,7 @@ bool filejob_GetNextPrim(CFile& f, int iVersion, char* pBuf, CPrim*& pPrim) {
           break;
 
         default:
-          throw "Exception.FileJob: Invalid primitive type.";
+          throw _T("Exception.FileJob: Invalid primitive type.");
       }
   }
   return true;
@@ -408,7 +408,7 @@ CPrimDim::CPrimDim(char* p) {
 
   m_nPenColor = PENCOLOR(p[32]);
 
-  m_fd.TextFontSet("Simplex.psf");
+  m_fd.TextFontSet(_T("Simplex.psf"));
   m_fd.TextPrecSet(CFontDef::PREC_PEGSTROKEFONT);
 
   m_fd.ChrSpacSet(((CVaxFloat*)&p[36])->Convert());
@@ -729,10 +729,10 @@ void CPrimTag::Write(CFile& f, char* p) const {
   f.Write(p, 32);
 }
 // Constructs a text primative using preclass primitive buffer.
-// All text primitives from the Vax are handled as "Simplex.psf".
+// All text primitives from the Vax are handled as `Simplex.psf`.
 CPrimText::CPrimText(char* p, int iVer) {
   m_fd.TextPrecSet(CFontDef::PREC_PEGSTROKEFONT);
-  m_fd.TextFontSet("Simplex.psf");
+  m_fd.TextFontSet(_T("Simplex.psf"));
 
   if (iVer == 1) {
     m_nPenColor = PENCOLOR(p[4] & 0x000f);
@@ -772,12 +772,12 @@ CPrimText::CPrimText(char* p, int iVer) {
       m_rs.SetDirY(vDirY);
     }
     char* context = nullptr;
-    char* pChr = strtok_s(&p[44], "\\", &context);
+    char* pChr = _tcstok_s(&p[44], "\\", &context);
 
     if (pChr == 0)
-      m_strText = "CFileJob.PrimText error: Missing string terminator.";
+      m_strText = _T("CFileJob.PrimText error: Missing string terminator.");
     else if (strlen(pChr) > 132)
-      m_strText = "CFileJob.PrimText error: Text too long.";
+      m_strText = _T("CFileJob.PrimText error: Text too long.");
     else {
       while (*pChr != 0) {
         if (!isprint(*pChr)) *pChr = '.';

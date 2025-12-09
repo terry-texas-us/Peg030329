@@ -112,7 +112,7 @@ void DlgProcSetupNoteInit(HWND hDlg) {
   if (context != nullptr) {
     ::EnumFontFamiliesEx(context->GetSafeHdc(), &lf, (FONTENUMPROC)EnumFontFamProc, LPARAM(hDlg), 0);
   }
-  ::SendDlgItemMessage(hDlg, IDC_FONT_NAME, CB_ADDSTRING, 0, (LPARAM)(LPCSTR) "Simplex.psf");
+  ::SendDlgItemMessage(hDlg, IDC_FONT_NAME, CB_ADDSTRING, 0, (LPARAM)(LPCSTR) _T("Simplex.psf"));
 
   CCharCellDef ccd;
   pstate.GetCharCellDef(ccd);
@@ -126,7 +126,7 @@ void DlgProcSetupNoteInit(HWND hDlg) {
   pstate.GetFontDef(fd);
 
   TCHAR szBuf[32]{};
-  strcpy_s(szBuf, sizeof(szBuf), fd.TextFont());
+  _tcscpy_s(szBuf, sizeof(szBuf), fd.TextFont());
   ::SendDlgItemMessage(hDlg, IDC_FONT_NAME, CB_SELECTSTRING, (WPARAM)-1, (LPARAM)((LPSTR)szBuf));
 
   DlgBoxSetItemDouble(hDlg, IDC_TEXT_SPACING, fd.ChrSpac());

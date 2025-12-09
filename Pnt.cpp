@@ -33,8 +33,8 @@ void CPnt::operator-=(const CVec& v) {
 void CPnt::Read(CFile& fl) { fl.Read(m_d, 3 * sizeof(double)); }
 std::string CPnt::ToStdString(int precision, int minWidth) const {
   std::ostringstream oss;
-  oss << std::fixed << std::setprecision(precision) << std::setw(minWidth) << m_d[0] << ";" << std::setw(minWidth)
-      << m_d[1] << ";" << std::setw(minWidth) << m_d[2] << "\t";
+  oss << std::fixed << std::setprecision(precision) << std::setw(minWidth) << m_d[0] << _T(";") << std::setw(minWidth)
+      << m_d[1] << _T(";") << std::setw(minWidth) << m_d[2] << _T("\t");
   return oss.str();
 }
 void CPnt::Write(CFile& fl) const { fl.Write(m_d, 3 * sizeof(double)); }

@@ -63,7 +63,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct) {
           this, TBSTYLE_FLAT,
           WS_CHILD | WS_VISIBLE | CBRS_TOP | CBRS_GRIPPER | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
       !m_wndToolBar.LoadToolBar(IDR_MAINFRAME)) {
-    TRACE0("Failed to create toolbar\n");
+    TRACE0(_T("Failed to create toolbar\n"));
     return -1;  // fail to create
   }
   m_wndToolBar.EnableDocking(CBRS_ALIGN_ANY);
@@ -71,7 +71,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct) {
   DockControlBar(&m_wndToolBar);
 
   if (!m_wndStatusBar.Create(this) || !m_wndStatusBar.SetIndicators(indicators, numberOfIndicators)) {
-    TRACE0("Failed to create status bar\n");
+    TRACE0(_T("Failed to create status bar\n"));
     return -1;  // fail to create
   }
 
@@ -82,13 +82,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct) {
   return 0;
 }
 void CMainFrame::OnDestroy() {
-  TRACE("CMainFrame::OnDestroy() - Entering\n");
+  TRACE(_T("CMainFrame::OnDestroy() - Entering\n"));
 
   CPegView* pView = CPegView::GetActiveView();
   CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
 
   if (pDC != NULL) {
-    // Stock objects are never left "current" so it is safe to delete whatever the old object is
+    // Stock objects are never left `current` so it is safe to delete whatever the old object is
     pDC->SelectStockObject(BLACK_PEN)->DeleteObject();
     pDC->SelectStockObject(WHITE_BRUSH)->DeleteObject();
     // pView->ReleaseDC();	// Release to DC associated with the view

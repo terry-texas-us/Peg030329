@@ -70,7 +70,7 @@ auto CDlgViewZoom::OnInitDialog() -> BOOL {
   GetWindowRect(&rcMoreArea);
 
   TCHAR szBuf[16]{};
-  wsprintf(szBuf, "%05u %05u", rcMoreArea.Width(), rcMoreArea.Height());
+  wsprintf(szBuf, _T("%05u %05u"), rcMoreArea.Width(), rcMoreArea.Height());
 
   GetDlgItem(IDC_LESS_AREA)->SetWindowText(szBuf);
   GetDlgItem(IDC_KEYPLAN_AREA)->EnableWindow(bKeyplan);
@@ -222,7 +222,7 @@ void CDlgViewZoom::Refresh() {
   GetDlgItem(IDC_LESS_AREA)->GetWindowText(szBuf, sizeof(szBuf));
 
   if (bKeyplan) {
-    GetDlgItem(IDC_MORELESS)->SetWindowText("&Less");
+    GetDlgItem(IDC_MORELESS)->SetWindowText(_T("&Less"));
 
     CDC dcMem;
     dcMem.CreateCompatibleDC(nullptr);
@@ -259,7 +259,7 @@ void CDlgViewZoom::Refresh() {
     pView->ModelViewPopActive();
     pView->ViewportPopActive();
   } else {
-    GetDlgItem(IDC_MORELESS)->SetWindowText("&More");
+    GetDlgItem(IDC_MORELESS)->SetWindowText(_T("&More"));
 
     CRect rcLessArea;
     GetDlgItem(IDC_LESS_AREA)->GetWindowRect(&rcLessArea);

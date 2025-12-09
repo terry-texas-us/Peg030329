@@ -26,7 +26,7 @@ double DlgBoxGetItemUnitsText(HWND hDlg, int iCtrlId) {
 
 void DlgBoxSetItemDouble(HWND hDlg, int iCtrlId, double dVal) {
   CString str;
-  str.Format("%f", dVal);
+  str.Format(_T("%f"), dVal);
   SetDlgItemText(hDlg, iCtrlId, str);
 }
 

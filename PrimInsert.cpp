@@ -54,7 +54,7 @@ const CPrimInsert& CPrimInsert::operator=(const CPrimInsert& src) {
 }
 
 void CPrimInsert::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const {
-  tvAddItem(hTree, hParent, "<Insert>", (CObject*)this);
+  tvAddItem(hTree, hParent, _T("<Insert>"), (CObject*)this);
 }
 CTMat CPrimInsert::BuildTransformMatrix(const CPnt& ptBase) const {
   CTMat tm(m_pt, m_vX, m_vY);
@@ -83,23 +83,23 @@ void CPrimInsert::Display(CPegView* pView, CDC* pDC) const {
   mspace.Return();
 }
 void CPrimInsert::DisRep(const CPnt&) const {
-  std::string str = "<Insert>";
-  str += " Color: " + StdFormatPenColor();
-  str += " Style: " + StdFormatPenStyle();
+  std::string str = _T("<Insert>");
+  str += _T(" Color: ") + StdFormatPenColor();
+  str += _T(" Style: ") + StdFormatPenStyle();
   msgSetPaneText(str);
 }
 void CPrimInsert::FormatExtra(CString& str) const {
   std::string extra;
-  extra = "Color;" + StdFormatPenColor() + "\t";
-  extra += "Style;" + StdFormatPenStyle();
+  extra = _T("Color;") + StdFormatPenColor() + _T("\t");
+  extra += _T("Style;") + StdFormatPenStyle();
   str = extra.c_str();
 }
 void CPrimInsert::FormatGeometry(CString& str) const {
   std::string geometry;
-  geometry = "Insertion Point;" + m_pt.ToStdString();
-  geometry += "X Axis;" + m_vX.ToStdString();
-  geometry += "Y Axis;" + m_vY.ToStdString();
-  geometry += "Z Axis;" + m_vZ.ToStdString();
+  geometry = _T("Insertion Point;") + m_pt.ToStdString();
+  geometry += _T("X Axis;") + m_vX.ToStdString();
+  geometry += _T("Y Axis;") + m_vY.ToStdString();
+  geometry += _T("Z Axis;") + m_vZ.ToStdString();
   str = geometry.c_str();
 }
 CPnt CPrimInsert::GetCtrlPt() const {

@@ -33,7 +33,7 @@ const CPrimBSpline& CPrimBSpline::operator=(const CPrimBSpline& src) {
 }
 
 void CPrimBSpline::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const {
-  tvAddItem(hTree, hParent, "<BSpline>", (CObject*)this);
+  tvAddItem(hTree, hParent, _T("<BSpline>"), (CObject*)this);
 }
 
 CPrim*& CPrimBSpline::Copy(CPrim*& pPrim) const {
@@ -60,20 +60,20 @@ void CPrimBSpline::Display(CPegView* pView, CDC* pDC) const {
   }
 }
 void CPrimBSpline::DisRep(const CPnt&) const {
-  std::string str = "<BSpline> Color: " + StdFormatPenColor() + " Style: " + StdFormatPenStyle();
+  std::string str = _T("<BSpline> Color: ") + StdFormatPenColor() + _T(" Style: ") + StdFormatPenStyle();
   msgSetPaneText(str);
 }
 void CPrimBSpline::FormatGeometry(CString& str) const {
   std::string geometry;
-  for (WORD w = 0; w < m_pts.GetSize(); w++) { geometry += "Control Point;" + m_pts[w].ToStdString(); }
+  for (WORD w = 0; w < m_pts.GetSize(); w++) { geometry += _T("Control Point;") + m_pts[w].ToStdString(); }
   str = geometry.c_str();
 }
 
 void CPrimBSpline::FormatExtra(CString& str) const {
   std::string extra;
-  extra = "Color;" + StdFormatPenColor() + "\t";
-  extra += "Style;" + StdFormatPenStyle() + "\t";
-  extra += "Control Points;" + std::to_string(m_pts.GetSize());
+  extra = _T("Color;") + StdFormatPenColor() + _T("\t");
+  extra += _T("Style;") + StdFormatPenStyle() + _T("\t");
+  extra += _T("Control Points;") + std::to_string(m_pts.GetSize());
   str = extra.c_str();
 }
 
@@ -190,7 +190,7 @@ bool CPrimBSpline::Write(CFile& fl) const {
 //			produced will lie closer to the defining polygon.
 //			When the iOrder is two the generated curve is a
 //			series of straight lines which are identical to the
-//			defining polygon.  Increasing the iOrder "tightens"
+//			defining polygon.  Increasing the iOrder `tightens`
 //			the curve.	Additional shape control can be obtained by
 //			use of repeating vertices.
 // Parameters:	iOrder 		iOrder of B-spline basis

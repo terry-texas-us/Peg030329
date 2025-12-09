@@ -41,7 +41,7 @@ const CPrimText& CPrimText::operator=(const CPrimText& src) {
   return (*this);
 }
 void CPrimText::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const {
-  tvAddItem(hTree, hParent, "<Text>", (CObject*)this);
+  tvAddItem(hTree, hParent, _T("<Text>"), (CObject*)this);
 }
 CPrim*& CPrimText::Copy(CPrim*& pPrim) const {
   pPrim = new CPrimText(*this);
@@ -64,31 +64,31 @@ void CPrimText::Display(CPegView* pView, CDC* pDC) const {
   }
 }
 void CPrimText::DisRep(const CPnt&) const {
-  std::string str = "<Text>";
-  str += " Color: " + StdFormatPenColor();
-  str += " Font: " + m_fd.TextFont();
-  str += " Precision: " + m_fd.FormatTextPrec();
-  str += " Path: " + m_fd.FormatTextPath();
-  str += " Alignment: (" + m_fd.FormatTextHorAlign() + ", " + m_fd.FormatTextVerAlign() + ")";
+  std::string str = _T("<Text>");
+  str += _T(" Color: ") + StdFormatPenColor();
+  str += _T(" Font: ") + m_fd.TextFont();
+  str += _T(" Precision: ") + m_fd.FormatTextPrec();
+  str += _T(" Path: ") + m_fd.FormatTextPath();
+  str += _T(" Alignment: (") + m_fd.FormatTextHorAlign() + _T(", ") + m_fd.FormatTextVerAlign() + _T(")");
   msgSetPaneText(str);
 }
 void CPrimText::FormatExtra(CString& str) const {
   std::stringstream ss;
-  ss << "Color;" << StdFormatPenColor().c_str() << "\t"
-     << "Font;" << m_fd.TextFont().GetString() << "\t"
-     << "Precision;" << m_fd.FormatTextPrec().GetString() << "\t"
-     << "Path;" << m_fd.FormatTextPath().GetString() << "\t"
-     << "Alignment;(" << m_fd.FormatTextHorAlign().GetString() << ", " << m_fd.FormatTextVerAlign().GetString() << ")\t"
-     << "Spacing;" << m_fd.ChrSpac() << "\t"
-     << "Length;" << m_strText.GetLength() << "\t"
-     << "Text;" << m_strText.GetString();
+  ss << _T("Color;") << StdFormatPenColor().c_str() << _T("\t")
+     << _T("Font;") << m_fd.TextFont().GetString() << _T("\t")
+     << _T("Precision;") << m_fd.FormatTextPrec().GetString() << _T("\t")
+     << _T("Path;") << m_fd.FormatTextPath().GetString() << _T("\t")
+     << _T("Alignment;(") << m_fd.FormatTextHorAlign().GetString() << _T(", ") << m_fd.FormatTextVerAlign().GetString() << _T(")\t")
+     << _T("Spacing;") << m_fd.ChrSpac() << _T("\t")
+     << _T("Length;") << m_strText.GetLength() << _T("\t")
+     << _T("Text;") << m_strText.GetString();
   str = ss.str().c_str();
 }
 void CPrimText::FormatGeometry(CString& str) const {
   std::stringstream ss;
-  ss << "Origin;" << m_rs.Origin().ToStdString();
-  ss << "X Axis;" << m_rs.DirX().ToStdString();
-  ss << "Y Axis;" << m_rs.DirY().ToStdString();
+  ss << _T("Origin;") << m_rs.Origin().ToStdString();
+  ss << _T("X Axis;") << m_rs.DirX().ToStdString();
+  ss << _T("Y Axis;") << m_rs.DirY().ToStdString();
   str = ss.str().c_str();
 }
 ///<summary>Get the bounding box of text.</summary>

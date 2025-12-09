@@ -1,6 +1,6 @@
 #pragma once
 
-// Detailed documentation for .jb1 (job files) at "Job File Format.md"
+// Detailed documentation for .jb1 (job files) at `Job File Format.txt`
 
 #include <afx.h>
 #include <afxstr.h>

@@ -48,7 +48,7 @@ const CPrimLine& CPrimLine::operator=(const CPrimLine& src) {
   return (*this);
 }
 void CPrimLine::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const {
-  tvAddItem(hTree, hParent, "<Line>", (CObject*)this);
+  tvAddItem(hTree, hParent, _T("<Line>"), (CObject*)this);
 }
 CPrim*& CPrimLine::Copy(CPrim*& pPrim) const {
   pPrim = new CPrimLine(*this);
@@ -110,11 +110,11 @@ void CPrimLine::DisRep(const CPnt& pt) const {
   TCHAR szLength[64]{};
   UnitsString_FormatLength(szLength, sizeof(szLength), app.GetUnits(), Length());
 
-  std::string str = "<Line>";
-  str += " Color: " + StdFormatPenColor();
-  str += " Style: " + StdFormatPenStyle();
-  str += " - " + std::string(szLength);
-  str += " @ " + UnitsString_FormatAngle(GetAngAboutZAx(), 0, 5);
+  std::string str = _T("<Line>");
+  str += _T(" Color: ") + StdFormatPenColor();
+  str += _T(" Style: ") + StdFormatPenStyle();
+  str += _T(" - ") + std::string(szLength);
+  str += _T(" @ ") + UnitsString_FormatAngle(GetAngAboutZAx(), 0, 5);
   msgSetPaneText(str);
 
   double dLen = Length();
@@ -138,16 +138,16 @@ void CPrimLine::FormatExtra(CString& str) const {
   UnitsString_FormatLength(szLength, sizeof(szLength), app.GetUnits(), Length());
 
   std::string extra;
-  extra = "Color;" + StdFormatPenColor() + "\t";
-  extra += "Style;" + StdFormatPenStyle() + "\t";
-  extra += "Length;" + std::string(szLength) + "\t";
-  extra += "Z-Angle;" + UnitsString_FormatAngle(GetAngAboutZAx(), 0, 5);
+  extra = _T("Color;") + StdFormatPenColor() + _T("\t");
+  extra += _T("Style;") + StdFormatPenStyle() + _T("\t");
+  extra += _T("Length;") + std::string(szLength) + _T("\t");
+  extra += _T("Z-Angle;") + UnitsString_FormatAngle(GetAngAboutZAx(), 0, 5);
   str = extra.c_str();
 }
 void CPrimLine::FormatGeometry(CString& str) const {
   std::string geometry;
-  geometry = "Begin Point;" + m_ln[0].ToStdString();
-  geometry += "End Point;" + m_ln[1].ToStdString();
+  geometry = _T("Begin Point;") + m_ln[0].ToStdString();
+  geometry += _T("End Point;") + m_ln[1].ToStdString();
   str = geometry.c_str();
 }
 void CPrimLine::GetAllPts(CPnts& pts) {

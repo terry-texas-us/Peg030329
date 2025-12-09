@@ -65,7 +65,7 @@ const CPrimDim& CPrimDim::operator=(const CPrimDim& src) {
   return (*this);
 }
 void CPrimDim::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const {
-  tvAddItem(hTree, hParent, "<Dim>", (CObject*)this);
+  tvAddItem(hTree, hParent, _T("<Dim>"), (CObject*)this);
 }
 CPrim*& CPrimDim::Copy(CPrim*& pPrim) const {
   pPrim = new CPrimDim(*this);
@@ -151,9 +151,9 @@ void CPrimDim::Display(CPegView* pView, CDC* pDC) const {
   }
 }
 void CPrimDim::DisRep(const CPnt& pt) const {
-  std::string str = "<Dim>";
-  str += " Color: " + StdFormatPenColor();
-  str += " Style: " + StdFormatPenStyle();
+  std::string str = _T("<Dim>");
+  str += _T(" Color: ") + StdFormatPenColor();
+  str += _T(" Style: ") + StdFormatPenStyle();
   msgSetPaneText(str);
 
   double dLen = Length();
@@ -173,14 +173,14 @@ void CPrimDim::DisRep(const CPnt& pt) const {
 }
 void CPrimDim::FormatExtra(CString& str) const {
   std::string extra;
-  extra = "Color;" + StdFormatPenColor() + "\t";
-  extra += "Style;" + StdFormatPenStyle();
+  extra = _T("Color;") + StdFormatPenColor() + _T("\t");
+  extra += _T("Style;") + StdFormatPenStyle();
   str += extra.c_str();
 }
 void CPrimDim::FormatGeometry(CString& str) const {
   std::string geometry;
-  geometry = "Begin Point;" + m_ln[0].ToStdString();
-  geometry += "End Point;" + m_ln[1].ToStdString();
+  geometry = _T("Begin Point;") + m_ln[0].ToStdString();
+  geometry += _T("End Point;") + m_ln[1].ToStdString();
   str = geometry.c_str();
 }
 void CPrimDim::GetAllPts(CPnts& pts) {

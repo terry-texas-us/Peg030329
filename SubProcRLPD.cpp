@@ -96,7 +96,7 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 
           iEndCapId = (wPrvKeyDwn == 0) ? 1 : -1;  // 1 (start) and -1 (end)
 
-          CString strMes("Cross sectional dimension (Diameter) is ");
+          CString strMes(_T("Cross sectional dimension (Diameter) is "));
           UnitsString_FormatLength(szLen, sizeof(szLen), std::max(app.GetUnits(), Inches), dDiam[1], 0, 2);
 
           pszLen = szLen;

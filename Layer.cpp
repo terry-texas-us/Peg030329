@@ -14,7 +14,7 @@ CLayer::CLayer(const CString& strName, WORD wStateFlgs) {
   m_wTracingFlgs = 0;
   m_wStateFlgs = wStateFlgs;
   m_nPenColor = 1;
-  m_strPenStyleName = "Continuous";
+  m_strPenStyleName = _T("Continuous");
 }
 void CLayer::Display(CPegView* pView, CDC* pDC) {
   CPrim::LayerPenColor() = PenColor();

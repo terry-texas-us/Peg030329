@@ -21,11 +21,11 @@ static std::string msgLoadStringResource(UINT resourceIdentifier) {
 int msgConfirm(UINT messageIdentifier, const CString& additionalText) {
   std::string confirm = msgLoadStringResource(messageIdentifier);
 
-  size_t pos = confirm.find("%s");
+  size_t pos = confirm.find(_T("%s"));
   if (pos != std::string::npos) { confirm.replace(pos, 2, additionalText.GetString()); }
-  size_t tabPos = confirm.find("\t");
+  size_t tabPos = confirm.find(_T("\t"));
   std::string message = (tabPos != std::string::npos) ? confirm.substr(0, tabPos) : confirm;
-  std::string caption = (tabPos != std::string::npos) ? confirm.substr(tabPos + 1) : "";
+  std::string caption = (tabPos != std::string::npos) ? confirm.substr(tabPos + 1) : _T("");
 
   return (MessageBox(0, message.c_str(), caption.c_str(), MB_ICONINFORMATION | MB_YESNOCANCEL | MB_DEFBUTTON2));
 }
@@ -33,9 +33,9 @@ int msgConfirm(UINT messageIdentifier, const CString& additionalText) {
 void msgWarning(UINT messageIdentifier) {
   std::string warning = msgLoadStringResource(messageIdentifier);
 
-  size_t tabPos = warning.find("\t");
+  size_t tabPos = warning.find(_T("\t"));
   std::string message = (tabPos != std::string::npos) ? warning.substr(0, tabPos) : warning;
-  std::string caption = (tabPos != std::string::npos) ? warning.substr(tabPos + 1) : "";
+  std::string caption = (tabPos != std::string::npos) ? warning.substr(tabPos + 1) : _T("");
 
   MessageBox(0, message.c_str(), caption.c_str(), MB_ICONWARNING | MB_OK);
 }
@@ -43,11 +43,11 @@ void msgWarning(UINT messageIdentifier) {
 void msgWarning(UINT messageIdentifier, const CString& additionalText) {
   std::string warning = msgLoadStringResource(messageIdentifier);
 
-  size_t pos = warning.find("%s");
+  size_t pos = warning.find(_T("%s"));
   if (pos != std::string::npos) { warning.replace(pos, 2, additionalText.GetString()); }
-  size_t tabPos = warning.find("\t");
+  size_t tabPos = warning.find(_T("\t"));
   std::string message = (tabPos != std::string::npos) ? warning.substr(0, tabPos) : warning;
-  std::string caption = (tabPos != std::string::npos) ? warning.substr(tabPos + 1) : "";
+  std::string caption = (tabPos != std::string::npos) ? warning.substr(tabPos + 1) : _T("");
 
   MessageBox(0, message.c_str(), caption.c_str(), MB_ICONWARNING | MB_OK);
 }
@@ -80,7 +80,7 @@ void msgInformation(UINT messageIdentifier) {
   if (messageIdentifier == 0) {  // Use current mode indentifier.
     information = msgLoadStringResource(static_cast<UINT>(app.m_iModeId));
 
-    size_t pos = information.find("\n");
+    size_t pos = information.find(_T("\n"));
     if (pos != std::string::npos) {  // Truncate at the newline, keeping only the mode name.
       information = information.substr(0, pos);
     }
@@ -92,7 +92,7 @@ void msgInformation(UINT messageIdentifier) {
 
 void msgInformation(UINT messageIdentifier, const CString& additionalText) {
   std::string information = msgLoadStringResource(messageIdentifier);
-  size_t pos = information.find("%s");
+  size_t pos = information.find(_T("%s"));
   if (pos != std::string::npos) { information.replace(pos, 2, additionalText.GetString()); }
   msgSetPaneText(information);
 }

@@ -12,7 +12,7 @@ void Path_UnquoteSpaces(CString& strPathName) {
   if (strPathName.IsEmpty()) return;
 
   TCHAR* pPathName = new TCHAR[MAX_PATH];
-  strcpy_s(pPathName, MAX_PATH, strPathName);
+  _tcscpy_s(pPathName, MAX_PATH, strPathName);
   size_t n = _tcslen(pPathName) - 1;
   while (n != 0 && pPathName[n] != '\\') { n--; }
   pPathName[n] = 0;
@@ -38,14 +38,14 @@ void Directory_ExamineFile(TCHAR* oldfile, TCHAR* newfile) {
   }
   if (_tcschr(oldfile, pathchar) != nullptr) {  // file has some degree of path designation
     if (_access(oldfile, kExistenceOnly) == 0) {
-      strcpy_s(newfile, sizeof(newfile), oldfile);
+      _tcscpy_s(newfile, sizeof(newfile), oldfile);
       return;
     }
     // strip the path
     TCHAR* pLast = strrchr(oldfile, pathchar);
-    strcpy_s(oldfile, sizeof(oldfile), ++pLast);
+    _tcscpy_s(oldfile, sizeof(oldfile), ++pLast);
   }
-  strcpy_s(newfile, sizeof(newfile), oldfile);
+  _tcscpy_s(newfile, sizeof(newfile), oldfile);
 
   if (_access(oldfile, kExistenceOnly) == 0) {  // its in current diretory
     return;
@@ -55,7 +55,7 @@ void Directory_ExamineFile(TCHAR* oldfile, TCHAR* newfile) {
     }
     TCHAR* envptr = nullptr;
     size_t len;
-    errno_t err = _dupenv_s(&envptr, &len, "ACAD");
+    errno_t err = _dupenv_s(&envptr, &len, _T("ACAD"));
 
     if (err != 0 || envptr == nullptr) {  // no ACAD environment to search
       return;
@@ -65,17 +65,17 @@ void Directory_ExamineFile(TCHAR* oldfile, TCHAR* newfile) {
       while (*cptr != ';' && *cptr != 0) { cptr++; }
       holdch = *cptr; /* grab terminating character */
       *cptr = 0;
-      strcpy_s(testpath, sizeof(testpath), envptr);
+      _tcscpy_s(testpath, sizeof(testpath), envptr);
       *cptr = holdch; /* put it back */
       int iTest = (int)_tcslen(testpath);
       if (testpath[iTest - 1] != pathchar) { /* append / or \ */
         testpath[iTest] = pathchar;
         testpath[iTest + 1] = 0;
       }
-      strcat_s(testpath, sizeof(testpath), oldfile);
+      _tcscat_s(testpath, sizeof(testpath), oldfile);
 
       if (!_access(testpath, 0)) { /* true if found */
-        strcpy_s(newfile, sizeof(newfile), testpath);
+        _tcscpy_s(newfile, sizeof(newfile), testpath);
         return;
       }
       cptr++;

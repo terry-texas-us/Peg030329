@@ -20,13 +20,13 @@ void ffaReadFile(const CString& strPathName) {
     TCHAR szLine[256]{};
     while (fl.ReadString(szLine, sizeof(szLine) - 1) != 0) {
       CString strLine(szLine);
-      int nComment = strLine.Find("//");
+      int nComment = strLine.Find(_T("//"));
 
       if (nComment == 0 || nComment == -1) continue;
 
       CString strName = strLine.Left(nComment);
       strName.TrimRight();
-      strName += ".jb1";
+      strName += _T(".jb1");
 
       if (pDoc->LayersLookup(strName) < 0) {
         pDoc->TracingMap(strName);

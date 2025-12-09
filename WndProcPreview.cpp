@@ -24,28 +24,28 @@ LRESULT CALLBACK WndProcPreview(HWND hwnd, UINT nMsg, WPARAM nParam, LPARAM lPar
       return (FALSE);
 
     case WM_SETFOCUS:
-      TRACE0("Preview WM_SETFOCUS message\n");
+      TRACE0(_T("Preview WM_SETFOCUS message\n"));
       break;
 
     case WM_KILLFOCUS:
-      TRACE0("Preview WM_KILLFOCUS message\n");
+      TRACE0(_T("Preview WM_KILLFOCUS message\n"));
       break;
 
     case WM_LBUTTONDOWN:
       ::SetFocus(hwnd);
-      TRACE0("Preview WM_LBUTTONDOWN message\n");
+      TRACE0(_T("Preview WM_LBUTTONDOWN message\n"));
       return (FALSE);
 
     case WM_RBUTTONDOWN:
-      TRACE0("Preview WM_RBUTTONDOWN message\n");
+      TRACE0(_T("Preview WM_RBUTTONDOWN message\n"));
       break;
 
     case WM_KEYDOWN:
-      TRACE0("Preview WM_KEYDOWN message\n");
+      TRACE0(_T("Preview WM_KEYDOWN message\n"));
       return (FALSE);
 
     case WM_CHAR:
-      TRACE0("Preview WM_CHAR message\n");
+      TRACE0(_T("Preview WM_CHAR message\n"));
       break;
   }
   return DefWindowProc(hwnd, nMsg, nParam, lParam);

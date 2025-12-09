@@ -26,7 +26,7 @@ INT_PTR CALLBACK DlgProcTrapFilter(HWND ahDlg, UINT anMsg, WPARAM wParam, LPARAM
   CPegDoc* pDoc{CPegDoc::GetDoc()};
 
   if (anMsg == WM_INITDIALOG) {
-    CString strElementName[] = {"Arc", "Insert", "Line", "Marker", "Text", "Panel", "Polyline"};
+    CString strElementName[] = {_T("Arc"), _T("Insert"), _T("Line"), _T("Marker"), _T("Text"), _T("Panel"), _T("Polyline")};
 
     SetDlgItemInt(ahDlg, IDC_TRAP_FILTER_PEN_ID, 1, FALSE);
 

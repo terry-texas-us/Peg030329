@@ -188,7 +188,7 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
             rProjPt[0] = detsegs.DetPt();
             pLine->GetLine(ln);
             wPrvOp = app.ModeLineHighlightOp(ID_OP8);
-            msgSetPaneText("Select the second line.");
+            msgSetPaneText(_T("Select the second line."));
             iLns = 1;
           }
         } else {
@@ -199,7 +199,7 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
               rProjPt[1] = detsegs.DetPt();
               if (line::Intersection(ln, pLine->Ln(), ptCen)) {
                 iLns++;
-                msgSetPaneText("Specify the location for the dimension arc.");
+                msgSetPaneText(_T("Specify the location for the dimension arc."));
               }
             }
           } else {
@@ -332,7 +332,7 @@ CPnt dimension::AddDiameter(const CPnt& pt) {
       annotate::GenArrowHead(1, .1, ptEnd, ptBeg, pSeg);
 
       CPrimDim* pDim = new CPrimDim(1, 1, CLine(ptBeg, ptEnd));
-      pDim->SetText("D" + pDim->Text());
+      pDim->SetText(_T("D") + pDim->Text());
       pDim->SetDefaultNote();
 
       pDim->SetTextPenColor(5);
@@ -363,7 +363,7 @@ CPnt dimension::AddRadius(const CPnt& arPt) {
       CSeg* pSeg = new CSeg;
 
       CPrimDim* pDim = new CPrimDim(1, 1, CLine(ptBeg, ptEnd));
-      pDim->SetText("R" + pDim->Text());
+      pDim->SetText(_T("R") + pDim->Text());
       pDim->SetDefaultNote();
 
       pDim->SetTextPenColor(5);

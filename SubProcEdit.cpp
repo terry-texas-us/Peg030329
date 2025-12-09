@@ -21,7 +21,7 @@ LRESULT CALLBACK SubProcEdit(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
 
     switch (LOWORD(wParam)) {
       case ID_HELP_KEY:
-        WinHelp(hwnd, "peg.hlp", HELP_KEY, reinterpret_cast<DWORD_PTR>("EDIT"));
+        WinHelp(hwnd, _T("peg.hlp"), HELP_KEY, reinterpret_cast<DWORD_PTR>(_T("EDIT")));
         return 0;
 
       case ID_OP0:

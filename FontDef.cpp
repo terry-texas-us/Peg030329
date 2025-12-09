@@ -5,7 +5,7 @@
 
 CFontDef::CFontDef() {
   m_wTextPrec = PREC_PEGSTROKEFONT;
-  m_strTextFont = "Simplex.psf";
+  m_strTextFont = _T("Simplex.psf");
   m_wTextPath = PATH_RIGHT;
   m_wTextHorAlign = HOR_ALIGN_LEFT;
   m_wTextVerAlign = VER_ALIGN_BOTTOM;
@@ -30,26 +30,26 @@ CFontDef& CFontDef::operator=(const CFontDef& fd) {
   return (*this);
 }
 CString CFontDef::FormatTextHorAlign() const {
-  CString strAlign[] = {"Left", "Center", "Right"};
-  CString str = (m_wTextHorAlign >= 1 && m_wTextHorAlign <= 3) ? strAlign[m_wTextHorAlign - 1] : CString("Invalid!");
+  CString strAlign[] = {_T("Left"), _T("Center"), _T("Right")};
+  CString str = (m_wTextHorAlign >= 1 && m_wTextHorAlign <= 3) ? strAlign[m_wTextHorAlign - 1] : CString(_T("Invalid!"));
 
   return (str);
 }
 CString CFontDef::FormatTextPath() const {
-  CString strPath[] = {"Right", "Left", "Up", "Down"};
-  CString str = (m_wTextPath >= 0 && m_wTextPath <= 3) ? strPath[m_wTextPath] : CString("Invalid!");
+  CString strPath[] = {_T("Right"), _T("Left"), _T("Up"), _T("Down")};
+  CString str = (m_wTextPath >= 0 && m_wTextPath <= 3) ? strPath[m_wTextPath] : CString(_T("Invalid!"));
 
   return (str);
 }
 CString CFontDef::FormatTextPrec() const {
-  CString strPrec[] = {"True Type", "Stroke"};
-  CString str = (m_wTextPrec >= 1 && m_wTextPrec <= 2) ? strPrec[m_wTextPrec - 1] : CString("Invalid!");
+  CString strPrec[] = {_T("True Type"), _T("Stroke")};
+  CString str = (m_wTextPrec >= 1 && m_wTextPrec <= 2) ? strPrec[m_wTextPrec - 1] : CString(_T("Invalid!"));
 
   return (str);
 }
 CString CFontDef::FormatTextVerAlign() const {
-  CString strAlign[] = {"Top", "Middle", "Bottom"};
-  CString str = (m_wTextVerAlign >= 2 && m_wTextVerAlign <= 4) ? strAlign[m_wTextVerAlign - 2] : CString("Invalid!");
+  CString strAlign[] = {_T("Top"), _T("Middle"), _T("Bottom")};
+  CString str = (m_wTextVerAlign >= 2 && m_wTextVerAlign <= 4) ? strAlign[m_wTextVerAlign - 2] : CString(_T("Invalid!"));
 
   return (str);
 }

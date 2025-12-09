@@ -33,7 +33,7 @@ INT_PTR CALLBACK DlgProcUnits(HWND hDlg, UINT anMsg, WPARAM wParam,
   return (FALSE);
 }
 void UnitsDlgProcInit(HWND hDlg) {
-  CString strMetricUnits[] = {"Meters", "Millimeters", "Centimeters", "Decimeters", "Kilometers"};
+  CString strMetricUnits[] = {_T("Meters"), _T("Millimeters"), _T("Centimeters"), _T("Decimeters"), _T("Kilometers")};
 
   int iCtrlId = std::min(IDC_ARCHITECTURAL + app.GetUnits(), IDC_METRIC);
 

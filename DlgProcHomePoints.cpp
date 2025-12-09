@@ -18,10 +18,10 @@ INT_PTR CALLBACK DlgProcHomePointGo(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM
     TCHAR szNames[256]{};
     ::LoadString(app.GetInstance(), IDS_HOME_POINT_GO_NAMES, szNames, 256);
     TCHAR* context = nullptr;
-    TCHAR* pName = strtok_s(szNames, "\t", &context);
+    TCHAR* pName = _tcstok_s(szNames, _T("\t"), &context);
     while (pName != nullptr) {
       ::SendDlgItemMessage(hDlg, IDC_LIST, CB_ADDSTRING, 0, (LPARAM)(LPCSTR)pName);
-      pName = strtok_s(nullptr, "\t", &context);
+      pName = _tcstok_s(nullptr, _T("\t"), &context);
     }
     ::SendDlgItemMessage(hDlg, IDC_LIST, CB_SETCURSEL, 9, 0L);
 
@@ -117,10 +117,10 @@ INT_PTR CALLBACK DlgProcHomePointSet(HWND hDlg, UINT anMsg, WPARAM wParam, LPARA
     ::LoadString(app.GetInstance(), IDS_HOME_POINT_SET_NAMES, szNames, 256);
 
     TCHAR* context = nullptr;
-    TCHAR* pName = strtok_s(szNames, "\t", &context);
+    TCHAR* pName = _tcstok_s(szNames, _T("\t"), &context);
     while (pName != nullptr) {
       ::SendDlgItemMessage(hDlg, IDC_LIST, CB_ADDSTRING, 0, (LPARAM)(LPCSTR)pName);
-      pName = strtok_s(nullptr, "\t", &context);
+      pName = _tcstok_s(nullptr, _T("\t"), &context);
     }
     ::SendDlgItemMessage(hDlg, IDC_LIST, CB_SETCURSEL, 9, 0L);
 

@@ -15,7 +15,7 @@
 CFileBlock::CFileBlock(const CString& strPathName) { CFile::Open(strPathName, modeReadWrite | shareDenyNone); }
 void CFileBlock::ReadBlocks(CBlocks& blks) {
   if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_BLOCKS)
-    throw "Exception CFileBlock: Expecting sentinel SECTION_BLOCKS.";
+    throw _T("Exception CFileBlock: Expecting sentinel SECTION_BLOCKS.");
 
   CString strName;
 
@@ -36,7 +36,7 @@ void CFileBlock::ReadBlocks(CBlocks& blks) {
     }
     blks[strName] = pBlock;
   }
-  if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_END) throw "Exception CFileBlock: Expecting sentinel SECTION_END.";
+  if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_END) throw _T("Exception CFileBlock: Expecting sentinel SECTION_END.");
 }
 void CFileBlock::ReadFile(const CString& strPathName, CBlocks& blks) {
   CFileException e;
@@ -48,11 +48,11 @@ void CFileBlock::ReadFile(const CString& strPathName, CBlocks& blks) {
 }
 void CFileBlock::ReadHeader() {
   if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_HEADER)
-    throw "Exception CFileBlock: Expecting sentinel SECTION_HEADER.";
+    throw _T("Exception CFileBlock: Expecting sentinel SECTION_HEADER.");
 
   // 	with addition of info where will loop key-value pairs till SECTION_END sentinel
 
-  if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_END) throw "Exception CFileBlock: Expecting sentinel SECTION_END.";
+  if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_END) throw _T("Exception CFileBlock: Expecting sentinel SECTION_END.");
 }
 void CFileBlock::WriteBlock(const CString& strName, CBlock* pBlock) {
   WORD wPrims = 0;

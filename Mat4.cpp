@@ -83,7 +83,7 @@ CMat4& CMat4::Inverse()  // Gauss-Jordan elimination with partial pivoting
     Exchange((*this)[i1], (*this)[iCol]);
 
     // Scale row iCol to have mA unit diagonal
-    if (mA[iCol][iCol] == 0.) { TRACE("CMat4::Inverse: singular matrix, can't invert\n"); }
+    if (mA[iCol][iCol] == 0.) { TRACE(_T("CMat4::Inverse: singular matrix, can't invert\n")); }
     (*this)[iCol] /= mA[iCol][iCol];
     mA[iCol] /= mA[iCol][iCol];
 

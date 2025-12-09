@@ -151,7 +151,7 @@ const CPrimArc& CPrimArc::operator=(const CPrimArc& src) {
   return (*this);
 }
 void CPrimArc::AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const {
-  tvAddItem(hTree, hParent, "<Arc>", (CObject*)this);
+  tvAddItem(hTree, hParent, _T("<Arc>"), (CObject*)this);
 }
 CPrim*& CPrimArc::Copy(CPrim*& pPrim) const {
   pPrim = new CPrimArc(*this);
@@ -305,12 +305,12 @@ void CPrimArc::Display(CPegView* pView, CDC* pDC) const {
   }
 }
 void CPrimArc::DisRep(const CPnt&) const {
-  std::string str = "<Arc>";
+  std::string str = _T("<Arc>");
 
-  str += " Color: " + StdFormatPenColor();
-  str += " Style: " + StdFormatPenStyle();
-  str += " SweepAngle: " + UnitsString_FormatAngle(m_dSwpAng, 0, 5);
-  str += " MajorAxisLength: " + std::to_string(m_vMajAx.Length());
+  str += _T(" Color: ") + StdFormatPenColor();
+  str += _T(" Style: ") + StdFormatPenStyle();
+  str += _T(" SweepAngle: ") + UnitsString_FormatAngle(m_dSwpAng, 0, 5);
+  str += _T(" MajorAxisLength: ") + std::to_string(m_vMajAx.Length());
   msgSetPaneText(str);
 }
 ///<summary>
@@ -339,18 +339,18 @@ void CPrimArc::GenPts(const CPnt& ptCent, const CVec& vMajAx, const CVec& vMinAx
 }
 void CPrimArc::FormatGeometry(CString& str) const {
   std::string geometry;
-  geometry = "Center Point;" + m_ptCenter.ToStdString();
-  geometry += "Major Axis;" + m_vMajAx.ToStdString();
-  geometry += "Minor Axis;" + m_vMinAx.ToStdString();
-  geometry += "Plane Normal;" + (m_vMajAx ^ m_vMinAx).ToStdString();
+  geometry = _T("Center Point;") + m_ptCenter.ToStdString();
+  geometry += _T("Major Axis;") + m_vMajAx.ToStdString();
+  geometry += _T("Minor Axis;") + m_vMinAx.ToStdString();
+  geometry += _T("Plane Normal;") + (m_vMajAx ^ m_vMinAx).ToStdString();
   str = geometry.c_str();
 }
 void CPrimArc::FormatExtra(CString& str) const {
   std::string extra;
-  extra = "Color;" + StdFormatPenColor() + "\t";
-  extra += "Style;" + StdFormatPenStyle() + "\t";
-  extra += "Sweep Angle;" + UnitsString_FormatAngle(m_dSwpAng) + "\t";
-  extra += "MajorAxisLength;" + std::to_string(m_vMajAx.Length());
+  extra = _T("Color;") + StdFormatPenColor() + _T("\t");
+  extra += _T("Style;") + StdFormatPenStyle() + _T("\t");
+  extra += _T("Sweep Angle;") + UnitsString_FormatAngle(m_dSwpAng) + _T("\t");
+  extra += _T("MajorAxisLength;") + std::to_string(m_vMajAx.Length());
   str = extra.c_str();
 }
 CPnt CPrimArc::GetBegPt() const { return (m_ptCenter + m_vMajAx); }

@@ -22,7 +22,7 @@ int UnitsString_GCD(int aiNmb1, int aiNmb2) {
 
 std::string UnitsString_FormatAngle(const double angle, int minWidth, int precision) {
   if (!std::isfinite(angle)) {  // Angle is NaN or infinite
-    return "Invalid angle";
+    return _T("Invalid angle");
   }
   if (precision < 0) { precision = 0; }
   if (minWidth < 0) { minWidth = 0; }
@@ -36,11 +36,11 @@ std::string UnitsString_FormatAngle(const double angle, int minWidth, int precis
 void UnitsString_FormatLength(TCHAR* buffer, size_t bufferSize, EUnits units, double length, int minWidth,
                               int precision) {
   if (units == Architectural) {
-    strcpy_s(buffer, bufferSize, UnitsString_FormatAsArchitectural(length).c_str());
+    _tcscpy_s(buffer, bufferSize, UnitsString_FormatAsArchitectural(length).c_str());
   } else if (units == Engineering) {
-    strcpy_s(buffer, bufferSize, UnitsString_FormatAsEngineering(length, precision).c_str());
+    _tcscpy_s(buffer, bufferSize, UnitsString_FormatAsEngineering(length, precision).c_str());
   } else {
-    strcpy_s(buffer, bufferSize, UnitsString_FormatAsSimple(length, minWidth, precision, units).c_str());
+    _tcscpy_s(buffer, bufferSize, UnitsString_FormatAsSimple(length, minWidth, precision, units).c_str());
   }
 }
 
@@ -65,14 +65,14 @@ std::string UnitsString_FormatAsArchitectural(double length) {
   }
   std::stringstream ss;
   if (feet == 0 && length < 0.) { ss << '-'; }
-  ss << feet << "'" << inches;
+  ss << feet << _T("'") << inches;
   if (fractionNumerator > 0) {  //
     int greatestCommonDivisor = UnitsString_GCD(fractionNumerator, unitsPrecision);
     fractionNumerator = fractionNumerator / greatestCommonDivisor;
     int fractionDenominator = unitsPrecision / greatestCommonDivisor;  // Add fractional component of inches
-    ss << "^/" << fractionNumerator << "/" << fractionDenominator << "^";
+    ss << _T("^/") << fractionNumerator << _T("/") << fractionDenominator << _T("^");
   }
-  ss << "\"";
+  ss << _T("\"");
   return ss.str();
 }
 
@@ -87,11 +87,11 @@ std::string UnitsString_FormatAsEngineering(double length, int precision) {
     length = fabs(length) + 0.5 / scaleFactor;  // Round it
     if (length < 0.) { ss << '-'; }
 
-    ss << int(length / 12.) << "'";
+    ss << int(length / 12.) << _T("'");
     length = fmod(length, 12.);
-    ss << int(length) << ".";
+    ss << int(length) << _T(".");
     length = fmod(length, 1.) * scaleFactor;
-    ss << int(length) << "\"";
+    ss << int(length) << _T("\"");
   }
   return ss.str();
 }
@@ -103,19 +103,19 @@ std::string UnitsString_FormatAsSimple(double length, int minWidth, int precisio
   ss << std::fixed << std::left << std::setprecision(precision) << std::setw(minWidth);
 
   if (units == Feet) {
-    ss << (length / 12.) << "'";
+    ss << (length / 12.) << _T("'");
   } else if (units == Inches) {
-    ss << length << "\"";
+    ss << length << _T("\"");
   } else if (units == Meters) {
-    ss << (length * 0.0254) << "m";
+    ss << (length * 0.0254) << _T("m");
   } else if (units == Millimeters) {
-    ss << (length * 25.4) << "mm";
+    ss << (length * 25.4) << _T("mm");
   } else if (units == Centimeters) {
-    ss << (length * 2.54) << "cm";
+    ss << (length * 2.54) << _T("cm");
   } else if (units == Decimeters) {
-    ss << (length * 0.254) << "dm";
+    ss << (length * 0.254) << _T("dm");
   } else if (units == Kilometers) {
-    ss << (length * 0.0000254) << "km";
+    ss << (length * 0.0000254) << _T("km");
   } else {
     ss << length;
   }
