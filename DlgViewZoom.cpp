@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <array>
 #include <cmath>
 
 #include "PegAEsys.h"
@@ -19,13 +20,13 @@ bool CDlgViewZoom::bKeyplan = false;
 IMPLEMENT_DYNAMIC(CDlgViewZoom, CDialog)
 
 CDlgViewZoom::CDlgViewZoom(CWnd* pParent /*=NULL*/) : CDialog(CDlgViewZoom::IDD, pParent), m_dRatio(0) {}
-CDlgViewZoom::~CDlgViewZoom() {}
+CDlgViewZoom::~CDlgViewZoom() = default;
 void CDlgViewZoom::DoDataExchange(CDataExchange* pDX) {
   CDialog::DoDataExchange(pDX);
   DDX_Text(pDX, IDC_RATIO, m_dRatio);
   DDV_MinMaxDouble(pDX, m_dRatio, .001, 1000.);
 }
-BOOL CDlgViewZoom::OnInitDialog() {
+auto CDlgViewZoom::OnInitDialog() -> BOOL {
   CPegView* pView = CPegView::GetActiveView();
 
   CDialog::OnInitDialog();
@@ -33,10 +34,10 @@ BOOL CDlgViewZoom::OnInitDialog() {
   double dViewportWidth = pView->GetWidthInInches();
   double dViewportHeight = pView->GetHeightInInches();
 
-  double dUMin = -dViewportWidth * .5;
+  double dUMin = -dViewportWidth * 0.5;
   double dUMax = dUMin + dViewportWidth;
 
-  double dVMin = -dViewportHeight * .5;
+  double dVMin = -dViewportHeight * 0.5;
   double dVMax = dVMin + dViewportHeight;
 
   pView->ModelViewAdjustWnd(dUMin, dVMin, dUMax, dVMax, 1.);
@@ -49,9 +50,9 @@ BOOL CDlgViewZoom::OnInitDialog() {
   CPnt ptTarget = pView->ModelViewGetTarget();
   line::IntersectionWithPln(ptCur, vDirection, ptTarget, vDirection, &ptCur);
 
-  dUMin = ptCur[0] - (dUExt * .5);
+  dUMin = ptCur[0] - (dUExt * 0.5);
   dUMax = dUMin + dUExt;
-  dVMin = ptCur[1] - (dVExt * .5);
+  dVMin = ptCur[1] - (dVExt * 0.5);
   dVMax = dVMin + dVExt;
 
   CRect rcKey;
@@ -106,16 +107,17 @@ void CDlgViewZoom::OnOK() {
     pView->DoWindowPan(m_dRatio);
   }
 }
+
 BEGIN_MESSAGE_MAP(CDlgViewZoom, CDialog)
-ON_BN_CLICKED(IDC_BEST, OnBnClickedBest)
-ON_BN_CLICKED(IDC_LAST, OnBnClickedLast)
-ON_BN_CLICKED(IDC_MORELESS, OnBnClickedMoreless)
-ON_BN_CLICKED(IDC_NORMAL, OnBnClickedNormal)
-ON_BN_CLICKED(IDC_OVERVIEW, OnBnClickedOverview)
-ON_BN_CLICKED(IDC_PAN, OnBnClickedPan)
-ON_EN_CHANGE(IDC_RATIO, OnEnChangeRatio)
-ON_BN_CLICKED(IDC_RECALL, OnBnClickedRecall)
-ON_BN_CLICKED(IDC_SAVE, OnBnClickedSave)
+ON_BN_CLICKED(IDC_BEST, &CDlgViewZoom::OnBnClickedBest)
+ON_BN_CLICKED(IDC_LAST, &CDlgViewZoom::OnBnClickedLast)
+ON_BN_CLICKED(IDC_MORELESS, &CDlgViewZoom::OnBnClickedMoreless)
+ON_BN_CLICKED(IDC_NORMAL, &CDlgViewZoom::OnBnClickedNormal)
+ON_BN_CLICKED(IDC_OVERVIEW, &CDlgViewZoom::OnBnClickedOverview)
+ON_BN_CLICKED(IDC_PAN, &CDlgViewZoom::OnBnClickedPan)
+ON_EN_CHANGE(IDC_RATIO, &CDlgViewZoom::OnEnChangeRatio)
+ON_BN_CLICKED(IDC_RECALL, &CDlgViewZoom::OnBnClickedRecall)
+ON_BN_CLICKED(IDC_SAVE, &CDlgViewZoom::OnBnClickedSave)
 END_MESSAGE_MAP()
 
 // CDlgViewZoom message handlers
@@ -266,11 +268,16 @@ void CDlgViewZoom::Refresh() {
 }
 void CDlgViewZoom::OnEnChangeRatio() {
   if (GetFocus() == GetDlgItem(IDC_RATIO)) {
-    char szBuf[32]{};
+    std::array<TCHAR, 32> itemText{};
+    GetDlgItemText(IDC_RATIO, itemText.data(), itemText.size());
 
-    GetDlgItemText(IDC_RATIO, szBuf, sizeof(szBuf));
-    double dRatio = atof(szBuf);
-
-    if (dRatio >= DBL_EPSILON) SendDlgItemMessage(IDC_KEYPLAN_AREA, WM_USER_ON_NEW_RATIO, 0, (LPARAM)(LPDWORD)&dRatio);
+    TCHAR* end = nullptr;
+    double ratio = _tcstod(itemText.data(), &end);
+    // skip trailing whitespace 
+    while (*end != _T('\0') && _istspace((unsigned int)*end))++ end;
+    // Validate: non-empty, fully parsed as double, and meets minimum threshold
+    if (end != itemText.data() && *end == _T('\0') && ratio > 0.0) {
+      SendDlgItemMessage(IDC_KEYPLAN_AREA, WM_USER_ON_NEW_RATIO, 0, (LPARAM)(LPDWORD)&ratio);
+    }
   }
 }
