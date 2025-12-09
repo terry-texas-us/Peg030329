@@ -42,6 +42,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
     <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -390,7 +391,6 @@
     <None Include=".clang-tidy" />
     <None Include="cpp.hint" />
     <None Include="Help Peg.pdf" />
-    <None Include="Job File Format.md" />
     <None Include="Micro Modernization Steps.md">
       <SubType>
       </SubType>

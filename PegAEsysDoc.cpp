@@ -60,7 +60,7 @@
 #include "Vec.h"
 
 extern double gbl_dExtNum;
-extern char gbl_szExtStr[128];
+extern TCHAR gbl_szExtStr[128];
 
 INT_PTR CALLBACK DlgProcDrawOptions(HWND, UINT, WPARAM, LPARAM) noexcept;
 INT_PTR CALLBACK DlgProcEditTrap_CommandsQuery(HWND, UINT, WPARAM, LPARAM) noexcept;
@@ -142,7 +142,7 @@ void DoEditTrapCopy(CPegView* view) {
     mf.SetLength(96);
     mf.SeekToEnd();
 
-    char* pBuf = new char[CPrim::BUFFER_SIZE];
+    TCHAR* pBuf = new TCHAR[CPrim::BUFFER_SIZE];
 
     trapsegs.Write(mf, pBuf);
     trapsegs.GetExtents(ptMin, ptMax, activeView->ModelViewGetMatrix());
@@ -242,7 +242,7 @@ BOOL CPegDoc::OnOpenDocument(LPCTSTR lpszPathName) {
 // CPegDoc serialization
 
 void CPegDoc::Serialize(CArchive& ar) {
-  char szFileName[MAX_PATH]{};
+  TCHAR szFileName[MAX_PATH]{};
   strcpy_s(szFileName, sizeof(szFileName), ar.m_strFileName.GetString());
 
   if (ar.IsStoring()) {
@@ -251,7 +251,7 @@ void CPegDoc::Serialize(CArchive& ar) {
       CFileOpenDWG fod;
       short nError;
       if (fod.Initialize(&nError)) {
-        char szName[MAX_PATH]{};
+        TCHAR szName[MAX_PATH]{};
         strcpy_s(szName, sizeof(szName), ar.m_strFileName.GetString());
         fod.Create(szName, m_wOpenFileType);
       }
@@ -287,7 +287,7 @@ void CPegDoc::Serialize(CArchive& ar) {
       CFileOpenDWG fod;
       short nError;
       if (fod.Initialize(&nError)) {
-        char szPathName[MAX_PATH]{};
+        TCHAR szPathName[MAX_PATH]{};
         strcpy_s(szPathName, sizeof(szPathName), ar.m_strFileName.GetString());
         fod.Load(szPathName);
         SetOpenFile(wFileType, szPathName);
@@ -398,7 +398,7 @@ ON_COMMAND(ID_TRAPCOMMANDS_UNBLOCK, OnTrapCommandsUnblock)
 END_MESSAGE_MAP()
 
 ///<summary>Constructs 0 to many seperate text primitives for each "\r\n" delimited substr.</summary>
-void CPegDoc::AddTextBlock(char* pszText) {
+void CPegDoc::AddTextBlock(TCHAR* pszText) {
   CPnt ptPvt = app.CursorPosGet();
 
   CFontDef fd;
@@ -409,8 +409,8 @@ void CPegDoc::AddTextBlock(char* pszText) {
 
   CRefSys rs(ptPvt, ccd);
 
-  char* context = nullptr;
-  char* pText = strtok_s(pszText, "\r", &context);
+  TCHAR* context = nullptr;
+  TCHAR* pText = strtok_s(pszText, "\r", &context);
   while (pText != 0) {
     if (strlen(pText) > 0) {
       CSeg* pSeg = new CSeg(new CPrimText(fd, rs, pText));
@@ -664,7 +664,7 @@ bool CPegDoc::LayerMelt(CString& strName) const {
 
   bool bRetVal = false;
 
-  char szFilter[256]{};
+  TCHAR szFilter[256]{};
   ::LoadString(app.GetInstance(), IDS_OPENFILE_FILTER_TRACINGS, szFilter, sizeof(szFilter));
 
   OPENFILENAME of{};
@@ -673,7 +673,7 @@ bool CPegDoc::LayerMelt(CString& strName) const {
   of.hwndOwner = 0;
   of.hInstance = app.GetInstance();
   of.lpstrFilter = szFilter;
-  of.lpstrFile = new char[MAX_PATH];
+  of.lpstrFile = new TCHAR[MAX_PATH];
   strcpy_s(of.lpstrFile, MAX_PATH, strName);
   of.nMaxFile = MAX_PATH;
   of.lpstrTitle = "Melt As";
@@ -889,9 +889,9 @@ void CPegDoc::SetOpenFile(WORD wFileType, const CString& strFileName) {
 void CPegDoc::TracingFuse(CString& layerName) const {
   CLayer* layer = LayersGet(layerName);
   if (layer != 0) {
-    char* title = new char[MAX_PATH];
+    TCHAR* title = new TCHAR[MAX_PATH];
     GetFileTitle(layerName, title, MAX_PATH);
-    char* context = nullptr;
+    TCHAR* context = nullptr;
     strtok_s(title, ".", &context);
     layerName = title;
     delete[] title;
@@ -1473,7 +1473,7 @@ void CPegDoc::OnEditTrapPaste() {
     } else if (IsClipboardFormatAvailable(CF_TEXT)) {
       HGLOBAL hGbl = GetClipboardData(CF_TEXT);
 
-      LPSTR lpText = new char[GlobalSize(hGbl)];
+      LPSTR lpText = new TCHAR[GlobalSize(hGbl)];
 
       LPCSTR lpBuffer = (LPCSTR)GlobalLock(hGbl);
       lstrcpy(lpText, lpBuffer);
@@ -1733,7 +1733,7 @@ void CPegDoc::OnFileManage() {
 void CPegDoc::OnFileTracing() {
   static DWORD nFilterIndex{1};
 
-  char szFilter[256]{};
+  TCHAR szFilter[256]{};
   ::LoadString(app.GetInstance(), IDS_OPENFILE_FILTER_TRACINGS, szFilter, sizeof(szFilter));
 
   OPENFILENAME of{};
@@ -1742,7 +1742,7 @@ void CPegDoc::OnFileTracing() {
   of.hwndOwner = 0;
   of.hInstance = app.GetInstance();
   of.lpstrFilter = szFilter;
-  of.lpstrFile = new char[MAX_PATH];
+  of.lpstrFile = new TCHAR[MAX_PATH];
   of.lpstrFile[0] = 0;
   of.nMaxFile = MAX_PATH;
   of.lpstrTitle = "Tracing File";
@@ -1773,7 +1773,7 @@ void CPegDoc::OnMaintenanceRemoveEmptySegments() {
 }
 void CPegDoc::OnPensEditColors() { app.PenColorsChoose(); }
 void CPegDoc::OnPensLoadColors() {
-  char szFilter[256]{};
+  TCHAR szFilter[256]{};
   ::LoadString(app.GetInstance(), IDS_OPENFILE_FILTER_PENCOLORS, szFilter, sizeof(szFilter));
 
   OPENFILENAME of{};
@@ -1782,7 +1782,7 @@ void CPegDoc::OnPensLoadColors() {
   of.hwndOwner = 0;
   of.hInstance = app.GetInstance();
   of.lpstrFilter = szFilter;
-  of.lpstrFile = new char[MAX_PATH];
+  of.lpstrFile = new TCHAR[MAX_PATH];
   of.lpstrFile[0] = 0;
   of.nMaxFile = MAX_PATH;
   of.lpstrTitle = "Load Pen Colors";
@@ -1804,7 +1804,7 @@ void CPegDoc::OnPensTranslate() {
   CStdioFile fl;
 
   if (fl.Open(app.m_strAppPath + "\\Pens\\xlate.txt", CFile::modeRead | CFile::typeText)) {
-    char pBuf[128]{};
+    TCHAR pBuf[128]{};
     WORD wCols{0};
 
     while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0) wCols++;
@@ -1818,7 +1818,7 @@ void CPegDoc::OnPensTranslate() {
       fl.SeekToBegin();
 
       while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0) {
-        char* context = nullptr;
+        TCHAR* context = nullptr;
         pCol[w] = PENCOLOR(atoi(strtok_s(pBuf, ",", &context)));
         pColNew[w++] = PENCOLOR(atoi(strtok_s(0, "\n", &context)));
       }
@@ -1864,7 +1864,7 @@ void CPegDoc::OnPrimExtractNum() {
 
   try {
     lex::Parse(strChr);
-    lex::EvalTokenStream((char*)0, &iTokId, &lDef, &iTyp, (void*)dVal, bufferSize);
+    lex::EvalTokenStream(nullptr, &iTokId, &lDef, &iTyp, (void*)dVal, bufferSize);
 
     if (iTyp != lex::TOK_LENGTH_OPERAND) { lex::ConvertValTyp(iTyp, lex::TOK_REAL, &lDef, dVal); }
     std::stringstream ss;
@@ -1873,7 +1873,7 @@ void CPegDoc::OnPrimExtractNum() {
     msgSetPaneText(str);
     gbl_dExtNum = dVal[0];
     dde::PostAdvise(dde::ExtNumInfo);
-  } catch (char* szMessage) { ::MessageBox(0, szMessage, 0, MB_ICONWARNING | MB_OK); }
+  } catch (TCHAR* szMessage) { ::MessageBox(0, szMessage, 0, MB_ICONWARNING | MB_OK); }
   return;
 }
 void CPegDoc::OnPrimExtractStr() {

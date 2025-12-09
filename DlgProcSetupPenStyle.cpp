@@ -17,7 +17,7 @@ void SetupPenStyle_Init(HWND);
 
 INT_PTR CALLBACK DlgProcSetupPenStyle(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam) noexcept {
   BOOL bTranslated;
-  char szBuf[32]{};
+  TCHAR szBuf[32]{};
   PENSTYLE nPenStyle;
 
   switch (nMsg) {
@@ -81,7 +81,7 @@ void SetupPenStyle_DrawEntire(LPDRAWITEMSTRUCT lpDIS, int) {
   LRESULT lrIndex{::SendMessage(lpDIS->hwndItem, CB_GETCURSEL, 0, 0)};
   if (lrIndex == CB_ERR) { return; }
 
-  char szBuf[32]{};
+  TCHAR szBuf[32]{};
   ::SendMessage(lpDIS->hwndItem, CB_GETLBTEXT, lpDIS->itemID, (LPARAM)(LPCSTR)szBuf);
 
   PENSTYLE nStyle{CPegDoc::GetDoc()->PenStylesLookup(szBuf)};

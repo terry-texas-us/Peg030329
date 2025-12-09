@@ -2,8 +2,8 @@
 
 using namespace std;
 
-char* string_TrimLeadingSpace(char* szString) {
-  char* p = szString;
+TCHAR* string_TrimLeadingSpace(TCHAR* szString) {
+  TCHAR* p = szString;
 
   while (p && *p && isspace(*p)) { p++; }
   return p;

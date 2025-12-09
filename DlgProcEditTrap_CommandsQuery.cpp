@@ -73,7 +73,7 @@ void DlgProcEditTrap_CommandsQueryFillGeometryList(HWND hDlg, CPrim* pPrim) {
 
   lvi.mask = LVIF_TEXT | LVIF_STATE;
 
-  char szBuf[64]{};
+  TCHAR szBuf[64]{};
   int iItem = 0;
 
   CString strBuf;
@@ -105,7 +105,7 @@ INT_PTR CALLBACK DlgProcEditTrap_CommandsQuery(HWND hDlg, UINT nMsg, WPARAM wPar
   HWND hWndGeometry = ::GetDlgItem(hDlg, IDC_GEOMETRY_LIST);
   switch (nMsg) {
     case WM_INITDIALOG: {
-      HTREEITEM htiSegmentList = tvAddItem(hWndSegmentTree, TVI_ROOT, "<Segments>", (CObject*)&trapsegs);
+      HTREEITEM htiSegmentList = tvAddItem(hWndSegmentTree, TVI_ROOT, _T("<Segments>"), (CObject*)&trapsegs);
 
       trapsegs.AddToTreeViewControl(hWndSegmentTree, htiSegmentList);
 
@@ -141,7 +141,7 @@ INT_PTR CALLBACK DlgProcEditTrap_CommandsQuery(HWND hDlg, UINT nMsg, WPARAM wPar
       if (pnm->idFrom == IDC_SEGMENT_TREE) {
         if (pnm->code == TVN_SELCHANGED) {
           NM_TREEVIEW* nmtv = (NM_TREEVIEW*)lParam;
-          char szText[256]{};
+          TCHAR szText[256]{};
           TV_ITEM item{};
 
           item.hItem = nmtv->itemNew.hItem;
@@ -153,8 +153,8 @@ INT_PTR CALLBACK DlgProcEditTrap_CommandsQuery(HWND hDlg, UINT nMsg, WPARAM wPar
           ListView_DeleteAllItems(hWndExtra);
           ListView_DeleteAllItems(hWndGeometry);
 
-          if (strcmp(item.pszText, "<Segments>") == 0) {
-          } else if (strcmp(item.pszText, "<Segment>") == 0) {
+          if (_tcscmp(item.pszText, _T("<Segments>")) == 0) {
+          } else if (_tcscmp(item.pszText, _T("<Segment>")) == 0) {
           } else {
             CPrim* pPrim = (CPrim*)item.lParam;
             DlgProcEditTrap_CommandsQueryFillExtraList(hDlg, pPrim);

@@ -21,10 +21,10 @@ void myloadometer(short percent) { TRACE("Load Progress: %d\n", percent); }
 
 #if ODA_FUNCTIONALITY
 CFileOpenDWG::CFileOpenDWG() {
-  m_henhd = (PAD_ENT_HDR) new char[sizeof(AD_ENT_HDR)];
-  m_hen = (PAD_ENT) new char[sizeof(AD_ENT)];
-  m_htb = (PAD_TB) new char[sizeof(AD_TB)];
-  m_hxd = (PAD_XD) new char[sizeof(AD_XD)];
+  m_henhd = (PAD_ENT_HDR) new TCHAR[sizeof(AD_ENT_HDR)];
+  m_hen = (PAD_ENT) new TCHAR[sizeof(AD_ENT)];
+  m_htb = (PAD_TB) new TCHAR[sizeof(AD_TB)];
+  m_hxd = (PAD_XD) new TCHAR[sizeof(AD_XD)];
 }
 #endif
 
@@ -45,7 +45,7 @@ CFileOpenDWG::~CFileOpenDWG() {
 
 #if ODA_FUNCTIONALITY
 ///<summary>Creates a new DWG or DXF file.</summary>
-bool CFileOpenDWG::Create(char* szPathKey, WORD wType) {
+bool CFileOpenDWG::Create(TCHAR* szPathKey, WORD wType) {
   // adNewFile adds the normal entries for a default "empty file" in AutoCAD, including layer 0,
   // linetypes CONTINUOUS, BYLAYER and BYBLOCK, dimstyle STANDARD, shapefile STANDARD, regapp ACAD,
   // and the standard objects.
@@ -58,7 +58,7 @@ bool CFileOpenDWG::Create(char* szPathKey, WORD wType) {
   WriteBlocksSection();
   WriteEntities();
 
-  char cFileType = wType == CPegDoc::FILE_TYPE_DWG ? AD_DWG : AD_DXF;
+  TCHAR cFileType = wType == CPegDoc::FILE_TYPE_DWG ? AD_DWG : AD_DXF;
   adSaveFile(m_hdb, szPathKey, cFileType, AD_ACAD2000, 0, 6, 1, 1);
 
   return true;
@@ -83,7 +83,7 @@ bool CFileOpenDWG::Initialize(short* nError) {
 #endif
 
 #if ODA_FUNCTIONALITY
-void CFileOpenDWG::Load(char* szPathKey) {
+void CFileOpenDWG::Load(TCHAR* szPathKey) {
   if (!m_bInitialized) { return; }
 #if defined(_DEBUG)
   short nRet = adDwgSmellsBad(szPathKey);
@@ -231,19 +231,19 @@ void CFileOpenDWG::ReadBlockTable(AD_DB_HANDLE hdb) {
         continue;
       }
       if ((m_htb->blkh.flag & AD_BLOCK_ANONYMOUS) == AD_BLOCK_ANONYMOUS) {
-        char szBuf[8]{};
+        TCHAR szBuf[8]{};
         _itoa_s(lBlockHeader, szBuf, sizeof(szBuf), 10);
         strcat_s(m_htb->blkh.name, sizeof(m_htb->blkh.name), szBuf);
         adReplaceBlockheader(hdb, &m_htb->blkh);
       }
       if ((m_htb->blkh.flag & AD_BLOCK_XREF) == AD_BLOCK_XREF) {
-        char szBuf[256]{};
+        TCHAR szBuf[256]{};
         Directory_ExamineFile(m_hen->block.xrefpath, szBuf);
         strcpy_s(m_hen->block.xrefpath, sizeof(m_hen->block.xrefpath), szBuf);
       }
       CBlock* pBlock;
       if (CPegDoc::GetDoc()->BlksLookup(m_htb->blkh.name, pBlock)) {
-        char szBuf[8]{};
+        TCHAR szBuf[8]{};
         _itoa_s(lBlockHeader, szBuf, sizeof(szBuf), 10);
         strcat_s(m_htb->blkh.name, sizeof(m_htb->blkh.name), szBuf);
         adReplaceBlockheader(hdb, &m_htb->blkh);
@@ -636,7 +636,7 @@ void CFileOpenDWG::WriteBlocksSection() {
   while (pos != 0) {
     pDoc->BlksGetNextAssoc(pos, strKey, pBlock);
 
-    char szName[64]{};
+    TCHAR szName[64]{};
     strcpy_s(szName, sizeof(szName), strKey.GetString());
 
     AD_OBJHANDLE blkobjhandle;
@@ -677,7 +677,7 @@ void CFileOpenDWG::WriteEntities() {
   for (int i = 0; i < iTblSize; i++) {
     CLayer* pLayer = pDoc->LayersGetAt(i);
 
-    char szName[64]{};
+    TCHAR szName[64]{};
     strcpy_s(szName, sizeof(szName), pLayer->GetName());
     adFindLayerByName(m_hdb, szName, CFileOpenDWG::ms_objecthandle);
 
@@ -871,7 +871,7 @@ bool CPrimArc::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PAD
 
   henhd->entcolor = m_nPenColor;
 
-  char szName[64]{};
+  TCHAR szName[64]{};
   if (m_nPenStyle == PENSTYLE_BYLAYER) {
     strcpy_s(szName, sizeof(szName), "ByLayer");
   } else {
@@ -946,7 +946,7 @@ bool CPrimInsert::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, 
 
   henhd->entcolor = m_nPenColor;
 
-  char szName[64]{};
+  TCHAR szName[64]{};
   if (m_nPenStyle == PENSTYLE_BYLAYER) {
     strcpy_s(szName, sizeof(szName), "ByLayer");
   } else {
@@ -993,7 +993,7 @@ bool CPrimLine::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PA
 
   henhd->entcolor = m_nPenColor;
 
-  char szName[64]{};
+  TCHAR szName[64]{};
   if (m_nPenStyle == PENSTYLE_BYLAYER) {
     strcpy_s(szName, sizeof(szName), "ByLayer");
   } else {
@@ -1227,7 +1227,7 @@ CPrimPolygon::CPrimPolygon(AD_DB_HANDLE hdb, PAD_ENT_HDR henhd, PAD_ENT hen) {
       long lNumAssocObjs;
       adReadBlobLong(bcptr, &lNumAssocObjs);
       for (int iAssocObj = 0; iAssocObj < lNumAssocObjs; iAssocObj++) {
-        char handle[8]{};
+        TCHAR handle[8]{};
         adReadBlobBytes(bcptrAssocObj, handle, 8);
       }
     }
@@ -1352,7 +1352,7 @@ bool CPrimSegRef::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, 
 
   henhd->entcolor = m_nPenColor;
 
-  char szName[64]{};
+  TCHAR szName[64]{};
   if (m_nPenStyle == PENSTYLE_BYLAYER) {
     strcpy_s(szName, sizeof(szName), "ByLayer");
   } else {
@@ -1528,7 +1528,7 @@ bool CPrimText::Write(AD_DB_HANDLE hdb, AD_VMADDR entlist, PAD_ENT_HDR henhd, PA
 
   henhd->entcolor = m_nPenColor;
 
-  char szName[64]{};
+  TCHAR szName[64]{};
   if (m_nPenStyle == PENSTYLE_BYLAYER) {
     strcpy_s(szName, sizeof(szName), "ByLayer");
   } else {

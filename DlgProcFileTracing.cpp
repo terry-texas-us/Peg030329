@@ -27,7 +27,7 @@ UINT_PTR CALLBACK OFNHookProcFileTracing(HWND hDlg, UINT uiMsg, WPARAM wParam, L
       if (lpofn->hdr.code == CDN_FOLDERCHANGE) {
         WndProcPreviewClear(hDlg);
       } else if (lpofn->hdr.code == CDN_SELCHANGE) {
-        char psz[MAX_PATH]{};
+        TCHAR psz[MAX_PATH]{};
         CommDlg_OpenSave_GetFilePath(GetParent(hDlg), psz, MAX_PATH);
 
         CFileStatus fs;
@@ -50,7 +50,7 @@ UINT_PTR CALLBACK OFNHookProcFileTracing(HWND hDlg, UINT uiMsg, WPARAM wParam, L
       return (TRUE);
     }
     case WM_COMMAND: {
-      char szFilePath[MAX_PATH]{};
+      TCHAR szFilePath[MAX_PATH]{};
       CommDlg_OpenSave_GetFilePath(GetParent(hDlg), szFilePath, MAX_PATH);
 
       CFileStatus fs;

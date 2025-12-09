@@ -14,7 +14,7 @@ void DlgBoxSetItemUnitsText(HWND hDlg, int control, double value);
 void DlgProcRLPDOptionsInit(HWND);
 
 INT_PTR CALLBACK DlgProcRLPDOptions(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM) noexcept {
-  char szBuf[32]{};
+  TCHAR szBuf[32]{};
 
   switch (nMsg) {
     case WM_INITDIALOG:

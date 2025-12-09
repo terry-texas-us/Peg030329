@@ -9,7 +9,7 @@ void DlgBoxSetItemDouble(HWND hDlg, int control, double value);
 INT_PTR CALLBACK DlgProcViewParameters(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept {
   CPegView* pView{CPegView::GetActiveView()};
 
-  char szBuf[32]{};
+  TCHAR szBuf[32]{};
 
   switch (anMsg) {
     case WM_INITDIALOG:

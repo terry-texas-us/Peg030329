@@ -57,8 +57,8 @@ void dde::Setup(HINSTANCE) {
   }
   dwInstance = ServerInfo.dwInstance;
 
-  ServerInfo.lpszServiceName = const_cast<char*>("PegAEsys");
-  ServerInfo.hszServiceName = DdeCreateStringHandle(ServerInfo.dwInstance, "PegAEsys", CP_WINANSI);
+  ServerInfo.lpszServiceName = const_cast<TCHAR*>("PegAEsys");
+  ServerInfo.hszServiceName = DdeCreateStringHandle(ServerInfo.dwInstance, _T("PegAEsys"), CP_WINANSI);
 
   // Register the name of the service
   DdeNameService(ServerInfo.dwInstance, ServerInfo.hszServiceName, (HSZ) nullptr, DNS_REGISTER);
@@ -70,44 +70,44 @@ void dde::Setup(HINSTANCE) {
   ItemAdd(SZDDESYS_TOPIC, SZDDE_ITEM_ITEMLIST, SysFormatList, SysReqItems, nullptr);
   ItemAdd(SZDDESYS_TOPIC, SZDDESYS_ITEM_TOPICS, SysFormatList, SysReqTopics, nullptr);
 
-  ItemAdd(SZDDESYS_TOPIC, "Protocols", SysFormatList, SysReqProtocols, nullptr);
+  ItemAdd(SZDDESYS_TOPIC, _T("Protocols"), SysFormatList, SysReqProtocols, nullptr);
 
-  ExecCmdAdd(SZDDESYS_TOPIC, "TracingOpen", ExecTracingOpen, 1, 2);
-  ExecCmdAdd(SZDDESYS_TOPIC, "TracingMap", ExecTracingMap, 1, 2);
-  ExecCmdAdd(SZDDESYS_TOPIC, "TracingView", ExecTracingView, 1, 2);
+  ExecCmdAdd(SZDDESYS_TOPIC, _T("TracingOpen"), ExecTracingOpen, 1, 2);
+  ExecCmdAdd(SZDDESYS_TOPIC, _T("TracingMap"), ExecTracingMap, 1, 2);
+  ExecCmdAdd(SZDDESYS_TOPIC, _T("TracingView"), ExecTracingView, 1, 2);
 
   // Add each General!Item pair
-  DimAngZInfo = ItemAdd("General", "DimAngZ", MyFormats, DimAngZRequest, DimAngZPoke);
-  DimLenInfo = ItemAdd("General", "DimLen", MyFormats, DimLenRequest, DimLenPoke);
-  EngAngZInfo = ItemAdd("General", "EngAngZ", MyFormats, EngAngZRequest, nullptr);
-  EngLenInfo = ItemAdd("General", "EngLen", MyFormats, EngLenRequest, nullptr);
-  ExtNumInfo = ItemAdd("General", "ExtNum", MyFormats, ExtNumRequest, nullptr);
-  ExtStrInfo = ItemAdd("General", "ExtStr", MyFormats, ExtStrRequest, nullptr);
-  RelPosZInfo = ItemAdd("General", "RelPosZ", MyFormats, RelPosZRequest, nullptr);
-  RelPosYInfo = ItemAdd("General", "RelPosY", MyFormats, RelPosYRequest, nullptr);
-  RelPosXInfo = ItemAdd("General", "RelPosX", MyFormats, RelPosXRequest, nullptr);
-  ScaleInfo = ItemAdd("General", "Scale", MyFormats, ScaleRequest, ScalePoke);
+  DimAngZInfo = ItemAdd(_T("General"), _T("DimAngZ"), MyFormats, DimAngZRequest, DimAngZPoke);
+  DimLenInfo = ItemAdd(_T("General"), _T("DimLen"), MyFormats, DimLenRequest, DimLenPoke);
+  EngAngZInfo = ItemAdd(_T("General"), _T("EngAngZ"), MyFormats, EngAngZRequest, nullptr);
+  EngLenInfo = ItemAdd(_T("General"), _T("EngLen"), MyFormats, EngLenRequest, nullptr);
+  ExtNumInfo = ItemAdd(_T("General"), _T("ExtNum"), MyFormats, ExtNumRequest, nullptr);
+  ExtStrInfo = ItemAdd(_T("General"), _T("ExtStr"), MyFormats, ExtStrRequest, nullptr);
+  RelPosZInfo = ItemAdd(_T("General"), _T("RelPosZ"), MyFormats, RelPosZRequest, nullptr);
+  RelPosYInfo = ItemAdd(_T("General"), _T("RelPosY"), MyFormats, RelPosYRequest, nullptr);
+  RelPosXInfo = ItemAdd(_T("General"), _T("RelPosX"), MyFormats, RelPosXRequest, nullptr);
+  ScaleInfo = ItemAdd(_T("General"), _T("Scale"), MyFormats, ScaleRequest, ScalePoke);
 
   // Add Topic for command execute connections
-  TopicAdd("Commands", nullptr, nullptr, nullptr);
+  TopicAdd(_T("Commands"), nullptr, nullptr, nullptr);
 
   // Add each Command!Item pair
-  ExecCmdAdd("Commands", "TracingBlank", ExecTracingBlank, 1, 2);
-  ExecCmdAdd("Commands", "TracingMap", ExecTracingMap, 1, 2);
-  ExecCmdAdd("Commands", "TracingOpen", ExecTracingOpen, 1, 2);
-  ExecCmdAdd("Commands", "TracingView", ExecTracingView, 1, 2);
-  ExecCmdAdd("Commands", "FileGet", ExecFileGet, 1, 2);
-  ExecCmdAdd("Commands", "GotoPoint", ExecGotoPoint, 1, 1);
-  ExecCmdAdd("Commands", "Line", ExecLine, 1, 1);
-  ExecCmdAdd("Commands", "Pen", ExecPen, 1, 1);
-  ExecCmdAdd("Commands", "Note", ExecNote, 1, 1);
-  ExecCmdAdd("Commands", "Send", ExecSend, 1, 1);
-  ExecCmdAdd("Commands", "SetPoint", ExecSetPoint, 1, 1);
-  ExecCmdAdd("Commands", "DimAngZ", ExecDA, 1, 1);
-  ExecCmdAdd("Commands", "DimLen", ExecDL, 1, 1);
-  ExecCmdAdd("Commands", "Scale", ExecScale, 1, 1);
-  ExecCmdAdd("Commands", "Fill", ExecFill, 1, 1);
-  ExecCmdAdd("Commands", "NoteHT", ExecNoteHT, 1, 1);
+  ExecCmdAdd(_T("Commands"), _T("TracingBlank"), ExecTracingBlank, 1, 2);
+  ExecCmdAdd(_T("Commands"), _T("TracingMap"), ExecTracingMap, 1, 2);
+  ExecCmdAdd(_T("Commands"), _T("TracingOpen"), ExecTracingOpen, 1, 2);
+  ExecCmdAdd(_T("Commands"), _T("TracingView"), ExecTracingView, 1, 2);
+  ExecCmdAdd(_T("Commands"), _T("FileGet"), ExecFileGet, 1, 2);
+  ExecCmdAdd(_T("Commands"), _T("GotoPoint"), ExecGotoPoint, 1, 1);
+  ExecCmdAdd(_T("Commands"), _T("Line"), ExecLine, 1, 1);
+  ExecCmdAdd(_T("Commands"), _T("Pen"), ExecPen, 1, 1);
+  ExecCmdAdd(_T("Commands"), _T("Note"), ExecNote, 1, 1);
+  ExecCmdAdd(_T("Commands"), _T("Send"), ExecSend, 1, 1);
+  ExecCmdAdd(_T("Commands"), _T("SetPoint"), ExecSetPoint, 1, 1);
+  ExecCmdAdd(_T("Commands"), _T("DimAngZ"), ExecDA, 1, 1);
+  ExecCmdAdd(_T("Commands"), _T("DimLen"), ExecDL, 1, 1);
+  ExecCmdAdd(_T("Commands"), _T("Scale"), ExecScale, 1, 1);
+  ExecCmdAdd(_T("Commands"), _T("Fill"), ExecFill, 1, 1);
+  ExecCmdAdd(_T("Commands"), _T("NoteHT"), ExecNoteHT, 1, 1);
 
   return;
 }
@@ -210,7 +210,7 @@ bool dde::DoCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hszTopic, HSZ hszIt
         return true;
       }
     } else {
-      char sz[32]{};
+      TCHAR sz[32]{};
       DdeGetData(hData, (LPBYTE)sz, (DWORD)sizeof(sz), (DWORD)0);
       ::PostMessage(app.GetSafeHwnd(), WM_CHAR, (WPARAM)sz[0], (LPARAM)1);
       *phReturnData = (HDDEDATA)(DWORD)DDE_FACK;
@@ -381,7 +381,7 @@ HDDEDATA dde::DoWildConnect(HSZ hszTopic) {
 
   return hData;
 }
-PEXECCMDFNINFO dde::ExecCmdAdd(const char* pszTopic, const char* pszCmdName, PEXECCMDFN pExecCmdFn, UINT uiMinArgs,
+PEXECCMDFNINFO dde::ExecCmdAdd(const TCHAR* pszTopic, const TCHAR* pszCmdName, PEXECCMDFN pExecCmdFn, UINT uiMinArgs,
                                UINT uiMaxArgs) {
   PEXECCMDFNINFO pCmd = nullptr;
   PEXECCMDFNINFO pHead;
@@ -400,7 +400,7 @@ PEXECCMDFNINFO dde::ExecCmdAdd(const char* pszTopic, const char* pszCmdName, PEX
     pCmd->uiMinArgs = uiMinArgs;
     pCmd->uiMaxArgs = uiMaxArgs;
   } else {  // New command item
-    pCmd = (PEXECCMDFNINFO) new char[sizeof(EXECCMDFNINFO)];
+    pCmd = (PEXECCMDFNINFO) new TCHAR[sizeof(EXECCMDFNINFO)];
     if (!pCmd) return nullptr;
 
     ::ZeroMemory(pCmd, sizeof(EXECCMDFNINFO));
@@ -422,7 +422,7 @@ PEXECCMDFNINFO dde::ExecCmdAdd(const char* pszTopic, const char* pszCmdName, PEX
   return pCmd;
 }
 ///<summary>Find a DDE execute command from its string name.</summary>
-PEXECCMDFNINFO dde::ExecCmdFind(PTOPICINFO pTopic, const char* lpszCmd) {
+PEXECCMDFNINFO dde::ExecCmdFind(PTOPICINFO pTopic, const TCHAR* lpszCmd) {
   PEXECCMDFNINFO pCmd = pTopic->pCmdList;
 
   while (pCmd) {
@@ -485,7 +485,7 @@ HDDEDATA dde::MakeCFText(UINT wFmt, LPSTR lpszStr, HSZ hszItem) {
 // Returns: A DDE data handle to a list of the format names.
 HDDEDATA dde::MakeDataFromFormatList(LPWORD pFmt, WORD wFmt, HSZ hszItem) {
   DWORD cb{0};
-  char buf[256]{};
+  TCHAR buf[256]{};
 
   HDDEDATA hData = DdeCreateDataHandle(ServerInfo.dwInstance, 0, 0, 0, hszItem, wFmt, 0);  // Empty data object to fill
   DWORD cbOffset{0};
@@ -525,7 +525,7 @@ bool dde::ProcessExecRequest(PTOPICINFO pTopic, HDDEDATA hData) {
   UINT uiNargs;
   LPSTR pArgBuf = 0;
   PCONVERSATIONINFO pCI;
-  char szResult[MAXRESULTSIZE]{};
+  TCHAR szResult[MAXRESULTSIZE]{};
 
   if (!hData) return false;
 
@@ -534,7 +534,7 @@ bool dde::ProcessExecRequest(PTOPICINFO pTopic, HDDEDATA hData) {
   if (!pData) return false;
 
   // Allocate double required size we might need so we can avoid doing any space tests.
-  pArgBuf = (LPSTR) new char[2 * strlen(pData)];
+  pArgBuf = (LPSTR) new TCHAR[2 * strlen(pData)];
   if (!pArgBuf) goto PER_exit;
 
   ::ZeroMemory(pArgBuf, 2 * strlen(pData));
@@ -602,7 +602,7 @@ bool dde::ParseCmd(LPSTR* ppszCmdLine, PTOPICINFO pTopic, LPSTR pszError, UINT u
   PPOP ppOp = pOpTable;
   PEXECCMDFNINFO pExecFnInfo;
   UINT uiNargs;
-  char cTerm;
+  TCHAR cTerm;
 
   *ppOp = 0;
   LPSTR pCmd = lex::SkipWhiteSpace(*ppszCmdLine);
@@ -629,12 +629,12 @@ bool dde::ParseCmd(LPSTR* ppszCmdLine, PTOPICINFO pTopic, LPSTR pszError, UINT u
       }
     } while (cTerm == ',');
 
-    if ((cTerm != ')') && (!lex::ScanForChar(')', &pCmd))) {  // Do not have a terminating ) char
+    if ((cTerm != ')') && (!lex::ScanForChar(')', &pCmd))) {  // Do not have a terminating ) character
       strncpy_s(pszError, uiErrorSize, "Missing ')'", _TRUNCATE);
       return false;
     }
   }
-  if (!lex::ScanForChar(']', &pCmd)) {  // Do not have a terminating ] char
+  if (!lex::ScanForChar(']', &pCmd)) {  // Do not have a terminating ] character
     strncpy_s(pszError, uiErrorSize, "Missing ']'", _TRUNCATE);
     return false;
   }
@@ -699,13 +699,13 @@ PEXECCMDFNINFO dde::ScanForCommand(PEXECCMDFNINFO pCmdInfo, LPSTR* ppStr) {
   LPSTR pStart = lex::SkipWhiteSpace(*ppStr);
   LPSTR p = pStart;
 
-  if (!isalpha(*p))  // First char is not alpha
+  if (!isalpha(*p))  // First character is not alpha
     return 0;
 
-  while (isalnum(*p))  // Collect alpha-num chars until we get to a non-alpha.
+  while (isalnum(*p))  // Collect alpha-num characters until we get to a non-alpha.
     p++;
 
-  char cSave = *p;  // Terminate the source temporarily with a null
+  TCHAR cSave = *p;  // Terminate the source temporarily with a null
   *p = '\0';
 
   while (pCmdInfo)  // Search for a command that matches the name we have

@@ -27,8 +27,8 @@ INT_PTR CALLBACK DlgProcAnnotateOptions(HWND, UINT, WPARAM, LPARAM) noexcept;
 void Polygon_GenPts(const CPnt&, const CVec&, const CVec&, int, CPnt*);
 
 namespace annotate {
-char szCurTxt[16]{};
-char szDefTxt[16]{};
+TCHAR szCurTxt[16]{};
+TCHAR szDefTxt[16]{};
 double dGapSpaceFac = 0.5;  // Edge space factor 25 percent of character height
 double dHookRad = 0.03125;  // Hook radius
 int iArrowTyp = 1;          // Arrow type

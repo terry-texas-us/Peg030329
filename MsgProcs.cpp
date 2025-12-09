@@ -11,14 +11,14 @@ CPrim* pGinCurPrim{nullptr};
 extern CTMat tmEditSeg;
 
 double DlgBoxGetItemDouble(HWND hDlg, int iCtrlId) {
-  char szBuf[32]{};
+  TCHAR szBuf[32]{};
 
   ::GetDlgItemText(hDlg, iCtrlId, (LPSTR)szBuf, 32);
   return (atof(szBuf));
 }
 
 double DlgBoxGetItemUnitsText(HWND hDlg, int iCtrlId) {
-  char szBuf[32]{};
+  TCHAR szBuf[32]{};
 
   ::GetDlgItemText(hDlg, iCtrlId, (LPSTR)szBuf, 32);
   return (UnitsString_ParseLength(app.GetUnits(), szBuf));
@@ -31,7 +31,7 @@ void DlgBoxSetItemDouble(HWND hDlg, int iCtrlId, double dVal) {
 }
 
 void DlgBoxSetItemUnitsText(HWND hDlg, int iCtrlId, double dVal) {
-  char szBuf[32]{};
+  TCHAR szBuf[32]{};
   UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), dVal);
   SetDlgItemText(hDlg, iCtrlId, szBuf);
 }

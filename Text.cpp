@@ -28,7 +28,7 @@ void text_Display0(CPegView* pView, CDC* pDC, const CFontDef& fd, const CRefSys&
     int nOff = 0;
     int nEnd = nOff;
     while (nEnd < strText.GetLength()) {
-      char c = strText[nEnd];
+      TCHAR c = strText[nEnd];
       if (c == '\r') {
         if (bTrueType)
           text_Display(pView, pDC, fd, rs, strText.Mid(nOff, nEnd - nOff));
@@ -131,7 +131,7 @@ void text_Display(CPegView* pView, CDC* pDC, const CFontDef& fd, const CTMat& tm
 
   while (n < nOff + nLen) {
     polyline::BeginLineStrip();
-    char c = isprint(strText[n]) ? strText[n] : '.';
+    TCHAR c = isprint(strText[n]) ? strText[n] : '.';
 
     for (int i = (int)plStrokeFontDef[c - 32]; i <= plStrokeFontDef[c - 32 + 1] - 1; i++) {
       int iY = (int)(plStrokeChrDef[i - 1] % 4096L);

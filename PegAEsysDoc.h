@@ -101,7 +101,7 @@ class CPegDoc : public CDocument {
 
   // Operations
  public:
-  void AddTextBlock(char* pszText);
+  void AddTextBlock(TCHAR* pszText);
   INT_PTR BlockGetRefCount(const CString& blockName) const;
 
   void BlksGetNextAssoc(POSITION& pos, CString& strKey, CBlock*& pBlock) { m_blks.GetNextAssoc(pos, strKey, pBlock); }

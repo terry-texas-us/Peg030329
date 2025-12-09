@@ -63,5 +63,5 @@ class CRGB : public CObject {
 //	int Read(CRect rect);
 //	int Read(int iX, int iY, int iWidth, int iHeight);
 //	void SetPixel(int iX, int iY, CRGB rgb);
-//	void WriteBMPFile(char* pFileName);
+//	void WriteBMPFile(TCHAR* pFileName);
 //};

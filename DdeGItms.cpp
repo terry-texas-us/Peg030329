@@ -9,7 +9,7 @@
 #include "ddeGItms.h"
 
 extern double gbl_dExtNum;
-extern char gbl_szExtStr[128];
+extern TCHAR gbl_szExtStr[128];
 
 namespace dde {
 PITEMINFO DimAngZInfo;
@@ -25,7 +25,7 @@ PITEMINFO ScaleInfo;
 }  // namespace dde
 // dimension z axis angle interface
 bool dde::DimAngZPoke(UINT, HSZ, HSZ, HDDEDATA hData) {
-  char sz[32]{};
+  TCHAR sz[32]{};
   DdeGetData(hData, (LPBYTE)sz, (DWORD)sizeof(sz), (DWORD)0);
   app.SetDimAngZ(atof(sz));
   app.StatusLineDisplay();
@@ -37,7 +37,7 @@ HDDEDATA dde::DimAngZRequest(UINT wFmt, HSZ, HSZ hszItem) {
 }
 // Dimension length interface
 bool dde::DimLenPoke(UINT, HSZ, HSZ, HDDEDATA hData) {
-  char sz[32]{};
+  TCHAR sz[32]{};
   DdeGetData(hData, (LPBYTE)sz, (DWORD)sizeof(sz), (DWORD)0);
   app.SetDimLen(atof(sz));
   app.StatusLineDisplay(DimLen);
@@ -82,7 +82,7 @@ HDDEDATA dde::RelPosZRequest(UINT wFmt, HSZ, HSZ hszItem) {
 }
 // Scale interface
 bool dde::ScalePoke(UINT, HSZ, HSZ, HDDEDATA hData) {
-  char sz[32]{};
+  TCHAR sz[32]{};
   DdeGetData(hData, (LPBYTE)sz, (DWORD)sizeof(sz), (DWORD)0);
   app.SetScale(atof(sz));
   app.StatusLineDisplay(Scale);

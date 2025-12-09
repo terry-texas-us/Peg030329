@@ -1092,7 +1092,7 @@ void CPegView::DisplayOdometer() {
   dde::PostAdvise(dde::RelPosZInfo);
 
   if (m_bViewOdometer) {
-    char szBuf[32]{};
+    TCHAR szBuf[32]{};
     if (app.RubberBandingGetType() == Lines) {
       CLine ln(app.RubberBandingGetStart(), pt);
 

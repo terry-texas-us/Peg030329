@@ -6,7 +6,7 @@ double DlgBoxGetItemDouble(HWND hDlg, int control);
 void DlgBoxSetItemDouble(HWND hDlg, int control, double value);
 
 INT_PTR CALLBACK DlgProcAnnotateOptions(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept {
-  const char* szArrTyp[] = {"Open", "Closed", "Mark", "Hash"};
+  const TCHAR* szArrTyp[] = {"Open", "Closed", "Mark", "Hash"};
 
   switch (anMsg) {
     case WM_INITDIALOG:

@@ -54,7 +54,7 @@ INT_PTR CALLBACK DlgProcTrapFilter(HWND ahDlg, UINT anMsg, WPARAM wParam, LPARAM
           trapFilterByPenColor(nPenColor);
         }
         if (IsDlgButtonChecked(ahDlg, IDC_TRAP_FILTER_LINE)) {
-          char szBuf[32]{};
+          TCHAR szBuf[32]{};
 
           BOOL bTranslated = TRUE;
 

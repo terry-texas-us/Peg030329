@@ -63,7 +63,7 @@ class CPegApp : public CWinApp {
   CPnt m_ptEditSegEnd;
   CPnt m_ptHomePoint[9];
   WORD m_wOpHighlighted;
-  char* m_pStrokeFontDef;      // 0
+  TCHAR* m_pStrokeFontDef;      // 0
   std::string m_strShadowDir;  // "PegAEsys Shadow Files"
 
  public:
@@ -145,7 +145,7 @@ class CPegApp : public CWinApp {
 
   void StatusLineDisplay(EStatusLineItem = All) const;
 
-  char* StrokeFontGet() const { return m_pStrokeFontDef; }
+  TCHAR* StrokeFontGet() const { return m_pStrokeFontDef; }
   void StrokeFontLoad(const CString& strPathName);
   void StrokeFontRelease();
 

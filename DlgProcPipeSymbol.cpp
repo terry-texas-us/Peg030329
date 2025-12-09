@@ -31,12 +31,12 @@ INT_PTR CALLBACK DlgProcPipeSymbol(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM)
   return (FALSE);
 }
 void DlgProcPipeSymbolInit(HWND hDlg) {
-  char szNames[512]{};
-  char* pName;
+  TCHAR szNames[512]{};
+  TCHAR* pName;
 
   ::LoadString(app.GetInstance(), IDS_SUBPROC_PIPE_SYMBOL_NAMES, szNames, 256);
 
-  char* context = nullptr;
+  TCHAR* context = nullptr;
   pName = strtok_s(szNames, "\t", &context);
   while (pName != nullptr) {
     ::SendDlgItemMessage(hDlg, IDC_LIST, LB_ADDSTRING, 0, (LPARAM)(LPCSTR)pName);

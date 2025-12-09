@@ -7,7 +7,7 @@
 // Format:
 // line 1: // <name of the .ffa file>
 // line 2: //
-// line 3 - end: <4 char key> // <var number of printable chars describing key>
+// line 3 - end: <4 character key> // <var number of printable chars describing key>
 // The key identifies the .jb1 to use. The description becomes its .peg name.
 #pragma tasMSG(TODO : Need to test ffa read when open pass non peg files)
 
@@ -17,7 +17,7 @@ void ffaReadFile(const CString& strPathName) {
   CStdioFile fl;
 
   if (fl.Open(strPathName, CFile::modeRead | CFile::typeText)) {
-    char szLine[256]{};
+    TCHAR szLine[256]{};
     while (fl.ReadString(szLine, sizeof(szLine) - 1) != 0) {
       CString strLine(szLine);
       int nComment = strLine.Find("//");

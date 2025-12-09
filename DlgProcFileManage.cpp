@@ -18,7 +18,7 @@
 
 void DlgProcFileManageDoLayerColor(HWND hDlg);
 
-char szLayerName[64]{};
+TCHAR szLayerName[64]{};
 
 INT_PTR CALLBACK DlgProcFileManage(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM lParam) noexcept {
   WORD wNotifyCode{HIWORD(wParam)};
@@ -384,7 +384,7 @@ void DlgProcFileManageDoTracingInclude(HWND hDlg) {
 
   static DWORD nFilterIndex{1};
 
-  char szFilter[256]{};
+  TCHAR szFilter[256]{};
   ::LoadString(app.GetInstance(), IDS_OPENFILE_FILTER_TRACINGS, szFilter, sizeof(szFilter));
 
   OPENFILENAME of{};
@@ -394,7 +394,7 @@ void DlgProcFileManageDoTracingInclude(HWND hDlg) {
   of.hInstance = app.GetInstance();
   of.lpstrFilter = szFilter;
   of.nFilterIndex = nFilterIndex;
-  of.lpstrFile = new char[MAX_PATH];
+  of.lpstrFile = new TCHAR[MAX_PATH];
   of.lpstrFile[0] = 0;
   of.nMaxFile = MAX_PATH;
   of.lpstrTitle = "Include Tracing";
@@ -462,7 +462,7 @@ void DlgProcFileManageDoTracingView(HWND hDlg) {
 void DlgProcFileManageInit(HWND hDlg) {
   CPegDoc* pDoc = CPegDoc::GetDoc();
 
-  char szBuf[MAX_PATH]{};
+  TCHAR szBuf[MAX_PATH]{};
   ::GetWindowText(hDlg, szBuf, MAX_PATH);
 
   CString strName = szBuf;
@@ -501,7 +501,7 @@ void DlgProcFileManageInit(HWND hDlg) {
 LRESULT GetCurSel(HWND hDlg, int iListId, CString& strTitle) {
   LRESULT lrCurSel = ::SendDlgItemMessage(hDlg, iListId, LB_GETCURSEL, 0, 0L);
   if (lrCurSel != LB_ERR) {
-    char szTitle[MAX_PATH]{};
+    TCHAR szTitle[MAX_PATH]{};
     ::SendDlgItemMessage(hDlg, iListId, LB_GETTEXT, (WPARAM)lrCurSel, (LPARAM)((LPSTR)szTitle));
     strTitle = szTitle;
   }

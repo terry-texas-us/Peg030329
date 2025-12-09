@@ -13,7 +13,7 @@
 /// @param resourceIdentifier The resource identifier of the string to load.
 /// @return A std::string containing the loaded resource text. The returned string may be empty if loading fails, and may be truncated if the resource exceeds the internal 256-byte buffer.
 static std::string msgLoadStringResource(UINT resourceIdentifier) {
-  char resourceString[256]{};
+  TCHAR resourceString[256]{};
   ::LoadString(app.GetInstance(), resourceIdentifier, resourceString, sizeof(resourceString));
   return std::string(resourceString);
 }
@@ -53,7 +53,7 @@ void msgWarning(UINT messageIdentifier, const CString& additionalText) {
 }
 
 void msgInformation(const CString& strMes) {
-  char information[256]{};
+  TCHAR information[256]{};
   int n = 0;
   for (; n < strMes.GetLength(); n++) { information[n] = isprint(strMes.GetAt(n)) ? strMes.GetAt(n) : '.'; }
   information[n] = 0;
@@ -64,7 +64,7 @@ void msgInformation(const CString& strMes) {
 }
 
 void msgSetPaneText(const std::string& paneText) {
-  char paneTextBuffer[256]{};
+  TCHAR paneTextBuffer[256]{};
   size_t n = 0;
   for (; n < paneText.length(); n++) { paneTextBuffer[n] = isprint(paneText[n]) ? paneText[n] : '.'; }
   paneTextBuffer[n] = 0;

@@ -16,7 +16,7 @@ void mfGetAll(CFile& f, const CVec& vTrns) {
     pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE, &trapsegs);
     trapsegs.RemoveAll();
   }
-  char* pBuf = new char[CPrim::BUFFER_SIZE];
+  TCHAR* pBuf = new TCHAR[CPrim::BUFFER_SIZE];
 
   CSeg* pSeg;
   while (filejob_GetNextSeg(f, 3, pBuf, pSeg)) {

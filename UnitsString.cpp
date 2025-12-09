@@ -33,7 +33,7 @@ std::string UnitsString_FormatAngle(const double angle, int minWidth, int precis
   return ss.str();
 }
 
-void UnitsString_FormatLength(char* buffer, size_t bufferSize, EUnits units, double length, int minWidth,
+void UnitsString_FormatLength(TCHAR* buffer, size_t bufferSize, EUnits units, double length, int minWidth,
                               int precision) {
   if (units == Architectural) {
     strcpy_s(buffer, bufferSize, UnitsString_FormatAsArchitectural(length).c_str());
@@ -122,8 +122,8 @@ std::string UnitsString_FormatAsSimple(double length, int minWidth, int precisio
   return ss.str();
 }
 
-double UnitsString_ParseLength(char* aszLen) {
-  char* szEndPtr;
+double UnitsString_ParseLength(TCHAR* aszLen) {
+  TCHAR* szEndPtr;
 
   double dRetVal = strtod(aszLen, &szEndPtr);
 
@@ -154,7 +154,7 @@ double UnitsString_ParseLength(char* aszLen) {
   return (dRetVal / app.GetScale());
 }
 
-double UnitsString_ParseLength(EUnits eUnits, char* aszLen) {  // Convert length expression to double value.
+double UnitsString_ParseLength(EUnits eUnits, TCHAR* aszLen) {  // Convert length expression to double value.
   try {
     int iTokId = 0;
     long lDef;
@@ -163,7 +163,7 @@ double UnitsString_ParseLength(EUnits eUnits, char* aszLen) {  // Convert length
     size_t bufferSize = sizeof(dVal);
 
     lex::Parse(aszLen);
-    lex::EvalTokenStream((char*)0, &iTokId, &lDef, &iTyp, (void*)dVal, bufferSize);
+    lex::EvalTokenStream(nullptr, &iTokId, &lDef, &iTyp, (void*)dVal, bufferSize);
 
     if (iTyp == lex::TOK_LENGTH_OPERAND)
       return (dVal[0]);
@@ -196,8 +196,8 @@ double UnitsString_ParseLength(EUnits eUnits, char* aszLen) {  // Convert length
       dVal[0] /= app.GetScale();
     }
     return (dVal[0]);
-  } catch (char* szMessage) {
-    ::MessageBox(0, szMessage, 0, MB_ICONWARNING | MB_OK);
+  } catch (TCHAR* szMessage) {
+    ::MessageBox(nullptr, szMessage, nullptr, MB_ICONWARNING | MB_OK);
     return (0.);
   }
 }

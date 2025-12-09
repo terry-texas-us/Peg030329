@@ -130,5 +130,5 @@ class CPrim : public CObject {
 
 CVec Prim_ComputeArbitraryAxis(const CVec& vNorm);
 
-inline bool Prim_IsByBlockPenStyle(const char* sName) { return (_stricmp(sName, "ByBlock") == 0 ? true : false); }
-inline bool Prim_IsByLayerPenStyle(const char* sName) { return (_stricmp(sName, "ByLayer") == 0 ? true : false); }
+inline bool Prim_IsByBlockPenStyle(const TCHAR* sName) { return (_stricmp(sName, "ByBlock") == 0 ? true : false); }
+inline bool Prim_IsByLayerPenStyle(const TCHAR* sName) { return (_stricmp(sName, "ByLayer") == 0 ? true : false); }

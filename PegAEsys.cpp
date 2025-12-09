@@ -86,7 +86,7 @@ int iTableOffset[64];
 float fTableValue[1536];
 }  // namespace hatch
 double gbl_dExtNum = 0.;
-char gbl_szExtStr[128]{};
+TCHAR gbl_szExtStr[128]{};
 
 double dPWids[] = {0.,   0.0075, 0.015, 0.02,   0.03, 0.0075, 0.015, 0.0225,
                    0.03, 0.0075, 0.015, 0.0225, 0.03, 0.0075, 0.015, 0.0225};
@@ -441,7 +441,7 @@ void CPegApp::OnTrapCommandsAddSegments() {
     app.SetWindowMode(ID_MODE_TRAP);
 }
 void CPegApp::OnFileRun() {
-  char szFilter[256]{};
+  TCHAR szFilter[256]{};
   ::LoadString(app.GetInstance(), IDS_OPENFILE_FILTER_APPS, szFilter, sizeof(szFilter));
 
   CFileDialog dlg(TRUE, "exe", "*.exe", OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, szFilter);
@@ -593,12 +593,12 @@ void CPegApp::HatchesLoad(const CString& strFileName) {
 
   if (!fl.Open(strFileName, CFile::modeRead | CFile::typeText, &e)) return;
 
-  char szLn[128]{};
+  TCHAR szLn[128]{};
   double dTotStrsLen{0.};
   int iNmbEnts{0};
   int iNmbStrsId{0};
 
-  char szValDel[] = ",\0";
+  TCHAR szValDel[] = ",\0";
   int iHatId{0};
   int iNmbHatLns{0};
   int iTblId{0};
@@ -614,8 +614,8 @@ void CPegApp::HatchesLoad(const CString& strFileName) {
       iTblId += 2;
       iNmbEnts = 0;
       dTotStrsLen = 0.;
-      char* context = nullptr;
-      char* pTok = strtok_s(szLn, szValDel, &context);
+      TCHAR* context = nullptr;
+      TCHAR* pTok = strtok_s(szLn, szValDel, &context);
       while (pTok != 0) {
         hatch::fTableValue[iTblId] = float(atof(pTok));
         iNmbEnts++;
@@ -701,11 +701,11 @@ void CPegApp::PenStylesLoad(const CString& strFileName) {
   if (fl.Open(strFileName, CFile::modeRead | CFile::typeText)) {
     CString strDescription;
     CString strName;
-    char pBuf[128]{};
+    TCHAR pBuf[128]{};
 
     WORD wLensMax = 8;
     double* pLen = new double[wLensMax];
-    char* context = nullptr;
+    TCHAR* context = nullptr;
     while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0) {
       int iId = atoi(strtok_s(pBuf, "=", &context));
       strName = strtok_s(0, ",", &context);
@@ -756,12 +756,12 @@ void CPegApp::PenColorsLoad(const CString& strFileName) {
   CStdioFile fl;
 
   if (fl.Open(strFileName, CFile::modeRead | CFile::typeText)) {
-    char pBuf[128]{};
+    TCHAR pBuf[128]{};
     LPSTR pId, pRed, pGreen, pBlue;
 
     while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0 && _strnicmp(pBuf, "<Colors>", 8) != 0);
 
-    char* context = nullptr;
+    TCHAR* context = nullptr;
     while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0 && *pBuf != '<') {
       pId = strtok_s(pBuf, "=", &context);
       pRed = strtok_s(0, ",", &context);
@@ -1007,7 +1007,7 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli) const {
     CDC* pDC = pView->GetDC();
 
     CRect rc;
-    char szBuf[128]{};
+    TCHAR szBuf[128]{};
 
     CFont* pFont = pDC->SelectObject(m_pFontApp);
     UINT nTextAlign = pDC->SetTextAlign(TA_LEFT | TA_TOP);
@@ -1094,7 +1094,7 @@ void CPegApp::StrokeFontLoad(const CString& strPathName) {
     // Open binary resources
     hrsrc = FindResource(NULL, MAKEINTRESOURCE(IDR_PEGSTROKEFONT), "STROKEFONT");
     fontlen = static_cast<int>(SizeofResource(NULL, hrsrc));
-    m_pStrokeFontDef = new char[static_cast<size_t>(fontlen)];
+    m_pStrokeFontDef = new TCHAR[static_cast<size_t>(fontlen)];
 
     fontptr = LockResource(LoadResource(NULL, hrsrc));
     memcpy(m_pStrokeFontDef, fontptr, static_cast<size_t>(fontlen));
@@ -1103,7 +1103,7 @@ void CPegApp::StrokeFontLoad(const CString& strPathName) {
     HANDLE hFile = CreateFile(strPathName, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
     if (hFile != ((HANDLE)-1)) {
       if (SetFilePointer(hFile, 0, 0, FILE_BEGIN) != (DWORD)-1) {
-        if (m_pStrokeFontDef == 0) m_pStrokeFontDef = new char[16384];
+        if (m_pStrokeFontDef == 0) m_pStrokeFontDef = new TCHAR[16384];
 
         DWORD nBytesRead;
         ReadFile(hFile, m_pStrokeFontDef, 16384U, &nBytesRead, 0);

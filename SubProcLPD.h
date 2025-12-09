@@ -30,7 +30,7 @@ extern double dInsRadElFac;  // inside radius elbow factor
 bool Fnd2LnsGivLn(CPrimLine*, double, CPrim*&, CLine*, CPrim*&, CLine*);
 int GenElbow(double, double, CLine*);
 void GenEndCap(const CPnt&, const CPnt&, double, double, CSeg*);
-int GenRiseDrop(char, double, double, CLine*);
+int GenRiseDrop(TCHAR, double, double, CLine*);
 
 /// @brief Generates a section between two lines: creates end caps and line primitives, adds the resulting CSeg to the document's work layer, and updates all views.
 /// @param section_width Width of the section (used for end caps).

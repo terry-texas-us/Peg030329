@@ -15,10 +15,10 @@ INT_PTR CALLBACK DlgProcHomePointGo(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM
   static CPnt pt{};
 
   if (anMsg == WM_INITDIALOG) {
-    char szNames[256]{};
+    TCHAR szNames[256]{};
     ::LoadString(app.GetInstance(), IDS_HOME_POINT_GO_NAMES, szNames, 256);
-    char* context = nullptr;
-    char* pName = strtok_s(szNames, "\t", &context);
+    TCHAR* context = nullptr;
+    TCHAR* pName = strtok_s(szNames, "\t", &context);
     while (pName != nullptr) {
       ::SendDlgItemMessage(hDlg, IDC_LIST, CB_ADDSTRING, 0, (LPARAM)(LPCSTR)pName);
       pName = strtok_s(nullptr, "\t", &context);
@@ -34,7 +34,7 @@ INT_PTR CALLBACK DlgProcHomePointGo(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM
   } else if (anMsg == WM_COMMAND) {
     CPegView* pView = CPegView::GetActiveView();
 
-    char szBuf[32]{};
+    TCHAR szBuf[32]{};
 
     switch (LOWORD(wParam)) {
       case IDC_LIST:
@@ -112,12 +112,12 @@ INT_PTR CALLBACK DlgProcHomePointSet(HWND hDlg, UINT anMsg, WPARAM wParam, LPARA
   int iId{};
 
   if (anMsg == WM_INITDIALOG) {
-    char szNames[256]{};
+    TCHAR szNames[256]{};
 
     ::LoadString(app.GetInstance(), IDS_HOME_POINT_SET_NAMES, szNames, 256);
 
-    char* context = nullptr;
-    char* pName = strtok_s(szNames, "\t", &context);
+    TCHAR* context = nullptr;
+    TCHAR* pName = strtok_s(szNames, "\t", &context);
     while (pName != nullptr) {
       ::SendDlgItemMessage(hDlg, IDC_LIST, CB_ADDSTRING, 0, (LPARAM)(LPCSTR)pName);
       pName = strtok_s(nullptr, "\t", &context);
@@ -131,7 +131,7 @@ INT_PTR CALLBACK DlgProcHomePointSet(HWND hDlg, UINT anMsg, WPARAM wParam, LPARA
     DlgBoxSetItemUnitsText(hDlg, IDC_Z, pt[2]);
     return (TRUE);
   } else if (anMsg == WM_COMMAND) {
-    char szBuf[32]{};
+    TCHAR szBuf[32]{};
 
     CPegView* pView = CPegView::GetActiveView();
 

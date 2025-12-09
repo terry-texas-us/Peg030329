@@ -11,7 +11,7 @@
 void Path_UnquoteSpaces(CString& strPathName) {
   if (strPathName.IsEmpty()) return;
 
-  char* pPathName = new char[MAX_PATH];
+  TCHAR* pPathName = new TCHAR[MAX_PATH];
   strcpy_s(pPathName, MAX_PATH, strPathName);
   size_t n = strlen(pPathName) - 1;
   while (n != 0 && pPathName[n] != '\\') { n--; }
@@ -20,17 +20,17 @@ void Path_UnquoteSpaces(CString& strPathName) {
   delete[] pPathName;
 }
 
-void Directory_ExamineFile(char* oldfile, char* newfile) {
+void Directory_ExamineFile(TCHAR* oldfile, TCHAR* newfile) {
   // the default file examine -- if the file isn't pathed to the right place,
   // then search the ACAD environment variable for the oldfile */
 
   const int kExistenceOnly = 0;
 
-  char holdch;
-  char testpath[256]{};
+  TCHAR holdch;
+  TCHAR testpath[256]{};
 
-  static char pathchar = '\\';
-  static char oldpathchar = '/';
+  static TCHAR pathchar = '\\';
+  static TCHAR oldpathchar = '/';
 
   // replace path characters, if present, with proper ones for platform
   for (int i = 0; i < int(strlen(oldfile)); i++) {
@@ -42,7 +42,7 @@ void Directory_ExamineFile(char* oldfile, char* newfile) {
       return;
     }
     // strip the path
-    char* pLast = strrchr(oldfile, pathchar);
+    TCHAR* pLast = strrchr(oldfile, pathchar);
     strcpy_s(oldfile, sizeof(oldfile), ++pLast);
   }
   strcpy_s(newfile, sizeof(newfile), oldfile);
@@ -53,14 +53,14 @@ void Directory_ExamineFile(char* oldfile, char* newfile) {
     if (strchr(oldfile, ':') != nullptr) {  // path with drive id
       return;
     }
-    char* envptr = nullptr;
+    TCHAR* envptr = nullptr;
     size_t len;
     errno_t err = _dupenv_s(&envptr, &len, "ACAD");
 
     if (err != 0 || envptr == nullptr) {  // no ACAD environment to search
       return;
     }
-    char* cptr = envptr;
+    TCHAR* cptr = envptr;
     do {
       while (*cptr != ';' && *cptr != 0) { cptr++; }
       holdch = *cptr; /* grab terminating character */

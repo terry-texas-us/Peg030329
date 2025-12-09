@@ -69,7 +69,7 @@ auto CDlgViewZoom::OnInitDialog() -> BOOL {
   CRect rcMoreArea;
   GetWindowRect(&rcMoreArea);
 
-  char szBuf[16]{};
+  TCHAR szBuf[16]{};
   wsprintf(szBuf, "%05u %05u", rcMoreArea.Width(), rcMoreArea.Height());
 
   GetDlgItem(IDC_LESS_AREA)->SetWindowText(szBuf);
@@ -167,7 +167,7 @@ void CDlgViewZoom::OnBnClickedLast() {
 // Enables/disables the keyplan.  Enabling the keyplan causes the dialog to grow.
 // Info indicating size and position are buried in a control.
 void CDlgViewZoom::OnBnClickedMoreless() {
-  char szBuf[16]{};
+  TCHAR szBuf[16]{};
   GetDlgItem(IDC_LESS_AREA)->GetWindowText(szBuf, sizeof(szBuf));
 
   if (bKeyplan) {
@@ -218,7 +218,7 @@ void CDlgViewZoom::Refresh() {
   CPegView* pView = CPegView::GetActiveView();
   CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
-  char szBuf[16]{};
+  TCHAR szBuf[16]{};
   GetDlgItem(IDC_LESS_AREA)->GetWindowText(szBuf, sizeof(szBuf));
 
   if (bKeyplan) {

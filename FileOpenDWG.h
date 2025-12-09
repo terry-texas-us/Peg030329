@@ -12,9 +12,9 @@ class CFileOpenDWG {
   CFileOpenDWG();
   ~CFileOpenDWG();
 
-  bool Create(char*, WORD);
+  bool Create(TCHAR*, WORD);
   bool Initialize(short* iError);
-  void Load(char*);
+  void Load(TCHAR*);
   void ReadBlock(AD_DB_HANDLE, PAD_BLKH, PAD_ENT_HDR);
   void ReadBlocks(AD_DB_HANDLE);
   void ReadBlockTable(AD_DB_HANDLE);

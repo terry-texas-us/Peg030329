@@ -6,7 +6,7 @@
 using namespace dde;
 
 ///<summary>Add a new topic and default processing for its item list and formats</summary>
-PTOPICINFO dde::TopicAdd(const char* lpszTopic, PEXECFN pfnExec, PREQUESTFN pfnRequest, PPOKEFN pfnPoke) {
+PTOPICINFO dde::TopicAdd(const TCHAR* lpszTopic, PEXECFN pfnExec, PREQUESTFN pfnRequest, PPOKEFN pfnPoke) {
   PTOPICINFO pTopic = TopicFind(lpszTopic);
 
   // See if we already have this topic
@@ -16,7 +16,7 @@ PTOPICINFO dde::TopicAdd(const char* lpszTopic, PEXECFN pfnExec, PREQUESTFN pfnR
     pTopic->pfnRequest = pfnRequest;
     pTopic->pfnPoke = pfnPoke;
   } else {  // Create a new topic
-    pTopic = (PTOPICINFO) new char[sizeof(TOPICINFO)];
+    pTopic = (PTOPICINFO) new TCHAR[sizeof(TOPICINFO)];
     if (!pTopic) return nullptr;
 
     ::ZeroMemory(pTopic, sizeof(TOPICINFO));
@@ -39,7 +39,7 @@ PTOPICINFO dde::TopicAdd(const char* lpszTopic, PEXECFN pfnExec, PREQUESTFN pfnR
   return pTopic;
 }
 ///<summary>Find a topic by its name</summary>
-PTOPICINFO dde::TopicFind(const char* lpszName) {
+PTOPICINFO dde::TopicFind(const TCHAR* lpszName) {
   PTOPICINFO pTopic = ServerInfo.pTopicList;
 
   while (pTopic) {
@@ -63,7 +63,7 @@ PTOPICINFO dde::TopicFind(HSZ hszName) {
 ///<summary>
 //Remove a topic and all its items.  If there is an active conversation on the topic then disconnect it.
 ///</summary>
-bool dde::TopicRemove(const char* lpszTopic) {
+bool dde::TopicRemove(const TCHAR* lpszTopic) {
   PTOPICINFO pTopic = ServerInfo.pTopicList;
   PTOPICINFO pPrevTopic = nullptr;
   PCONVERSATIONINFO pCI;

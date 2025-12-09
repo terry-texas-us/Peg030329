@@ -104,7 +104,7 @@ void CPrimPolyline::DisRep(const CPnt& ptPic) const {
     else
       dAng = line::GetAngAboutZAx(CLine(ptBeg, ptEnd));
 
-    char szBuf[24]{};
+    TCHAR szBuf[24]{};
     UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), dLen);
     strRep += szBuf;
     sprintf_s(szBuf, sizeof(szBuf), " @ %6.2f degrees", dAng / RADIAN);

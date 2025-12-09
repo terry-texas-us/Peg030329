@@ -5,7 +5,7 @@
 using namespace dde;
 
 // Add a new item.
-PITEMINFO dde::ItemAdd(const char* lpszTopic, const char* lpszItem, LPWORD lpFormatList, PREQUESTFN lpReqFn,
+PITEMINFO dde::ItemAdd(const TCHAR* lpszTopic, const TCHAR* lpszItem, LPWORD lpFormatList, PREQUESTFN lpReqFn,
                        PPOKEFN lpPokeFn) {
   PITEMINFO pItem = nullptr;
   PTOPICINFO pTopic = TopicFind(lpszTopic);
@@ -22,7 +22,7 @@ PITEMINFO dde::ItemAdd(const char* lpszTopic, const char* lpszItem, LPWORD lpFor
     pItem->pfnPoke = lpPokeFn;
     pItem->pFormatList = lpFormatList;
   } else {  // Create a new item
-    pItem = (PITEMINFO) new char[sizeof(ITEMINFO)];
+    pItem = (PITEMINFO) new TCHAR[sizeof(ITEMINFO)];
     if (!pItem) return nullptr;
 
     ::ZeroMemory(pItem, sizeof(ITEMINFO));
@@ -40,7 +40,7 @@ PITEMINFO dde::ItemAdd(const char* lpszTopic, const char* lpszItem, LPWORD lpFor
   return pItem;
 }
 ///<summary>Find an item by its name in a topic </summary>
-PITEMINFO dde::ItemFind(PTOPICINFO pTopic, const char* lpszItem) {
+PITEMINFO dde::ItemFind(PTOPICINFO pTopic, const TCHAR* lpszItem) {
   PITEMINFO pItem = pTopic->pItemList;
   while (pItem) {
     if (lstrcmpi(pItem->pszItemName, lpszItem) == 0) break;

@@ -18,7 +18,7 @@ std::string UnitsString_FormatAngle(const double angle, int minWidth = 0, int pr
 /// @param adVal The numeric length value to format.
 /// @param minWidth Minimum field width for the formatted output; the result will be padded if shorter than this (default 0).
 /// @param precision Number of fractional digits to include in the formatted output (default 4).
-void UnitsString_FormatLength(char* aszBuf, size_t bufferSize, EUnits units, double adVal, int minWidth = 0,
+void UnitsString_FormatLength(TCHAR* aszBuf, size_t bufferSize, EUnits units, double adVal, int minWidth = 0,
                               int precision = 4);
 
 /// @brief Formats a length value as an architectural-style string (feet, inches, and fractional inches).
@@ -49,10 +49,10 @@ int UnitsString_GCD(int aiNmb1, int aiNmb2);
 /// @brief Parses a length string with an optional unit suffix and returns the length converted to the application's internal scale.
 /// @param length Pointer to a null-terminated C string containing a numeric length optionally followed by a unit suffix. Recognized suffixes (case-insensitive): ' (feet, may be followed by inches), mm (millimeters), m (meters), cm (centimeters), d (decimeters), k (kilometers). If no recognized suffix is present, the numeric value is treated as inches. The pointer must be valid for reading; the function does not modify the string.
 /// @return The parsed length converted to the application's internal units: the value converted to inches according to the suffix (or treated as inches if none) and then divided by app.GetScale().
-double UnitsString_ParseLength(char* length);
+double UnitsString_ParseLength(TCHAR* length);
 
 /// @brief Parses a length expression string and returns its value converted to the application's internal length units (inches adjusted by app.GetScale()).
 /// @param eUnits The unit system of the input length expression. Determines the conversion factor applied. Supported values include: Architectural, Engineering, Feet, Inches, Meters, Millimeters, Centimeters, Decimeters, and Kilometers.
 /// @param length A null-terminated C string containing the length expression to parse. The string is processed by the lexer/evaluator functions (lex::Parse, lex::EvalTokenStream).
 /// @return The parsed length as a double expressed in the application's internal units (the function converts input units to inches and then divides by app.GetScale()). On parse/evaluation error the function displays a message box and returns 0.0.
-double UnitsString_ParseLength(EUnits, char* length);
+double UnitsString_ParseLength(EUnits, TCHAR* length);

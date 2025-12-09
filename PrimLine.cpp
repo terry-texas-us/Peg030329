@@ -107,7 +107,7 @@ void CPrimLine::Display(CPegView* pView, CDC* pDC) const {
   polyline::End(pView, pDC, nPenStyle);
 }
 void CPrimLine::DisRep(const CPnt& pt) const {
-  char szLength[64]{};
+  TCHAR szLength[64]{};
   UnitsString_FormatLength(szLength, sizeof(szLength), app.GetUnits(), Length());
 
   std::string str = "<Line>";
@@ -134,7 +134,7 @@ void CPrimLine::DisRep(const CPnt& pt) const {
   dde::PostAdvise(dde::EngAngZInfo);
 }
 void CPrimLine::FormatExtra(CString& str) const {
-  char szLength[64]{};
+  TCHAR szLength[64]{};
   UnitsString_FormatLength(szLength, sizeof(szLength), app.GetUnits(), Length());
 
   std::string extra;

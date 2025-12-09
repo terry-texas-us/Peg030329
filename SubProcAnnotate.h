@@ -9,7 +9,7 @@ class CSeg;
 LRESULT CALLBACK SubProcAnnotate(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 namespace annotate {
-extern char szDefTxt[16];
+extern TCHAR szDefTxt[16];
 extern double dGapSpaceFac;  // Edge space factor 25 percent of character height
 extern double dHookRad;      // Hook radius
 extern int iArrowTyp;        // Arrow type

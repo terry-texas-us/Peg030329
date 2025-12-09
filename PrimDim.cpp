@@ -336,7 +336,7 @@ void CPrimDim::SetDefaultNote() {
 
   m_rs.SetOrigin(m_ln.ProjPtAlong(.5));
   double dAng = 0.;
-  char cText0 = m_strText[0];
+  TCHAR cText0 = m_strText[0];
   if (cText0 != 'R' && cText0 != 'D') {
     dAng = m_ln.GetAngAboutZAx();
     double dDis = .075;
@@ -363,7 +363,7 @@ void CPrimDim::SetDefaultNote() {
   m_rs.SetDirX(vRefXAx);
   m_rs.SetDirY(vRefYAx);
 
-  char szBuf[64]{};
+  TCHAR szBuf[64]{};
   UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), m_ln.Length());
   m_strText = szBuf;
   m_strText.TrimLeft();

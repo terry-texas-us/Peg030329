@@ -36,7 +36,7 @@ void CFilePeg::ReadBlocksSection(CPegDoc* pDoc) {
 
   CPrim* pPrim;
   CString strName;
-  char szXRefPathNam[32]{};
+  TCHAR szXRefPathNam[32]{};
 
   WORD wTblSize = FilePeg_ReadWord(*this);
 

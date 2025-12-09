@@ -34,7 +34,7 @@ INT_PTR CALLBACK DlgProcSetupNote(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM) n
           CCharCellDef ccd;
           pstate.GetCharCellDef(ccd);
 
-          char szBuf[32]{};
+          TCHAR szBuf[32]{};
 
           ::GetDlgItemText(hDlg, IDC_TEXT_HEIGHT, szBuf, sizeof(szBuf));
           ccd.ChrHgtSet(atof(szBuf));
@@ -125,7 +125,7 @@ void DlgProcSetupNoteInit(HWND hDlg) {
   CFontDef fd;
   pstate.GetFontDef(fd);
 
-  char szBuf[32]{};
+  TCHAR szBuf[32]{};
   strcpy_s(szBuf, sizeof(szBuf), fd.TextFont());
   ::SendDlgItemMessage(hDlg, IDC_FONT_NAME, CB_SELECTSTRING, (WPARAM)-1, (LPARAM)((LPSTR)szBuf));
 

@@ -88,8 +88,8 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
 
       case ID_OP1:  // Search for an endcap in proximity of current location
         if (lpd::SelEndCapUsingPoint(pView, ptCur, pEndCapSeg, pEndCapMark)) {  // Endcap located
-          char szLen[32]{};
-          char szWid[32]{};
+          TCHAR szLen[32]{};
+          TCHAR szWid[32]{};
 
           ptPrv = pEndCapMark->GetPt();
           dWid[1] = pEndCapMark->GetDat(0);
@@ -642,7 +642,7 @@ void lpd::GenEndCap(const CPnt& pt1, const CPnt& pt2, double dWid, double dDep, 
 //				pLns		(in)  2:3 definition parallel line set
 //							(out) 0:1 parallel line set for cross section
 //								  2:3 parallel line set for thru section
-int lpd::GenRiseDrop(char acRisDrop, double adWid, double adDep, CLine* pLns) {
+int lpd::GenRiseDrop(TCHAR acRisDrop, double adWid, double adDep, CLine* pLns) {
   static double dSlo = 0.;
 
   CPegDoc* pDoc = CPegDoc::GetDoc();
@@ -719,8 +719,8 @@ void lpd::GenSizeNote(CPnt arPt, double adAng, double adWid,
   vYAx.RotAboutZAx(dSinAng, dCosAng);
   CRefSys rs(arPt, vXAx, vYAx);
 
-  char pNote[48]{};
-  char pSize[16]{};
+  TCHAR pNote[48]{};
+  TCHAR pSize[16]{};
 
   UnitsString_FormatLength(pSize, sizeof(pSize), std::max(app.GetUnits(), Inches), adWid, 0, 2);
   strcpy_s(pNote, sizeof(pNote), string_TrimLeadingSpace(pSize));

@@ -220,7 +220,7 @@ void CPrimPolygon::DisRep(const CPnt& ptPic) const {
     else
       dAng = line::GetAngAboutZAx(CLine(*pBegPt, *pEndPt));
 
-    char szBuf[24]{};
+    TCHAR szBuf[24]{};
     UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), dLen);
     strRep += szBuf;
     std::stringstream ss;
