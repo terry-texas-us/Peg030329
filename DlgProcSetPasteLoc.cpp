@@ -5,30 +5,27 @@
 #include "Pnt.h"
 #include "SegsTrap.h"
 
-INT_PTR CALLBACK DlgProcSetPasteLoc(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
-{
-    CPnt pt{};
+INT_PTR CALLBACK DlgProcSetPasteLoc(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept {
+  CPnt pt{};
 
-    switch (anMsg)
-    {
+  switch (anMsg) {
     case WM_INITDIALOG:
-        return (TRUE);
+      return (TRUE);
 
     case WM_COMMAND:
 
-        switch (LOWORD(wParam))
-        {
+      switch (LOWORD(wParam)) {
         case IDOK:
-            pt = app.CursorPosGet();
-            trapsegs.PvtPt() = pt;
-            ::EndDialog(hDlg, TRUE);
-            return (TRUE);
+          pt = app.CursorPosGet();
+          trapsegs.PvtPt() = pt;
+          ::EndDialog(hDlg, TRUE);
+          return (TRUE);
 
         case IDCANCEL:
-            ::EndDialog(hDlg, FALSE);
-            return (TRUE);
-        }
-        break;
-    }
-    return (FALSE);
+          ::EndDialog(hDlg, FALSE);
+          return (TRUE);
+      }
+      break;
+  }
+  return (FALSE);
 }

@@ -9,7 +9,7 @@
 /// @param minWidth Minimum total field width for the resulting string; padded if necessary. Default is 0.
 /// @param precision Number of digits to display after the decimal point. Default is 6.
 /// @return A std::string containing the formatted angle.
-std::string	UnitsString_FormatAngle(const double angle, int minWidth = 0, int precision = 6);
+std::string UnitsString_FormatAngle(const double angle, int minWidth = 0, int precision = 6);
 
 /// @brief Formats a length value into a textual representation according to the specified units and writes it into a caller-provided buffer.
 /// @param aszBuf Pointer to the output buffer where the formatted string will be written (null-terminated).
@@ -18,7 +18,8 @@ std::string	UnitsString_FormatAngle(const double angle, int minWidth = 0, int pr
 /// @param adVal The numeric length value to format.
 /// @param minWidth Minimum field width for the formatted output; the result will be padded if shorter than this (default 0).
 /// @param precision Number of fractional digits to include in the formatted output (default 4).
-void UnitsString_FormatLength(char* aszBuf, size_t bufferSize, EUnits units, double adVal, int minWidth = 0, int precision = 4);
+void UnitsString_FormatLength(char* aszBuf, size_t bufferSize, EUnits units, double adVal, int minWidth = 0,
+                              int precision = 4);
 
 /// @brief Formats a length value as an architectural-style string (feet, inches, and fractional inches).
 /// @param length The length value to format, expressed in the library's base unit (commonly inches or feet — refer to the library/application settings).
@@ -37,13 +38,13 @@ std::string UnitsString_FormatAsEngineering(double length, int precision);
 /// @param precision Number of digits to display after the decimal point (controls rounding).
 /// @param units Enumeration value specifying the units to use for formatting (affects the unit label and any conversion applied).
 /// @return A formatted string representing the length with the chosen units, respecting the specified precision and minimum width.
-std::string	UnitsString_FormatAsSimple(double length, int minWidth, int precision, EUnits units);
+std::string UnitsString_FormatAsSimple(double length, int minWidth, int precision, EUnits units);
 
 /// @brief Calculates the greatest common divisor (GCD) of two integers.
 /// @param aiNmb1 The first integer.
 /// @param aiNmb2 The second integer.
 /// @return The non-negative greatest common divisor of the two arguments. If one argument is zero, returns the absolute value of the other; if both are zero, returns 0.
-int	UnitsString_GCD(int aiNmb1, int aiNmb2);
+int UnitsString_GCD(int aiNmb1, int aiNmb2);
 
 /// @brief Parses a length string with an optional unit suffix and returns the length converted to the application's internal scale.
 /// @param length Pointer to a null-terminated C string containing a numeric length optionally followed by a unit suffix. Recognized suffixes (case-insensitive): ' (feet, may be followed by inches), mm (millimeters), m (meters), cm (centimeters), d (decimeters), k (kilometers). If no recognized suffix is present, the numeric value is treated as inches. The pointer must be valid for reading; the function does not modify the string.

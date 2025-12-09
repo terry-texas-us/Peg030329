@@ -3,42 +3,39 @@
 #include "Pnt.h"
 #include "Vec.h"
 
-class CVaxFloat
-{
-public:
-    CVaxFloat() { m_f = 0.f; }
+class CVaxFloat {
+ public:
+  CVaxFloat() { m_f = 0.f; }
 
-    void		Convert(const double&);
-    double		Convert() const;
+  void Convert(const double&);
+  double Convert() const;
 
-private:
-    float		m_f;
+ private:
+  float m_f;
 };
 
-class CVaxPnt
-{
-public:
-    CVaxPnt() { }
+class CVaxPnt {
+ public:
+  CVaxPnt() {}
 
-    void		Convert(const CPnt&);
-    CPnt		Convert() const;
+  void Convert(const CPnt&);
+  CPnt Convert() const;
 
-private:
-    CVaxFloat	x;
-    CVaxFloat	y;
-    CVaxFloat	z;
+ private:
+  CVaxFloat x;
+  CVaxFloat y;
+  CVaxFloat z;
 };
 
-class CVaxVec
-{
-public:
-    CVaxVec() { }
+class CVaxVec {
+ public:
+  CVaxVec() {}
 
-    void		Convert(const CVec&);
-    CVec		Convert() const;
+  void Convert(const CVec&);
+  CVec Convert() const;
 
-private:
-    CVaxFloat	x;
-    CVaxFloat	y;
-    CVaxFloat	z;
+ private:
+  CVaxFloat x;
+  CVaxFloat y;
+  CVaxFloat z;
 };

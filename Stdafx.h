@@ -1,15 +1,15 @@
 #pragma once
 
-#ifndef WINVER				// Allow use of features specific to Windows 10 or later.
-#define WINVER 0x0A00		
+#ifndef WINVER  // Allow use of features specific to Windows 10 or later.
+#define WINVER 0x0A00
 #endif
 
-#ifndef _WIN32_WINNT		// Allow use of features specific to Windows 10 or later.
-#define _WIN32_WINNT 0x0A00	
+#ifndef _WIN32_WINNT  // Allow use of features specific to Windows 10 or later.
+#define _WIN32_WINNT 0x0A00
 #endif
 
-#ifndef _WIN32_IE			// Allow use of features specific to IE 10 or later
-#define _WIN32_IE 0x0A00	
+#ifndef _WIN32_IE  // Allow use of features specific to IE 10 or later
+#define _WIN32_IE 0x0A00
 #endif
 
 #define _AFX_ALL_WARNINGS
@@ -18,12 +18,12 @@
 #define tasSTR(x) tasSTR2(x)
 #define tasMSG(desc) message(__FILE__ "(" tasSTR(__LINE__) ") : " #desc)
 
-#define ODA_FUNCTIONALITY 0 // This functionality is dead forever. Do not enable it. Use to find related code only.
+#define ODA_FUNCTIONALITY 0  // This functionality is dead forever. Do not enable it. Use to find related code only.
 #define GL_FUNCTIONALITY 0
 
-#define WIN32_LEAN_AND_MEAN      // Exclude rarely-used services from Windows.h
-#define NOMINMAX                 // Prevent Windows.h from defining min/max macros
-#define STRICT                   // Enforce stricter type safety
+#define WIN32_LEAN_AND_MEAN  // Exclude rarely-used services from Windows.h
+#define NOMINMAX             // Prevent Windows.h from defining min/max macros
+#define STRICT               // Enforce stricter type safety
 
 //#include <Windows.h>
 

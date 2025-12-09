@@ -13,54 +13,47 @@ void DlgBoxSetItemUnitsText(HWND hDlg, int control, double value);
 
 void DlgProcRLPDOptionsInit(HWND);
 
-INT_PTR CALLBACK DlgProcRLPDOptions(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM) noexcept
-{
-    char szBuf[32]{};
+INT_PTR CALLBACK DlgProcRLPDOptions(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM) noexcept {
+  char szBuf[32]{};
 
-    switch (nMsg)
-    {
+  switch (nMsg) {
     case WM_INITDIALOG:
-        DlgProcRLPDOptionsInit(hDlg);
-        return (TRUE);
+      DlgProcRLPDOptionsInit(hDlg);
+      return (TRUE);
 
     case WM_COMMAND:
-        switch (LOWORD(wParam))
-        {
+      switch (LOWORD(wParam)) {
         case IDOK:
-            rlpd::dInsideRadiusFactor = DlgBoxGetItemDouble(hDlg, IDC_RADIUS_FACTOR);
-            ::GetDlgItemText(hDlg, IDC_DIAMETER, szBuf, sizeof(szBuf));
-            rlpd::dSecDiam = UnitsString_ParseLength(std::max(app.GetUnits(), Inches), szBuf);
-            rlpd::bGenCenterline = (IsDlgButtonChecked(hDlg, IDC_CENTERLINE) ? true : false);
+          rlpd::dInsideRadiusFactor = DlgBoxGetItemDouble(hDlg, IDC_RADIUS_FACTOR);
+          ::GetDlgItemText(hDlg, IDC_DIAMETER, szBuf, sizeof(szBuf));
+          rlpd::dSecDiam = UnitsString_ParseLength(std::max(app.GetUnits(), Inches), szBuf);
+          rlpd::bGenCenterline = (IsDlgButtonChecked(hDlg, IDC_CENTERLINE) ? true : false);
 
-            rlpd::eJust0 = rlpd::Center0;
-            if (IsDlgButtonChecked(hDlg, IDC_LEFT))
-            {
-                rlpd::eJust0 = rlpd::Left0;
-            }
-            else if (IsDlgButtonChecked(hDlg, IDC_RIGHT))
-            {
-                rlpd::eJust0 = rlpd::Right0;
-            }
-            [[fallthrough]]; // Intentional fallthrough
+          rlpd::eJust0 = rlpd::Center0;
+          if (IsDlgButtonChecked(hDlg, IDC_LEFT)) {
+            rlpd::eJust0 = rlpd::Left0;
+          } else if (IsDlgButtonChecked(hDlg, IDC_RIGHT)) {
+            rlpd::eJust0 = rlpd::Right0;
+          }
+          [[fallthrough]];  // Intentional fallthrough
 
         case IDCANCEL:
-            ::EndDialog(hDlg, TRUE);
-            return (TRUE);
-        }
-        break;
-    }
-    return (FALSE);
+          ::EndDialog(hDlg, TRUE);
+          return (TRUE);
+      }
+      break;
+  }
+  return (FALSE);
 }
 
-void DlgProcRLPDOptionsInit(HWND hDlg)
-{
-    EUnits eUnits = app.GetUnits();
-    app.SetUnits(std::max(eUnits, Inches));
-    DlgBoxSetItemUnitsText(hDlg, IDC_DIAMETER, rlpd::dSecDiam);
-    app.SetUnits(eUnits);
-    DlgBoxSetItemDouble(hDlg, IDC_RADIUS_FACTOR, rlpd::dInsideRadiusFactor);
+void DlgProcRLPDOptionsInit(HWND hDlg) {
+  EUnits eUnits = app.GetUnits();
+  app.SetUnits(std::max(eUnits, Inches));
+  DlgBoxSetItemUnitsText(hDlg, IDC_DIAMETER, rlpd::dSecDiam);
+  app.SetUnits(eUnits);
+  DlgBoxSetItemDouble(hDlg, IDC_RADIUS_FACTOR, rlpd::dInsideRadiusFactor);
 
-    ::CheckRadioButton(hDlg, IDC_LEFT, IDC_RIGHT, IDC_CENTER + rlpd::eJust0);
+  ::CheckRadioButton(hDlg, IDC_LEFT, IDC_RIGHT, IDC_CENTER + rlpd::eJust0);
 
-    if (rlpd::bGenCenterline) { ::SendDlgItemMessage(hDlg, IDC_CENTERLINE, BM_SETCHECK, 1, 0L); }
+  if (rlpd::bGenCenterline) { ::SendDlgItemMessage(hDlg, IDC_CENTERLINE, BM_SETCHECK, 1, 0L); }
 }

@@ -28,215 +28,193 @@
 using namespace dde;
 
 ///<summary>Sets the Text Height.</summary>
-bool dde::ExecNoteHT(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
-{
-    char szBuf[32]{};
-    strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
-    CCharCellDef ccd;
-    pstate.GetCharCellDef(ccd);
-    ccd.ChrHgtSet(atof(szBuf));
-    pstate.SetCharCellDef(ccd);
-    return true;
+bool dde::ExecNoteHT(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
+  char szBuf[32]{};
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  CCharCellDef ccd;
+  pstate.GetCharCellDef(ccd);
+  ccd.ChrHgtSet(atof(szBuf));
+  pstate.SetCharCellDef(ccd);
+  return true;
 }
 ///<summary>Sets the Fill.</summary>
-bool dde::ExecFill(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
-{
-    char szBuf[8]{};
-    strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
-    pstate.SetPolygonIntStyleId(static_cast<short>(atoi(szBuf)));
-    return true;
+bool dde::ExecFill(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
+  char szBuf[8]{};
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  pstate.SetPolygonIntStyleId(static_cast<short>(atoi(szBuf)));
+  return true;
 }
 ///<summary>Sets the Scale.</summary>
-bool dde::ExecScale(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
-{
-    char szBuf[32]{};
-    strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
-    app.SetScale(atof(szBuf));
-    app.StatusLineDisplay(Scale);
-    return true;
+bool dde::ExecScale(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
+  char szBuf[32]{};
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  app.SetScale(atof(szBuf));
+  app.StatusLineDisplay(Scale);
+  return true;
 }
 ///<summary>Sets the Diamond Length.</summary>
-bool dde::ExecDL(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
-{
-    char szBuf[32]{};
-    strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
-    app.SetDimLen(UnitsString_ParseLength(app.GetUnits(), szBuf));
-    app.StatusLineDisplay(DimLen);
-    return true;
+bool dde::ExecDL(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
+  char szBuf[32]{};
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  app.SetDimLen(UnitsString_ParseLength(app.GetUnits(), szBuf));
+  app.StatusLineDisplay(DimLen);
+  return true;
 }
 ///<summary>Sets the Diamond Angle.</summary>
-bool dde::ExecDA(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
-{
-    char szBuf[32]{};
-    strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
-    app.SetDimAngZ(atof(szBuf));
-    app.StatusLineDisplay(DimAng);
-    return true;
+bool dde::ExecDA(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
+  char szBuf[32]{};
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  app.SetDimAngZ(atof(szBuf));
+  app.StatusLineDisplay(DimAng);
+  return true;
 }
 ///<summary></summary>
-bool dde::ExecTracingBlank(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs)
-{
-    int iPathKey = static_cast<int>(uiNargs - 1);
+bool dde::ExecTracingBlank(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs) {
+  int iPathKey = static_cast<int>(uiNargs - 1);
 
-    CPegDoc* pDoc = CPegDoc::GetDoc();
-    pDoc->LayerBlank(ppArgs[iPathKey]);
+  CPegDoc* pDoc = CPegDoc::GetDoc();
+  pDoc->LayerBlank(ppArgs[iPathKey]);
 
-    return true;
+  return true;
 }
 ///<summary>Maps a tracing file.</summary>
-bool dde::ExecTracingMap(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs)
-{
-    int iPathKey = static_cast<int>(uiNargs - 1);
+bool dde::ExecTracingMap(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs) {
+  int iPathKey = static_cast<int>(uiNargs - 1);
 
-    CPegDoc* pDoc = CPegDoc::GetDoc();
-    pDoc->TracingMap(ppArgs[iPathKey]);
+  CPegDoc* pDoc = CPegDoc::GetDoc();
+  pDoc->TracingMap(ppArgs[iPathKey]);
 
-    return true;
+  return true;
 }
 ///<summary>Opens a tracing file.</summary>
-bool dde::ExecTracingOpen(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs)
-{
-    int iPathKey = static_cast<int>(uiNargs - 1);
+bool dde::ExecTracingOpen(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs) {
+  int iPathKey = static_cast<int>(uiNargs - 1);
 
-    CPegDoc* pDoc = CPegDoc::GetDoc();
-    pDoc->TracingOpen(ppArgs[iPathKey]);
+  CPegDoc* pDoc = CPegDoc::GetDoc();
+  pDoc->TracingOpen(ppArgs[iPathKey]);
 
-    return true;
+  return true;
 }
 ///<summary>Views a tracing file.</summary>
-bool dde::ExecTracingView(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs)
-{
-    int iPathKey = static_cast<int>(uiNargs - 1);
+bool dde::ExecTracingView(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs) {
+  int iPathKey = static_cast<int>(uiNargs - 1);
 
-    CPegDoc* pDoc = CPegDoc::GetDoc();
-    pDoc->TracingView(ppArgs[iPathKey]);
+  CPegDoc* pDoc = CPegDoc::GetDoc();
+  pDoc->TracingView(ppArgs[iPathKey]);
 
-    return true;
+  return true;
 }
 ///<summary>Gets a tracing file.</summary>
-bool dde::ExecFileGet(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs)
-{
-    int iPathKey = static_cast<int>(uiNargs - 1);
+bool dde::ExecFileGet(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs) {
+  int iPathKey = static_cast<int>(uiNargs - 1);
 
-    CPegDoc* pDoc = CPegDoc::GetDoc();
+  CPegDoc* pDoc = CPegDoc::GetDoc();
 
-    // Reference .. set up translation vector
-    CPnt ptPvt(app.CursorPosGet());
-    trapsegs.PvtPt() = ptPvt;
-    CVec vTrns(ORIGIN, ptPvt);
+  // Reference .. set up translation vector
+  CPnt ptPvt(app.CursorPosGet());
+  trapsegs.PvtPt() = ptPvt;
+  CVec vTrns(ORIGIN, ptPvt);
 
-    CFileJob fj;
+  CFileJob fj;
 
-    if (fj.OpenForRead(ppArgs[iPathKey]))
-    {
-        CLayer* pLayer = pDoc->WorkLayerGet();
+  if (fj.OpenForRead(ppArgs[iPathKey])) {
+    CLayer* pLayer = pDoc->WorkLayerGet();
 
-        fj.ReadHeader();
-        fj.ReadSegs(pLayer);
-        detsegs.AddTail(pLayer);
+    fj.ReadHeader();
+    fj.ReadSegs(pLayer);
+    detsegs.AddTail(pLayer);
 
-        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE, &trapsegs);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE, &trapsegs);
 
-        trapsegs.RemoveAll();
-        trapsegs.AddTail(pLayer);
-        trapsegs.Translate(vTrns);
+    trapsegs.RemoveAll();
+    trapsegs.AddTail(pLayer);
+    trapsegs.Translate(vTrns);
 
-        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE_TRAP, &trapsegs);
-    }
-    return true;
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE_TRAP, &trapsegs);
+  }
+  return true;
 }
 ///<summary>Set the position of the cursor.</summary>
-bool dde::ExecGotoPoint(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
-{
-    char szBuf[8]{};
+bool dde::ExecGotoPoint(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
+  char szBuf[8]{};
 
-    strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 
-    int iStakeId = atoi(szBuf);
-    app.CursorPosSet(app.HomePointGet(iStakeId));
+  int iStakeId = atoi(szBuf);
+  app.CursorPosSet(app.HomePointGet(iStakeId));
 
-    return true;
+  return true;
 }
 ///<summary>Sets the pen color.</summary>
-bool dde::ExecPen(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
-{
-    char szBuf[8]{};
+bool dde::ExecPen(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
+  char szBuf[8]{};
 
-    strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 
-    pstate.SetPenColor(PENCOLOR(atoi(szBuf)));
-    app.StatusLineDisplay(Pen);
+  pstate.SetPenColor(PENCOLOR(atoi(szBuf)));
+  app.StatusLineDisplay(Pen);
 
-    return true;
+  return true;
 }
 ///<summary>Sets the pen style</summary>
-bool dde::ExecLine(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
-{
-    char szBuf[8]{};
+bool dde::ExecLine(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
+  char szBuf[8]{};
 
-    strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 
-    pstate.SetPenStyle(PENSTYLE(atoi(szBuf)));
-    app.StatusLineDisplay(Line);
+  pstate.SetPenStyle(PENSTYLE(atoi(szBuf)));
+  app.StatusLineDisplay(Line);
 
-    return true;
+  return true;
 }
 ///<summary>Adds a note the drawing at the current cursor position.</summary>
-bool dde::ExecNote(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
-{
-    CPegDoc* pDoc = CPegDoc::GetDoc();
+bool dde::ExecNote(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
+  CPegDoc* pDoc = CPegDoc::GetDoc();
 
-    CPnt ptPvt = app.CursorPosGet();
+  CPnt ptPvt = app.CursorPosGet();
 
-    CFontDef fd;
-    pstate.GetFontDef(fd);
-    CCharCellDef ccd;
-    pstate.GetCharCellDef(ccd);
+  CFontDef fd;
+  pstate.GetFontDef(fd);
+  CCharCellDef ccd;
+  pstate.GetCharCellDef(ccd);
 
-    CRefSys rs(ptPvt, ccd);
+  CRefSys rs(ptPvt, ccd);
 
-    CSeg* pSeg = new CSeg(new CPrimText(fd, rs, ppArgs[0]));
-    pDoc->WorkLayerAddTail(pSeg);
-    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG, pSeg);
+  CSeg* pSeg = new CSeg(new CPrimText(fd, rs, ppArgs[0]));
+  pDoc->WorkLayerAddTail(pSeg);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG, pSeg);
 
-    ptPvt = text_GetNewLinePos(fd, rs, 1., 0);
-    app.CursorPosSet(ptPvt);
+  ptPvt = text_GetNewLinePos(fd, rs, 1., 0);
+  app.CursorPosSet(ptPvt);
 
-    return true;
+  return true;
 }
 ///<summary>Posts message to force key driven action.</summary>
-bool dde::ExecSend(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
-{
-    HWND hWndTarget = GetFocus();
-    char* pIdx = (LPSTR)ppArgs[0];
-    while (*pIdx != 0)
-    {
-        if (*pIdx == '{')
-        {
-            *pIdx++;
-            int iVkValue = atoi(pIdx);
-            ::PostMessage(hWndTarget, WM_KEYDOWN, static_cast<WPARAM>(iVkValue), 0L);
-            while ((*pIdx != 0) && (*pIdx != '}'))
-                pIdx++;
-        }
-        else
-        {
-            ::PostMessage(hWndTarget, WM_CHAR, static_cast<WPARAM>(*pIdx), 0L);
-            pIdx++;
-        }
+bool dde::ExecSend(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
+  HWND hWndTarget = GetFocus();
+  char* pIdx = (LPSTR)ppArgs[0];
+  while (*pIdx != 0) {
+    if (*pIdx == '{') {
+      *pIdx++;
+      int iVkValue = atoi(pIdx);
+      ::PostMessage(hWndTarget, WM_KEYDOWN, static_cast<WPARAM>(iVkValue), 0L);
+      while ((*pIdx != 0) && (*pIdx != '}')) pIdx++;
+    } else {
+      ::PostMessage(hWndTarget, WM_CHAR, static_cast<WPARAM>(*pIdx), 0L);
+      pIdx++;
     }
-    return true;
+  }
+  return true;
 }
 ///<summary>Sets a home point.</summary>
-bool dde::ExecSetPoint(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs)
-{
-    char szBuf[8]{};
+bool dde::ExecSetPoint(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
+  char szBuf[8]{};
 
-    strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 
-    int iStakeId = atoi(szBuf);
+  int iStakeId = atoi(szBuf);
 
-    app.HomePointSave(iStakeId, app.CursorPosGet());
+  app.HomePointSave(iStakeId, app.CursorPosGet());
 
-    return true;
+  return true;
 }

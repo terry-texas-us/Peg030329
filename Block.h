@@ -2,46 +2,44 @@
 
 #include <Windows.h>
 
-#include <afxcoll.h> // For CMapStringToOb
+#include <afxcoll.h>  // For CMapStringToOb
 #include <afxstr.h>
 #include <afxtempl.h>
 
-#include "Pnt.h" // for CPnt member
-#include "Seg.h" // for CSeg base class
+#include "Pnt.h"  // for CPnt member
+#include "Seg.h"  // for CSeg base class
 
-class CBlock: public CSeg
-{
-private:
+class CBlock : public CSeg {
+ private:
+  WORD m_wBlkTypFlgs;  // block type flag values
+  //		b0 set - anonymous block
+  //		b1 set - block has attribute definitions
+  //		b2 set - block is an external reference
+  //		b3 set - not used
+  //		b4 set - block is externally dependent
+  //		b5 set - block is a resolved external reference
+  //		b6 set - definition is referenced
+  CPnt m_ptBase;              // block base point
+  CString m_strXRefPathName;  // external reference (XRef) path name
 
-    WORD		m_wBlkTypFlgs;		// block type flag values
-    //		b0 set - anonymous block
-    //		b1 set - block has attribute definitions
-    //		b2 set - block is an external reference
-    //		b3 set - not used
-    //		b4 set - block is externally dependent
-    //		b5 set - block is a resolved external reference
-    //		b6 set - definition is referenced
-    CPnt		m_ptBase;			// block base point
-    CString		m_strXRefPathName; 	// external reference (XRef) path name
+ public:
+  CBlock() { m_wBlkTypFlgs = 0; }
+  CBlock(WORD, const CPnt&);
+  CBlock(WORD, const CPnt&, const CString&);
 
-public:
-    CBlock() { m_wBlkTypFlgs = 0; }
-    CBlock(WORD, const CPnt&);
-    CBlock(WORD, const CPnt&, const CString&);
+  CBlock(const CBlock&) = delete;
+  CBlock& operator=(const CBlock&) = delete;
 
-    CBlock(const CBlock&) = delete;
-    CBlock& operator=(const CBlock&) = delete;
+  CBlock(CBlock&&) = delete;
+  CBlock& operator=(CBlock&&) = delete;
 
-    CBlock(CBlock&&) = delete;
-    CBlock& operator=(CBlock&&) = delete;
-
-    CPnt GetBasePt() const { return m_ptBase; }
-    WORD GetBlkTypFlgs() const { return m_wBlkTypFlgs; }
-    bool HasAttributes() const { return (m_wBlkTypFlgs & 2) == 2; }
-    bool IsAnonymous() const { return (m_wBlkTypFlgs & 1) == 1; }
-    bool IsFromExternalReference() const { return (m_wBlkTypFlgs & 4) == 4; }
-    void SetBlkTypFlgs(WORD wBlkTypFlgs) { m_wBlkTypFlgs = wBlkTypFlgs; }
-    void SetBasePt(const CPnt& pt) { m_ptBase = pt; }
+  CPnt GetBasePt() const { return m_ptBase; }
+  WORD GetBlkTypFlgs() const { return m_wBlkTypFlgs; }
+  bool HasAttributes() const { return (m_wBlkTypFlgs & 2) == 2; }
+  bool IsAnonymous() const { return (m_wBlkTypFlgs & 1) == 1; }
+  bool IsFromExternalReference() const { return (m_wBlkTypFlgs & 4) == 4; }
+  void SetBlkTypFlgs(WORD wBlkTypFlgs) { m_wBlkTypFlgs = wBlkTypFlgs; }
+  void SetBasePt(const CPnt& pt) { m_ptBase = pt; }
 };
 
 typedef CTypedPtrMap<CMapStringToOb, CString, CBlock*> CBlocks;

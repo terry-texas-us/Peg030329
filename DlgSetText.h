@@ -8,28 +8,27 @@
 
 #include "res\resource.h"
 
-class CDlgSetText: public CDialog
-{
-    DECLARE_DYNAMIC(CDlgSetText)
+class CDlgSetText : public CDialog {
+  DECLARE_DYNAMIC(CDlgSetText)
 
-public:
-    CDlgSetText(CWnd* pParent = NULL);   // standard constructor
-    virtual ~CDlgSetText();
+ public:
+  CDlgSetText(CWnd* pParent = NULL);  // standard constructor
+  virtual ~CDlgSetText();
 
-    CDlgSetText(const CDlgSetText&) = delete; // Prevent copying
-    CDlgSetText& operator=(const CDlgSetText&) = delete; // Prevent assignment
+  CDlgSetText(const CDlgSetText&) = delete;             // Prevent copying
+  CDlgSetText& operator=(const CDlgSetText&) = delete;  // Prevent assignment
 
-    // Dialog Data
-    enum { IDD = IDD_SET_TEXT };
+  // Dialog Data
+  enum { IDD = IDD_SET_TEXT };
 
-protected:
-    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-    virtual BOOL OnInitDialog(void);
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV support
+  virtual BOOL OnInitDialog(void);
 
-public:
-    CString m_sText;
-    CString m_strTitle;
+ public:
+  CString m_sText;
+  CString m_strTitle;
 
-protected:
-    DECLARE_MESSAGE_MAP()
+ protected:
+  DECLARE_MESSAGE_MAP()
 };

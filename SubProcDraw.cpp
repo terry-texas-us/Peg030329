@@ -375,10 +375,12 @@ void CDrawHandler::HandleMouseMove(CPnt cursorPosition, CDC* deviceContext) {
     int iDrawMode = pstate.SetROP2(deviceContext, R2_XORPEN);
 
     CPrimBSpline splinePrimitive(WORD(state.numberOfPoints + 1), state.points.data());
-    if (state.points[state.numberOfPoints - 1] != state.points[state.numberOfPoints]) splinePrimitive.Display(view, deviceContext);
+    if (state.points[state.numberOfPoints - 1] != state.points[state.numberOfPoints])
+      splinePrimitive.Display(view, deviceContext);
     state.points[state.numberOfPoints] = cursorPosition;
     splinePrimitive.SetPoint(state.numberOfPoints, state.points[state.numberOfPoints]);
-    if (state.points[state.numberOfPoints - 1] != state.points[state.numberOfPoints]) splinePrimitive.Display(view, deviceContext);
+    if (state.points[state.numberOfPoints - 1] != state.points[state.numberOfPoints])
+      splinePrimitive.Display(view, deviceContext);
 
     pstate.SetROP2(deviceContext, iDrawMode);
   } else if (state.previousKeyDown == ID_OP8 && state.numberOfPoints == 2) {

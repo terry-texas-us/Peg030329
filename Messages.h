@@ -4,9 +4,9 @@
 
 #include <afxstr.h>
 
-#include <string> // for std::string
+#include <string>  // for std::string
 
-/// @brief Displays a confirmation message dialog box with Yes/No buttons, using a string resource for the message and caption. 
+/// @brief Displays a confirmation message dialog box with Yes/No buttons, using a string resource for the message and caption.
 /// @param messageIdentifier Identifier of the message template or resource to display in the confirmation dialog.
 /// @param additionalText text to include in the message (e.g., inserted into the template) or additional text shown in the dialog.
 /// @return An integer result code indicating the user's response (for example a dialog result such as yes/no or other response code)

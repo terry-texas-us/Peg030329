@@ -5,26 +5,25 @@
 
 #include "res\resource.h"
 
-class CDlgSetScale: public CDialog
-{
-    DECLARE_DYNAMIC(CDlgSetScale)
+class CDlgSetScale : public CDialog {
+  DECLARE_DYNAMIC(CDlgSetScale)
 
-public:
-    CDlgSetScale(CWnd* pParent = NULL);   // standard constructor
-    virtual ~CDlgSetScale();
+ public:
+  CDlgSetScale(CWnd* pParent = NULL);  // standard constructor
+  virtual ~CDlgSetScale();
 
-    CDlgSetScale(const CDlgSetScale&) = delete; // Prevent copying
-    CDlgSetScale& operator=(const CDlgSetScale&) = delete; // Prevent assignment
+  CDlgSetScale(const CDlgSetScale&) = delete;             // Prevent copying
+  CDlgSetScale& operator=(const CDlgSetScale&) = delete;  // Prevent assignment
 
-    // Dialog Data
-    enum { IDD = IDD_SET_SCALE };
+  // Dialog Data
+  enum { IDD = IDD_SET_SCALE };
 
-protected:
-    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV support
 
-public:
-    double m_dScale;
+ public:
+  double m_dScale;
 
-protected:
-    DECLARE_MESSAGE_MAP()
+ protected:
+  DECLARE_MESSAGE_MAP()
 };

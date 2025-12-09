@@ -3,7 +3,7 @@
 #include "FileBitmap.h"
 #include "PixelMapRGB.h"
 
-//CPixelMapRGB::CPixelMapRGB(int nRows, int nCols) 
+//CPixelMapRGB::CPixelMapRGB(int nRows, int nCols)
 //{
 //	m_nRows = nRows;
 //	m_nCols = nCols;
@@ -13,12 +13,12 @@
 //{
 //	m_nRows = src.m_nRows;
 //	m_nCols = src.m_nCols;
-//	
+//
 //	if (m_rgbPixel != 0)
 //		delete [] m_rgbPixel;
 //
 //	m_rgbPixel = new CRGB[m_nRows * m_nCols];
-//	
+//
 //	for (int i = 0; i < m_nRows * m_nCols; i++)
 //		m_rgbPixel[i] = src.m_rgbPixel[i];
 //
@@ -33,7 +33,7 @@
 //	glDrawPixels(m_nCols, m_nRows, GL_RGB, GL_UNSIGNED_BYTE, m_rgbPixel);
 //}
 //
-//CRGB CPixelMapRGB::GetPixel(int iX, int iY) 
+//CRGB CPixelMapRGB::GetPixel(int iX, int iY)
 //{
 //	CRGB rgbBad(255, 255, 255);
 //	ASSERT(iX >= 0 && iX < m_nCols);

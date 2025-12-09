@@ -1,2 +1,3 @@
-Checks: 'cppcoreguidelines-*,modernize-*,readability-*'
+Checks: '-*,cppcoreguidelines-*'
+#,modernize-*,readability-*'
   

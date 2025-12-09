@@ -10,38 +10,34 @@
 double DlgBoxGetItemDouble(HWND hDlg, int control);
 void DlgBoxSetItemDouble(HWND hDlg, int control, double value);
 
-INT_PTR CALLBACK DlgProcSetupHatch(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
-{
-    short	nStyleId;
+INT_PTR CALLBACK DlgProcSetupHatch(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept {
+  short nStyleId;
 
-    switch (anMsg)
-    {
+  switch (anMsg) {
     case WM_INITDIALOG:
-        SetDlgItemInt(hDlg, IDC_FIL_AREA_HAT_ID, static_cast<UINT>(pstate.PolygonIntStyleId()), FALSE);
-        DlgBoxSetItemDouble(hDlg, IDC_FIL_AREA_HAT_X_SCAL, hatch::dXAxRefVecScal);
-        DlgBoxSetItemDouble(hDlg, IDC_FIL_AREA_HAT_Y_SCAL, hatch::dYAxRefVecScal);
-        DlgBoxSetItemDouble(hDlg, IDC_FIL_AREA_HAT_ROT_ANG, hatch::dOffAng / RADIAN);
-        return (TRUE);
+      SetDlgItemInt(hDlg, IDC_FIL_AREA_HAT_ID, static_cast<UINT>(pstate.PolygonIntStyleId()), FALSE);
+      DlgBoxSetItemDouble(hDlg, IDC_FIL_AREA_HAT_X_SCAL, hatch::dXAxRefVecScal);
+      DlgBoxSetItemDouble(hDlg, IDC_FIL_AREA_HAT_Y_SCAL, hatch::dYAxRefVecScal);
+      DlgBoxSetItemDouble(hDlg, IDC_FIL_AREA_HAT_ROT_ANG, hatch::dOffAng / RADIAN);
+      return (TRUE);
 
     case WM_COMMAND:
 
-        switch (LOWORD(wParam))
-        {
+      switch (LOWORD(wParam)) {
         case IDOK:
-            pstate.SetPolygonIntStyle(POLYGON_HATCH);
+          pstate.SetPolygonIntStyle(POLYGON_HATCH);
           nStyleId = short(GetDlgItemInt(hDlg, IDC_FIL_AREA_HAT_ID, nullptr, FALSE));
-            pstate.SetPolygonIntStyleId(nStyleId);
-            hatch::dXAxRefVecScal = std::max(0.01, DlgBoxGetItemDouble(hDlg, IDC_FIL_AREA_HAT_X_SCAL));
-            hatch::dYAxRefVecScal = std::max(0.01, DlgBoxGetItemDouble(hDlg, IDC_FIL_AREA_HAT_Y_SCAL));
-            hatch::dOffAng = Arc(DlgBoxGetItemDouble(hDlg, IDC_FIL_AREA_HAT_ROT_ANG));
-            [[fallthrough]]; // Intentional fallthrough
+          pstate.SetPolygonIntStyleId(nStyleId);
+          hatch::dXAxRefVecScal = std::max(0.01, DlgBoxGetItemDouble(hDlg, IDC_FIL_AREA_HAT_X_SCAL));
+          hatch::dYAxRefVecScal = std::max(0.01, DlgBoxGetItemDouble(hDlg, IDC_FIL_AREA_HAT_Y_SCAL));
+          hatch::dOffAng = Arc(DlgBoxGetItemDouble(hDlg, IDC_FIL_AREA_HAT_ROT_ANG));
+          [[fallthrough]];  // Intentional fallthrough
 
         case IDCANCEL:
-            ::EndDialog(hDlg, TRUE);
-            return (TRUE);
-        }
-        break;
-    }
-    return (FALSE);
+          ::EndDialog(hDlg, TRUE);
+          return (TRUE);
+      }
+      break;
+  }
+  return (FALSE);
 }
-

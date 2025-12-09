@@ -11,100 +11,84 @@
 extern double gbl_dExtNum;
 extern char gbl_szExtStr[128];
 
-namespace dde
-{
-    PITEMINFO DimAngZInfo;
-    PITEMINFO DimLenInfo;
-    PITEMINFO EngAngZInfo;
-    PITEMINFO EngLenInfo;
-    PITEMINFO ExtNumInfo;
-    PITEMINFO ExtStrInfo;
-    PITEMINFO RelPosXInfo;
-    PITEMINFO RelPosYInfo;
-    PITEMINFO RelPosZInfo;
-    PITEMINFO ScaleInfo;
-}
+namespace dde {
+PITEMINFO DimAngZInfo;
+PITEMINFO DimLenInfo;
+PITEMINFO EngAngZInfo;
+PITEMINFO EngLenInfo;
+PITEMINFO ExtNumInfo;
+PITEMINFO ExtStrInfo;
+PITEMINFO RelPosXInfo;
+PITEMINFO RelPosYInfo;
+PITEMINFO RelPosZInfo;
+PITEMINFO ScaleInfo;
+}  // namespace dde
 // dimension z axis angle interface
-bool dde::DimAngZPoke(UINT, HSZ, HSZ, HDDEDATA hData)
-{
-    char sz[32]{};
-    DdeGetData(hData, (LPBYTE)sz, (DWORD)sizeof(sz), (DWORD)0);
-    app.SetDimAngZ(atof(sz));
-    app.StatusLineDisplay();
-    return true;
+bool dde::DimAngZPoke(UINT, HSZ, HSZ, HDDEDATA hData) {
+  char sz[32]{};
+  DdeGetData(hData, (LPBYTE)sz, (DWORD)sizeof(sz), (DWORD)0);
+  app.SetDimAngZ(atof(sz));
+  app.StatusLineDisplay();
+  return true;
 }
-HDDEDATA dde::DimAngZRequest(UINT wFmt, HSZ, HSZ hszItem)
-{
-    std::string str = std::to_string(app.GetDimAngZ());
-    return dde::MakeCFText(wFmt, (LPSTR)str.c_str(), hszItem);
+HDDEDATA dde::DimAngZRequest(UINT wFmt, HSZ, HSZ hszItem) {
+  std::string str = std::to_string(app.GetDimAngZ());
+  return dde::MakeCFText(wFmt, (LPSTR)str.c_str(), hszItem);
 }
 // Dimension length interface
-bool dde::DimLenPoke(UINT, HSZ, HSZ, HDDEDATA hData)
-{
-    char sz[32]{};
-    DdeGetData(hData, (LPBYTE)sz, (DWORD)sizeof(sz), (DWORD)0);
-    app.SetDimLen(atof(sz));
-    app.StatusLineDisplay(DimLen);
+bool dde::DimLenPoke(UINT, HSZ, HSZ, HDDEDATA hData) {
+  char sz[32]{};
+  DdeGetData(hData, (LPBYTE)sz, (DWORD)sizeof(sz), (DWORD)0);
+  app.SetDimLen(atof(sz));
+  app.StatusLineDisplay(DimLen);
 
-    return true;
+  return true;
 }
-HDDEDATA dde::DimLenRequest(UINT wFmt, HSZ, HSZ hszItem)
-{
-    std::string str = std::to_string(app.GetDimLen());
-    return dde::MakeCFText(wFmt, (LPSTR)str.c_str(), hszItem);
+HDDEDATA dde::DimLenRequest(UINT wFmt, HSZ, HSZ hszItem) {
+  std::string str = std::to_string(app.GetDimLen());
+  return dde::MakeCFText(wFmt, (LPSTR)str.c_str(), hszItem);
 }
 // Engaged length interface (no poke)
-HDDEDATA dde::EngLenRequest(UINT wFmt, HSZ, HSZ hszItem)
-{
-    std::string str = std::to_string(app.GetEngLen());
-    return dde::MakeCFText(wFmt, (LPSTR)str.c_str(), hszItem);
+HDDEDATA dde::EngLenRequest(UINT wFmt, HSZ, HSZ hszItem) {
+  std::string str = std::to_string(app.GetEngLen());
+  return dde::MakeCFText(wFmt, (LPSTR)str.c_str(), hszItem);
 }
-// Engaged z axis angle interface (no poke) 
-HDDEDATA dde::EngAngZRequest(UINT wFmt, HSZ, HSZ hszItem)
-{
-    std::string str = std::to_string(app.GetEngAngZ());
-    return dde::MakeCFText(wFmt, (LPSTR)str.c_str(), hszItem);
+// Engaged z axis angle interface (no poke)
+HDDEDATA dde::EngAngZRequest(UINT wFmt, HSZ, HSZ hszItem) {
+  std::string str = std::to_string(app.GetEngAngZ());
+  return dde::MakeCFText(wFmt, (LPSTR)str.c_str(), hszItem);
 }
 // Extracted number interface (no poke)
-HDDEDATA dde::ExtNumRequest(UINT wFmt, HSZ, HSZ hszItem)
-{
-    std::string str = std::to_string(gbl_dExtNum);
-    return dde::MakeCFText(wFmt, (LPSTR)str.c_str(), hszItem);
+HDDEDATA dde::ExtNumRequest(UINT wFmt, HSZ, HSZ hszItem) {
+  std::string str = std::to_string(gbl_dExtNum);
+  return dde::MakeCFText(wFmt, (LPSTR)str.c_str(), hszItem);
 }
 // Extracted string interface (no poke)
-HDDEDATA dde::ExtStrRequest(UINT wFmt, HSZ, HSZ hszItem)
-{
-    return dde::MakeCFText(wFmt, (LPSTR)gbl_szExtStr, hszItem);
-}
+HDDEDATA dde::ExtStrRequest(UINT wFmt, HSZ, HSZ hszItem) { return dde::MakeCFText(wFmt, (LPSTR)gbl_szExtStr, hszItem); }
 // Relative x position interface (no poke)
-HDDEDATA dde::RelPosXRequest(UINT wFmt, HSZ, HSZ hszItem)
-{
-    std::string str = std::to_string(CPegView::GetActiveView()->GetRelPos()[0]);
-    return dde::MakeCFText(wFmt, (LPSTR)str.c_str(), hszItem);
+HDDEDATA dde::RelPosXRequest(UINT wFmt, HSZ, HSZ hszItem) {
+  std::string str = std::to_string(CPegView::GetActiveView()->GetRelPos()[0]);
+  return dde::MakeCFText(wFmt, (LPSTR)str.c_str(), hszItem);
 }
 // Relative y position interface (no poke)
-HDDEDATA dde::RelPosYRequest(UINT wFmt, HSZ, HSZ hszItem)
-{
-    std::string str = std::to_string(CPegView::GetActiveView()->GetRelPos()[1]);
-    return dde::MakeCFText(wFmt, (LPSTR)str.c_str(), hszItem);
+HDDEDATA dde::RelPosYRequest(UINT wFmt, HSZ, HSZ hszItem) {
+  std::string str = std::to_string(CPegView::GetActiveView()->GetRelPos()[1]);
+  return dde::MakeCFText(wFmt, (LPSTR)str.c_str(), hszItem);
 }
 // Relative z position interface (no poke)
-HDDEDATA dde::RelPosZRequest(UINT wFmt, HSZ, HSZ hszItem)
-{
-    std::string str = std::to_string(CPegView::GetActiveView()->GetRelPos()[2]);
-    return dde::MakeCFText(wFmt, (LPSTR)str.c_str(), hszItem);
+HDDEDATA dde::RelPosZRequest(UINT wFmt, HSZ, HSZ hszItem) {
+  std::string str = std::to_string(CPegView::GetActiveView()->GetRelPos()[2]);
+  return dde::MakeCFText(wFmt, (LPSTR)str.c_str(), hszItem);
 }
 // Scale interface
-bool dde::ScalePoke(UINT, HSZ, HSZ, HDDEDATA hData)
-{
-    char sz[32]{};
-    DdeGetData(hData, (LPBYTE)sz, (DWORD)sizeof(sz), (DWORD)0);
-    app.SetScale(atof(sz));
-    app.StatusLineDisplay(Scale);
-    return true;
+bool dde::ScalePoke(UINT, HSZ, HSZ, HDDEDATA hData) {
+  char sz[32]{};
+  DdeGetData(hData, (LPBYTE)sz, (DWORD)sizeof(sz), (DWORD)0);
+  app.SetScale(atof(sz));
+  app.StatusLineDisplay(Scale);
+  return true;
 }
-HDDEDATA dde::ScaleRequest(UINT wFmt, HSZ, HSZ hszItem)
-{
-    std::string scale = std::to_string(app.GetScale());
-    return dde::MakeCFText(wFmt, (LPSTR)scale.c_str(), hszItem);
+HDDEDATA dde::ScaleRequest(UINT wFmt, HSZ, HSZ hszItem) {
+  std::string scale = std::to_string(app.GetScale());
+  return dde::MakeCFText(wFmt, (LPSTR)scale.c_str(), hszItem);
 }

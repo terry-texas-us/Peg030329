@@ -81,7 +81,8 @@ class CPegDoc : public CDocument {
   CLayer* m_pLayerWork = nullptr;
   CSegs m_segsDeleted;
   bool m_bTrapHighlight = true;
-  double m_dMarkSize = 0.0;  // in drawing units when greater than zero; in pixels when less than zero; default otherwise
+  double m_dMarkSize =
+      0.0;  // in drawing units when greater than zero; in pixels when less than zero; default otherwise
 
   // Overrides
  public:
@@ -162,7 +163,7 @@ class CPegDoc : public CDocument {
 
   CLayer* AnyLayerRemove(CSeg* pSeg);
 
-/// Set the stored mark size. Positive => drawing units; negative => pixels.
+  /// Set the stored mark size. Positive => drawing units; negative => pixels.
   void SetMarkSize(double size) noexcept { m_dMarkSize = size; }
   void SetOpenFile(WORD wFileType, const CString& strFileName);
 

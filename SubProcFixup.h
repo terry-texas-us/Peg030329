@@ -4,10 +4,9 @@
 
 LRESULT CALLBACK SubProcFixup(HWND, UINT, WPARAM, LPARAM) noexcept;
 
-namespace fixup
-{
-    extern double dAxTol;
-    extern double dSiz;
+namespace fixup {
+extern double dAxTol;
+extern double dSiz;
 
-    bool SetOptions(double* size, double* influenceAngle);
-}
+bool SetOptions(double* size, double* influenceAngle);
+}  // namespace fixup

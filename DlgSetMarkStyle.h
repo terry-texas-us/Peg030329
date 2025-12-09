@@ -23,7 +23,7 @@ class CDlgSetMarkStyle : public CDialog {
 
   int m_nMarkStyle = 0;  // current mark style (default 0)
 
-  int m_nMarkRadio = 0;  // radio button selection
+  int m_nMarkRadio = 0;    // radio button selection
   BOOL m_bCheck1 = FALSE;  // corresponds to first 0x32 circle
   BOOL m_bCheck2 = FALSE;  // corresponds to second 0x64 box
 

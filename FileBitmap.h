@@ -7,22 +7,20 @@
 
 #include "PixelMapRGB.h"
 
-class CFileBitmap: public CFile
-{
+class CFileBitmap : public CFile {
+ private:
+  int m_nRows{0};  // dimensions of the bitmap
+  int m_nCols{0};
+  CRGB* m_rgbPixel{nullptr};
 
-private:
-    int   m_nRows{0};		// dimensions of the bitmap
-    int	  m_nCols{0};
-    CRGB* m_rgbPixel{nullptr};
+ public:
+  CFileBitmap() {}
+  CFileBitmap(const CString& strPathName);
 
-public:
-    CFileBitmap() { }
-    CFileBitmap(const CString& strPathName);
+  CFileBitmap(const CFileBitmap&) = delete;
+  CFileBitmap& operator=(const CFileBitmap&) = delete;
 
-    CFileBitmap(const CFileBitmap&) = delete;
-    CFileBitmap& operator=(const CFileBitmap&) = delete;
+  ~CFileBitmap() {}
 
-    ~CFileBitmap() { }
-
-    bool Load(const CString& strPathName, CBitmap& bm, CPalette& pal);
+  bool Load(const CString& strPathName, CBitmap& bm, CPalette& pal);
 };

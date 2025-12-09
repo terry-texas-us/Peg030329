@@ -30,13 +30,13 @@ const double TWOPI = (PI * 2.);
 //	return c == 0 ? 1e30 * Signum(s) : s / c; // avoid div. by zero
 //}
 
-inline int Round(double d) // closest integer
+inline int Round(double d)  // closest integer
 {
-    return  (int)(d + 0.5);
+  return (int)(d + 0.5);
 }
 inline double Arc(double degrees)  // arc length of an angle
 {
-    return degrees * (PI / 180);
+  return degrees * (PI / 180);
 }
 //inline double Deg(double arc)
 //// angle in degree, corresponding to an arc length

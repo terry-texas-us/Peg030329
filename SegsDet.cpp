@@ -23,9 +23,7 @@ void CSegsDet::AddTailSegsInActiveView(CPegView* pView, CLayer* pLayer) {
       while (pos != 0) {
         CSeg* pSeg = pLayer->GetNext(pos);
 
-        if (pSeg->IsInView(pView)) {
-          AddTail(pSeg);
-        }
+        if (pSeg->IsInView(pView)) { AddTail(pSeg); }
       }
     }
   }

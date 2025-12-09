@@ -7,7 +7,12 @@
 IMPLEMENT_DYNAMIC(CDlgSetMarkStyle, CDialog)
 
 CDlgSetMarkStyle::CDlgSetMarkStyle(CWnd* pParent /*=nullptr*/)
-    : CDialog(IDD_SET_MARK_STYLE, pParent), m_nMarkStyle(0), m_nMarkRadio(0), m_bCheck1(FALSE), m_bCheck2(FALSE), m_dMarkSize(0.0) {}
+    : CDialog(IDD_SET_MARK_STYLE, pParent),
+      m_nMarkStyle(0),
+      m_nMarkRadio(0),
+      m_bCheck1(FALSE),
+      m_bCheck2(FALSE),
+      m_dMarkSize(0.0) {}
 
 CDlgSetMarkStyle::~CDlgSetMarkStyle() {}
 
@@ -29,7 +34,7 @@ void CDlgSetMarkStyle::DoDataExchange(CDataExchange* pDX) {
   // new: DDX for mark size numeric edit control (assumes IDC_EDIT1)
   DDX_Text(pDX, IDC_EDIT1, m_dMarkSize);
   if (pDX->m_bSaveAndValidate) {
-    DDV_MinMaxDouble(pDX, m_dMarkSize, -10000.0, 10000.0); // arbitrary sane range
+    DDV_MinMaxDouble(pDX, m_dMarkSize, -10000.0, 10000.0);  // arbitrary sane range
   }
 
   // When saving, combine UI-backed values back into the single flags integer.

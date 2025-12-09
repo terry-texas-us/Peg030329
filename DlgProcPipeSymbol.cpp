@@ -8,45 +8,39 @@
 
 void DlgProcPipeSymbolInit(HWND);
 
-INT_PTR CALLBACK DlgProcPipeSymbol(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept
-{
-    switch (anMsg)
-    {
+INT_PTR CALLBACK DlgProcPipeSymbol(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) noexcept {
+  switch (anMsg) {
     case WM_INITDIALOG:
-        DlgProcPipeSymbolInit(hDlg);
-        return (TRUE);
+      DlgProcPipeSymbolInit(hDlg);
+      return (TRUE);
 
     case WM_COMMAND:
-        switch (LOWORD(wParam))
-        {
+      switch (LOWORD(wParam)) {
         case IDOK:
-            pipe::wCurSymId = WORD(::SendDlgItemMessage(hDlg, IDC_LIST, LB_GETCURSEL, 0, 0L));
-            [[fallthrough]]; // Intentional fallthrough
+          pipe::wCurSymId = WORD(::SendDlgItemMessage(hDlg, IDC_LIST, LB_GETCURSEL, 0, 0L));
+          [[fallthrough]];  // Intentional fallthrough
 
         case IDCANCEL:
-            ::EndDialog(hDlg, TRUE);
-            return (TRUE);
-        }
-        break;
+          ::EndDialog(hDlg, TRUE);
+          return (TRUE);
+      }
+      break;
 
-        break;
-    }
-    return (FALSE);
+      break;
+  }
+  return (FALSE);
 }
-void DlgProcPipeSymbolInit(HWND hDlg)
-{
-    char szNames[512]{};
-    char* pName;
+void DlgProcPipeSymbolInit(HWND hDlg) {
+  char szNames[512]{};
+  char* pName;
 
-    ::LoadString(app.GetInstance(), IDS_SUBPROC_PIPE_SYMBOL_NAMES, szNames, 256);
+  ::LoadString(app.GetInstance(), IDS_SUBPROC_PIPE_SYMBOL_NAMES, szNames, 256);
 
-    char* context = nullptr;
-    pName = strtok_s(szNames, "\t", &context);
-    while (pName != nullptr)
-    {
-        ::SendDlgItemMessage(hDlg, IDC_LIST, LB_ADDSTRING, 0, (LPARAM)(LPCSTR)pName);
-        pName = strtok_s(nullptr, "\t", &context);
-    }
-    ::SendDlgItemMessage(hDlg, IDC_LIST, LB_SETCURSEL, pipe::wCurSymId, 0L);
+  char* context = nullptr;
+  pName = strtok_s(szNames, "\t", &context);
+  while (pName != nullptr) {
+    ::SendDlgItemMessage(hDlg, IDC_LIST, LB_ADDSTRING, 0, (LPARAM)(LPCSTR)pName);
+    pName = strtok_s(nullptr, "\t", &context);
+  }
+  ::SendDlgItemMessage(hDlg, IDC_LIST, LB_SETCURSEL, pipe::wCurSymId, 0L);
 }
-

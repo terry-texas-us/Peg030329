@@ -4,34 +4,28 @@
 
 // CDlgAbout dialog used for App About
 
-class CDlgAbout: public CDialog
-{
-public:
-    CDlgAbout();
-    
-    CDlgAbout(const CDlgAbout&) = delete;
-    CDlgAbout& operator=(const CDlgAbout&) = delete;
+class CDlgAbout : public CDialog {
+ public:
+  CDlgAbout();
 
-    // Dialog Data
-    enum { IDD = IDD_ABOUTBOX };
+  CDlgAbout(const CDlgAbout&) = delete;
+  CDlgAbout& operator=(const CDlgAbout&) = delete;
 
-protected:
-    virtual void DoDataExchange(CDataExchange* pDX) override;    // DDX/DDV support
+  // Dialog Data
+  enum { IDD = IDD_ABOUTBOX };
 
-    // Implementation
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX) override;  // DDX/DDV support
+
+  // Implementation
 };
 
-CDlgAbout::CDlgAbout() : CDialog{IDD}
-{ }
+CDlgAbout::CDlgAbout() : CDialog{IDD} {}
 
-void CDlgAbout::DoDataExchange(CDataExchange* pDX)
-{
-    CDialog::DoDataExchange(pDX);
-}
+void CDlgAbout::DoDataExchange(CDataExchange* pDX) { CDialog::DoDataExchange(pDX); }
 
 // App command to run the dialog
-void CPegApp::OnAppAbout()
-{
-    auto dlg = CDlgAbout();
-    dlg.DoModal();
+void CPegApp::OnAppAbout() {
+  auto dlg = CDlgAbout();
+  dlg.DoModal();
 }

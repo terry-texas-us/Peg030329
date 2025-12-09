@@ -17,7 +17,7 @@ class CPegView;
 //		^/nn/dd^	where
 //			nn is a numerator of zero or more characters
 //			dd is a denominator of zero or more characters
-//	  The numerator and denominator are each offset in y by 50 / 1000 
+//	  The numerator and denominator are each offset in y by 50 / 1000
 //    iregardless of character size attributes.
 //	  Horizontal spacing of resulting string is 3 short and must be
 //	  accounted for for proper extent determination.
@@ -29,7 +29,8 @@ class CPegView;
 //	  b12 - b23 relative x displacement
 //	  b24 - b31 operation code (5 for line, else move)
 
-void text_Display(CPegView* pView, CDC* pDC, const CFontDef& fd, const CTMat& tm, int nOff, int nLen, const CString& strText);
+void text_Display(CPegView* pView, CDC* pDC, const CFontDef& fd, const CTMat& tm, int nOff, int nLen,
+                  const CString& strText);
 bool text_Display(CPegView* pView, CDC* pDC, const CFontDef& fd, const CRefSys& rs, const CString& strText);
 void text_Display0(CPegView* pView, CDC* pDC, const CFontDef& fd, const CRefSys& rs, const CString& strText);
 void text_GetBottomLeft(const CFontDef& fd, int iChrs, CPnt& pt);
