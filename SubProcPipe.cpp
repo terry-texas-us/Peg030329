@@ -39,7 +39,7 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
     CPegDoc* pDoc{CPegDoc::GetDoc()};
     CPegView* pView{CPegView::GetActiveView()};
 
-    CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+    CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
     pt[1] = app.CursorPosGet();
 
@@ -51,20 +51,20 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 
       case ID_OP1:  // Join existing component of pipe system
 
-        pLineHor = 0;
+        pLineHor = nullptr;
         eJoinHor = pipe::No;
 
-        pArcVer = 0;
+        pArcVer = nullptr;
         eJoinVer = pipe::No;
 
         pos = detsegs.GetHeadPosition();
-        while (eJoinHor == pipe::No && eJoinVer == pipe::No && pos != 0) {
+        while (eJoinHor == pipe::No && eJoinVer == pipe::No && pos != nullptr) {
           CSeg* pSeg = detsegs.GetNext(pos);
           POSITION posPrim = pSeg->GetHeadPosition();
-          while (eJoinHor == pipe::No && eJoinVer == pipe::No && posPrim != 0) {
+          while (eJoinHor == pipe::No && eJoinVer == pipe::No && posPrim != nullptr) {
             CPrim* pPrim = pSeg->GetNext(posPrim);
             if (pPrim->Is(CPrim::Type::Arc)) {  // Primitive is potentially an existing vertical pipe section
-              CPrimArc* pArc = static_cast<CPrimArc*>(pPrim);
+              auto* pArc = static_cast<CPrimArc*>(pPrim);
               if (fabs(pArc->GetSwpAng() - TWOPI) <= DBL_EPSILON) {
                 if (CVec(pArc->Center(), pt[1]).Length() <= pipe::dCSize) {
                   pArcVer = pArc;
@@ -73,7 +73,7 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
                 }
               }
             } else if (pPrim->Is(CPrim::Type::Line)) {  // Primitive is potentially an existing horizontal pipe section
-              CPrimLine* pLine = static_cast<CPrimLine*>(pPrim);
+              auto* pLine = static_cast<CPrimLine*>(pPrim);
 
               CPnt4 ptView(pt[1], 1.);
               pView->ModelViewTransform(ptView);
@@ -108,10 +108,10 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 
           pt[0] = pt[1];
         }
-        pLineHor = 0;
+        pLineHor = nullptr;
         eJoinHor = pipe::No;
 
-        pArcVer = 0;
+        pArcVer = nullptr;
         eJoinVer = pipe::No;
 
         wPrvKeyDwn = ID_OP2;
@@ -135,7 +135,7 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 
           CSeg* pSeg = new CSeg(new CPrimLine(pt[1], ptEnd));
           pDoc->WorkLayerAddTail(pSeg);
-          pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+          pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 
           pipe::GenTicMark(pt[1], ptEnd, pipe::dCSize);
 
@@ -147,14 +147,14 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 
           wPrvKeyDwn = ID_OP3;
 
-          pLineHor = 0;
+          pLineHor = nullptr;
           eJoinHor = pipe::No;
         } else if (eJoinVer != pipe::No) {  // On an existing vertical pipe section
           if (eJoinVer == pipe::End)
             // Ending on an existing vertical pipe section
             pipe::GenFits(wPrvKeyDwn, pt[0], ID_OP5, pt[1]);
           wPrvKeyDwn = ID_OP4;
-          pArcVer = 0;
+          pArcVer = nullptr;
           eJoinVer = pipe::No;
         } else {
           if (wPrvKeyDwn != 0) {
@@ -183,7 +183,7 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
             pt[3] = Pnt_ProjPtTo(pt[1], ptBeg, pipe::dCSize);
             pt[4] = Pnt_ProjPtTo(pt[1], ptEnd, pipe::dCSize);
 
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_PRIM_ERASE_SAFE, pLineHor);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_PRIM_ERASE_SAFE, pLineHor);
             pLineHor->SetPt1(pt[3]);
             pLineHor->Display(pView, pDC);
 
@@ -191,7 +191,7 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 
             CSeg* pSeg = new CSeg(new CPrimLine(pt[4], ptEnd));
             pDoc->WorkLayerAddTail(pSeg);
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 
             pipe::GenTicMark(pt[4], ptEnd, pipe::dCSize);
 
@@ -208,7 +208,7 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 
             CSeg* pSeg = new CSeg(new CPrimLine(pt[1], ptEnd));
             pDoc->WorkLayerAddTail(pSeg);
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 
             pipe::GenTicMark(pt[1], ptEnd, 2. * pipe::dCSize);
 
@@ -220,14 +220,14 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
           }
           wPrvKeyDwn = ID_OP4;
 
-          pLineHor = 0;
+          pLineHor = nullptr;
           eJoinHor = pipe::No;
         } else if (eJoinVer != pipe::No) {  // On an existing vertical pipe section
           if (eJoinVer == pipe::End)
             // Dropping into an existing vertical pipe section
             pipe::GenFits(wPrvKeyDwn, pt[0], ID_OP4, pt[1]);
           wPrvKeyDwn = ID_OP4;
-          pArcVer = 0;
+          pArcVer = nullptr;
           eJoinVer = pipe::No;
         } else {
           nPenColor = pstate.PenColor();
@@ -265,7 +265,7 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 
             CSeg* pSeg = new CSeg(new CPrimLine(pt[1], ptEnd));
             pDoc->WorkLayerAddTail(pSeg);
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 
             pipe::GenTicMark(pt[1], ptEnd, 2. * pipe::dCSize);
             pstate.SetPen(pDC, 1, 1);
@@ -283,7 +283,7 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 
             CSeg* pSeg = new CSeg(new CPrimLine(pt[4], ptEnd));
             pDoc->WorkLayerAddTail(pSeg);
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 
             pipe::GenTicMark(pt[4], ptEnd, pipe::dCSize);
             pstate.SetPen(pDC, 1, 1);
@@ -294,14 +294,14 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
           }
           wPrvKeyDwn = ID_OP5;
 
-          pLineHor = 0;
+          pLineHor = nullptr;
           eJoinHor = pipe::No;
         } else if (eJoinVer != pipe::No) {  // On an existing vertical pipe section
           if (eJoinVer == pipe::End)
             // Rising into an existing vertical pipe section
             pipe::GenFits(wPrvKeyDwn, pt[0], ID_OP5, pt[1]);
           wPrvKeyDwn = ID_OP5;
-          pArcVer = 0;
+          pArcVer = nullptr;
           eJoinVer = pipe::No;
         } else {
           nPenColor = pstate.PenColor();
@@ -322,9 +322,9 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
       case ID_OP8:
         if (wPrvKeyDwn != 0) app.RubberBandingDisable();
         wPrvKeyDwn = 0;
-        pLineHor = 0;
+        pLineHor = nullptr;
         eJoinHor = pipe::No;
-        pArcVer = 0;
+        pArcVer = nullptr;
         eJoinVer = pipe::No;
 
         pipe::GenSyms(pDC, pt[1]);
@@ -380,7 +380,7 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
               pipe::GenFits(ID_OP3, pt[3], ID_OP3, pt[4]);
             }
             pt[0] = pt[4];
-            pLineHor = 0;
+            pLineHor = nullptr;
             eJoinHor = pipe::No;
             wPrvKeyDwn = ID_OP3;
             app.RubberBandingStartAtEnable(pt[0], Lines);
@@ -397,9 +397,9 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
       case IDM_ESCAPE:
         if (wPrvKeyDwn != 0) app.RubberBandingDisable();
         wPrvKeyDwn = 0;
-        pLineHor = 0;
+        pLineHor = nullptr;
         eJoinHor = pipe::No;
-        pArcVer = 0;
+        pArcVer = nullptr;
         eJoinVer = pipe::No;
 
         pt[0] = pt[1];
@@ -441,7 +441,7 @@ void pipe::GenFits(WORD wPrvKeyDwn, const CPnt& PP, WORD CUR, const CPnt& PC) {
   CSeg* pSeg = new CSeg(new CPrimLine(pt1, pt2));
 
   pDoc->WorkLayerAddTail(pSeg);
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 }
 
 ///<summary>Generates a piping symbol at point specified if pipe section located.</summary>
@@ -456,13 +456,13 @@ void pipe::GenSyms(CDC* pDC, const CPnt& P0) {
 
   CPnt ptIns;
 
-  CPrimLine* pLine = 0;
+  CPrimLine* pLine = nullptr;
 
   POSITION pos = detsegs.GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = detsegs.GetNext(pos);
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
       if (pPrim->Is(CPrim::Type::Line)) {  // Primitive is potentially an existing horizontal pipe section
         pLine = static_cast<CPrimLine*>(pPrim);
@@ -511,7 +511,7 @@ FoundIt:
 
   pSeg = new CSeg(new CPrimLine(pt[3], ptEnd));
   pDoc->WorkLayerAddTail(pSeg);
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 
   pipe::GenTicMark(ptIns, ptEnd, dTicDis[pipe::wCurSymId]);
 
@@ -783,7 +783,7 @@ FoundIt:
   pipe::dTicSize = tick_size;
 
   pDoc->WorkLayerAddTail(pSeg);
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 }
 
 //	Effect: Draws tic mark at a point dDis from begin point on the line defined by
@@ -808,7 +808,7 @@ void pipe::GenTicMark(const CPnt& ptBeg, const CPnt& ptEnd, double dDis) {
 
     CSeg* pSeg = new CSeg(new CPrimLine(1, 1, pt1, pt2));
     pDoc->WorkLayerAddTail(pSeg);
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
   }
 }
 
@@ -827,7 +827,7 @@ void pipe::GenRise(const CPnt& ptCent) {
 
   CSeg* pSeg = new CSeg(new CPrimArc(ptCent, vXAx, vYAx, TWOPI));
   pDoc->WorkLayerAddTail(pSeg);
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 }
 
 void pipe::GenDrop(const CPnt& ptCent) {
@@ -845,5 +845,5 @@ void pipe::GenDrop(const CPnt& ptCent) {
 
   CSeg* pSeg = new CSeg(new CPrimArc(ptCent, vXAx, vYAx, TWOPI));
   pDoc->WorkLayerAddTail(pSeg);
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 }

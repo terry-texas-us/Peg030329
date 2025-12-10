@@ -43,7 +43,7 @@ void WndProcKeyPlanOnDraw(HWND hwnd) {
   dc.Attach(::BeginPaint(hwnd, &ps));
 
   CDC dcMem;
-  dcMem.CreateCompatibleDC(NULL);
+  dcMem.CreateCompatibleDC(nullptr);
 
   dcMem.SelectObject(CBitmap::FromHandle(CDlgViewZoom::m_hbmKeyplan));
   BITMAP bitmap;
@@ -51,7 +51,7 @@ void WndProcKeyPlanOnDraw(HWND hwnd) {
 
   dc.BitBlt(0, 0, bitmap.bmWidth, bitmap.bmHeight, &dcMem, 0, 0, SRCCOPY);
 
-  CBrush* pBrush = (CBrush*)dc.SelectStockObject(NULL_BRUSH);
+  auto* pBrush = (CBrush*)dc.SelectStockObject(NULL_BRUSH);
   dc.Rectangle(0, 0, bitmap.bmWidth, bitmap.bmHeight);
 
 #pragma tasMSG(TODO : Need to use the CWnd associated with Keyplan and not the active app view)
@@ -109,7 +109,7 @@ void WndProcKeyPlanOnMouseMove(HWND hwnd, WPARAM wParam, LPARAM lParam) {
     int iDrawMode = ::SetROP2(hDCKeyplan, R2_XORPEN);
 
     // Show defining window as hollow rectangle with dark gray outline
-    HBRUSH hBrush = (HBRUSH)::SelectObject(hDCKeyplan, ::GetStockObject(NULL_BRUSH));
+    auto hBrush = (HBRUSH)::SelectObject(hDCKeyplan, ::GetStockObject(NULL_BRUSH));
     HPEN hPenGray = ::CreatePen(PS_SOLID, 2, RGB(0x80, 0x80, 0x80));
     HPEN hPen = (HPEN)::SelectObject(hDCKeyplan, hPenGray);
     ::Rectangle(hDCKeyplan, CDlgViewZoom::m_rcWnd.left, CDlgViewZoom::m_rcWnd.top, CDlgViewZoom::m_rcWnd.right,
@@ -157,14 +157,14 @@ void WndProcKeyPlanOnNewRatio(HWND hwnd, LPARAM lParam) {
   HDC hDCKeyplan = ::GetDC(hwnd);
   int iDrawMode = ::SetROP2(hDCKeyplan, R2_XORPEN);
 
-  HBRUSH hBrush = (HBRUSH)::SelectObject(hDCKeyplan, ::GetStockObject(NULL_BRUSH));
+  auto hBrush = (HBRUSH)::SelectObject(hDCKeyplan, ::GetStockObject(NULL_BRUSH));
   HPEN hPenGray = ::CreatePen(PS_SOLID, 2, RGB(0x80, 0x80, 0x80));
   HPEN hPen = (HPEN)::SelectObject(hDCKeyplan, hPenGray);
   ::Rectangle(hDCKeyplan, CDlgViewZoom::m_rcWnd.left, CDlgViewZoom::m_rcWnd.top, CDlgViewZoom::m_rcWnd.right,
               CDlgViewZoom::m_rcWnd.bottom);
 
   CDC dcMem;
-  dcMem.CreateCompatibleDC(NULL);
+  dcMem.CreateCompatibleDC(nullptr);
 
   dcMem.SelectObject(CBitmap::FromHandle(CDlgViewZoom::m_hbmKeyplan));
   BITMAP bitmap;

@@ -39,7 +39,7 @@ double CVaxFloat::Convert() const {
   return (double(fMS));
 }
 void CVaxFloat::Convert(const double& dMS) {
-  float fMS = float(dMS);
+  auto fMS = float(dMS);
   float fVax = 0.f;
 
   if (fMS != 0.f) {

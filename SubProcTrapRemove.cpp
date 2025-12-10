@@ -76,7 +76,7 @@ LRESULT CALLBACK SubProcTrapRemove(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM 
         case ID_OP5:
           if (!trapsegs.IsEmpty()) {
             pSeg = trapsegs.RemoveTail();
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
           }
           app.StatusLineDisplay(TrapCnt);
           return 0;
@@ -119,12 +119,12 @@ void pTrapRemByArea(CPegView* pView, CPnt pt1, CPnt pt2) {
   line::Extents_xy(CLine(pt1, pt2), pt1, pt2);  // Rationalize the diagonal
 
   POSITION pos = trapsegs.GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = trapsegs.GetNext(pos);
 
     if (pSeg->SelUsingRect(pView, pt1, pt2)) {
       trapsegs.RemoveAt(trapsegs.Find(pSeg));
-      pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+      pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
     }
   }
 }
@@ -141,16 +141,16 @@ void pTrapRemByLn(CPegView* pView, CPnt ptBeg, CPnt ptEnd) {
   CPnts ptsInt;
 
   POSITION pos = trapsegs.GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = trapsegs.GetNext(pos);
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
 
       if (pPrim->SelUsingLine(pView, CLine(ptView[0], ptView[1]), ptsInt)) {
         trapsegs.RemoveAt(trapsegs.Find(pSeg));
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
         break;
       }
     }

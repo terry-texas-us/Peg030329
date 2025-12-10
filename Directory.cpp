@@ -10,7 +10,7 @@
 void Path_UnquoteSpaces(CString& strPathName) {
   if (strPathName.IsEmpty()) return;
 
-  TCHAR* pPathName = new TCHAR[MAX_PATH];
+  auto* pPathName = new TCHAR[MAX_PATH];
   _tcscpy_s(pPathName, MAX_PATH, strPathName);
   size_t n = _tcslen(pPathName) - 1;
   while (n != 0 && pPathName[n] != '\\') { n--; }

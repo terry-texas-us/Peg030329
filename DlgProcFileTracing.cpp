@@ -72,7 +72,7 @@ UINT_PTR CALLBACK OFNHookProcFileTracing(HWND hDlg, UINT uiMsg, WPARAM wParam, L
           return (TRUE);
 
         case IDC_TRAP: {
-          CLayer* pLayer = new CLayer();
+          auto* pLayer = new CLayer();
 
           pDoc->TracingLoadLayer(szFilePath, pLayer);
 

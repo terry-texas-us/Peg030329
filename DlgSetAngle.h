@@ -12,7 +12,7 @@ class CDlgSetAngle : public CDialog {
   DECLARE_DYNAMIC(CDlgSetAngle)
 
  public:
-  CDlgSetAngle(CWnd* pParent = NULL);  // standard constructor
+  CDlgSetAngle(CWnd* pParent = nullptr);  // standard constructor
   virtual ~CDlgSetAngle();
 
   CDlgSetAngle(const CDlgSetAngle&) = delete;             // Prevent copying

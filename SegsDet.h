@@ -30,7 +30,7 @@ class CSegsDet : public CSegs {
   CSeg*& DetSeg() { return m_pDetSeg; }
   CPrim*& DetPrim() { return m_pDetPrim; }
   CPnt& DetPt() { return m_ptDet; }
-  bool IsSegEngaged() const { return m_pDetSeg != 0; }
+  bool IsSegEngaged() const { return m_pDetSeg != nullptr; }
   CSeg* SelLineUsingPoint(CPegView* pView, const CPnt& pt);
   CSeg* SelSegAndPrimUsingPoint(const CPnt&);
   CSeg* SelSegAndPrimAtCtrlPt(const CPnt4& pt);

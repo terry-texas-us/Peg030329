@@ -38,7 +38,7 @@ INT_PTR CALLBACK DlgProcModeRevise(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM l
         case IDOK: {
           int iLen = ::GetWindowTextLength(hWndTextCtrl);
 
-          TCHAR* pszNew = new TCHAR[iLen + 1u];
+          auto* pszNew = new TCHAR[iLen + 1u];
           ::GetWindowText(hWndTextCtrl, pszNew, iLen + 1);
 
           CPegDoc* pDoc = CPegDoc::GetDoc();

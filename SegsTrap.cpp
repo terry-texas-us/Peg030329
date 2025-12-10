@@ -25,19 +25,19 @@ void CSegsTrap::AddSegsAtPt(CPegView* pView, CSegsDet* pSegs, CPnt pt) {
   CPrimPolygon::EdgeToEvaluate() = 0;
 
   POSITION pos = pSegs->GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = pSegs->GetNext(pos);
 
-    if (Find(pSeg) != 0)  // already in trap
+    if (Find(pSeg) != nullptr)  // already in trap
       continue;
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
       if (pPrim->SelUsingPoint(pView, ptView, dPicApertSiz, rPt))  // Segment within tolerance
       {
         AddTail(pSeg);
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE_TRAP, pSeg);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE_TRAP, pSeg);
         break;
       }
     }
@@ -54,7 +54,7 @@ void CSegsTrap::Compress() {
   CSeg* pSegNew = new CSeg;
 
   POSITION pos = GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = GetNext(pos);
 
     CPegDoc::GetDoc()->AnyLayerRemove(pSeg);
@@ -74,21 +74,21 @@ void CSegsTrap::Copy(const CVec& vTrns) {
   CPegDoc* pDoc = CPegDoc::GetDoc();
 
   POSITION pos = GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = GetNext(pos);
     CSeg* pNewSeg = new CSeg(*pSeg);
 
     pDoc->WorkLayerAddTail(pNewSeg);
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG, pSeg);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG, pSeg);
     pSeg->Translate(vTrns);
 
     LPARAM lHint = (m_bIdentify) ? CPegDoc::HINT_SEG_SAFE_TRAP : CPegDoc::HINT_SEG_SAFE;
-    pDoc->UpdateAllViews(NULL, lHint, pSeg);
+    pDoc->UpdateAllViews(nullptr, lHint, pSeg);
   }
 }
 void CSegsTrap::DeleteSegs() {
   POSITION pos = GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = GetNext(pos);
     CPegDoc::GetDoc()->AnyLayerRemove(pSeg);
     detsegs.Remove(pSeg);
@@ -107,16 +107,16 @@ void CSegsTrap::Expand() {
   CSeg* pNewSeg;
   CPrim* pPrim;
 
-  CSegs* pSegs = new CSegs;
+  auto* pSegs = new CSegs;
   pSegs->AddTail(this);
   RemoveAll();
 
   POSITION pos = pSegs->GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     pSeg = pSegs->GetNext(pos);
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       pPrim = pSeg->GetNext(posPrim);
       pNewSeg = new CSeg(pPrim);
       CPegDoc::GetDoc()->WorkLayerAddTail(pNewSeg);
@@ -143,17 +143,17 @@ void CSegsTrap::RemoveSegsAtPt(CPegView* pView, CPnt pt) {
   CPrimPolygon::EdgeToEvaluate() = 0;
 
   POSITION pos = GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = GetNext(pos);
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
       if (pPrim->SelUsingPoint(pView, ptView, dPicApertSiz, rPt))  // Segment within tolerance
       {
         RemoveAt(Find(pSeg));
         iNmbFnd++;
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
         break;
       }
     }
@@ -162,19 +162,19 @@ void CSegsTrap::RemoveSegsAtPt(CPegView* pView, CPnt pt) {
 void CSegsTrap::Square() {
   CPegDoc* pDoc = CPegDoc::GetDoc();
 
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEGS_ERASE_SAFE_TRAP, this);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_ERASE_SAFE_TRAP, this);
 
   POSITION pos = GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = GetNext(pos);
     pSeg->Square();
   }
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEGS_SAFE_TRAP, this);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE_TRAP, this);
 }
 void CSegsTrap::TransformSegs(const CTMat& tm) {
   CPegDoc* pDoc = CPegDoc::GetDoc();
 
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEGS_ERASE_SAFE_TRAP, this);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_ERASE_SAFE_TRAP, this);
   Transform(tm);
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEGS_SAFE_TRAP, this);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE_TRAP, this);
 }

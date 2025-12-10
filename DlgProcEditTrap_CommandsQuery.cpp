@@ -133,7 +133,7 @@ INT_PTR CALLBACK DlgProcEditTrap_CommandsQuery(HWND hDlg, UINT nMsg, WPARAM wPar
       return (TRUE);
     }
     case WM_NOTIFY: {
-      NMHDR* pnm = (NMHDR*)lParam;
+      auto* pnm = (NMHDR*)lParam;
       if (pnm->idFrom == IDC_SEGMENT_TREE) {
         if (pnm->code == TVN_SELCHANGED) {
           NM_TREEVIEW* nmtv = (NM_TREEVIEW*)lParam;
@@ -152,7 +152,7 @@ INT_PTR CALLBACK DlgProcEditTrap_CommandsQuery(HWND hDlg, UINT nMsg, WPARAM wPar
           if (_tcscmp(item.pszText, _T("<Segments>")) == 0) {
           } else if (_tcscmp(item.pszText, _T("<Segment>")) == 0) {
           } else {
-            CPrim* pPrim = (CPrim*)item.lParam;
+            auto* pPrim = (CPrim*)item.lParam;
             DlgProcEditTrap_CommandsQueryFillExtraList(hDlg, pPrim);
             DlgProcEditTrap_CommandsQueryFillGeometryList(hDlg, pPrim);
           }

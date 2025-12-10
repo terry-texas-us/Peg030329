@@ -9,7 +9,7 @@ class CDlgSetScale : public CDialog {
   DECLARE_DYNAMIC(CDlgSetScale)
 
  public:
-  CDlgSetScale(CWnd* pParent = NULL);  // standard constructor
+  CDlgSetScale(CWnd* pParent = nullptr);  // standard constructor
   virtual ~CDlgSetScale();
 
   CDlgSetScale(const CDlgSetScale&) = delete;             // Prevent copying

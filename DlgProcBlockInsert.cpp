@@ -87,7 +87,7 @@ void BlockInsertDoOK(HWND hDlg) {
 
   CString strBlkNam;
   if (BlockInsertGetCurSel(hDlg, IDC_BLOCKS_LIST, strBlkNam) != LB_ERR) {
-    CPrimSegRef* pSegRef = new CPrimSegRef(strBlkNam, *ptIns);
+    auto* pSegRef = new CPrimSegRef(strBlkNam, *ptIns);
 
     CSeg* pSeg = new CSeg(pSegRef);
     pDoc->WorkLayerAddTail(pSeg);

@@ -531,7 +531,7 @@ bool dde::ProcessExecRequest(PTOPICINFO pTopic, HDDEDATA hData) {
 
   if (!hData) return false;
 
-  LPSTR pData = (LPSTR)DdeAccessData(hData, nullptr);
+  auto pData = (LPSTR)DdeAccessData(hData, nullptr);
 
   if (!pData) return false;
 

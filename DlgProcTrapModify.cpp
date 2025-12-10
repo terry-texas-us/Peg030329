@@ -65,7 +65,7 @@ void DlgProcTrapModifyPolygons() {
       CPrim* pPrim = pSeg->GetNext(posPrim);
 
       if (pPrim->Is(CPrim::Type::Polygon)) {
-        CPrimPolygon* pPolygon = static_cast<CPrimPolygon*>(pPrim);
+        auto* pPolygon = static_cast<CPrimPolygon*>(pPrim);
         pPolygon->SetIntStyle(pstate.PolygonIntStyle());
         pPolygon->SetIntStyleId(pstate.PolygonIntStyleId());
         pPolygon->SetHatRefVecs(hatch::dOffAng, hatch::dXAxRefVecScal, hatch::dYAxRefVecScal);

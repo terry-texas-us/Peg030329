@@ -92,7 +92,7 @@ INT_PTR CALLBACK DlgProcSetupNote(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM) n
 int CALLBACK EnumFontFamProc(const LPLOGFONT lplf, const LPTEXTMETRIC, int, LPARAM lParam) {
   HWND hDlg = HWND(lParam);
 
-  const LPENUMLOGFONT elf = (const LPENUMLOGFONT)lplf;
+  const auto elf = (const LPENUMLOGFONT)lplf;
   ::SendDlgItemMessage(hDlg, IDC_FONT_NAME, CB_ADDSTRING, 0, (LPARAM)(LPCSTR)elf->elfFullName);
 
   return 1;

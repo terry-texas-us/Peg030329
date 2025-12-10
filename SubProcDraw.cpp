@@ -211,7 +211,7 @@ void CDrawHandler::HandleOp5(CPnt cursorPosition) {
         state.points[++state.numberOfPoints] = state.points[1];
       } else {
         if (eArcGenId == EArcGen::ThreePoint) {
-          CPrimArc* arcPrimitive = new CPrimArc(state.points[0], state.points[1], state.points[2]);
+          auto* arcPrimitive = new CPrimArc(state.points[0], state.points[1], state.points[2]);
           if (arcPrimitive->GetSwpAng() != 0.0) {
             CSeg* segment = new CSeg(arcPrimitive);
             document->WorkLayerAddTail(segment);

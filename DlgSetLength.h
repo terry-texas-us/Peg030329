@@ -12,7 +12,7 @@ class CDlgSetLength : public CDialog {
   DECLARE_DYNAMIC(CDlgSetLength)
 
  public:
-  CDlgSetLength(CWnd* pParent = NULL);  // standard constructor
+  CDlgSetLength(CWnd* pParent = nullptr);  // standard constructor
   virtual ~CDlgSetLength();
 
   CDlgSetLength(const CDlgSetLength&) = delete;             // Prevent copying

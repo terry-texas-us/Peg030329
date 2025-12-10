@@ -134,7 +134,7 @@ LRESULT CALLBACK SubProcNodal(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
         if (wPrvKeyDwn == 0) {
           CUniqPt* pUniqPt;
           POSITION pos = nodal::UPL->GetHeadPosition();
-          while (pos != 0) {
+          while (pos != nullptr) {
             pUniqPt = (CUniqPt*)nodal::UPL->GetNext(pos);
             delete pUniqPt;
           }
@@ -143,7 +143,7 @@ LRESULT CALLBACK SubProcNodal(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
 
           CNodalPrim* pNodalPrim;
           pos = nodal::PrimLis->GetHeadPosition();
-          while (pos != 0) {
+          while (pos != nullptr) {
             pNodalPrim = (CNodalPrim*)nodal::PrimLis->GetNext(pos);
             delete pNodalPrim;
           }
@@ -175,11 +175,11 @@ void nodal::AddByArea(CPnt arPt1, CPnt arPt2) {
   CPnts pts;
 
   POSITION pos = detsegs.GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     pSeg = detsegs.GetNext(pos);
 
     posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       pPrim = pSeg->GetNext(posPrim);
       dwMask = nodal::GetPrimMask(pPrim);
       pPrim->GetAllPts(pts);
@@ -196,11 +196,11 @@ void nodal::AddByPt(const CPnt& pt) {
   CPnts pts;
 
   POSITION pos = detsegs.GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = detsegs.GetNext(pos);
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
 
       dwMask = nodal::GetPrimMask(pPrim);
@@ -227,10 +227,10 @@ void nodal::AddEngPrim() {
 
 ///<summary>Maintains an ordered list of the primatives with at least one identified node.</summary>
 void nodal::AddPrimBit(bool abSet, const CPrim* pPrim, int aiBit) {
-  CNodalPrim* pNodalPrim = 0;
+  CNodalPrim* pNodalPrim = nullptr;
 
   POSITION pos = nodal::PrimLis->GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     POSITION posCur = pos;
     pNodalPrim = (CNodalPrim*)nodal::PrimLis->GetNext(pos);
     if (pNodalPrim->pPrim == pPrim) {
@@ -239,7 +239,7 @@ void nodal::AddPrimBit(bool abSet, const CPrim* pPrim, int aiBit) {
     }
   }
   if (abSet) {
-    if (pos == 0)  // Add to list
+    if (pos == nullptr)  // Add to list
     {
       pNodalPrim = new CNodalPrim;
       pNodalPrim->pPrim = pPrim;
@@ -248,13 +248,13 @@ void nodal::AddPrimBit(bool abSet, const CPrim* pPrim, int aiBit) {
     }
     pNodalPrim->dwMask = ibset(pNodalPrim->dwMask, aiBit);
   } else {
-    if (pos != 0) pNodalPrim->dwMask = ibclr(pNodalPrim->dwMask, aiBit);
+    if (pos != nullptr) pNodalPrim->dwMask = ibclr(pNodalPrim->dwMask, aiBit);
   }
 }
 
 void nodal::AddPrimByPt(const CPnt pt) {
   CSeg* pSeg = detsegs.SelSegAndPrimUsingPoint(pt);
-  if (pSeg == 0) return;
+  if (pSeg == nullptr) return;
 
   CPrim* pPrim = detsegs.DetPrim();
 
@@ -274,10 +274,10 @@ void nodal::CopyPrims(const CVec& vTrns) {
 
   CPegDoc* pDoc = CPegDoc::GetDoc();
   CPegView* pView = CPegView::GetActiveView();
-  CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+  CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
   POSITION pos = nodal::SegList->GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     pSeg = nodal::SegList->GetNext(pos);
 
     pNewSeg = new CSeg(*pSeg);
@@ -285,7 +285,7 @@ void nodal::CopyPrims(const CVec& vTrns) {
     pDoc->WorkLayerAddTail(pNewSeg);
 
     pSeg->Translate(vTrns);
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG, pSeg);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG, pSeg);
   }
   pstate.Restore(pDC, iPrimState);
 }
@@ -303,16 +303,16 @@ void nodal::GenFilAreas(const CVec& vTrns) {
 
   CPegDoc* pDoc = CPegDoc::GetDoc();
   CPegView* pView = CPegView::GetActiveView();
-  CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+  CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
   int iPrimState = pstate.Save();
 
   POSITION pos = nodal::SegList->GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     pSeg = nodal::SegList->GetNext(pos);
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       pPrim = pSeg->GetNext(posPrim);
 
       dwMask = nodal::GetPrimMask(pPrim);
@@ -338,7 +338,7 @@ void nodal::GenFilAreas(const CVec& vTrns) {
           // Project reference origin to plane
           pSegNew = new CSeg(new CPrimPolygon(4, pt[0], vXAx, vYAx, pt));
           pDoc->WorkLayerAddTail(pSegNew);
-          pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegNew);
+          pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegNew);
         }
       } else if (pPrim->Is(CPrim::Type::Polygon)) {
         pPolygon = static_cast<CPrimPolygon*>(pPrim);
@@ -364,7 +364,7 @@ void nodal::GenFilAreas(const CVec& vTrns) {
             // Project reference origin to plane
             pSegNew = new CSeg(new CPrimPolygon(4, pt[0], vXAx, vYAx, pt));
             pDoc->WorkLayerAddTail(pSegNew);
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegNew);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegNew);
           }
         }
       }
@@ -381,19 +381,19 @@ void nodal::GenVecs(const CVec& vTrns) {
   CSeg* pSeg = new CSeg;
 
   POSITION pos = nodal::UPL->GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     pUniqPt = (CUniqPt*)nodal::UPL->GetNext(pos);
     pSeg->AddTail(new CPrimLine(pUniqPt->pt, pUniqPt->pt + vTrns));
   }
   pDoc->WorkLayerAddTail(pSeg);
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 }
 
 DWORD nodal::GetPrimMask(CPrim* pPrim) {
-  CNodalPrim* pNodalPrim = 0;
+  CNodalPrim* pNodalPrim = nullptr;
 
   POSITION pos = nodal::PrimLis->GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     POSITION posCur = pos;
     pNodalPrim = (CNodalPrim*)nodal::PrimLis->GetNext(pos);
     if (pNodalPrim->pPrim == pPrim) {
@@ -401,7 +401,7 @@ DWORD nodal::GetPrimMask(CPrim* pPrim) {
       break;
     }
   }
-  return ((pos != 0) ? pNodalPrim->dwMask : 0UL);
+  return ((pos != nullptr) ? pNodalPrim->dwMask : 0UL);
 }
 //Effect:	Translate all control points identified
 void nodal::Translate(const CVec& vTrns) {
@@ -410,22 +410,22 @@ void nodal::Translate(const CVec& vTrns) {
   CPegDoc* pDoc = CPegDoc::GetDoc();
 
   POSITION pos = nodal::SegList->GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = nodal::SegList->GetNext(pos);
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSeg);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSeg);
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
       dwMask = nodal::GetPrimMask(pPrim);
       pPrim->TranslateUsingMask(vTrns, dwMask);
     }
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
   }
   CUniqPt* pUniqPt;
 
   pos = nodal::UPL->GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     pUniqPt = (CUniqPt*)nodal::UPL->GetNext(pos);
     pUniqPt->pt += vTrns;
   }
@@ -443,7 +443,7 @@ void nodal::UpdLis(bool abAdd, CSeg* pSeg, CPrim* pPrim, DWORD dwMask, int aiBit
       nodal::AddPrimBit(abAdd, pPrim, aiBit);
 
       POSITION pos = nodal::UPL->GetHeadPosition();
-      while (pos != 0) {
+      while (pos != nullptr) {
         pUniqPt = (CUniqPt*)nodal::UPL->GetNext(pos);
         if (arPt == pUniqPt->pt)  // Point already in list
         {
@@ -464,7 +464,7 @@ void nodal::UpdLis(bool abAdd, CSeg* pSeg, CPrim* pPrim, DWORD dwMask, int aiBit
       nodal::AddPrimBit(abAdd, pPrim, aiBit);
 
       POSITION pos = nodal::UPL->GetHeadPosition();
-      while (pos != 0) {
+      while (pos != nullptr) {
         posDel = pos;
         pUniqPt = (CUniqPt*)nodal::UPL->GetNext(pos);
         if (arPt == pUniqPt->pt)  // Point found

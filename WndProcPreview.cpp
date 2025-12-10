@@ -7,7 +7,7 @@
 #include "Preview.h"
 #include "PrimState.h"
 
-CBitmap* WndProcPreview_pBitmap = NULL;
+CBitmap* WndProcPreview_pBitmap = nullptr;
 
 LRESULT CALLBACK WndProcPreview(HWND hwnd, UINT nMsg, WPARAM nParam, LPARAM lParam) {
   switch (nMsg) {
@@ -58,18 +58,18 @@ void WndProcPreviewClear(HWND hDlg) {
   ::GetClientRect(hWndPreview, &rc);
 
   CDC dcMem;
-  dcMem.CreateCompatibleDC(0);
+  dcMem.CreateCompatibleDC(nullptr);
 
-  CBitmap* pBitmapOld = (CBitmap*)dcMem.SelectObject(WndProcPreview_pBitmap);
+  auto* pBitmapOld = (CBitmap*)dcMem.SelectObject(WndProcPreview_pBitmap);
   dcMem.PatBlt(0, 0, rc.right, rc.bottom, BLACKNESS);
 
   dcMem.SelectObject(pBitmapOld);
-  ::InvalidateRect(hWndPreview, 0, TRUE);
+  ::InvalidateRect(hWndPreview, nullptr, TRUE);
 }
 
 void WndProcPreviewOnCreate(HWND hwnd) {
   CPegView* pView = CPegView::GetActiveView();
-  CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+  CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
   CRect rc;
   ::GetClientRect(hwnd, &rc);
@@ -78,9 +78,9 @@ void WndProcPreviewOnCreate(HWND hwnd) {
 }
 
 void WndProcPreviewOnDestroy(HWND) {
-  if (WndProcPreview_pBitmap != NULL) delete WndProcPreview_pBitmap;
+  if (WndProcPreview_pBitmap != nullptr) delete WndProcPreview_pBitmap;
 
-  WndProcPreview_pBitmap = NULL;
+  WndProcPreview_pBitmap = nullptr;
 }
 
 void WndProcPreviewOnDraw(HWND hwnd) {
@@ -93,7 +93,7 @@ void WndProcPreviewOnDraw(HWND hwnd) {
   dc.Attach(::BeginPaint(hwnd, &ps));
 
   CDC dcMem;
-  dcMem.CreateCompatibleDC(NULL);
+  dcMem.CreateCompatibleDC(nullptr);
 
   CBitmap* pBitmap = dcMem.SelectObject(WndProcPreview_pBitmap);
   dc.BitBlt(0, 0, rc.right, rc.bottom, &dcMem, 0, 0, SRCCOPY);
@@ -113,7 +113,7 @@ void WndProcPreviewUpdate(HWND hDlg, CBlock* pBlock) {
   ::GetClientRect(hWndPreview, &rc);
 
   CDC dcMem;
-  dcMem.CreateCompatibleDC(NULL);
+  dcMem.CreateCompatibleDC(nullptr);
 
   CBitmap* pBitmap = dcMem.SelectObject(WndProcPreview_pBitmap);
   dcMem.PatBlt(0, 0, rc.right, rc.bottom, BLACKNESS);
@@ -150,7 +150,7 @@ void WndProcPreviewUpdate(HWND hDlg, CBlock* pBlock) {
 
   pstate.Restore(&dcMem, iPrimState);
   dcMem.SelectObject(pBitmap);
-  ::InvalidateRect(hWndPreview, 0, TRUE);
+  ::InvalidateRect(hWndPreview, nullptr, TRUE);
 }
 
 void WndProcPreviewUpdate(HWND hDlg, CSegs* pSegs) {
@@ -162,7 +162,7 @@ void WndProcPreviewUpdate(HWND hDlg, CSegs* pSegs) {
   ::GetClientRect(hWndPreview, &rc);
 
   CDC dcMem;
-  dcMem.CreateCompatibleDC(NULL);
+  dcMem.CreateCompatibleDC(nullptr);
 
   CBitmap* pBitmap = dcMem.SelectObject(WndProcPreview_pBitmap);
   dcMem.PatBlt(0, 0, rc.right, rc.bottom, BLACKNESS);
@@ -196,5 +196,5 @@ void WndProcPreviewUpdate(HWND hDlg, CSegs* pSegs) {
   pView->ViewportPopActive();
 
   dcMem.SelectObject(pBitmap);
-  ::InvalidateRect(hWndPreview, 0, TRUE);
+  ::InvalidateRect(hWndPreview, nullptr, TRUE);
 }

@@ -37,16 +37,16 @@ void DlgBoxSetItemUnitsText(HWND hDlg, int iCtrlId, double dVal) {
 }
 bool AppGetGinCur(CPrim*& pPrim) {
   pPrim = pGinCurPrim;
-  return (pPrim != 0);
+  return (pPrim != nullptr);
 }
 bool AppGetGinCur(CSeg*& pSeg) {
   pSeg = pGinCurSeg;
-  return (pSeg != 0);
+  return (pSeg != nullptr);
 }
 bool AppGetGinCur(CSeg*& pSeg, CPrim*& pPrim) {
   pSeg = pGinCurSeg;
   pPrim = pGinCurPrim;
-  return (pSeg != 0);
+  return (pSeg != nullptr);
 }
 void AppSetGinCur(CSeg* pSeg, CPrim* pPrim) {
   tmEditSeg.Identity();

@@ -88,7 +88,7 @@ INT_PTR CALLBACK DlgProcFileManage(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM l
         szLayerName[0] = 0;
         if (pGetLayerName()) {
           if (_tcslen(szLayerName) > 0) {
-            CLayer* pLayer = new CLayer(szLayerName);
+            auto* pLayer = new CLayer(szLayerName);
             pDoc->LayersAdd(pLayer);
             ::SendDlgItemMessage(hDlg, IDC_LAY, LB_ADDSTRING, 0, (LPARAM)(LPCSTR)szLayerName);
           }
@@ -515,7 +515,7 @@ void DlgProcFileManageDoLayerColor(HWND hDlg) {
     int iLayerId = pDoc->LayersLookup(strName);
     CLayer* pLayer = pDoc->LayersGetAt(iLayerId);
 
-    PENCOLOR nPenColor = (PENCOLOR)::GetDlgItemInt(hDlg, IDC_COLOR_ID, nullptr, FALSE);
+    auto nPenColor = (PENCOLOR)::GetDlgItemInt(hDlg, IDC_COLOR_ID, nullptr, FALSE);
     pLayer->SetPenColor(nPenColor);
     pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_LAYER_SAFE, pLayer);
 

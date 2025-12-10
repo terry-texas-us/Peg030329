@@ -12,7 +12,7 @@
 void text_Display0(CPegView* pView, CDC* pDC, const CFontDef& fd, const CRefSys& rs0, const CString& strText) {
   if (strText.GetLength() > 0) {
     CRefSys rs = rs0;
-    bool bTrueType = pDC != 0 && fd.TextPrec() == CFontDef::PREC_TRUETYPEFONT && pView->GetViewTrueTypeFonts();
+    bool bTrueType = pDC != nullptr && fd.TextPrec() == CFontDef::PREC_TRUETYPEFONT && pView->GetViewTrueTypeFonts();
     int nLen = string_LengthSansEscSeqs(strText);
 
     CTMat tm(rs.GetTransformMatrix());
@@ -118,7 +118,7 @@ void text_Display(CPegView* pView, CDC* pDC, const CFontDef& fd, const CTMat& tm
   if (nLen == 0) return;
 
   long* plStrokeFontDef = (long*)app.StrokeFontGet();
-  if (plStrokeFontDef == 0) return;
+  if (plStrokeFontDef == nullptr) return;
 
   long* plStrokeChrDef = plStrokeFontDef + 96;
   double dChrSpac = 1. + (.32 + fd.ChrSpac()) / .6;
@@ -220,7 +220,7 @@ bool text_Display(CPegView* pView, CDC* pDC, const CFontDef& fd, const CRefSys& 
 
   CFont font;
   font.CreateFontIndirect(&logfont);
-  CFont* pfntold = (CFont*)pDC->SelectObject(&font);
+  auto* pfntold = (CFont*)pDC->SelectObject(&font);
 
   UINT uTextAlign = pDC->SetTextAlign(TA_BASELINE | TA_LEFT);
   int iBkMode = pDC->SetBkMode(TRANSPARENT);

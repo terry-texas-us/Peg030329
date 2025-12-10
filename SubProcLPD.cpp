@@ -76,8 +76,8 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
           app.RubberBandingDisable();
           app.ModeLineUnhighlightOp(wPrvKeyDwn);
           lpd::bContSec = false;
-          pEndCapSeg = 0;
-          pEndCapMark = 0;
+          pEndCapSeg = nullptr;
+          pEndCapMark = nullptr;
         }
         ptPrv = ptCur;
         break;
@@ -112,7 +112,7 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
       case ID_OP2:
         if (wPrvKeyDwn != 0) app.RubberBandingDisable();
 
-        if (pEndCapSeg == 0) {  // No end-cap consideration
+        if (pEndCapSeg == nullptr) {  // No end-cap consideration
           if (wPrvKeyDwn == ID_OP2) {
             ptCur = UserAxisSnapLn(ptPrv, ptCur);
             lnPar[0] = lnPar[2];
@@ -130,11 +130,11 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
 
                   ParLines_GenPts(.5, dWid[1], lnLead, &lnPar[2]);
 
-                  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, lpd::pEndCapSeg);
+                  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, lpd::pEndCapSeg);
 
                   pDoc->AnyLayerRemove(lpd::pEndCapSeg);
                   detsegs.Remove(lpd::pEndCapSeg);
-                  if (trapsegs.Remove(lpd::pEndCapSeg) != 0) { app.StatusLineDisplay(TrapCnt); }
+                  if (trapsegs.Remove(lpd::pEndCapSeg) != nullptr) { app.StatusLineDisplay(TrapCnt); }
                   lpd::pEndCapSeg->RemovePrims();
                   delete lpd::pEndCapSeg;
                 }
@@ -152,7 +152,7 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
               lpd::GenTransition(Begin, iJus, dSlo, dWid, dDep, &lnPar[2]);
               ptCur = Mid(lnPar[2][1], lnPar[3][1]);
               lpd::bContSec = true;
-              lpd::pEndCapSeg = 0;
+              lpd::pEndCapSeg = nullptr;
             } else
               // Zero length section specified
               msgInformation(0);
@@ -161,12 +161,12 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
           if (iEndCapId > 0) {  // Begin at end-cap
             POSITION pos = pEndCapSeg->Find(pEndCapMark);
             pEndCapSeg->GetNext(pos);
-            CPrimLine* pPrimCapLine = static_cast<CPrimLine*>(pEndCapSeg->GetAt(pos));
+            auto* pPrimCapLine = static_cast<CPrimLine*>(pEndCapSeg->GetAt(pos));
             lpd::bContSec = lpd::Fnd2LnsGivLn(pPrimCapLine, RADIAN, pLeftLine, &lnPar[2], pRightLine, &lnPar[3]);
             lpd::pEndCapSeg = pEndCapSeg;
           }
-          pEndCapSeg = 0;
-          pEndCapMark = 0;
+          pEndCapSeg = nullptr;
+          pEndCapMark = nullptr;
         }
         wPrvKeyDwn = ID_OP2;
         ptPrv = ptCur;
@@ -181,7 +181,7 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
         lpd::SetOptions(&dWid[2], &dDep[2]);
         iJus[1] = lpd::eJust;
         iJus[1] *= 4;          //??
-        if (pEndCapMark == 0)  // No end-cap consideration
+        if (pEndCapMark == nullptr)  // No end-cap consideration
         {
           if (wPrvKeyDwn == 0)  // Beginning initial section
           {
@@ -206,10 +206,10 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
                   ptPrv = Mid(lnPar[0][0], lnPar[1][0]);
                   lnLead(ptPrv, ptCur);
                   ParLines_GenPts(.5, dWid[1], lnLead, &lnPar[2]);
-                  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, lpd::pEndCapSeg);
+                  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, lpd::pEndCapSeg);
                   pDoc->AnyLayerRemove(lpd::pEndCapSeg);
                   detsegs.Remove(lpd::pEndCapSeg);
-                  if (trapsegs.Remove(lpd::pEndCapSeg) != 0) { app.StatusLineDisplay(TrapCnt); }
+                  if (trapsegs.Remove(lpd::pEndCapSeg) != nullptr) { app.StatusLineDisplay(TrapCnt); }
                   lpd::pEndCapSeg->RemovePrims();
                   delete lpd::pEndCapSeg;
                 }
@@ -219,7 +219,7 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
               dDep[1] = dDep[2];
               ptCur = Mid(lnPar[2][1], lnPar[3][1]);
               lpd::bContSec = false;
-              lpd::pEndCapSeg = 0;
+              lpd::pEndCapSeg = nullptr;
               wPrvKeyDwn = ID_OP2;
             } else  // Zero length section specified
               msgInformation(0);
@@ -234,7 +234,7 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
               dWid[1] = dWid[2];
               dDep[1] = dDep[2];
               lpd::bContSec = false;
-              lpd::pEndCapSeg = 0;
+              lpd::pEndCapSeg = nullptr;
               wPrvKeyDwn = ID_OP2;
             } else  // Zero length section specified
               msgInformation(0);
@@ -245,12 +245,12 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
           {
             POSITION pos = pEndCapSeg->Find(pEndCapMark);
             pEndCapSeg->GetNext(pos);
-            CPrimLine* pPrimCapLine = static_cast<CPrimLine*>(pEndCapSeg->GetAt(pos));
+            auto* pPrimCapLine = static_cast<CPrimLine*>(pEndCapSeg->GetAt(pos));
             lpd::bContSec = lpd::Fnd2LnsGivLn(pPrimCapLine, RADIAN, pLeftLine, &lnPar[2], pRightLine, &lnPar[3]);
             lpd::pEndCapSeg = pEndCapSeg;
           }
-          pEndCapSeg = 0;
-          pEndCapMark = 0;
+          pEndCapSeg = nullptr;
+          pEndCapMark = nullptr;
           wPrvKeyDwn = ID_OP2;
         }
         ptPrv = ptCur;
@@ -263,8 +263,8 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
         if (lpd::GenTap(pView, ptPrv, ptCur, dWid[1], dDep[1], lnPar)) {
           wPrvKeyDwn = 0;
           lpd::bContSec = false;
-          pEndCapSeg = 0;
-          pEndCapMark = 0;
+          pEndCapSeg = nullptr;
+          pEndCapMark = nullptr;
           ptPrv = ptCur;
         } else
           msgInformation(0);
@@ -291,7 +291,7 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
       case ID_OP7:  //	Search for an endcap in proximity of current location
         // dialog to `Select direction`, `Up.Down.`
         if (iRet >= 0) {
-          if (pEndCapMark == 0)  // No end-cap consideration
+          if (pEndCapMark == nullptr)  // No end-cap consideration
           {
             if (wPrvKeyDwn == ID_OP2) {
               ptCur = UserAxisSnapLn(ptPrv, ptCur);  // Constrain point to user axis
@@ -309,10 +309,10 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
                     lnLead(ptPrv, ptCur);
                     ParLines_GenPts(.5, dWid[1], lnLead, &lnPar[2]);
 
-                    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, lpd::pEndCapSeg);
+                    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, lpd::pEndCapSeg);
                     pDoc->AnyLayerRemove(lpd::pEndCapSeg);
                     detsegs.Remove(lpd::pEndCapSeg);
-                    if (trapsegs.Remove(lpd::pEndCapSeg) != 0) { app.StatusLineDisplay(TrapCnt); }
+                    if (trapsegs.Remove(lpd::pEndCapSeg) != nullptr) { app.StatusLineDisplay(TrapCnt); }
                     lpd::pEndCapSeg->RemovePrims();
                     delete lpd::pEndCapSeg;
                   }
@@ -334,11 +334,11 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
             }
           } else  // Work with existing end-cap
           {
-            pEndCapSeg = 0;
-            pEndCapMark = 0;
+            pEndCapSeg = nullptr;
+            pEndCapMark = nullptr;
           }
           lpd::bContSec = false;
-          lpd::pEndCapSeg = 0;
+          lpd::pEndCapSeg = nullptr;
           wPrvKeyDwn = ID_OP2;
           ptPrv = ptCur;
           app.CursorPosSet(ptPrv);
@@ -348,18 +348,18 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
 
       case ID_OP9:
         dAng = 0.;
-        if (pEndCapMark != 0)  // Work with existing end-cap
+        if (pEndCapMark != nullptr)  // Work with existing end-cap
         {
           if (pEndCapMark->PenColor() == 15 && pEndCapMark->MarkStyle() == 8) {
             POSITION posPrim = pEndCapSeg->Find(pEndCapMark);
             pEndCapSeg->GetNext(posPrim);
-            CPrimLine* pLine = static_cast<CPrimLine*>(pEndCapSeg->GetAt(posPrim));
+            auto* pLine = static_cast<CPrimLine*>(pEndCapSeg->GetAt(posPrim));
             dAng = fmod(pLine->GetAngAboutZAx(), PI);
             if (dAng <= RADIAN) dAng += PI;
             dAng -= HALF_PI;
           }
-          pEndCapSeg = 0;
-          pEndCapMark = 0;
+          pEndCapSeg = nullptr;
+          pEndCapMark = nullptr;
         }
         lpd::GenSizeNote(ptCur, dAng, dWid[1], dDep[1]);
         if (wPrvKeyDwn != 0) app.RubberBandingDisable();
@@ -371,8 +371,8 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
         app.RubberBandingDisable();
         app.ModeLineUnhighlightOp(wPrvKeyDwn);
         lpd::bContSec = false;
-        pEndCapSeg = 0;
-        pEndCapMark = 0;
+        pEndCapSeg = nullptr;
+        pEndCapMark = nullptr;
         [[fallthrough]];
 
       default:
@@ -411,7 +411,7 @@ bool lpd::Fnd2LnsGivLn(CPrimLine* pTestLine, double dAccAng, CPrim*& pLeftLine, 
   CLine lnTest;
   double dLnAng, dLnAng0;
 
-  pLeftLine = 0;
+  pLeftLine = nullptr;
   int iRel1 = 0;
 
   pTestLine->GetLine(lnTest);
@@ -419,11 +419,11 @@ bool lpd::Fnd2LnsGivLn(CPrimLine* pTestLine, double dAccAng, CPrim*& pLeftLine, 
   dLnAng0 = fmod(pTestLine->GetAngAboutZAx(), PI);
 
   POSITION pos = detsegs.GetTailPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     pSeg = (CSeg*)detsegs.GetPrev(pos);
 
     posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       pPrim = pSeg->GetNext(posPrim);
       if (pPrim == pTestLine || !pPrim->Is(CPrim::Type::Line)) continue;
       static_cast<CPrimLine*>(pPrim)->GetPts(ptBeg, ptEnd);
@@ -437,7 +437,7 @@ bool lpd::Fnd2LnsGivLn(CPrimLine* pTestLine, double dAccAng, CPrim*& pLeftLine, 
 
       dLnAng = fmod(line::GetAngAboutZAx(CLine(ptBeg, ptEnd)), PI);
       if (fabs(fabs(dLnAng0 - dLnAng) - HALF_PI) <= dAccAng) {
-        if (pLeftLine == 0)  // No qualifiers yet
+        if (pLeftLine == nullptr)  // No qualifiers yet
         {
           iRel1 = lnTest.DirRelOfPt(ptBeg);
           pLeftLine = pPrim;
@@ -502,15 +502,15 @@ int lpd::GenElbow(double adWid, double adDep, CLine* pLns) {
   iIn[1] = iIn[0] + 2;
   iOut[1] = iOut[0] + 2;
 
-  if (lpd::pEndCapSeg != 0) {
-    CPrimMark* pMark = static_cast<CPrimMark*>(lpd::pEndCapSeg->GetHead());
+  if (lpd::pEndCapSeg != nullptr) {
+    auto* pMark = static_cast<CPrimMark*>(lpd::pEndCapSeg->GetHead());
     section_width = pMark->GetDat(0);
     section_depth = pMark->GetDat(1);
 
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, lpd::pEndCapSeg);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, lpd::pEndCapSeg);
     pDoc->AnyLayerRemove(lpd::pEndCapSeg);
     detsegs.Remove(lpd::pEndCapSeg);
-    if (trapsegs.Remove(lpd::pEndCapSeg) != 0) { app.StatusLineDisplay(TrapCnt); }
+    if (trapsegs.Remove(lpd::pEndCapSeg) != nullptr) { app.StatusLineDisplay(TrapCnt); }
     lpd::pEndCapSeg->RemovePrims();
     delete lpd::pEndCapSeg;
   } else {
@@ -600,7 +600,7 @@ int lpd::GenElbow(double adWid, double adDep, CLine* pLns) {
   lpd::GenEndCap(points[1], points[3], adWid, adDep, pSeg);
 
   pDoc->WorkLayerAddTail(pSeg);
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
   pLns[iIn[1]][0] = points[1];
   pLns[iOut[1]][0] = points[3];
 
@@ -623,7 +623,7 @@ void lpd::GenEndCap(const CPnt& pt1, const CPnt& pt2, double dWid, double dDep, 
 
   double d[] = {dWid, dDep};
 
-  CPrimMark* pPrimMark = new CPrimMark(15, 8, ptMid);
+  auto* pPrimMark = new CPrimMark(15, 8, ptMid);
   pPrimMark->SetDat(2, d);
   pSeg->AddTail(pPrimMark);
 
@@ -683,7 +683,7 @@ int lpd::GenRiseDrop(TCHAR acRisDrop, double adWid, double adDep, CLine* pLns) {
   pSeg->AddTail(new CPrimLine(pstate.PenColor(), acRisDrop, pLns[2][0], pLns[3][1]));
 
   pDoc->WorkLayerAddTail(pSeg);
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 
   return (iResult);
 }
@@ -700,7 +700,7 @@ bool lpd::GenSection(double section_width, double section_depth, CLine* lines) {
   lpd::GenEndCap(lines[0][1], lines[1][1], section_width, section_depth, section_segment);
   section_segment->AddTail(new CPrimLine(pstate.PenColor(), pstate.PenStyle(), lines[1]));
   document->WorkLayerAddTail(section_segment);
-  document->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, section_segment);
+  document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, section_segment);
 
   return true;
 }
@@ -730,7 +730,7 @@ void lpd::GenSizeNote(CPnt arPt, double adAng, double adWid,
   _tcscat_s(pNote, sizeof(pNote), string_TrimLeadingSpace(pSize));
 
   CPegView* pView = CPegView::GetActiveView();
-  CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+  CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
   int iPrimState = pstate.Save();
 
@@ -748,7 +748,7 @@ void lpd::GenSizeNote(CPnt arPt, double adAng, double adWid,
 
   CSeg* pSeg = new CSeg(new CPrimText(fd, rs, pNote));
   pDoc->WorkLayerAddTail(pSeg);
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
   pstate.Restore(pDC, iPrimState);
 }
 
@@ -794,7 +794,7 @@ CPnt lpd::GenTakeoff(CPegView* pView, CPnt arPrvPt, CPnt arCurPt, double* adWid,
 
   POSITION pos = end_cap_segment->Find(pEndCapMark);
   end_cap_segment->GetNext(pos);
-  CPrimLine* pPrimCapLn = static_cast<CPrimLine*>(end_cap_segment->GetAt(pos));  // Get end-cap line
+  auto* pPrimCapLn = static_cast<CPrimLine*>(end_cap_segment->GetAt(pos));  // Get end-cap line
   pPrimCapLn->GetLine(lnCap);
   if (!lpd::Fnd2LnsGivLn(pPrimCapLn, RADIAN, pPrimLn1, &rPar[0], pPrimLn2, &rPar[1])) {
     msgWarning(IDS_MSG_LPD_NOT_DUCT_SEC);
@@ -834,10 +834,10 @@ CPnt lpd::GenTakeoff(CPegView* pView, CPnt arPrvPt, CPnt arCurPt, double* adWid,
     lpd::pEndCapSeg = nullptr;
     lpd::GenElbow(dWid[0], dDep[0], pLns);
   }
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, end_cap_segment);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, end_cap_segment);
   pDoc->AnyLayerRemove(end_cap_segment);
   detsegs.Remove(end_cap_segment);
-  if (trapsegs.Remove(end_cap_segment) != 0) { app.StatusLineDisplay(TrapCnt); }
+  if (trapsegs.Remove(end_cap_segment) != nullptr) { app.StatusLineDisplay(TrapCnt); }
   end_cap_segment->RemovePrims();
   delete end_cap_segment;
 
@@ -873,7 +873,7 @@ CPnt lpd::GenTakeoff(CPegView* pView, CPnt arPrvPt, CPnt arCurPt, double* adWid,
     pSeg->AddTail(new CPrimArc(1, pstate.PenStyle(), lpd::pt[3], vMajAx, vMinAx, TWOPI));
     pSeg->AddTail(new CPrimLine(1, pstate.PenStyle(), lpd::pt[3], lpd::pt[4]));
     pDoc->WorkLayerAddTail(pSeg);
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
   }
   arCurPt[0] = (rPar[0][1][0] + rPar[1][1][0]) * .5f;
   arCurPt[1] = (rPar[0][1][1] + rPar[1][1][1]) * .5f;
@@ -894,9 +894,9 @@ bool lpd::GenTap(CPegView* pView, CPnt arPrvPt, CPnt arCurPos, double adWid, dou
   CLine lnLead;
 
   double dSlo = 1.;
-  if (detsegs.SelLineUsingPoint(pView, arCurPos) == 0) return false;
+  if (detsegs.SelLineUsingPoint(pView, arCurPos) == nullptr) return false;
 
-  CPrimLine* pLine = static_cast<CPrimLine*>(detsegs.DetPrim());
+  auto* pLine = static_cast<CPrimLine*>(detsegs.DetPrim());
 
   lnLead[0] = arPrvPt;
   lnLead[1] = pLine->Ln().ProjPt(arPrvPt);
@@ -927,7 +927,7 @@ bool lpd::GenTap(CPegView* pView, CPnt arPrvPt, CPnt arCurPos, double adWid, dou
     pSeg->AddTail(new CPrimArc(1, pstate.PenStyle(), ptBeg, vMajAx, vMinAx, TWOPI));
     pSeg->AddTail(new CPrimLine(1, pstate.PenStyle(), ptBeg, ptEnd));
     pDoc->WorkLayerAddTail(pSeg);
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
   }
   return true;
 }
@@ -967,7 +967,7 @@ CPnt lpd::GenTee(CPegView* pView, CPnt arPrvPt, CPnt arCurPt, double* adWid, dou
 
   POSITION pos = end_cap_segment->Find(pEndCapMark);
   end_cap_segment->GetNext(pos);
-  CPrimLine* pPrimCapLn = static_cast<CPrimLine*>(end_cap_segment->GetAt(pos));  // Get end-cap line
+  auto* pPrimCapLn = static_cast<CPrimLine*>(end_cap_segment->GetAt(pos));  // Get end-cap line
   pPrimCapLn->GetLine(lnCap);
 
   if (!lpd::Fnd2LnsGivLn(pPrimCapLn, RADIAN, pPrimLn2, &rPar[1], pPrimLn1, &rPar[0])) {
@@ -1062,7 +1062,7 @@ CPnt lpd::GenTee(CPegView* pView, CPnt arPrvPt, CPnt arCurPt, double* adWid, dou
     pSeg->AddTail(new CPrimArc(1, pstate.PenStyle(), lpd::pt[3], vMajAx, vMinAx, TWOPI));
     pSeg->AddTail(new CPrimLine(1, pstate.PenStyle(), lpd::pt[3], lpd::pt[4]));
     pDoc->WorkLayerAddTail(pSeg);
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
   }
   arCurPt[0] = (pLns[2][1][0] + pLns[3][1][0]) * .5f;
   arCurPt[1] = (pLns[2][1][1] + pLns[3][1][1]) * .5f;
@@ -1179,7 +1179,7 @@ int lpd::GenTransition(ETransition eEnd, int* aiJus, double* adSlo, double* adWi
     delete pSeg;
   else {
     pDoc->WorkLayerAddTail(pSeg);
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
   }
   return (iResult);
 }
@@ -1193,11 +1193,11 @@ bool lpd::SelEndCapUsingPoint(CPegView* view, const CPnt& model_point, CSeg*& se
   double pick_aperature = detsegs.PicApertSiz();
 
   POSITION pos = detsegs.GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     segment = detsegs.GetNext(pos);
 
     POSITION posPrim = segment->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = segment->GetNext(posPrim);
 
       if (pPrim->Is(CPrim::Type::Mark)) {

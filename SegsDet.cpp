@@ -20,7 +20,7 @@ void CSegsDet::AddTailSegsInActiveView(CPegView* pView, CLayer* pLayer) {
   if (pLayer->IsOn()) {
     if (pLayer->IsOpened() || pLayer->IsHot() || pLayer->IsWarm()) {
       POSITION pos = pLayer->GetHeadPosition();
-      while (pos != 0) {
+      while (pos != nullptr) {
         CSeg* pSeg = pLayer->GetNext(pos);
 
         if (pSeg->IsInView(pView)) { AddTail(pSeg); }
@@ -37,18 +37,18 @@ void CSegsDet::DelLast() {
     CSeg* pSeg = RemoveTail();
 
     pDoc->AnyLayerRemove(pSeg);
-    if (trapsegs.Remove(pSeg) != 0) {  // Display it normal color so the erase xor will work
-      pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+    if (trapsegs.Remove(pSeg) != nullptr) {  // Display it normal color so the erase xor will work
+      pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
       app.StatusLineDisplay(TrapCnt);
     }
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSeg);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSeg);
     pDoc->DeletedSegsAddTail(pSeg);
     msgInformation(IDS_SEG_DEL_TO_RESTORE);
   }
 }
 CSeg* CSegsDet::SelLineUsingPoint(CPegView* pView, const CPnt& pt) {
-  m_pDetSeg = 0;
-  m_pDetPrim = 0;
+  m_pDetSeg = nullptr;
+  m_pDetPrim = nullptr;
 
   CPnt ptEng;
 
@@ -60,10 +60,10 @@ CSeg* CSegsDet::SelLineUsingPoint(CPegView* pView, const CPnt& pt) {
   CTMat tm = pView->ModelViewGetMatrixInverse();
 
   POSITION pos = GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = GetNext(pos);
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
       if (pPrim->Is(CPrim::Type::Line)) {
         if (pPrim->SelUsingPoint(pView, ptView, tol, ptEng)) {
@@ -85,10 +85,10 @@ CPrimText* CSegsDet::SelTextUsingPoint(CPegView* pView, const CPnt& ptPic) {
   pView->ModelViewTransform(ptView);
 
   POSITION pos = GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = GetNext(pos);
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
       if (pPrim->Is(CPrim::Type::Text)) {
         CPnt ptProj;
@@ -97,7 +97,7 @@ CPrimText* CSegsDet::SelTextUsingPoint(CPegView* pView, const CPnt& ptPic) {
       }
     }
   }
-  return 0;
+  return nullptr;
 }
 
 /// @brief Searches the segments for a primitive hit by the given point using the active view, records the detected segment/primitive and detection point, and returns the selected segment.
@@ -140,16 +140,16 @@ CSeg* CSegsDet::SelSegAndPrimAtCtrlPt(const CPnt4& pt) {
   CPrim* pPrim;
   CPnt ptEng;
 
-  m_pDetSeg = 0;
-  m_pDetPrim = 0;
+  m_pDetSeg = nullptr;
+  m_pDetPrim = nullptr;
 
   CTMat tm = pView->ModelViewGetMatrixInverse();
 
   POSITION pos = GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = GetNext(pos);
     pPrim = pSeg->SelPrimAtCtrlPt(pView, pt, &ptEng);
-    if (pPrim != 0) {
+    if (pPrim != nullptr) {
       m_ptDet = ptEng;
       m_ptDet = tm * m_ptDet;
       m_pDetSeg = pSeg;

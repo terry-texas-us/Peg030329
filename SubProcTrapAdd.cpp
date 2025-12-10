@@ -22,7 +22,7 @@ LRESULT CALLBACK SubProcTrapAdd(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lPar
   CPegDoc* pDoc{CPegDoc::GetDoc()};
   CPegView* pView{CPegView::GetActiveView()};
 
-  CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+  CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
   switch (nMsg) {
     case WM_COMMAND:
@@ -81,9 +81,9 @@ LRESULT CALLBACK SubProcTrapAdd(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lPar
 
             CSeg* pSeg = pDoc->WorkLayerGetNext(pos);
 
-            if (trapsegs.Find(pSeg) == 0) {
+            if (trapsegs.Find(pSeg) == nullptr) {
               trapsegs.AddTail(pSeg);
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE_TRAP, pSeg);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE_TRAP, pSeg);
               app.StatusLineDisplay(TrapCnt);
             }
           } else {
@@ -137,15 +137,15 @@ void trap::AddByArea(CPegView* pView, CDC* pDC, CSegs* pSegs, CPnt pt0, CPnt pt1
   line::Extents_xy(CLine(pt[0], pt[1]), pt0, pt1);
 
   POSITION pos = pSegs->GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = pSegs->GetNext(pos);
 
-    if (trapsegs.Find(pSeg) != 0)  // already in trap
+    if (trapsegs.Find(pSeg) != nullptr)  // already in trap
       continue;
 
     if (pSeg->SelUsingRect(pView, pt0, pt1)) {
       trapsegs.AddTail(pSeg);
-      pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE_TRAP, pSeg);
+      pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE_TRAP, pSeg);
     }
   }
   pstate.Restore(pDC, iPrimState);
@@ -168,18 +168,18 @@ void trap::AddByLn(CPegView* pView, CDC* pDC, CSegs* pSegs, CPnt ptBeg,
   int iPrimState = pstate.Save();
 
   POSITION pos = pSegs->GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = pSegs->GetNext(pos);
 
-    if (trapsegs.Find(pSeg) != 0)  // already in trap
+    if (trapsegs.Find(pSeg) != nullptr)  // already in trap
       continue;
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
       if (pPrim->SelUsingLine(pView, CLine(ptView[0], ptView[1]), ptsInt)) {
         trapsegs.AddTail(pSeg);
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE_TRAP, pSeg);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE_TRAP, pSeg);
         break;
       }
     }
@@ -192,12 +192,12 @@ void trap::AddLast() {
 
   // adds last editable segment to trap
   POSITION pos = pDoc->WorkLayerGetTailPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = pDoc->WorkLayerGetPrev(pos);
 
     if (!trapsegs.Find(pSeg)) {  // not already in trap
       trapsegs.AddTail(pSeg);
-      pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE_TRAP, pSeg);
+      pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE_TRAP, pSeg);
       break;
     }
   }

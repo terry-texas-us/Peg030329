@@ -65,7 +65,7 @@ void DoEditPrimitiveCopy() {
 
     AppSetGinCur(pSeg, pPrimCopy);
 
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSeg);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSeg);
   }
 }
 void DoEditPrimitiveEscape() {
@@ -76,14 +76,14 @@ void DoEditPrimitiveEscape() {
 
     CPegDoc* pDoc = CPegDoc::GetDoc();
     CPegView* pView = CPegView::GetActiveView();
-    CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+    CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
     int iDrawMode = pstate.SetROP2(pDC, R2_XORPEN);
     int iPrimState = pstate.Save();
 
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_PRIM, pPrim);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_PRIM, pPrim);
     pPrim->Transform(tmEditSeg);
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_PRIM, pPrim);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_PRIM, pPrim);
 
     pstate.Restore(pDC, iPrimState);
     pstate.SetROP2(pDC, iDrawMode);
@@ -115,14 +115,14 @@ void DoEditPrimitiveTransform(WORD wId) {
 
     CPegDoc* pDoc = CPegDoc::GetDoc();
     CPegView* pView = CPegView::GetActiveView();
-    CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+    CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
     int iDrawMode = pstate.SetROP2(pDC, R2_XORPEN);
     int iPrimState = pstate.Save();
 
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_PRIM, pPrim);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_PRIM, pPrim);
     pPrim->Transform(tm);
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_PRIM, pPrim);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_PRIM, pPrim);
 
     tmEditSeg *= tm;
     pstate.Restore(pDC, iPrimState);

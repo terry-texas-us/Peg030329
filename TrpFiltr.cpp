@@ -51,7 +51,7 @@ INT_PTR CALLBACK DlgProcTrapFilter(HWND ahDlg, UINT anMsg, WPARAM wParam, LPARAM
     switch (LOWORD(wParam)) {
       case IDOK:
         if (IsDlgButtonChecked(ahDlg, IDC_TRAP_FILTER_PEN)) {
-          nPenColor = PENCOLOR(GetDlgItemInt(ahDlg, IDC_TRAP_FILTER_PEN_ID, 0, FALSE));
+          nPenColor = PENCOLOR(GetDlgItemInt(ahDlg, IDC_TRAP_FILTER_PEN_ID, nullptr, FALSE));
           trapFilterByPenColor(nPenColor);
         }
         if (IsDlgButtonChecked(ahDlg, IDC_TRAP_FILTER_LINE)) {
@@ -110,15 +110,15 @@ void trapFilterByLineStyle(int iLnId) {
   CPegDoc* pDoc = CPegDoc::GetDoc();
 
   POSITION pos = trapsegs.GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = trapsegs.GetNext(pos);
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
       if (pPrim->PenStyle() == iLnId) {  // Line match remove it
         trapsegs.Remove(pSeg);
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
         break;
       }
     }
@@ -129,15 +129,15 @@ void trapFilterByPenColor(PENCOLOR nPenColor) {
   CPegDoc* pDoc = CPegDoc::GetDoc();
 
   POSITION pos = trapsegs.GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = trapsegs.GetNext(pos);
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
       if (pPrim->PenColor() == nPenColor) {  // Color match remove it
         trapsegs.Remove(pSeg);
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
         break;
       }
     }
@@ -192,7 +192,7 @@ void trapFilterByPrimType(CPrim::Type type) {
       }
       if (filter) {
         trapsegs.Remove(segment);
-        document->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, segment);
+        document->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, segment);
         break;
       }
     }

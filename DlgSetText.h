@@ -12,7 +12,7 @@ class CDlgSetText : public CDialog {
   DECLARE_DYNAMIC(CDlgSetText)
 
  public:
-  CDlgSetText(CWnd* pParent = NULL);  // standard constructor
+  CDlgSetText(CWnd* pParent = nullptr);  // standard constructor
   virtual ~CDlgSetText();
 
   CDlgSetText(const CDlgSetText&) = delete;             // Prevent copying

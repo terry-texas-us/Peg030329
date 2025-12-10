@@ -47,7 +47,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
 
   CPegDoc* pDoc = CPegDoc::GetDoc();
   CPegView* pView = CPegView::GetActiveView();
-  CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+  CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
   switch (anMsg) {
     case WM_COMMAND:
@@ -96,7 +96,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
                 delete pSeg;
               else {
                 pDoc->WorkLayerAddTail(pSeg);
-                pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+                pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
               }
               pt[0] = pt[1];
             } else
@@ -146,7 +146,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
                 delete pSeg;
               else {
                 pDoc->WorkLayerAddTail(pSeg);
-                pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+                pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
               }
               pt[0] = pt[1];
             } else  // Two points coincide
@@ -240,7 +240,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
             pstate.Restore(pDC, iPrimState);
           }
           pDoc->WorkLayerAddTail(pSeg);
-          pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+          pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 
           pt[0] = pt[1];
           app.CursorPosSet(pt[0]);
@@ -302,7 +302,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
           vXAx.RotAboutArbAx(vPlnNorm, -HALF_PI);
           pSeg->AddTail(new CPrimArc(1, 1, pt[1], vXAx, vYAx, TWOPI));
           pDoc->WorkLayerAddTail(pSeg);
-          pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+          pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 
           pt[0] = pt[1];
           app.RubberBandingStartAtEnable(pt[0], Lines);
@@ -315,7 +315,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
             app.ModeLineUnhighlightOp(wPrvKeyDwn);
           }
           pText = detsegs.SelTextUsingPoint(pView, pt[1]);
-          if (pText != 0) {
+          if (pText != nullptr) {
             CPnts ptsBox;
             pText->GetBoundingBox(ptsBox, annotate::dGapSpaceFac);
 
@@ -323,7 +323,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
             pSeg->AddTail(new CPrimLine(pstate.PenColor(), 1, ptsBox[0], ptsBox[1]));
 
             pDoc->WorkLayerAddTail(pSeg);
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 
             app.CursorPosSet(pt[1]);
           }
@@ -345,12 +345,12 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
             bool bG1Flg = false;
             bool bG2Flg = false;
             pText = detsegs.SelTextUsingPoint(pView, pt[0]);
-            if (pText != 0) {
+            if (pText != nullptr) {
               pText->GetBoundingBox(ptsBox1, annotate::dGapSpaceFac);
               bG1Flg = true;
             }
             pText = detsegs.SelTextUsingPoint(pView, pt[1]);
-            if (pText != 0) {
+            if (pText != nullptr) {
               pText->GetBoundingBox(ptsBox2, annotate::dGapSpaceFac);
               bG2Flg = true;
             }
@@ -380,7 +380,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
 
               for (i = 0; i < 4; i++) { pSeg->AddTail(new CPrimLine(1, 1, pt[i], pt[(i + 1) % 4])); }
               pDoc->WorkLayerAddTail(pSeg);
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
             }
             app.CursorPosSet(pt[1]);
             app.ModeLineUnhighlightOp(wPrvKeyDwn);
@@ -391,8 +391,8 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
           pt[1] = app.CursorPosGet();
 
           pSeg = detsegs.SelLineUsingPoint(pView, pt[1]);
-          if (pSeg != 0) {
-            CPrimLine* pLine = static_cast<CPrimLine*>(detsegs.DetPrim());
+          if (pSeg != nullptr) {
+            auto* pLine = static_cast<CPrimLine*>(detsegs.DetPrim());
 
             pt[1] = detsegs.DetPt();
 
@@ -404,7 +404,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
             if (dlg.DoModal() == IDOK) {
               _tcscpy_s(annotate::szCurTxt, sizeof(annotate::szCurTxt), dlg.m_sText.GetString());
             }
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSeg);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSeg);
 
             int iPrimState = pstate.Save();
 
@@ -451,7 +451,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
               dRel[1] = pLine->RelOfPt(ptsBox[1]);
 
               if (dRel[0] > DBL_EPSILON && dRel[1] < 1. - DBL_EPSILON) {
-                CPrimLine* pLineNew = new CPrimLine(*pLine);
+                auto* pLineNew = new CPrimLine(*pLine);
                 pLine->SetPt1(ptsBox[0]);
                 pLineNew->SetPt0(ptsBox[1]);
                 pSeg->AddTail(pLineNew);
@@ -463,7 +463,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
               pt[0] = pt[1];
               app.CursorPosSet(pt[0]);
             }
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG, pSeg);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG, pSeg);
             pstate.Restore(pDC, iPrimState);
           }
 
@@ -482,7 +482,7 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
 
             pSeg = new CSeg(new CPrimLine(15, 2, pt[2], pt[3]));
             pDoc->WorkLayerAddTail(pSeg);
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
             app.CursorPosSet(pt[0]);
             app.ModeLineUnhighlightOp(wPrvKeyDwn);
           }

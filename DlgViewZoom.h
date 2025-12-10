@@ -22,7 +22,7 @@ class CDlgViewZoom : public CDialog {
   DECLARE_DYNAMIC(CDlgViewZoom)
 
  public:
-  CDlgViewZoom(CWnd* pParent = NULL);  // standard constructor
+  CDlgViewZoom(CWnd* pParent = nullptr);  // standard constructor
 
   CDlgViewZoom(const CDlgViewZoom&) = delete;
   CDlgViewZoom& operator=(const CDlgViewZoom&) = delete;

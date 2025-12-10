@@ -56,13 +56,13 @@ LRESULT CALLBACK SubProcPower(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
         eJoin = No;
 
         POSITION pos = detsegs.GetHeadPosition();
-        while (eJoin == No && pos != 0) {
+        while (eJoin == No && pos != nullptr) {
           CSeg* pSeg = detsegs.GetNext(pos);
           POSITION posPrim = pSeg->GetHeadPosition();
-          while (eJoin == No && posPrim != 0) {
+          while (eJoin == No && posPrim != nullptr) {
             CPrim* pPrim = pSeg->GetNext(posPrim);
             if (pPrim->Is(CPrim::Type::Arc)) {
-              CPrimArc* pArc = static_cast<CPrimArc*>(pPrim);
+              auto* pArc = static_cast<CPrimArc*>(pPrim);
 
               if (fabs(pArc->GetSwpAng() - TWOPI) <= DBL_EPSILON) {  // Arc is closed
                 if (Pnt_DistanceTo_xy(pt[1], pArc->Center()) <= .1) {
@@ -114,7 +114,7 @@ LRESULT CALLBACK SubProcPower(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
               pLinePrv = new CPrimLine(pt[0], pt[1]);
               pSegPrv->AddTail(pLinePrv);
               pDoc->WorkLayerAddTail(pSegPrv);
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegPrv);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegPrv);
               wPrvKeyDwn = ID_OP2;
             }
           }
@@ -127,7 +127,7 @@ LRESULT CALLBACK SubProcPower(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
 
               pSegPrv->AddTail(new CPrimLine(pt[0], pt2));
               pDoc->WorkLayerAddTail(pSegPrv);
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegPrv);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegPrv);
               dRad[Begin] = dRad[End];
             }
           }
@@ -238,7 +238,7 @@ LRESULT CALLBACK SubProcPower(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
           pSeg->AddTail(new CPrimLine(2, 1, pt[3], pt2));
           pSeg->AddTail(new CPrimLine(2, 1, pt2, pt[4]));
           pDoc->WorkLayerAddTail(pSeg);
-          pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+          pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
           pt2 = Pnt_ProjPtTo(pt2, pt3, .04);
         } else {  // No more room for additional circuit run to home arrows on identified line
           bArrow = false;
@@ -266,14 +266,14 @@ int SubProcPowerFndCirc(CLine& ln, const CPnt& pt, CPnt& ptProj, double* dRel) {
   double dDis;
 
   POSITION pos = detsegs.GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = detsegs.GetNext(pos);
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
       if (pPrim->Is(CPrim::Type::Line)) {
-        CPrimLine* pLine = static_cast<CPrimLine*>(pPrim);
+        auto* pLine = static_cast<CPrimLine*>(pPrim);
 
         pLine->GetLine(ln);
 
@@ -303,7 +303,7 @@ void SubProcPowerGenGround(const CPnt& pt2, const CPnt& pt3) {
   pSeg->AddTail(new CPrimLine(1, 1, pt[0], pt[1]));
   pSeg->AddTail(new CPrimArc(1, 1, pt[2], vXAx, vYAx, TWOPI));
   pDoc->WorkLayerAddTail(pSeg);
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 }
 ///<summary>Generate hot circuit conductor</summary>
 void SubProcPowerGenHot(const CPnt& pt2, const CPnt& pt3) {
@@ -316,7 +316,7 @@ void SubProcPowerGenHot(const CPnt& pt2, const CPnt& pt3) {
 
   CSeg* pSeg = new CSeg(new CPrimLine(1, 1, pt[0], pt[1]));
   pDoc->WorkLayerAddTail(pSeg);
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 }
 void SubProcPowerGenNeutral(const CPnt& pt2, const CPnt& pt3) {
   CPegDoc* pDoc = CPegDoc::GetDoc();
@@ -328,7 +328,7 @@ void SubProcPowerGenNeutral(const CPnt& pt2, const CPnt& pt3) {
 
   CSeg* pSeg = new CSeg(new CPrimLine(1, 1, pt[0], pt[1]));
   pDoc->WorkLayerAddTail(pSeg);
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 }
 ///<summary>Generate switch leg circuit conductor</summary>
 void SubProcPowerGenSwitchLeg(const CPnt& pt2, const CPnt& pt3) {
@@ -349,5 +349,5 @@ void SubProcPowerGenSwitchLeg(const CPnt& pt2, const CPnt& pt3) {
   pSeg->AddTail(new CPrimLine(1, 1, pt[1], pt[3]));
   pSeg->AddTail(new CPrimLine(1, 1, pt[3], pt[4]));
   pDoc->WorkLayerAddTail(pSeg);
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 }

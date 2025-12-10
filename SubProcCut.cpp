@@ -18,7 +18,7 @@ LRESULT CALLBACK SubProcCut(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
   static CPnt rPrvPos{};
 
   CPegView* pView = CPegView::GetActiveView();
-  CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+  CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
   if (anMsg == WM_COMMAND) {
     LRESULT lResult = 0;
@@ -116,23 +116,23 @@ void cut::CutPrimAt2Pts(CDC* pDC, CPnt pt1, CPnt pt2) {
 
   pView->ModelViewTransform(2, ptView);
 
-  CSegs* pSegsOut = new CSegs;
-  CSegs* pSegsIn = new CSegs;
+  auto* pSegsOut = new CSegs;
+  auto* pSegsIn = new CSegs;
 
   POSITION posSeg;
   POSITION posSegPrv;
 
   double dPicApertSiz = detsegs.PicApertSiz();
 
-  for (posSeg = detsegs.GetHeadPosition(); (posSegPrv = posSeg) != 0;) {
+  for (posSeg = detsegs.GetHeadPosition(); (posSegPrv = posSeg) != nullptr;) {
     CSeg* pSeg = detsegs.GetNext(posSeg);
 
-    if (trapsegs.Find(pSeg) != 0) continue;
+    if (trapsegs.Find(pSeg) != nullptr) continue;
 
     POSITION posPrim1;
     POSITION posPrim2;
 
-    for (posPrim1 = pSeg->GetHeadPosition(); (posPrim2 = posPrim1) != 0;) {
+    for (posPrim1 = pSeg->GetHeadPosition(); (posPrim2 = posPrim1) != nullptr;) {
       CPrim* pPrim = pSeg->GetNext(posPrim1);
 
       if (!pPrim->SelUsingPoint(pView, ptView[0], dPicApertSiz, ptCut[0])) continue;
@@ -160,12 +160,12 @@ void cut::CutPrimAt2Pts(CDC* pDC, CPnt pt1, CPnt pt2) {
   }
   if (pSegsOut->GetCount() > 0) {
     pDoc->WorkLayerAddTail(pSegsOut);
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEGS, pSegsOut);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS, pSegsOut);
   }
   if (pSegsIn->GetCount() > 0) {
     pDoc->WorkLayerAddTail(pSegsIn);
     trapsegs.AddTail(pSegsIn);
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEGS_TRAP, pSegsIn);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_TRAP, pSegsIn);
   }
   delete pSegsIn;
   delete pSegsOut;
@@ -180,7 +180,7 @@ void cut::CutPrimsByLn(CPnt pt1, CPnt pt2) {
   CPegDoc* pDoc = CPegDoc::GetDoc();
   CPegView* pView = CPegView::GetActiveView();
 
-  CSegs* pSegs = new CSegs;
+  auto* pSegs = new CSegs;
 
   CPnts ptsInt;
 
@@ -190,13 +190,13 @@ void cut::CutPrimsByLn(CPnt pt1, CPnt pt2) {
   CTMat tm = pView->ModelViewGetMatrixInverse();
 
   POSITION pos = detsegs.GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = detsegs.GetNext(pos);
 
-    if (trapsegs.Find(pSeg) != 0) continue;
+    if (trapsegs.Find(pSeg) != nullptr) continue;
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
 
       pPrim->SelUsingLine(pView, CLine(ptView[0], ptView[1]), ptsInt);
@@ -205,15 +205,15 @@ void cut::CutPrimsByLn(CPnt pt1, CPnt pt2) {
 
         ptsInt[w] = tm * ptsInt[w];
 
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_PRIM_ERASE_SAFE, pPrim);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_PRIM_ERASE_SAFE, pPrim);
         pPrim->CutAtPt(ptsInt[w], pSegNew);
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_PRIM_SAFE, pPrim);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_PRIM_SAFE, pPrim);
         pSegs->AddTail(pSegNew);
       }
     }
   }
   pDoc->WorkLayerAddTail(pSegs);
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEGS_SAFE, pSegs);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE, pSegs);
   delete pSegs;
 }
 
@@ -222,7 +222,7 @@ void cut::CutPrimsAtPt(CPnt pt) {
   CPegDoc* pDoc = CPegDoc::GetDoc();
   CPegView* pView = CPegView::GetActiveView();
 
-  CSegs* pSegs = new CSegs;
+  auto* pSegs = new CSegs;
 
   CPnt ptCut;
 
@@ -234,27 +234,27 @@ void cut::CutPrimsAtPt(CPnt pt) {
   double dPicApertSiz = detsegs.PicApertSiz();
 
   POSITION pos = detsegs.GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = detsegs.GetNext(pos);
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
 
       if (pPrim->SelUsingPoint(pView, ptView, dPicApertSiz, ptCut)) {  // Pick point is within tolerance of primative
         CSeg* pSegNew = new CSeg;
 
         ptCut = tm * ptCut;
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_PRIM_ERASE_SAFE, pPrim);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_PRIM_ERASE_SAFE, pPrim);
         pPrim->CutAtPt(ptCut, pSegNew);
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_PRIM_SAFE, pPrim);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_PRIM_SAFE, pPrim);
         pSegs->AddTail(pSegNew);
         break;
       }
     }
   }
   pDoc->WorkLayerAddTail(pSegs);
-  pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEGS_SAFE, pSegs);
+  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE, pSegs);
   delete pSegs;
 }
 
@@ -270,17 +270,17 @@ void cut::CutSegsByArea(CDC* pDC, CPnt ptLL, CPnt ptUR) {
   PENCOLOR nPenColor = pstate.PenColor();
   PENSTYLE nPenStyle = pstate.PenStyle();
 
-  CSegs* pSegsOut = new CSegs;
-  CSegs* pSegsIn = new CSegs;
+  auto* pSegsOut = new CSegs;
+  auto* pSegsIn = new CSegs;
 
   POSITION posSeg, posSegPrv;
-  for (posSeg = detsegs.GetHeadPosition(); (posSegPrv = posSeg) != 0;) {
+  for (posSeg = detsegs.GetHeadPosition(); (posSegPrv = posSeg) != nullptr;) {
     pSeg = detsegs.GetNext(posSeg);
 
-    if (trapsegs.Find(pSeg) != 0) continue;
+    if (trapsegs.Find(pSeg) != nullptr) continue;
 
     POSITION posPrim, posPrimPrv;
-    for (posPrim = pSeg->GetHeadPosition(); (posPrimPrv = posPrim) != 0;) {
+    for (posPrim = pSeg->GetHeadPosition(); (posPrimPrv = posPrim) != nullptr;) {
       pPrim = pSeg->GetNext(posPrim);
 
       if ((iInts = pPrim->IsWithinArea(ptLL, ptUR, ptInt)) == 0) continue;
@@ -302,12 +302,12 @@ void cut::CutSegsByArea(CDC* pDC, CPnt ptLL, CPnt ptUR) {
 
   if (pSegsOut->GetCount() > 0) {
     pDoc->WorkLayerAddTail(pSegsOut);
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEGS, pSegsOut);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS, pSegsOut);
   }
   if (pSegsIn->GetCount() > 0) {
     pDoc->WorkLayerAddTail(pSegsIn);
     trapsegs.AddTail(pSegsIn);
-    pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEGS_SAFE_TRAP, pSegsIn);
+    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE_TRAP, pSegsIn);
   }
   delete pSegsIn;
   delete pSegsOut;

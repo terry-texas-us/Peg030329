@@ -61,9 +61,9 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
         return 0;
 
       case ID_OP1:
-        if (pSegRef != 0) { pDoc->UpdateAllViews(NULL, CPegDoc::HINT_PRIM, pPrimRef); }
+        if (pSegRef != nullptr) { pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_PRIM, pPrimRef); }
         pSegRef = detsegs.SelSegAndPrimUsingPoint(ptCurPos);
-        if (pSegRef == 0) { return 0; }
+        if (pSegRef == nullptr) { return 0; }
         pPrimRef = detsegs.DetPrim();
         if (!pPrimRef->Is(CPrim::Type::Line)) { return 0; }
         ptCurPos = detsegs.DetPt();
@@ -74,18 +74,18 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
         else if (wPrvKeyDwn == ID_OP1)
           ;
         else {
-          CPrimLine* pLinePrv = static_cast<CPrimLine*>(pPrimPrv);
+          auto* pLinePrv = static_cast<CPrimLine*>(pPrimPrv);
           if (!line::Intersection(lnPrv, lnRef, ptInt)) {
             msgInformation(0);
             return 0;
           }
           if (wPrvKeyDwn == ID_OP2) {
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
             if (CVec(pLinePrv->Pt1(), ptInt).Length() < CVec(pLinePrv->Pt1(), ptInt).Length())
               pLinePrv->SetPt0(ptInt);
             else
               pLinePrv->SetPt1(ptInt);
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegPrv);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegPrv);
           } else if (wPrvKeyDwn == ID_OP3) {
             if (CVec(lnPrv[0], ptInt).Length() < CVec(lnPrv[1], ptInt).Length()) lnPrv[0] = lnPrv[1];
             lnPrv[1] = ptInt;
@@ -94,11 +94,11 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
             if (pFndCPGivRadAnd4Pts(fixup::dSiz, lnPrv[0], lnPrv[1], lnRef[0], lnRef[1], &ptCP)) {
               lnPrv[1] = lnPrv.ProjPt(ptCP);
               lnRef[0] = lnRef.ProjPt(ptCP);
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
               pLinePrv->SetPt0(lnPrv[0]);
               pLinePrv->SetPt1(lnPrv[1]);
               pSegPrv->AddTail(new CPrimLine(lnPrv[1], lnRef[0]));
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegPrv);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegPrv);
             }
           } else if (wPrvKeyDwn == ID_OP4) {
             if (CVec(lnPrv[0], ptInt).Length() < CVec(lnPrv[1], ptInt).Length()) lnPrv[0] = lnPrv[1];
@@ -110,10 +110,10 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
               lnPrv[1] = lnPrv.ProjPt(ptCP);
               lnRef[0] = lnRef.ProjPt(ptCP);
 
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
               pLinePrv->SetPt0(lnPrv[0]);
               pLinePrv->SetPt1(lnPrv[1]);
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegPrv);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegPrv);
 
               CVec rPrvEndInter(lnPrv[1], ptInt);
               CVec rPrvEndRefBeg(lnPrv[1], lnRef[0]);
@@ -126,7 +126,7 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
 
               CSeg* pSeg = new CSeg(new CPrimArc(ptCP, vMajAx, vMinAx, dAng));
               pDoc->WorkLayerAddTail(pSeg);
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
             }
           }
           app.ModeLineUnhighlightOp(wPrvKeyDwn);
@@ -135,7 +135,7 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
 
       case ID_OP2:
         pSegSec = detsegs.SelSegAndPrimUsingPoint(ptCurPos);
-        if (pSegSec == 0) { return 0; }
+        if (pSegSec == nullptr) { return 0; }
         pPrimSec = detsegs.DetPrim();
         pLine = static_cast<CPrimLine*>(pPrimSec);
 
@@ -153,12 +153,12 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
             msgInformation(0);
             return 0;
           }
-          pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSec);
+          pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSec);
           if (CVec(pLine->Pt0(), ptInt).Length() < CVec(pLine->Pt1(), ptInt).Length())
             pLine->SetPt0(ptInt);
           else
             pLine->SetPt1(ptInt);
-          pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegSec);
+          pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegSec);
         } else {
           if (!line::Intersection(lnPrv, lnSec, ptInt))  // Two lines do not define an intersection
           {
@@ -167,12 +167,12 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
           }
           if (wPrvKeyDwn == ID_OP2) {
             pLine = static_cast<CPrimLine*>(pPrimPrv);
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
             if (CVec(pLine->Pt0(), ptInt).Length() < CVec(pLine->Pt1(), ptInt).Length())
               pLine->SetPt0(ptInt);
             else
               pLine->SetPt1(ptInt);
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegPrv);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegPrv);
           } else if (wPrvKeyDwn == ID_OP3) {
             if (CVec(lnPrv[0], ptInt).Length() < CVec(lnPrv[1], ptInt).Length()) lnPrv[0] = lnPrv[1];
             lnPrv[1] = ptInt;
@@ -182,11 +182,11 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
               pLine = static_cast<CPrimLine*>(pPrimPrv);
               lnPrv[1] = lnPrv.ProjPt(ptCP);
               lnSec[0] = lnSec.ProjPt(ptCP);
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
               pLine->SetPt0(lnPrv[0]);
               pLine->SetPt1(lnPrv[1]);
               pSegPrv->AddTail(new CPrimLine(lnPrv[1], lnSec[0]));
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegPrv);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegPrv);
             }
           } else if (wPrvKeyDwn == ID_OP4) {
             if (CVec(lnPrv[0], ptInt).Length() < CVec(lnPrv[1], ptInt).Length()) lnPrv[0] = lnPrv[1];
@@ -198,7 +198,7 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
               pLine = static_cast<CPrimLine*>(pPrimPrv);
               lnPrv[1] = lnPrv.ProjPt(ptCP);
               lnSec[0] = lnSec.ProjPt(ptCP);
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
               pLine->SetPt0(lnPrv[0]);
               pLine->SetPt1(lnPrv[1]);
               CVec rPrvEndInter(lnPrv[1], ptInt);
@@ -210,16 +210,16 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
               CPnt rTmp = Pnt_RotAboutArbPtAndAx(lnPrv[1], ptCP, vPlnNorm, HALF_PI);
               vMinAx = CVec(ptCP, rTmp);
               pSegPrv->AddTail(new CPrimArc(ptCP, vMajAx, vMinAx, dAng));
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegPrv);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegPrv);
             }
           }
-          pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSec);
+          pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSec);
           pLine = static_cast<CPrimLine*>(pPrimSec);
           if (CVec(pLine->Pt0(), ptInt).Length() < CVec(pLine->Pt1(), ptInt).Length())
             pLine->SetPt0(ptInt);
           else
             pLine->SetPt1(ptInt);
-          pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegSec);
+          pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegSec);
           app.ModeLineUnhighlightOp(wPrvKeyDwn);
         }
         return 0;
@@ -259,19 +259,19 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
               ;
             else if (wPrvKeyDwn == ID_OP2) {
               pLine = static_cast<CPrimLine*>(pPrimPrv);
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
               pLine->SetPt0(lnPrv[0]);
               pLine->SetPt1(ptInt);
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegPrv);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegPrv);
             } else if (wPrvKeyDwn == ID_OP3 || wPrvKeyDwn == ID_OP4) {
               pLine = static_cast<CPrimLine*>(pPrimPrv);
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
               pLine->SetPt0(lnPrv[0]);
               pLine->SetPt1(lnPrv[1]);
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegPrv);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegPrv);
             }
             pLine = static_cast<CPrimLine*>(pPrimSec);
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSec);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSec);
             pLine->SetPt0(lnSec[0]);
             pLine->SetPt1(lnSec[1]);
             if (LOWORD(wParam) == ID_OP3)
@@ -288,7 +288,7 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
               vMinAx = CVec(ptCP, rTmp);
               pSegSec->AddTail(new CPrimArc(ptCP, vMajAx, vMinAx, dAng));
             }
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegSec);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegSec);
           }
           app.ModeLineUnhighlightOp(wPrvKeyDwn);
         }
@@ -296,36 +296,36 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
 
       case ID_OP5:
         pSegSec = detsegs.SelSegAndPrimUsingPoint(ptCurPos);
-        if (pSegSec != 0) {
+        if (pSegSec != nullptr) {
           pPrimSec = detsegs.DetPrim();
           ptCurPos = detsegs.DetPt();
           if (pPrimSec->Is(CPrim::Type::Line)) {
             pLine = static_cast<CPrimLine*>(pPrimSec);
             pLine->GetLine(lnSec);
             double dLen = lnSec.Length();
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSec);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSec);
             lnSec[0] = UserAxisSnapLn(ptCurPos, lnSec[0]);
             lnSec[1] = Pnt_ProjPtTo(lnSec[0], ptCurPos, dLen);
             pLine->SetPt0(grid::UserSnapPt(lnSec[0]));
             pLine->SetPt1(grid::UserSnapPt(lnSec[1]));
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegSec);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegSec);
           }
         }
         return 0;
 
       case ID_OP6:
         pSegSec = detsegs.SelSegAndPrimUsingPoint(ptCurPos);
-        if (pSegRef != 0 && pSegSec != 0) {
+        if (pSegRef != nullptr && pSegSec != nullptr) {
           pPrimSec = detsegs.DetPrim();
           if (pPrimSec->Is(CPrim::Type::Line)) {
             pLine = static_cast<CPrimLine*>(pPrimSec);
 
             lnSec[0] = lnRef.ProjPt(pLine->Pt0());
             lnSec[1] = lnRef.ProjPt(pLine->Pt1());
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSec);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSec);
             pLine->SetPt0(Pnt_ProjPtTo(lnSec[0], pLine->Pt0(), app.GetDimLen()));
             pLine->SetPt1(Pnt_ProjPtTo(lnSec[1], pLine->Pt1(), app.GetDimLen()));
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSegSec);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegSec);
           }
         }
         return 0;
@@ -340,19 +340,19 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
         return 0;
 
       case IDM_RETURN:
-        if (pSegRef != 0) {
-          pDoc->UpdateAllViews(NULL, CPegDoc::HINT_PRIM, pPrimRef);
-          pSegRef = 0;
-          pPrimRef = 0;
+        if (pSegRef != nullptr) {
+          pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_PRIM, pPrimRef);
+          pSegRef = nullptr;
+          pPrimRef = nullptr;
         }
         app.ModeLineUnhighlightOp(wPrvKeyDwn);
         return 0;
 
       case IDM_ESCAPE:
-        if (pSegRef != 0) {
-          pDoc->UpdateAllViews(NULL, CPegDoc::HINT_PRIM, pPrimRef);
-          pSegRef = 0;
-          pPrimRef = 0;
+        if (pSegRef != nullptr) {
+          pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_PRIM, pPrimRef);
+          pSegRef = nullptr;
+          pPrimRef = nullptr;
         }
         app.ModeLineUnhighlightOp(wPrvKeyDwn);
         return 0;

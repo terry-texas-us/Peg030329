@@ -32,7 +32,7 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
   CPegDoc* pDoc{CPegDoc::GetDoc()};
   CPegView* pView{CPegView::GetActiveView()};
 
-  CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+  CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
   if (anMsg == WM_COMMAND) {
     long lResult{0};
@@ -73,7 +73,7 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
           if (ptPrv != ptCur) {
             CSeg* pSeg = new CSeg(new CPrimLine(1, 1, ptPrv, ptCur));
             pDoc->WorkLayerAddTail(pSeg);
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
           }
           ptPrv = ptCur;
         }
@@ -91,14 +91,14 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
               app.ModeLineUnhighlightOp(wPrvOp);
               wPrvOp = app.ModeLineHighlightOp(ID_OP3);
             }
-            CPrimDim* pDim = new CPrimDim(1, 1, CLine(ptPrv, ptCur));
+            auto* pDim = new CPrimDim(1, 1, CLine(ptPrv, ptCur));
             pDim->SetTextPenColor(5);
             pDim->SetTextHorAlign(CFontDef::HOR_ALIGN_CENTER);
             pDim->SetTextVerAlign(CFontDef::VER_ALIGN_MIDDLE);
 
             pSeg->AddTail(pDim);
             pDoc->WorkLayerAddTail(pSeg);
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 
             ptPrv = ptCur;
           }
@@ -128,7 +128,7 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
               app.ModeLineUnhighlightOp(wPrvOp);
               wPrvOp = app.ModeLineHighlightOp(ID_OP4);
             }
-            CPrimDim* pDim = new CPrimDim(1, 1, CLine(ptPrv, ptCur));
+            auto* pDim = new CPrimDim(1, 1, CLine(ptPrv, ptCur));
             pDim->SetTextPenColor(5);
             pDim->SetTextHorAlign(CFontDef::HOR_ALIGN_CENTER);
             pDim->SetTextVerAlign(CFontDef::VER_ALIGN_MIDDLE);
@@ -136,7 +136,7 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
             pSeg->AddTail(pDim);
             annotate::GenArrowHead(1, .1, ptPrv, ptCur, pSeg);
             pDoc->WorkLayerAddTail(pSeg);
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 
             ptPrv = ptCur;
           } else
@@ -162,7 +162,7 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
 
             CSeg* pSeg = new CSeg(new CPrimLine(1, 1, ptPrv, ptCur));
             pDoc->WorkLayerAddTail(pSeg);
-            pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+            pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
           }
           ptPrv = ptCur;
           app.ModeLineUnhighlightOp(wPrvOp);
@@ -182,8 +182,8 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
           app.RubberBandingDisable();
           app.ModeLineUnhighlightOp(wPrvOp);
 
-          if (detsegs.SelLineUsingPoint(pView, ptCur) != 0) {
-            CPrimLine* pLine = static_cast<CPrimLine*>(detsegs.DetPrim());
+          if (detsegs.SelLineUsingPoint(pView, ptCur) != nullptr) {
+            auto* pLine = static_cast<CPrimLine*>(detsegs.DetPrim());
 
             rProjPt[0] = detsegs.DetPt();
             pLine->GetLine(ln);
@@ -193,8 +193,8 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
           }
         } else {
           if (iLns == 1) {
-            if (detsegs.SelLineUsingPoint(pView, ptCur) != 0) {
-              CPrimLine* pLine = static_cast<CPrimLine*>(detsegs.DetPrim());
+            if (detsegs.SelLineUsingPoint(pView, ptCur) != nullptr) {
+              auto* pLine = static_cast<CPrimLine*>(detsegs.DetPrim());
 
               rProjPt[1] = detsegs.DetPt();
               if (line::Intersection(ln, pLine->Ln(), ptCen)) {
@@ -244,7 +244,7 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
 
               pSeg->AddTail(new CPrimText(fd, rs, UnitsString_FormatAngle(dAng).c_str()));
               pDoc->WorkLayerAddTail(pSeg);
-              pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+              pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
               pstate.Restore(pDC, iPrimState);
             }
             app.ModeLineUnhighlightOp(wPrvOp);
@@ -277,11 +277,11 @@ CPnt dimension::AddArrowHead(CPnt arPt) {
   CPegDoc* pDoc = CPegDoc::GetDoc();
 
   POSITION pos = detsegs.GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = detsegs.GetNext(pos);
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
       CLine ln;
       if (pPrim->Is(CPrim::Type::Line))
@@ -307,7 +307,7 @@ CPnt dimension::AddArrowHead(CPnt arPt) {
           pt = ln[1];
         }
         pDoc->WorkLayerAddTail(pSeg);
-        pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+        pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 
         app.CursorPosSet(pt);
         return (pt);
@@ -319,11 +319,11 @@ CPnt dimension::AddArrowHead(CPnt arPt) {
 CPnt dimension::AddDiameter(const CPnt& pt) {
   CPegDoc* pDoc = CPegDoc::GetDoc();
 
-  if (detsegs.SelSegAndPrimUsingPoint(pt) != 0) {
+  if (detsegs.SelSegAndPrimUsingPoint(pt) != nullptr) {
     CPnt ptEnd = detsegs.DetPt();
 
     if ((detsegs.DetPrim())->Is(CPrim::Type::Arc)) {
-      CPrimArc* pArc = static_cast<CPrimArc*>(detsegs.DetPrim());
+      auto* pArc = static_cast<CPrimArc*>(detsegs.DetPrim());
 
       CPnt ptBeg = Pnt_ProjPtTo(ptEnd, pArc->Center(), 2. * pArc->GetMajAx().Length());
 
@@ -331,7 +331,7 @@ CPnt dimension::AddDiameter(const CPnt& pt) {
 
       annotate::GenArrowHead(1, .1, ptEnd, ptBeg, pSeg);
 
-      CPrimDim* pDim = new CPrimDim(1, 1, CLine(ptBeg, ptEnd));
+      auto* pDim = new CPrimDim(1, 1, CLine(ptBeg, ptEnd));
       pDim->SetText(_T("D") + pDim->Text());
       pDim->SetDefaultNote();
 
@@ -342,7 +342,7 @@ CPnt dimension::AddDiameter(const CPnt& pt) {
 
       annotate::GenArrowHead(1, .1, ptBeg, ptEnd, pSeg);
       pDoc->WorkLayerAddTail(pSeg);
-      pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+      pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 
       return (ptEnd);
     }
@@ -352,17 +352,17 @@ CPnt dimension::AddDiameter(const CPnt& pt) {
 CPnt dimension::AddRadius(const CPnt& arPt) {
   CPegDoc* pDoc = CPegDoc::GetDoc();
 
-  if (detsegs.SelSegAndPrimUsingPoint(arPt) != 0) {
+  if (detsegs.SelSegAndPrimUsingPoint(arPt) != nullptr) {
     CPnt ptEnd = detsegs.DetPt();
 
     if ((detsegs.DetPrim())->Is(CPrim::Type::Arc)) {
-      CPrimArc* pArc = static_cast<CPrimArc*>(detsegs.DetPrim());
+      auto* pArc = static_cast<CPrimArc*>(detsegs.DetPrim());
 
       CPnt ptBeg = pArc->Center();
 
       CSeg* pSeg = new CSeg;
 
-      CPrimDim* pDim = new CPrimDim(1, 1, CLine(ptBeg, ptEnd));
+      auto* pDim = new CPrimDim(1, 1, CLine(ptBeg, ptEnd));
       pDim->SetText(_T("R") + pDim->Text());
       pDim->SetDefaultNote();
 
@@ -374,7 +374,7 @@ CPnt dimension::AddRadius(const CPnt& arPt) {
 
       annotate::GenArrowHead(1, .1, ptBeg, ptEnd, pSeg);
       pDoc->WorkLayerAddTail(pSeg);
-      pDoc->UpdateAllViews(NULL, CPegDoc::HINT_SEG_SAFE, pSeg);
+      pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 
       return (ptEnd);
     }
@@ -395,20 +395,20 @@ CPnt dimension::CvtPrim(CPegView* pView, CPnt pt) {
   double dPicApertSiz = detsegs.PicApertSiz();
 
   POSITION pos = detsegs.GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     pSeg = detsegs.GetNext(pos);
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       posPrimCur = posPrim;
       pPrim = pSeg->GetNext(posPrim);
       if (pPrim->SelUsingPoint(pView, ptView, dPicApertSiz, ptProj)) {
         CLine ln;
 
         if (pPrim->Is(CPrim::Type::Line)) {
-          CPrimLine* pPrimLine = static_cast<CPrimLine*>(pPrim);
+          auto* pPrimLine = static_cast<CPrimLine*>(pPrim);
           pPrimLine->GetLine(ln);
-          CPrimDim* pPrimDim = new CPrimDim(pPrimLine->PenColor(), pPrimLine->PenStyle(), ln);
+          auto* pPrimDim = new CPrimDim(pPrimLine->PenColor(), pPrimLine->PenStyle(), ln);
           pPrimDim->SetTextPenColor(5);
           pPrimDim->SetTextHorAlign(CFontDef::HOR_ALIGN_CENTER);
           pPrimDim->SetTextVerAlign(CFontDef::VER_ALIGN_MIDDLE);
@@ -417,11 +417,11 @@ CPnt dimension::CvtPrim(CPegView* pView, CPnt pt) {
           delete pPrim;
           return ptProj;
         } else if (pPrim->Is(CPrim::Type::Dim)) {
-          CPrimDim* pPrimDim = static_cast<CPrimDim*>(pPrim);
+          auto* pPrimDim = static_cast<CPrimDim*>(pPrim);
           CRefSys rs;
           pPrimDim->GetRefSys(rs);
-          CPrimLine* pPrimLine = new CPrimLine(pPrimDim->PenColor(), pPrimDim->PenStyle(), pPrimDim->Line());
-          CPrimText* pPrimText = new CPrimText(pPrimDim->FontDef(), rs, pPrimDim->Text());
+          auto* pPrimLine = new CPrimLine(pPrimDim->PenColor(), pPrimDim->PenStyle(), pPrimDim->Line());
+          auto* pPrimText = new CPrimText(pPrimDim->FontDef(), rs, pPrimDim->Text());
           pPrimText->PenColor() = pPrimDim->TextPenColor();
           pSeg->InsertAfter(posPrimCur, pPrimLine);
           pSeg->InsertAfter(posPrimCur, pPrimText);
@@ -444,11 +444,11 @@ CPnt dimension::ProjPtToLn(CPnt pt) {
   double dRel[2];
 
   POSITION pos = pDoc->WorkLayerGetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = pDoc->WorkLayerGetNext(pos);
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
 
       if (pPrim->Is(CPrim::Type::Line)) {
