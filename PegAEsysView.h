@@ -62,26 +62,26 @@ class CPegView : public CView {
  public:
   // Overrides
  public:
-  virtual void OnDraw(CDC* pDC);  // overridden to draw this view
-  virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+  void OnDraw(CDC* pDC) override;  // overridden to draw this view
+  BOOL PreCreateWindow(CREATESTRUCT& cs) override;
 
  protected:
-  virtual BOOL OnPreparePrinting(CPrintInfo* pInfo);
-  virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
-  virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo);
+  BOOL OnPreparePrinting(CPrintInfo* pInfo) override;
+  void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo) override;
+  void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo) override;
 
-  virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
+  void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo) override;
 
   // Implementation
  public:
-  virtual ~CPegView();
+  ~CPegView() override;
 #ifdef _DEBUG
-  virtual void AssertValid() const;
-  virtual void Dump(CDumpContext& dc) const;
+  void AssertValid() const override;
+  void Dump(CDumpContext& dc) const override;
 #endif
 
  protected:
-  void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint);
+  void OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) override;
 
  public:
   void BackgroundImageDisplay(CDC* pDC);

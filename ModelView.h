@@ -21,7 +21,7 @@ class CModelView : public CAbstractView {
   CModelView();
   CModelView(const CModelView& src);
 
-  ~CModelView() {}
+  ~CModelView() override {}
 
  public:  // Operators
   CModelView& operator=(const CModelView& src);

@@ -45,7 +45,7 @@ class CLayer : public CSegs {
   CLayer(const CLayer&) = delete;
   CLayer& operator=(const CLayer&) = delete;
 
-  ~CLayer() {}
+  ~CLayer() override {}
 
   void ClrStateFlg(WORD w = 0xffff) { m_wStateFlgs &= ~w; }
   void ClrTracingFlg(WORD w = 0xffff) { m_wTracingFlgs &= ~w; }

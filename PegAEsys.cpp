@@ -260,52 +260,52 @@ BOOL CPegApp::InitInstance() {
 }
 
 BEGIN_MESSAGE_MAP(CPegApp, CWinApp)
-ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
+ON_COMMAND(ID_APP_ABOUT, &CPegApp::OnAppAbout)
 // Standard file based document commands
-ON_COMMAND(ID_FILE_NEW, CWinApp::OnFileNew)
-ON_COMMAND(ID_FILE_OPEN, CWinApp::OnFileOpen)
+ON_COMMAND(ID_FILE_NEW, &CWinApp::OnFileNew)
+ON_COMMAND(ID_FILE_OPEN, &CWinApp::OnFileOpen)
 // Standard print setup command
-ON_COMMAND(ID_FILE_PRINT_SETUP, CWinApp::OnFilePrintSetup)
-ON_COMMAND(ID_FILE_RUN, OnFileRun)
-ON_COMMAND(ID_HELP_CONTENTS, OnHelpContents)
-ON_COMMAND(ID_MODE_ANNOTATE, OnModeAnnotate)
-ON_COMMAND(ID_MODE_CUT, OnModeCut)
-ON_COMMAND(ID_MODE_DIMENSION, OnModeDimension)
-ON_COMMAND(ID_MODE_DRAW, OnModeDraw)
-ON_COMMAND(ID_MODE_DRAW2, OnModeDraw2)
-ON_COMMAND(ID_MODE_EDIT, OnModeEdit)
-ON_COMMAND(ID_MODE_FIXUP, OnModeFixup)
-ON_COMMAND(ID_MODE_LETTER, OnModeLetter)
-ON_COMMAND(ID_MODE_LPD, OnModeLPD)
-ON_COMMAND(ID_MODE_NODAL, OnModeNodal)
-ON_COMMAND(ID_MODE_PIPE, OnModePipe)
-ON_COMMAND(ID_MODE_POWER, OnModePower)
-ON_COMMAND(ID_MODE_PRIM_EDIT, OnModePrimEdit)
-ON_COMMAND(ID_MODE_PRIM_MEND, OnModePrimMend)
-ON_COMMAND(ID_MODE_REVISE, OnModeRevise)
-ON_COMMAND(ID_MODE_RLPD, OnModeRLPD)
-ON_COMMAND(ID_MODE_SEGEDIT, OnModeSegEdit)
-ON_COMMAND(ID_MODE_TRAP, OnModeTrap)
-ON_COMMAND(ID_TRAPCOMMANDS_ADDSEGMENTS, OnTrapCommandsAddSegments)
-ON_COMMAND(ID_VIEW_MODEINFORMATION, OnViewModeInformation)
-ON_COMMAND(ID_VIEW_STATEINFORMATION, OnViewStateInformation)
+ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinApp::OnFilePrintSetup)
+ON_COMMAND(ID_FILE_RUN, &CPegApp::OnFileRun)
+ON_COMMAND(ID_HELP_CONTENTS, &CPegApp::OnHelpContents)
+ON_COMMAND(ID_MODE_ANNOTATE, &CPegApp::OnModeAnnotate)
+ON_COMMAND(ID_MODE_CUT, &CPegApp::OnModeCut)
+ON_COMMAND(ID_MODE_DIMENSION, &CPegApp::OnModeDimension)
+ON_COMMAND(ID_MODE_DRAW, &CPegApp::OnModeDraw)
+ON_COMMAND(ID_MODE_DRAW2, &CPegApp::OnModeDraw2)
+ON_COMMAND(ID_MODE_EDIT, &CPegApp::OnModeEdit)
+ON_COMMAND(ID_MODE_FIXUP, &CPegApp::OnModeFixup)
+ON_COMMAND(ID_MODE_LETTER, &CPegApp::OnModeLetter)
+ON_COMMAND(ID_MODE_LPD, &CPegApp::OnModeLPD)
+ON_COMMAND(ID_MODE_NODAL, &CPegApp::OnModeNodal)
+ON_COMMAND(ID_MODE_PIPE, &CPegApp::OnModePipe)
+ON_COMMAND(ID_MODE_POWER, &CPegApp::OnModePower)
+ON_COMMAND(ID_MODE_PRIM_EDIT, &CPegApp::OnModePrimEdit)
+ON_COMMAND(ID_MODE_PRIM_MEND, &CPegApp::OnModePrimMend)
+ON_COMMAND(ID_MODE_REVISE, &CPegApp::OnModeRevise)
+ON_COMMAND(ID_MODE_RLPD, &CPegApp::OnModeRLPD)
+ON_COMMAND(ID_MODE_SEGEDIT, &CPegApp::OnModeSegEdit)
+ON_COMMAND(ID_MODE_TRAP, &CPegApp::OnModeTrap)
+ON_COMMAND(ID_TRAPCOMMANDS_ADDSEGMENTS, &CPegApp::OnTrapCommandsAddSegments)
+ON_COMMAND(ID_VIEW_MODEINFORMATION, &CPegApp::OnViewModeInformation)
+ON_COMMAND(ID_VIEW_STATEINFORMATION, &CPegApp::OnViewStateInformation)
 #pragma warning(push)
 #pragma warning(disable : 4191)
-ON_UPDATE_COMMAND_UI(ID_MODE_ANNOTATE, OnUpdateModeAnnotate)
-ON_UPDATE_COMMAND_UI(ID_MODE_CUT, OnUpdateModeCut)
-ON_UPDATE_COMMAND_UI(ID_MODE_DIMENSION, OnUpdateModeDimension)
-ON_UPDATE_COMMAND_UI(ID_MODE_DRAW, OnUpdateModeDraw)
-ON_UPDATE_COMMAND_UI(ID_MODE_DRAW2, OnUpdateModeDraw2)
-ON_UPDATE_COMMAND_UI(ID_MODE_EDIT, OnUpdateModeEdit)
-ON_UPDATE_COMMAND_UI(ID_MODE_FIXUP, OnUpdateModeFixup)
-ON_UPDATE_COMMAND_UI(ID_MODE_LPD, OnUpdateModeLpd)
-ON_UPDATE_COMMAND_UI(ID_MODE_NODAL, OnUpdateModeNodal)
-ON_UPDATE_COMMAND_UI(ID_MODE_PIPE, OnUpdateModePipe)
-ON_UPDATE_COMMAND_UI(ID_MODE_POWER, OnUpdateModePower)
-ON_UPDATE_COMMAND_UI(ID_MODE_RLPD, OnUpdateModeRlpd)
-ON_UPDATE_COMMAND_UI(ID_MODE_TRAP, OnUpdateModeTrap)
-ON_UPDATE_COMMAND_UI(ID_VIEW_MODEINFORMATION, OnUpdateViewModeinformation)
-ON_UPDATE_COMMAND_UI(ID_VIEW_STATEINFORMATION, OnUpdateViewStateinformation)
+ON_UPDATE_COMMAND_UI(ID_MODE_ANNOTATE, &CPegApp::OnUpdateModeAnnotate)
+ON_UPDATE_COMMAND_UI(ID_MODE_CUT, &CPegApp::OnUpdateModeCut)
+ON_UPDATE_COMMAND_UI(ID_MODE_DIMENSION, &CPegApp::OnUpdateModeDimension)
+ON_UPDATE_COMMAND_UI(ID_MODE_DRAW, &CPegApp::OnUpdateModeDraw)
+ON_UPDATE_COMMAND_UI(ID_MODE_DRAW2, &CPegApp::OnUpdateModeDraw2)
+ON_UPDATE_COMMAND_UI(ID_MODE_EDIT, &CPegApp::OnUpdateModeEdit)
+ON_UPDATE_COMMAND_UI(ID_MODE_FIXUP, &CPegApp::OnUpdateModeFixup)
+ON_UPDATE_COMMAND_UI(ID_MODE_LPD, &CPegApp::OnUpdateModeLpd)
+ON_UPDATE_COMMAND_UI(ID_MODE_NODAL, &CPegApp::OnUpdateModeNodal)
+ON_UPDATE_COMMAND_UI(ID_MODE_PIPE, &CPegApp::OnUpdateModePipe)
+ON_UPDATE_COMMAND_UI(ID_MODE_POWER, &CPegApp::OnUpdateModePower)
+ON_UPDATE_COMMAND_UI(ID_MODE_RLPD, &CPegApp::OnUpdateModeRlpd)
+ON_UPDATE_COMMAND_UI(ID_MODE_TRAP, &CPegApp::OnUpdateModeTrap)
+ON_UPDATE_COMMAND_UI(ID_VIEW_MODEINFORMATION, &CPegApp::OnUpdateViewModeinformation)
+ON_UPDATE_COMMAND_UI(ID_VIEW_STATEINFORMATION, &CPegApp::OnUpdateViewStateinformation)
 #pragma warning(pop)
 END_MESSAGE_MAP()
 
@@ -434,10 +434,11 @@ void CPegApp::OnTrapCommandsAddSegments() {
   m_bTrapModeAddSegments = !m_bTrapModeAddSegments;
   app.CheckMenuItem(ID_TRAPCOMMANDS_ADDSEGMENTS, (m_bTrapModeAddSegments ? MF_CHECKED : MF_UNCHECKED));
 
-  if (m_iModeId == ID_MODE_TRAP)
+  if (m_iModeId == ID_MODE_TRAP) {
     app.SetWindowMode(ID_MODE_TRAPR);
-  else if (m_iModeId == ID_MODE_TRAPR)
+  } else if (m_iModeId == ID_MODE_TRAPR) {
     app.SetWindowMode(ID_MODE_TRAP);
+}
 }
 void CPegApp::OnFileRun() {
   TCHAR szFilter[256]{};
@@ -508,22 +509,23 @@ WORD CPegApp::GetFileTypeFromPath(const CString& strPathName) {
   if (nExt != -1) {
     CString strExt = strPathName.Mid(nExt);
 
-    if (strExt.CompareNoCase(_T(".blk")) == 0)
+    if (strExt.CompareNoCase(_T(".blk")) == 0) {
       return (CPegDoc::FILE_TYPE_BLOCK);
-    else if (strExt.CompareNoCase(_T(".dwg")) == 0)
+    } else if (strExt.CompareNoCase(_T(".dwg")) == 0) {
       return (CPegDoc::FILE_TYPE_DWG);
-    else if (strExt.CompareNoCase(_T(".dxf")) == 0)
+    } else if (strExt.CompareNoCase(_T(".dxf")) == 0) {
       return (CPegDoc::FILE_TYPE_DXF);
-    else if (strExt.CompareNoCase(_T(".ffa")) == 0)
+    } else if (strExt.CompareNoCase(_T(".ffa")) == 0) {
       return (CPegDoc::FILE_TYPE_FFA);
-    else if (strExt.CompareNoCase(_T(".peg")) == 0)
+    } else if (strExt.CompareNoCase(_T(".peg")) == 0) {
       return (CPegDoc::FILE_TYPE_PEG);
-    else if (strExt.CompareNoCase(_T(".tra")) == 0)
+    } else if (strExt.CompareNoCase(_T(".tra")) == 0) {
       return (CPegDoc::FILE_TYPE_TRACING);
-    else if (strExt.CompareNoCase(_T(".jb1")) == 0)
+    } else if (strExt.CompareNoCase(_T(".jb1")) == 0) {
       return (CPegDoc::FILE_TYPE_JOB);
-    else if (strExt.CompareNoCase(_T(".bmp")) == 0)
+    } else if (strExt.CompareNoCase(_T(".bmp")) == 0) {
       return (CPegDoc::FILE_TYPE_BMP);
+}
   }
   return (CPegDoc::FILE_TYPE_NONE);
 }
@@ -801,7 +803,7 @@ void CPegApp::RubberBandingDisable() {
     pnt[iPts++] = m_pntGinStart;
     pDC->Polyline(pnt, iPts);
   } else if (m_iGinRubTyp == Circles) {
-    CBrush* pBrushOld = (CBrush*)pDC->SelectStockObject(NULL_BRUSH);
+    auto* pBrushOld = (CBrush*)pDC->SelectStockObject(NULL_BRUSH);
     int iRadiusX = abs(m_pntGinEnd.x - m_pntGinStart.x);
     int iRadiusY = abs(m_pntGinEnd.y - m_pntGinStart.y);
     int iRadius = (int)sqrt((double)(iRadiusX * iRadiusX + iRadiusY * iRadiusY) + .5);
@@ -809,7 +811,7 @@ void CPegApp::RubberBandingDisable() {
                  m_pntGinStart.y - iRadius);
     pDC->SelectObject(pBrushOld);
   } else if (m_iGinRubTyp == Rectangles) {
-    CBrush* pBrushOld = (CBrush*)pDC->SelectStockObject(NULL_BRUSH);
+    auto* pBrushOld = (CBrush*)pDC->SelectStockObject(NULL_BRUSH);
     pDC->Rectangle(m_pntGinStart.x, m_pntGinStart.y, m_pntGinEnd.x, m_pntGinEnd.y);
     pDC->SelectObject(pBrushOld);
   }
@@ -911,7 +913,7 @@ void CPegApp::SetModeCursor(int iModeId) {
   if (hCursor != nullptr) SetCursor(hCursor);
 }
 void CPegApp::SetWindowMode(int aiModeId) {
-  CFrameWnd* pFrame = (CFrameWnd*)m_pMainWnd;
+  auto* pFrame = (CFrameWnd*)m_pMainWnd;
   HWND hwnd = pFrame->GetSafeHwnd();
 
   switch (aiModeId) {
@@ -1096,13 +1098,13 @@ void CPegApp::StrokeFontLoad(const CString& strPathName) {
 
   } else {
     HANDLE hFile =
-        CreateFile(strPathName, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+        CreateFile(strPathName, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
     if (hFile != ((HANDLE)-1)) {
       if (SetFilePointer(hFile, 0, nullptr, FILE_BEGIN) != (DWORD)-1) {
         if (m_pStrokeFontDef == nullptr) m_pStrokeFontDef = new TCHAR[16384];
 
         DWORD nBytesRead;
-        ReadFile(hFile, m_pStrokeFontDef, 16384U, &nBytesRead, 0);
+        ReadFile(hFile, m_pStrokeFontDef, 16384U, &nBytesRead, nullptr);
       }
       CloseHandle(hFile);
     }

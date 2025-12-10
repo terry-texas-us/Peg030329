@@ -7,12 +7,7 @@
 IMPLEMENT_DYNAMIC(CDlgSetMarkStyle, CDialog)
 
 CDlgSetMarkStyle::CDlgSetMarkStyle(CWnd* pParent /*=nullptr*/)
-    : CDialog(IDD_SET_MARK_STYLE, pParent),
-      m_nMarkStyle(0),
-      m_nMarkRadio(0),
-      m_bCheck1(FALSE),
-      m_bCheck2(FALSE),
-      m_dMarkSize(0.0) {}
+    : CDialog(IDD_SET_MARK_STYLE, pParent) {}
 
 CDlgSetMarkStyle::~CDlgSetMarkStyle() {}
 

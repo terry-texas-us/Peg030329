@@ -15,7 +15,7 @@
 static std::string msgLoadStringResource(UINT resourceIdentifier) {
   TCHAR resourceString[256]{};
   ::LoadString(app.GetInstance(), resourceIdentifier, resourceString, sizeof(resourceString));
-  return std::string(resourceString);
+  return {resourceString};
 }
 
 int msgConfirm(UINT messageIdentifier, const CString& additionalText) {

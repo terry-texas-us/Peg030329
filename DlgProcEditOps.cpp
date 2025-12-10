@@ -27,26 +27,26 @@ int iRotOrd[3];
 }  // namespace dlgproceditops
 
 CVec dlgproceditops::GetMirrorScale() {
-  return (CVec(dlgproceditops::dXMirrorScale, dlgproceditops::dYMirrorScale, dlgproceditops::dZMirrorScale));
+  return {dlgproceditops::dXMirrorScale, dlgproceditops::dYMirrorScale, dlgproceditops::dZMirrorScale};
 }
 CVec dlgproceditops::GetRotAng() {
-  return (CVec(dlgproceditops::dXRotAng, dlgproceditops::dYRotAng, dlgproceditops::dZRotAng));
+  return {dlgproceditops::dXRotAng, dlgproceditops::dYRotAng, dlgproceditops::dZRotAng};
 }
 CTMat dlgproceditops::GetInvertedRotTrnMat() {
   CTMat tm(dlgproceditops::iRotOrd, dlgproceditops::GetRotAng());
   tm.Inverse();
   return (tm);
 }
-CTMat dlgproceditops::GetRotTrnMat() { return (CTMat(dlgproceditops::iRotOrd, dlgproceditops::GetRotAng())); }
+CTMat dlgproceditops::GetRotTrnMat() { return {dlgproceditops::iRotOrd, dlgproceditops::GetRotAng()}; }
 CVec dlgproceditops::GetScale() {
-  return (CVec(dlgproceditops::dXScale, dlgproceditops::dYScale, dlgproceditops::dZScale));
+  return {dlgproceditops::dXScale, dlgproceditops::dYScale, dlgproceditops::dZScale};
 }
 CVec dlgproceditops::GetInvertedScale() {
   double dX = fabs(dlgproceditops::dXScale) > DBL_EPSILON ? 1. / dlgproceditops::dXScale : 1.;
   double dY = fabs(dlgproceditops::dYScale) > DBL_EPSILON ? 1. / dlgproceditops::dYScale : 1.;
   double dZ = fabs(dlgproceditops::dZScale) > DBL_EPSILON ? 1. / dlgproceditops::dZScale : 1.;
 
-  return (CVec(dX, dY, dZ));
+  return {dX, dY, dZ};
 }
 void dlgproceditops::SetMirrorScale(double dX, double dY, double dZ) {
   dlgproceditops::dXMirrorScale = dX;
@@ -85,7 +85,7 @@ INT_PTR CALLBACK DlgProcEditOps(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) no
       ::CheckDlgButton(hDlg, IDC_EDIT_OP_MIR_Y, 1);
     } else {
       ::CheckDlgButton(hDlg, IDC_EDIT_OP_MIR_Z, 1);
-}
+    }
     return (TRUE);
   } else if (anMsg == WM_COMMAND) {
     switch (LOWORD(wParam)) {

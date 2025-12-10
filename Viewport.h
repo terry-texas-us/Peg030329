@@ -25,7 +25,7 @@ class CViewport : public CObject {
 #endif
   CViewport(const CViewport& src);
 
-  ~CViewport() {}
+  ~CViewport() override {}
 
   CViewport& operator=(const CViewport& src);
 

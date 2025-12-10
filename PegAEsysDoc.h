@@ -86,17 +86,17 @@ class CPegDoc : public CDocument {
 
   // Overrides
  public:
-  virtual BOOL OnNewDocument();
-  virtual BOOL OnOpenDocument(LPCTSTR lpszPathName);
-  virtual void DeleteContents();
-  virtual void Serialize(CArchive& ar);
+  BOOL OnNewDocument() override;
+  BOOL OnOpenDocument(LPCTSTR lpszPathName) override;
+  void DeleteContents() override;
+  void Serialize(CArchive& ar) override;
 
   // Implementation
  public:
-  virtual ~CPegDoc();
+  ~CPegDoc() override;
 #ifdef _DEBUG
-  virtual void AssertValid() const;
-  virtual void Dump(CDumpContext& dc) const;
+  void AssertValid() const override;
+  void Dump(CDumpContext& dc) const override;
 #endif
 
   // Operations

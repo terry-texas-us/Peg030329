@@ -229,7 +229,7 @@ INT_PTR CALLBACK DlgProcSetupConstraints(HWND hDlg, UINT anMsg, WPARAM wParam, L
   return (FALSE);
 }
 
-CPnt grid::GetOrign() { return (CPnt(dXOrig, dYOrig, dZOrig)); }
+CPnt grid::GetOrign() { return {dXOrig, dYOrig, dZOrig}; }
 
 CPnt grid::SetOrign(const CPnt& ptOrig) {
   CPnt pt(dXOrig, dYOrig, dZOrig);

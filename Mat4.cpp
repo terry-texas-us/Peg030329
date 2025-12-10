@@ -52,8 +52,8 @@ CMat4& CMat4::operator/=(const double d) {
 // Special methods
 
 CMat4 CMat4::Transpose() {
-  return CMat4(CVec4(m_v[0][0], m_v[1][0], m_v[2][0], m_v[3][0]), CVec4(m_v[0][1], m_v[1][1], m_v[2][1], m_v[3][1]),
-               CVec4(m_v[0][2], m_v[1][2], m_v[2][2], m_v[3][2]), CVec4(m_v[0][3], m_v[1][3], m_v[2][3], m_v[3][3]));
+  return {CVec4(m_v[0][0], m_v[1][0], m_v[2][0], m_v[3][0]), CVec4(m_v[0][1], m_v[1][1], m_v[2][1], m_v[3][1]),
+          CVec4(m_v[0][2], m_v[1][2], m_v[2][2], m_v[3][2]), CVec4(m_v[0][3], m_v[1][3], m_v[2][3], m_v[3][3])};
 }
 
 CMat4& CMat4::Identity() {
@@ -106,11 +106,11 @@ CMat4 operator-(const CMat4& mA)
 }
 */
 CMat4 operator+(const CMat4& mA, const CMat4& mB) {
-  return CMat4(mA[0] + mB[0], mA[1] + mB[1], mA[2] + mB[2], mA[3] + mB[3]);
+  return {mA[0] + mB[0], mA[1] + mB[1], mA[2] + mB[2], mA[3] + mB[3]};
 }
 
 CMat4 operator-(const CMat4& mA, const CMat4& mB) {
-  return CMat4(mA[0] - mB[0], mA[1] - mB[1], mA[2] - mB[2], mA[3] - mB[3]);
+  return {mA[0] - mB[0], mA[1] - mB[1], mA[2] - mB[2], mA[3] - mB[3]};
 }
 
 CMat4 operator*(const CMat4& mA, const CMat4& mB) {
@@ -124,11 +124,11 @@ CMat4 operator*(const CMat4& mA, const CMat4& mB) {
   return mC;
 }
 
-CMat4 operator*(const CMat4& mA, const double d) { return CMat4(mA[0] * d, mA[1] * d, mA[2] * d, mA[3] * d); }
+CMat4 operator*(const CMat4& mA, const double d) { return {mA[0] * d, mA[1] * d, mA[2] * d, mA[3] * d}; }
 
 CMat4 operator*(const double d, const CMat4& mA) { return mA * d; }
 
-CMat4 operator/(const CMat4& mA, const double d) { return CMat4(mA[0] / d, mA[1] / d, mA[2] / d, mA[3] / d); }
+CMat4 operator/(const CMat4& mA, const double d) { return {mA[0] / d, mA[1] / d, mA[2] / d, mA[3] / d}; }
 
 bool operator==(const CMat4& mA, const CMat4& mB) {
   return ((mA[0] == mB[0]) && (mA[1] == mB[1]) && (mA[2] == mB[2]) && (mA[3] == mB[3]));

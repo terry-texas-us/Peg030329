@@ -32,7 +32,7 @@ class CVec4 : public CObject {
 
   void operator()(const double dX, const double dY, const double dZ, const double dW);
 
-  CVec4 operator-() const { return CVec4(-m_d[0], -m_d[1], -m_d[2], -m_d[3]); }
+  CVec4 operator-() const { return { -m_d[0], -m_d[1], -m_d[2], -m_d[3] }; }
 
  public:  // Methods
   void Get(double* d) const {

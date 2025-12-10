@@ -23,7 +23,7 @@ class CSegsDet : public CSegs {
   CSegsDet(const CSegsDet&) = delete;
   CSegsDet& operator=(const CSegsDet&) = delete;
 
-  ~CSegsDet() {}
+  ~CSegsDet() override {}
 
   void AddTailSegsInActiveView(CPegView* pView, CLayer* pLayer);
   void DelLast();

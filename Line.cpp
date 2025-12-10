@@ -8,8 +8,8 @@
 #include "PrimState.h"
 #include "SafeMath.h"
 
-CLine CLine::operator-(const CVec& v) const { return (CLine(m_pt[0] - v, m_pt[1] - v)); }
-CLine CLine::operator+(const CVec& v) const { return (CLine(m_pt[0] + v, m_pt[1] + v)); }
+CLine CLine::operator-(const CVec& v) const { return {m_pt[0] - v, m_pt[1] - v}; }
+CLine CLine::operator+(const CVec& v) const { return {m_pt[0] + v, m_pt[1] + v}; }
 ///<summary>Determines if lines are parallel.</summary>
 bool CLine::operator||(const CLine& r) const {
   CVec vBeg1End1(m_pt[0], m_pt[1]);
@@ -98,7 +98,7 @@ bool CLine::GetParallels(double dDis, double dEcc, CLine& lnLeft, CLine& lnRight
   }
   return false;
 }
-CVec CLine::GetVector() const { return CVec(m_pt[0], m_pt[1]); }
+CVec CLine::GetVector() const { return {m_pt[0], m_pt[1]}; }
 ///<summary>Projects a point onto line.</summary>
 CPnt CLine::ProjPt(const CPnt& pt) const {
   CVec vBegEnd(m_pt[0], m_pt[1]);

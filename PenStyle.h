@@ -21,7 +21,7 @@ class CPenStyle : public CObject {
 
   CPenStyle(const CPenStyle& penstyle);
 
-  ~CPenStyle();
+  ~CPenStyle() override;
 
   CPenStyle& operator=(const CPenStyle& penstyle);
 

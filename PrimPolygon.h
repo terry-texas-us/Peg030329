@@ -39,33 +39,33 @@ class CPrimPolygon : public CPrim {
  public:  // Operators
   const CPrimPolygon& operator=(const CPrimPolygon&);
 
-  ~CPrimPolygon();
+  ~CPrimPolygon() override;
 
  public:  // Methods - absolute virtuals
-  void AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const;
-  void Assign(CPrim* pPrim) { *this = *static_cast<CPrimPolygon*>(pPrim); }
-  CPrim*& Copy(CPrim*&) const;
-  void Display(CPegView* pView, CDC* pDC) const;
-  void DisRep(const CPnt&) const;
-  void FormatExtra(CString& str) const;
-  void FormatGeometry(CString& str) const;
-  void GetAllPts(CPnts& pts);
-  CPnt GetCtrlPt() const;
-  void GetExtents(CPnt&, CPnt&, const CTMat&) const;
-  CPnt GoToNxtCtrlPt() const;
-  bool Is(CPrim::Type type) const { return type == CPrim::Type::Polygon; }
-  bool IsPtACtrlPt(CPegView* pView, const CPnt4&) const;
-  bool IsInView(CPegView* pView) const;
-  void Read(CFile&);
-  CPnt SelAtCtrlPt(CPegView* pView, const CPnt4&) const;
-  bool SelUsingLine(CPegView*, const CLine&, CPnts&) { return false; }
-  bool SelUsingPoint(CPegView* pView, const CPnt4&, double, CPnt&);
-  bool SelUsingRect(CPegView* pView, const CPnt&, const CPnt&);
-  void Transform(const CTMat&);
-  void Translate(const CVec&);
-  void TranslateUsingMask(const CVec&, const DWORD);
-  bool Write(CFile&) const;
-  void Write(CFile&, char*) const;
+  void AddToTreeViewControl(HWND hTree, HTREEITEM hParent) const override;
+  void Assign(CPrim* pPrim) override { *this = *static_cast<CPrimPolygon*>(pPrim); }
+  CPrim*& Copy(CPrim*&) const override;
+  void Display(CPegView* pView, CDC* pDC) const override;
+  void DisRep(const CPnt&) const override;
+  void FormatExtra(CString& str) const override;
+  void FormatGeometry(CString& str) const override;
+  void GetAllPts(CPnts& pts) override;
+  CPnt GetCtrlPt() const override;
+  void GetExtents(CPnt&, CPnt&, const CTMat&) const override;
+  CPnt GoToNxtCtrlPt() const override;
+  bool Is(CPrim::Type type) const override { return type == CPrim::Type::Polygon; }
+  bool IsPtACtrlPt(CPegView* pView, const CPnt4&) const override;
+  bool IsInView(CPegView* pView) const override;
+  void Read(CFile&) override;
+  CPnt SelAtCtrlPt(CPegView* pView, const CPnt4&) const override;
+  bool SelUsingLine(CPegView*, const CLine&, CPnts&) override { return false; }
+  bool SelUsingPoint(CPegView* pView, const CPnt4&, double, CPnt&) override;
+  bool SelUsingRect(CPegView* pView, const CPnt&, const CPnt&) override;
+  void Transform(const CTMat&) override;
+  void Translate(const CVec&) override;
+  void TranslateUsingMask(const CVec&, const DWORD) override;
+  bool Write(CFile&) const override;
+  void Write(CFile&, char*) const override;
 #if ODA_FUNCTIONALITY
   bool Write(AD_DB_HANDLE, AD_VMADDR, PAD_ENT_HDR, PAD_ENT);
 #endif
@@ -75,8 +75,8 @@ class CPrimPolygon : public CPrim {
   const short& IntStyleId() const { return (m_nIntStyleId); }
   CPnt GetPt(int i) const { return (m_Pt[i]); }
   int GetPts() { return (m_wPts); }
-  void ModifyState();
-  bool PvtOnCtrlPt(CPegView* pView, const CPnt4&) const;
+  void ModifyState() override;
+  bool PvtOnCtrlPt(CPegView* pView, const CPnt4&) const override;
   void SetIntStyle(const short n) { m_nIntStyle = n; }
   void SetIntStyleId(const short n) { m_nIntStyleId = n; }
   void SetHatRefVecs(double, double, double);

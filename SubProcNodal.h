@@ -20,11 +20,11 @@ LRESULT CALLBACK SubProcNodal(HWND, UINT, WPARAM, LPARAM) noexcept;
 
 class CNodalPrim : public CObject {
  public:
-  const CPrim* pPrim;
-  DWORD dwMask;
+  const CPrim* pPrim{nullptr};
+  DWORD dwMask{0};
 
  public:
-  CNodalPrim() noexcept : CObject(), pPrim(nullptr), dwMask(0) {}
+  CNodalPrim() noexcept : CObject() {}
   CNodalPrim(const CNodalPrim&) = delete;
   CNodalPrim& operator=(const CNodalPrim&) = delete;
 
@@ -34,11 +34,11 @@ class CNodalPrim : public CObject {
 
 class CUniqPt : public CObject {
  public:
-  int iCnt;
+  int iCnt{0};
   CPnt pt;
 
  public:
-  CUniqPt() noexcept : CObject(), iCnt(0), pt() {}
+  CUniqPt() noexcept : CObject(),  pt() {}
   CUniqPt(const CUniqPt&) = delete;
   CUniqPt& operator=(const CUniqPt&) = delete;
   CUniqPt(CUniqPt&&) = delete;

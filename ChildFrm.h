@@ -19,16 +19,16 @@ class CChildFrame : public CMDIChildWnd {
   // Operations
  public:
   // Overrides
-  virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+  BOOL PreCreateWindow(CREATESTRUCT& cs) override;
 
   // Implementation
  public:
-  virtual ~CChildFrame();
+  ~CChildFrame() override;
 #ifdef _DEBUG
-  virtual void AssertValid() const;
-  virtual void Dump(CDumpContext& dc) const;
+  void AssertValid() const override;
+  void Dump(CDumpContext& dc) const override;
 #endif
-  virtual void ActivateFrame(int nCmdShow = -1);
+  void ActivateFrame(int nCmdShow = -1) override;
 
   // Generated message map functions
  protected:

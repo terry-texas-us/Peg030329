@@ -58,8 +58,8 @@ class CPnt : public CObject {
     m_d[2] = dZ;
   }
 
-  CPnt operator*(double t) const { return CPnt(m_d[0] * t, m_d[1] * t, m_d[2] * t); }
-  CPnt operator/(double t) const { return CPnt(m_d[0] / t, m_d[1] / t, m_d[2] / t); }
+  CPnt operator*(double t) const { return {m_d[0] * t, m_d[1] * t, m_d[2] * t}; }
+  CPnt operator/(double t) const { return {m_d[0] / t, m_d[1] / t, m_d[2] / t}; }
 
  public:  // Methods
   void Get(Vecd vd) const {

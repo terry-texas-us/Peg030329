@@ -21,7 +21,7 @@ class CSegs : public CObList {
  public:  // Constructors and destructor
   CSegs() {}
 
-  virtual ~CSegs() {}
+  ~CSegs() override {}
 
   // Explicitly delete copy constructor and assignment operator to fix C4625 and C4626 warnings
   CSegs(const CSegs&) = delete;

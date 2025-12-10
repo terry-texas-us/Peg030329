@@ -24,7 +24,7 @@ class CSegsTrap : public CSegs {
   CSegsTrap(const CSegsTrap&) = delete;
   CSegsTrap& operator=(const CSegsTrap&) = delete;
 
-  ~CSegsTrap() {}
+  ~CSegsTrap() override {}
 
   void AddSegsAtPt(CPegView* pView, CSegsDet*, CPnt);
   void Compress();

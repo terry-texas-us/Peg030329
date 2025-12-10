@@ -45,7 +45,7 @@ class CVec : public CObject {
 
   void operator()(const double dX, const double dY, const double dZ);
 
-  CVec operator-() const { return CVec(-m_d[0], -m_d[1], -m_d[2]); }
+  CVec operator-() const { return { -m_d[0], -m_d[1], -m_d[2] }; }
 
   bool operator==(const CVec& v) const { return (Identical(v)); }
   bool operator!=(const CVec& v) const { return (!Identical(v)); }
@@ -146,18 +146,18 @@ inline void CVec::operator()(const double dX, const double dY, const double dZ) 
 }
 
 inline CVec CVec::operator+(const CVec& v) const {
-  return CVec(m_d[0] + v.m_d[0], m_d[1] + v.m_d[1], m_d[2] + v.m_d[2]);
+  return {m_d[0] + v.m_d[0], m_d[1] + v.m_d[1], m_d[2] + v.m_d[2]};
 }
 
 inline CVec CVec::operator-(const CVec& v) const {
-  return CVec(m_d[0] - v.m_d[0], m_d[1] - v.m_d[1], m_d[2] - v.m_d[2]);
+  return {m_d[0] - v.m_d[0], m_d[1] - v.m_d[1], m_d[2] - v.m_d[2]};
 }
 
 inline double CVec::operator*(const CVec& v) const {
   return (m_d[0] * v.m_d[0] + m_d[1] * v.m_d[1] + m_d[2] * v.m_d[2]);
 }
 
-inline CVec CVec::operator*(double t) const { return CVec(m_d[0] * t, m_d[1] * t, m_d[2] * t); }
+inline CVec CVec::operator*(double t) const { return {m_d[0] * t, m_d[1] * t, m_d[2] * t}; }
 
 inline double CVec::SquaredLength() const { return (m_d[0] * m_d[0] + m_d[1] * m_d[1] + m_d[2] * m_d[2]); }
 
@@ -165,12 +165,12 @@ inline double CVec::SquaredLength() const { return (m_d[0] * m_d[0] + m_d[1] * m
 
 inline CVec operator*(const double t, const CVec& v) { return (v * t); }
 
-inline CVec operator/(const CVec& v, const double d) { return CVec(v.m_d[0] / d, v.m_d[1] / d, v.m_d[2] / d); }
+inline CVec operator/(const CVec& v, const double d) { return {v.m_d[0] / d, v.m_d[1] / d, v.m_d[2] / d}; }
 
 inline CVec Max(const CVec& vA, const CVec& vB) {
-  return CVec(std::max(vA.m_d[0], vB.m_d[0]), std::max(vA.m_d[1], vB.m_d[1]), std::max(vA.m_d[2], vB.m_d[2]));
+  return {std::max(vA.m_d[0], vB.m_d[0]), std::max(vA.m_d[1], vB.m_d[1]), std::max(vA.m_d[2], vB.m_d[2])};
 }
 
 inline CVec Min(const CVec& vA, const CVec& vB) {
-  return CVec(std::min(vA.m_d[0], vB.m_d[0]), std::min(vA.m_d[1], vB.m_d[1]), std::min(vA.m_d[2], vB.m_d[2]));
+  return {std::min(vA.m_d[0], vB.m_d[0]), std::min(vA.m_d[1], vB.m_d[1]), std::min(vA.m_d[2], vB.m_d[2])};
 }

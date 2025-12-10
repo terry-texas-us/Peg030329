@@ -64,7 +64,7 @@ class CAbstractView : public CObject {
   CAbstractView(PAD_VPENT);
 #endif
 
-  ~CAbstractView() {}
+  ~CAbstractView() override {}
 
  public:  // Operators
   CAbstractView& operator=(const CAbstractView& av);

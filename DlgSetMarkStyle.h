@@ -9,7 +9,7 @@ class CDlgSetMarkStyle : public CDialog {
 
  public:
   CDlgSetMarkStyle(CWnd* pParent = nullptr);  // standard constructor
-  virtual ~CDlgSetMarkStyle();
+  virtual ~CDlgSetMarkStyle() override;
 
   CDlgSetMarkStyle(const CDlgSetMarkStyle&) = delete;
   CDlgSetMarkStyle& operator=(const CDlgSetMarkStyle&) = delete;
@@ -30,11 +30,11 @@ class CDlgSetMarkStyle : public CDialog {
   double m_dMarkSize = 0.0;  // mark size: positive=world units, negative=pixels
 
  protected:
-  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV support
+  virtual void DoDataExchange(CDataExchange* pDX) override;  // DDX/DDV support
 
  protected:
-  virtual BOOL OnInitDialog();
-  virtual void OnOK();
+  virtual BOOL OnInitDialog() override;
+  virtual void OnOK() override;
 
   DECLARE_MESSAGE_MAP()
 };
