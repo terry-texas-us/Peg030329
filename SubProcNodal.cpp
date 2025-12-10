@@ -32,10 +32,11 @@ LRESULT CALLBACK SubProcNodal(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lPara
     switch (LOWORD(wParam)) {
       case ID_OP0:
         nodal::bAdd = !nodal::bAdd;
-        if (nodal::bAdd)
+        if (nodal::bAdd) {
           app.SetWindowMode(ID_MODE_NODAL);
-        else
+        } else {
           app.SetWindowMode(ID_MODE_NODALR);
+}
         break;
 
       case ID_OP1:
@@ -221,8 +222,9 @@ void nodal::AddEngPrim() {
 
   detsegs.DetPrim()->GetAllPts(pts);
 
-  for (int i = 0; i < (int)pts.GetSize(); i++)
+  for (int i = 0; i < (int)pts.GetSize(); i++) {
     nodal::UpdLis(nodal::bAdd, detsegs.DetSeg(), detsegs.DetPrim(), dwMask, i, pts[i]);
+}
 }
 
 ///<summary>Maintains an ordered list of the primatives with at least one identified node.</summary>

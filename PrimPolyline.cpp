@@ -63,24 +63,26 @@ CPrim*& CPrimPolyline::Copy(CPrim*& pPrim) const {
 }
 
 void CPrimPolyline::Display(CPegView* pView, CDC* pDC) const {
-  if (pDC == 0) {
+  if (pDC == nullptr) {
     PENCOLOR nPenColor = LogicalPenColor();
     opengl::SetCurrentColor(app.PenColorsGetHot(nPenColor));
 
-    if (IsLooped())
+    if (IsLooped()) {
       opengl::BeginLineLoop();
-    else
+    } else {
       opengl::BeginLineStrip();
+}
 
     for (WORD w = 0; w < m_pts.GetSize(); w++) { opengl::SetVertex(m_pts[w]); }
     opengl::End();
   } else {
     pstate.SetPen(pDC, m_nPenColor, m_nPenStyle);
 
-    if (IsLooped())
+    if (IsLooped()) {
       polyline::DisplayLoop(pView, pDC, m_pts);
-    else
+    } else {
       polyline::Display(pView, pDC, m_pts);
+}
   }
 }
 void CPrimPolyline::DisRep(const CPnt& ptPic) const {
@@ -99,10 +101,11 @@ void CPrimPolyline::DisRep(const CPnt& ptPic) const {
     double dAng;
     double dLen = CVec(ptBeg, ptEnd).Length();  // Length of edge
 
-    if (CVec(ptPic, ptBeg).Length() > dLen * .5)
+    if (CVec(ptPic, ptBeg).Length() > dLen * .5) {
       dAng = line::GetAngAboutZAx(CLine(ptEnd, ptBeg));
-    else
+    } else {
       dAng = line::GetAngAboutZAx(CLine(ptBeg, ptEnd));
+}
 
     TCHAR szBuf[24]{};
     UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), dLen);
@@ -157,29 +160,33 @@ CPnt CPrimPolyline::GoToNxtCtrlPt() const {
     WORD wBeg = WORD(mS_wEdge - 1);
     WORD wEnd = WORD(mS_wEdge % wPts);
 
-    if (m_pts[wEnd][0] > m_pts[wBeg][0])
+    if (m_pts[wEnd][0] > m_pts[wBeg][0]) {
       mS_wPivotVertex = wBeg;
-    else if (m_pts[wEnd][0] < m_pts[wBeg][0])
+    } else if (m_pts[wEnd][0] < m_pts[wBeg][0]) {
       mS_wPivotVertex = wEnd;
-    else if (m_pts[wEnd][1] > m_pts[wBeg][1])
+    } else if (m_pts[wEnd][1] > m_pts[wBeg][1]) {
       mS_wPivotVertex = wBeg;
-    else
+    } else {
       mS_wPivotVertex = wEnd;
+}
   } else if (mS_wPivotVertex == 0) {
-    if (mS_wEdge == 1)
+    if (mS_wEdge == 1) {
       mS_wPivotVertex = 1;
-    else
+    } else {
       mS_wPivotVertex = static_cast<WORD>(wPts - 1);
+}
   } else if (mS_wPivotVertex == wPts - 1) {
-    if (mS_wEdge == wPts)
+    if (mS_wEdge == wPts) {
       mS_wPivotVertex = 0;
-    else
+    } else {
       mS_wPivotVertex--;
+}
   } else {
-    if (mS_wEdge == mS_wPivotVertex)
+    if (mS_wEdge == mS_wPivotVertex) {
       mS_wPivotVertex--;
-    else
+    } else {
       mS_wPivotVertex++;
+}
   }
   return (m_pts[mS_wPivotVertex]);
 }
@@ -202,25 +209,28 @@ bool CPrimPolyline::IsInView(CPegView* pView) const {
 bool CPrimPolyline::PvtOnCtrlPt(CPegView* pView, const CPnt4& ptView) const {
   WORD wPts = WORD(m_pts.GetSize());
 
-  if (mS_wPivotVertex >= wPts)
+  if (mS_wPivotVertex >= wPts) {
     // Not engaged at a vertex
     return false;
+}
 
   CPnt4 ptCtrl(m_pts[mS_wPivotVertex], 1.);
   pView->ModelViewTransform(ptCtrl);
 
-  if (Pnt4_DistanceTo_xy(ptCtrl, ptView) >= mS_dPicApertSiz)
+  if (Pnt4_DistanceTo_xy(ptCtrl, ptView) >= mS_dPicApertSiz) {
     // Not on proper vertex
     return false;
+}
 
-  if (mS_wPivotVertex == 0)
+  if (mS_wPivotVertex == 0) {
     mS_wEdge = WORD(mS_wEdge == 1 ? wPts : 1);
-  else if (mS_wPivotVertex == wPts - 1)
+  } else if (mS_wPivotVertex == wPts - 1) {
     mS_wEdge = WORD(mS_wEdge == wPts ? mS_wEdge - 1 : wPts);
-  else if (mS_wPivotVertex == mS_wEdge)
+  } else if (mS_wPivotVertex == mS_wEdge) {
     mS_wEdge++;
-  else
+  } else {
     mS_wEdge--;
+}
 
   return true;
 }
@@ -306,8 +316,9 @@ void CPrimPolyline::Translate(const CVec& v) {
   for (WORD w = 0; w < m_pts.GetSize(); w++) m_pts[w] += v;
 }
 void CPrimPolyline::TranslateUsingMask(const CVec& v, const DWORD dwMask) {
-  for (WORD w = 0; w < m_pts.GetSize(); w++)
+  for (WORD w = 0; w < m_pts.GetSize(); w++) {
     if (((dwMask >> w) & 1UL) == 1) m_pts[w] += v;
+}
 }
 bool CPrimPolyline::Write(CFile& fl) const {
   FilePeg_WriteWord(fl, static_cast<WORD>(CPrim::Type::Polyline));
@@ -324,12 +335,13 @@ WORD CPrimPolyline::SwingVertex() const {
 
   WORD wSwingVertex;
 
-  if (mS_wPivotVertex == 0)
+  if (mS_wPivotVertex == 0) {
     wSwingVertex = WORD(mS_wEdge == 1 ? 1 : wPts - 1);
-  else if (mS_wPivotVertex == WORD(wPts - 1))
+  } else if (mS_wPivotVertex == WORD(wPts - 1)) {
     wSwingVertex = WORD(mS_wEdge == wPts ? 0 : mS_wPivotVertex - 1);
-  else
+  } else {
     wSwingVertex = WORD(mS_wEdge == mS_wPivotVertex ? mS_wPivotVertex - 1 : mS_wPivotVertex + 1);
+}
 
   return (wSwingVertex);
 }

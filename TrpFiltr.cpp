@@ -39,8 +39,9 @@ INT_PTR CALLBACK DlgProcTrapFilter(HWND ahDlg, UINT anMsg, WPARAM wParam, LPARAM
     }
     ::SendDlgItemMessage(ahDlg, IDC_TRAP_FILTER_LINE_LIST, CB_SETCURSEL, 0, 0);
 
-    for (WORD w = 0; w < sizeof(strElementName) / sizeof(strElementName[0]); w++)
+    for (WORD w = 0; w < sizeof(strElementName) / sizeof(strElementName[0]); w++) {
       ::SendDlgItemMessage(ahDlg, IDC_TRAP_FILTER_ELEMENT_LIST, LB_ADDSTRING, 0, (LPARAM)(LPCSTR)strElementName[w]);
+}
 
     ::SendDlgItemMessage(ahDlg, IDC_TRAP_FILTER_ELEMENT_LIST, LB_SETCURSEL, 0, 0L);
     return (TRUE);

@@ -53,9 +53,9 @@ bool CFileJob::OpenForWrite(const CString& strPathName) {
 }
 void CFileJob::ReadHeader() {
   if (Read(m_PrimBuf, 32) == 32) {
-    if (ReleaseVersion() == 1)
+    if (ReleaseVersion() == 1) {
       SeekToBegin();
-    else {
+    } else {
       if (GetLength() >= 96) Seek(96, begin);
     }
   }
@@ -139,7 +139,7 @@ bool filejob_GetNextSeg(CFile& f, int iVersion, char* pBuf, CSeg*& pSeg) {
   return true;
 }
 bool filejob_GetNextPrim(CFile& f, int iVersion, char* pBuf, CPrim*& pPrim) {
-  short* pTyp = (short*)&pBuf[4];
+  auto* pTyp = (short*)&pBuf[4];
 
   do {
     if (f.Read(pBuf, 32) < 32) return false;
@@ -418,7 +418,7 @@ CPrimDim::CPrimDim(char* p) {
   m_rs.SetDirX(((CVaxVec*)&p[55])->Convert());
   m_rs.SetDirY(((CVaxVec*)&p[67])->Convert());
 
-  short* pChrs = (short*)&p[79];
+  auto* pChrs = (short*)&p[79];
   char* pChr = &p[81];
 
   pChr[*pChrs] = '\0';
@@ -459,7 +459,7 @@ void CPrimDim::Write(CFile& f, char* p) const {
   mspace.Transform(v);
   ((CVaxVec*)&p[67])->Convert(v);
 
-  short* pChrs = (short*)&p[79];
+  auto* pChrs = (short*)&p[79];
   *pChrs = short(m_strText.GetLength());
 
   char* pChr = &p[81];
@@ -772,11 +772,11 @@ CPrimText::CPrimText(char* p, int iVer) {
     char* context = nullptr;
     char* pChr = _tcstok_s(&p[44], "\\", &context);
 
-    if (pChr == nullptr)
+    if (pChr == nullptr) {
       m_strText = _T("CFileJob.PrimText error: Missing string terminator.");
-    else if (std::strlen(pChr) > 132)
+    } else if (std::strlen(pChr) > 132) {
       m_strText = _T("CFileJob.PrimText error: Text too long.");
-    else {
+    } else {
       while (*pChr != 0) {
         if (!isprint(*pChr)) *pChr = '.';
         pChr++;
@@ -793,7 +793,7 @@ CPrimText::CPrimText(char* p, int iVer) {
     m_rs.SetDirX(((CVaxVec*)&p[29])->Convert());
     m_rs.SetDirY(((CVaxVec*)&p[41])->Convert());
 
-    short* pChrs = (short*)&p[53];
+    auto* pChrs = (short*)&p[53];
     char* pChr = &p[55];
 
     pChr[*pChrs] = '\0';
@@ -823,7 +823,7 @@ void CPrimText::Write(CFile& f, char* p) const {
   mspace.Transform(v);
   ((CVaxVec*)&p[41])->Convert(v);
 
-  short* pChrs = (short*)&p[53];
+  auto* pChrs = (short*)&p[53];
   *pChrs = short(m_strText.GetLength());
 
   char* pChr = &p[55];

@@ -11,14 +11,14 @@ CFileBitmap::CFileBitmap(const CString& strFileName) {
 }
 
 bool CFileBitmap::Load(const CString& strFileName, CBitmap& bmReference, CPalette& palReference) {
-  HBITMAP hBitmap = (HBITMAP)::LoadImage(0, strFileName, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
-  if (hBitmap == NULL) return false;
+  auto hBitmap = (HBITMAP)::LoadImage(nullptr, strFileName, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+  if (hBitmap == nullptr) return false;
 
   bmReference.Attach(hBitmap);
 
   // Return now if device does not support palettes
 
-  CClientDC dc(NULL);
+  CClientDC dc(nullptr);
   if ((dc.GetDeviceCaps(RASTERCAPS) & RC_PALETTE) == 0) { return true; }
 
   DIBSECTION ds{};
@@ -37,7 +37,7 @@ bool CFileBitmap::Load(const CString& strFileName, CBitmap& bmReference, CPalett
   if (nColors > 256) {
     palReference.CreateHalftonePalette(&dc);
   } else {  // Create a custom palette from the DIB section's color table
-    RGBQUAD* pRGB = new RGBQUAD[static_cast<size_t>(nColors)];
+    auto* pRGB = new RGBQUAD[static_cast<size_t>(nColors)];
 
     CDC dcMem;
     dcMem.CreateCompatibleDC(&dc);
@@ -48,7 +48,7 @@ bool CFileBitmap::Load(const CString& strFileName, CBitmap& bmReference, CPalett
 
     UINT nSize = sizeof(LOGPALETTE) + (sizeof(PALETTEENTRY) * (nColors - 1));
 
-    LOGPALETTE* pLogPal = (LOGPALETTE*)new BYTE[nSize];
+    auto* pLogPal = (LOGPALETTE*)new BYTE[nSize];
 
     pLogPal->palVersion = 0x300;
     pLogPal->palNumEntries = (WORD)nColors;

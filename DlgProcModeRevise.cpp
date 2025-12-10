@@ -28,8 +28,9 @@ INT_PTR CALLBACK DlgProcModeRevise(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM l
         pText->GetFontDef(fd);
         pText->GetRefSys(rs);
         ::SetWindowText(hWndTextCtrl, pText->Text());
-      } else
+      } else {
         ::EndDialog(hDlg, TRUE);
+}
 
       return (TRUE);
 
@@ -61,8 +62,9 @@ INT_PTR CALLBACK DlgProcModeRevise(HWND hDlg, UINT nMsg, WPARAM wParam, LPARAM l
             pText->GetFontDef(fd);
             pText->GetRefSys(rs);
             ::SetWindowText(hWndTextCtrl, pText->Text());
-          } else
+          } else {
             SetWindowText(hWndTextCtrl, "");
+}
 
           ::SetFocus(hWndTextCtrl);
           return (TRUE);

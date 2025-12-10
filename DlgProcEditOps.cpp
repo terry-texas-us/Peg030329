@@ -79,12 +79,13 @@ INT_PTR CALLBACK DlgProcEditOps(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM) no
     DlgBoxSetItemDouble(hDlg, IDC_EDIT_OP_ROT_Y, dlgproceditops::dYRotAng);
     DlgBoxSetItemDouble(hDlg, IDC_EDIT_OP_ROT_Z, dlgproceditops::dZRotAng);
 
-    if (dlgproceditops::dXMirrorScale < 0.)
+    if (dlgproceditops::dXMirrorScale < 0.) {
       ::CheckDlgButton(hDlg, IDC_EDIT_OP_MIR_X, 1);
-    else if (dlgproceditops::dYMirrorScale < 0.)
+    } else if (dlgproceditops::dYMirrorScale < 0.) {
       ::CheckDlgButton(hDlg, IDC_EDIT_OP_MIR_Y, 1);
-    else
+    } else {
       ::CheckDlgButton(hDlg, IDC_EDIT_OP_MIR_Z, 1);
+}
     return (TRUE);
   } else if (anMsg == WM_COMMAND) {
     switch (LOWORD(wParam)) {

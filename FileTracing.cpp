@@ -32,17 +32,20 @@ bool CFileTracing::OpenForWrite(const CString& strPathName) {
   return true;
 }
 void CFileTracing::ReadHeader() {
-  if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_HEADER)
+  if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_HEADER) {
     throw _T("Exception CFileTracing: Expecting sentinel SECTION_HEADER.");
+}
 
   // 	with addition of info here will loop key-value pairs till SECTION_END sentinel
 
-  if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_END)
+  if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_END) {
     throw _T("Exception CFileTracing: Expecting sentinel SECTION_END.");
 }
+}
 bool CFileTracing::ReadSegs(CLayer* pLayer) {
-  if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_SEGMENTS)
+  if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_SEGMENTS) {
     throw _T("Exception CFileTracing: Expecting sentinel SECTION_SEGMENTS.");
+}
 
   CPrim* pPrim;
 
@@ -59,8 +62,9 @@ bool CFileTracing::ReadSegs(CLayer* pLayer) {
     }
     pLayer->AddTail(pSeg);
   }
-  if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_END)
+  if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_END) {
     throw _T("Exception CFileTracing: Expecting sentinel SECTION_END.");
+}
 
   return true;
 }
@@ -75,7 +79,7 @@ void CFileTracing::WriteSegs(CLayer* pLayer) {
   FilePeg_WriteWord(*this, static_cast<WORD>(pLayer->GetCount()));
 
   POSITION pos = pLayer->GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = pLayer->GetNext(pos);
     pSeg->Write(*this);
   }

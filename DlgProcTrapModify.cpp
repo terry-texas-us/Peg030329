@@ -47,12 +47,13 @@ void DlgProcTrapModifyDoOK(HWND hDlg) {
   CFontDef fd{};
   pstate.GetFontDef(fd);
 
-  if (::SendDlgItemMessage(hDlg, IDC_MOD_NOTE, BM_GETCHECK, 0, 0L))
+  if (::SendDlgItemMessage(hDlg, IDC_MOD_NOTE, BM_GETCHECK, 0, 0L)) {
     trapsegs.ModifyNotes(fd, ccd, TM_TEXT_ALL);
-  else if (::SendDlgItemMessage(hDlg, IDC_FONT, BM_GETCHECK, 0, 0L))
+  } else if (::SendDlgItemMessage(hDlg, IDC_FONT, BM_GETCHECK, 0, 0L)) {
     trapsegs.ModifyNotes(fd, ccd, TM_TEXT_FONT);
-  else if (::SendDlgItemMessage(hDlg, IDC_HEIGHT, BM_GETCHECK, 0, 0L))
+  } else if (::SendDlgItemMessage(hDlg, IDC_HEIGHT, BM_GETCHECK, 0, 0L)) {
     trapsegs.ModifyNotes(fd, ccd, TM_TEXT_HEIGHT);
+}
 }
 
 void DlgProcTrapModifyPolygons() {

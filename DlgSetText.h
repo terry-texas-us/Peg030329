@@ -23,7 +23,7 @@ class CDlgSetText : public CDialog {
 
  protected:
   virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV support
-  virtual BOOL OnInitDialog(void);
+  virtual BOOL OnInitDialog();
 
  public:
   CString m_sText;

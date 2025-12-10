@@ -41,9 +41,9 @@ INT_PTR CALLBACK DlgProcSetupPenColor(HWND hDlg, UINT anMsg, WPARAM wParam, LPAR
     }
     case WM_DRAWITEM: {
       auto lpDIS = (LPDRAWITEMSTRUCT)lParam;
-      if (lpDIS->itemID == -1)      // Empty combo box
+      if (lpDIS->itemID == -1) {      // Empty combo box
         OwnerDraw_Focus(lpDIS, 0);  // Draw only focus rectangle
-      else {
+      } else {
         switch (lpDIS->itemAction) {
           case ODA_DRAWENTIRE:
             SetupPenColor_DrawEntire(lpDIS, -2);

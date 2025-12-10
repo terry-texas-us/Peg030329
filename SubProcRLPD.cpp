@@ -143,9 +143,10 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
               rlpd::GenSection(dDiam[2], &lnPar[2]);
               rlpd::bContSec = true;
               pgEndCapSeg = pDoc->WorkLayerGetTail();
-            } else
+            } else {
               // Zero length section specified
               msgInformation(0);
+}
           } else if (wPrvKeyDwn == ID_OP3) {
             ptCur = UserAxisSnapLn(ptPrv, ptCur);
             lnLead(ptPrv, ptCur);
@@ -155,9 +156,10 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
               ptCur[1] = (lnPar[2][1][1] + lnPar[3][1][1]) * .5f;
               rlpd::bContSec = true;
               pgEndCapSeg = nullptr;
-            } else
+            } else {
               // Zero length section specified
               msgInformation(0);
+}
           }
         } else {                // Work with existing end-cap
           if (iEndCapId > 0) {  // Begin at end-cap
@@ -248,8 +250,9 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
               rlpd::bContSec = false;
               pgEndCapSeg = nullptr;
               wPrvKeyDwn = ID_OP2;
-            } else  // Zero length section specified
+            } else {  // Zero length section specified
               msgInformation(0);
+}
           } else if (wPrvKeyDwn == ID_OP3) {
             ptCur = UserAxisSnapLn(ptPrv, ptCur);  // Constrain point to user axis
             lnPar[0] = lnPar[2];
@@ -262,8 +265,9 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
               rlpd::bContSec = false;
               pgEndCapSeg = nullptr;
               wPrvKeyDwn = ID_OP2;
-            } else  // Zero length section specified
+            } else {  // Zero length section specified
               msgInformation(0);
+}
           }
         } else  // Work with existing end-cap
         {
@@ -338,8 +342,9 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
               rlpd::bContSec = false;
               pgEndCapSeg = nullptr;
               wPrvKeyDwn = 0;  //ID_OP2;
-            } else             // Zero length section specified
+            } else {             // Zero length section specified
               msgInformation(0);
+}
           }
         } else  // Work with existing end-cap
         {
@@ -435,8 +440,9 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
                   if (detsegs.DetPrim()->Is(CPrim::Type::Line)) {
                     (static_cast<CPrimLine*>(detsegs.DetPrim()))->GetPts(ptBeg, ptEnd);
                     ptMid = Mid(ptBeg, ptEnd);
-                    if (rlpd::SelEndCapUsingPoint(pView, ptMid, pEndCapSeg, pEndCapMark))
+                    if (rlpd::SelEndCapUsingPoint(pView, ptMid, pEndCapSeg, pEndCapMark)) {
                       dDist = pEndCapMark->GetDat(0);
+}
                   }
                 }
               }
@@ -456,8 +462,9 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
               rlpd::bContSec = false;
               pgEndCapSeg = nullptr;
               wPrvKeyDwn = 0;
-            } else  // Zero length section specified
+            } else {  // Zero length section specified
               msgInformation(0);
+}
           }
         } else  // Work with existing end-cap
         {
@@ -561,8 +568,9 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
           }
           ptMid = Pnt_ProjPtTo(ptBeg, ptMid, dDiam[1]);
           ptTemp = Pnt_RotAboutArbPtAndAx(ptBeg, ptMid, vVwPlnNorm, HALF_PI);
-          if (detsegs.SelSegAndPrimUsingPoint(ptTemp) == nullptr)
+          if (detsegs.SelSegAndPrimUsingPoint(ptTemp) == nullptr) {
             ptTemp = Pnt_RotAboutArbPtAndAx(ptTemp, ptMid, vVwPlnNorm, PI);
+}
           ptEnd = Pnt_RotAboutArbPtAndAx(ptBeg, ptPrv, vVwPlnNorm, HALF_PI);
 
           CSeg* pSeg;
@@ -583,19 +591,21 @@ LRESULT CALLBACK SubProcRLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam
           pSeg = new CSeg(new CPrimLine(ptUpDn[2], ptUpDn[3]));
           ptEnd = Pnt_RotAboutArbPtAndAx(ptUpDn[1], ptUpDn[0], vVwPlnNorm, HALF_PI);
           if (Pnt_DistanceTo_xy(ptUpDn[0], ptUpDn[2]) >
-              Pnt_DistanceTo_xy(ptUpDn[2], ptEnd))  //Solid line for up and down
+              Pnt_DistanceTo_xy(ptUpDn[2], ptEnd)) {  //Solid line for up and down
             pSeg->AddTail(new CSeg(new CPrimArc(ptPrv, vMajAx, vMinAx, PI)));
-          else
+          } else {
             pSeg->AddTail(new CSeg(new CPrimArc(ptPrv, vMajAx, vMinAx, -PI)));
+}
 
           nPenColor = pstate.PenColor();
           nPenStyle = pstate.PenStyle();
           if (LOWORD(wParam) == ID_OP8) pstate.SetPen(pDC, 1, 2);
 
-          if (Pnt_DistanceTo_xy(ptUpDn[0], ptUpDn[2]) < Pnt_DistanceTo_xy(ptUpDn[2], ptEnd))  //Solid or dashed line
+          if (Pnt_DistanceTo_xy(ptUpDn[0], ptUpDn[2]) < Pnt_DistanceTo_xy(ptUpDn[2], ptEnd)) {  //Solid or dashed line
             pSeg->AddTail(new CSeg(new CPrimArc(ptPrv, vMajAx, vMinAx, PI)));
-          else
+          } else {
             pSeg->AddTail(new CSeg(new CPrimArc(ptPrv, vMajAx, vMinAx, -PI)));
+}
 
           pDoc->WorkLayerAddTail(pSeg);
           pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
@@ -736,8 +746,9 @@ bool rlpd::Fnd2LnsGivLn(CPrimLine* pTestLine, double dAccAng, CPrim*& pLeftLine,
         ptBeg = ptEnd;
         ptEnd = ptTmp;
       } else if (ptEnd != ptTestLineBeg &&
-                 ptEnd != ptTestLineEnd)  //	No endpoint coincides with one of the test line endpoints
+                 ptEnd != ptTestLineEnd) {  //	No endpoint coincides with one of the test line endpoints
         continue;
+}
 
       dLnAng = fmod(line::GetAngAboutZAx(CLine(ptBeg, ptEnd)), PI);
       if (fabs(fabs(dLnAng0 - dLnAng) - HALF_PI) <= dAccAng) {
@@ -777,9 +788,10 @@ int rlpd::GenElbow(double adWid, double adDep, CLine* pLns) {
 
   int iDir = pLns[0].DirRelOfPt(pLns[2][1]);
 
-  if (iDir == 0)
+  if (iDir == 0) {
     // No turn indicated
     return 0;
+}
 
   CPnt* pt = new CPnt[6];
 
@@ -1146,9 +1158,9 @@ int rlpd::GenTransition(rlpd::ETransition eEnd, int* aiJus, double* adSlo, doubl
     rlpd::GenEndCap(pLns[1][1], pLns[0][1], adWid[I0 + 1], adDep[I0 + 1], pSeg);
     pSeg->AddTail(new CPrimLine(pLns[0][1], ptLeftEnd));
   }
-  if (pSeg->IsEmpty())
+  if (pSeg->IsEmpty()) {
     delete pSeg;
-  else {
+  } else {
     pDoc->WorkLayerAddTail(pSeg);
     pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
   }

@@ -67,10 +67,12 @@ void CSeg::BreakPolylines() {
       PENSTYLE nPenStyle = pPrim->PenStyle();
       CPnts pts;
       static_cast<CPrimPolyline*>(pPrim)->GetAllPts(pts);
-      for (WORD w = 0; w < pts.GetSize() - 1; w++)
+      for (WORD w = 0; w < pts.GetSize() - 1; w++) {
         CObList::InsertBefore(posPrim, new CPrimLine(nPenColor, nPenStyle, pts[w], pts[w + 1]));
-      if (static_cast<CPrimPolyline*>(pPrim)->IsLooped())
+}
+      if (static_cast<CPrimPolyline*>(pPrim)->IsLooped()) {
         CObList::InsertBefore(posPrim, new CPrimLine(nPenColor, nPenStyle, pts[pts.GetUpperBound()], pts[0]));
+}
       this->RemoveAt(posPrim);
       delete pPrim;
     } else if (pPrim->Is(CPrim::Type::SegRef)) {

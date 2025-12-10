@@ -125,12 +125,13 @@ void CTMat::DefUsingArbPtAndAx(const CPnt& ptO,  // point on plane which defines
   // avoid sqrt use if Ny or Nz are 0.
 
   double d = 0.;
-  if (dAbsNz <= DBL_EPSILON)
+  if (dAbsNz <= DBL_EPSILON) {
     d = dAbsNy;
-  else if (dAbsNy <= DBL_EPSILON)
+  } else if (dAbsNy <= DBL_EPSILON) {
     d = dAbsNz;
-  else
+  } else {
     d = sqrt(dAbsNy * dAbsNy + dAbsNz * dAbsNz);
+}
 
   // sin(Rx) = Ny / d; cos(Rx) = Nz / d
 

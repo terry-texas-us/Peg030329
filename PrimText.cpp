@@ -48,11 +48,11 @@ CPrim*& CPrimText::Copy(CPrim*& pPrim) const {
   return (pPrim);
 }
 void CPrimText::Display(CPegView* pView, CDC* pDC) const {
-  if (pDC == 0) {
+  if (pDC == nullptr) {
     PENCOLOR nPenColor = LogicalPenColor();
     opengl::SetCurrentColor(app.PenColorsGetHot(nPenColor));
 
-    text_Display0(pView, 0, m_fd, m_rs, m_strText);
+    text_Display0(pView, nullptr, m_fd, m_rs, m_strText);
   } else {
     pstate.SetPenColor(LogicalPenColor());
 

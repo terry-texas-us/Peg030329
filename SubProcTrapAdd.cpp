@@ -100,10 +100,10 @@ LRESULT CALLBACK SubProcTrapAdd(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lPar
           return 0;
 
         case ID_OP9:
-          if (!trapsegs.IsEmpty())  // Trap is not empty
+          if (!trapsegs.IsEmpty()) {  // Trap is not empty
             ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_TRAP_MODIFY), hwnd,
                         reinterpret_cast<DLGPROC>(DlgProcTrapModify));
-          else { msgInformation(0); }
+          } else { msgInformation(0); }
           return 0;
 
         case IDM_RETURN:
@@ -140,8 +140,9 @@ void trap::AddByArea(CPegView* pView, CDC* pDC, CSegs* pSegs, CPnt pt0, CPnt pt1
   while (pos != nullptr) {
     CSeg* pSeg = pSegs->GetNext(pos);
 
-    if (trapsegs.Find(pSeg) != nullptr)  // already in trap
+    if (trapsegs.Find(pSeg) != nullptr) {  // already in trap
       continue;
+}
 
     if (pSeg->SelUsingRect(pView, pt0, pt1)) {
       trapsegs.AddTail(pSeg);
@@ -171,8 +172,9 @@ void trap::AddByLn(CPegView* pView, CDC* pDC, CSegs* pSegs, CPnt ptBeg,
   while (pos != nullptr) {
     CSeg* pSeg = pSegs->GetNext(pos);
 
-    if (trapsegs.Find(pSeg) != nullptr)  // already in trap
+    if (trapsegs.Find(pSeg) != nullptr) {  // already in trap
       continue;
+}
 
     POSITION posPrim = pSeg->GetHeadPosition();
     while (posPrim != nullptr) {

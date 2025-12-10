@@ -39,13 +39,13 @@ void CLayer::Display(CPegView* pView, CDC* pDC, bool bIdentifyTrap) {
     pColTbl = bDetSegs ? crHotCols : crWarmCols;
 
     POSITION pos = GetHeadPosition();
-    while (pos != 0) {
+    while (pos != nullptr) {
       CSeg* pSeg = GetNext(pos);
 
       if (pSeg->IsInView(pView)) {
         if (bDetSegs) detsegs.AddTail(pSeg);
 
-        if (bIdentifyTrap && trapsegs.Find(pSeg) != 0) {
+        if (bIdentifyTrap && trapsegs.Find(pSeg) != nullptr) {
           CPrim::SpecPenColor() = trapsegs.PenColor();
           pSeg->Display(pView, pDC);
           CPrim::SpecPenColor() = 0;

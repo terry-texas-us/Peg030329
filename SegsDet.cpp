@@ -92,8 +92,9 @@ CPrimText* CSegsDet::SelTextUsingPoint(CPegView* pView, const CPnt& ptPic) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
       if (pPrim->Is(CPrim::Type::Text)) {
         CPnt ptProj;
-        if (static_cast<CPrimText*>(pPrim)->SelUsingPoint(pView, ptView, 0., ptProj))
+        if (static_cast<CPrimText*>(pPrim)->SelUsingPoint(pView, ptView, 0., ptProj)) {
           return static_cast<CPrimText*>(pPrim);
+}
       }
     }
   }

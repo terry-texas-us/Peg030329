@@ -184,7 +184,7 @@ CPnt CPrimSegRef::SelAtCtrlPt(CPegView* pView, const CPnt4& ptPic) const {
   mspace.SetLocalTM(tm);
 
   POSITION pos = pBlock->GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CPrim* pPrim = pBlock->GetNext(pos);
     ptCtrl = pPrim->SelAtCtrlPt(pView, ptPic);
     if (mS_wCtrlPt != USHRT_MAX) {
@@ -228,7 +228,7 @@ bool CPrimSegRef::SelUsingPoint(CPegView* pView, const CPnt4& pt, double dtol, C
   mspace.SetLocalTM(tm);
 
   POSITION posPrim = pBlock->GetHeadPosition();
-  while (posPrim != 0) {
+  while (posPrim != nullptr) {
     if ((pBlock->GetNext(posPrim))->SelUsingPoint(pView, pt, dtol, ptProj)) {
       bResult = true;
       break;

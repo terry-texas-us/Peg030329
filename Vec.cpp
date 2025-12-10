@@ -63,8 +63,9 @@ bool CVec::Collinear(const CVec& v, double dTol) const {
   } else if (fabs(m_d[2]) > FLT_EPSILON) {
     double dT = v.m_d[2] / m_d[2];
     return (fabs(dT * m_d[0] - v.m_d[0]) > dTol || fabs(dT * m_d[1] - v.m_d[1]) > dTol) ? false : true;
-  } else
+  } else {
     return true;  // Vector is zero vector .. true makes sense
+}
 }
 
 void CVec::Normalize() {

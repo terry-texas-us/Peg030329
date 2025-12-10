@@ -48,10 +48,11 @@ void DlgProcEditTrap_CommandsQueryFillExtraList(HWND hDlg, CPrim* pPrim) {
     // value ends at tab or end-of-string
     int valEnd = str.Find('\t', nOff);
     CString value;
-    if (valEnd == -1)
+    if (valEnd == -1) {
       value = str.Mid(nOff);  // remainder is the final value
-    else
+    } else {
       value = str.Mid(nOff, valEnd - nOff);
+}
 
     ListView_SetItemText(hWndExtra, iItem, 1, const_cast<LPTSTR>((LPCTSTR)value))++ iItem;
 

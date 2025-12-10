@@ -69,11 +69,11 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
         ptCurPos = detsegs.DetPt();
         static_cast<CPrimLine*>(pPrimRef)->GetLine(lnRef);
 
-        if (wPrvKeyDwn == 0)
+        if (wPrvKeyDwn == 0) {
           wPrvKeyDwn = app.ModeLineHighlightOp(ID_OP1);
-        else if (wPrvKeyDwn == ID_OP1)
+        } else if (wPrvKeyDwn == ID_OP1) {
           ;
-        else {
+        } else {
           auto* pLinePrv = static_cast<CPrimLine*>(pPrimPrv);
           if (!line::Intersection(lnPrv, lnRef, ptInt)) {
             msgInformation(0);
@@ -81,10 +81,11 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
           }
           if (wPrvKeyDwn == ID_OP2) {
             pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
-            if (CVec(pLinePrv->Pt1(), ptInt).Length() < CVec(pLinePrv->Pt1(), ptInt).Length())
+            if (CVec(pLinePrv->Pt1(), ptInt).Length() < CVec(pLinePrv->Pt1(), ptInt).Length()) {
               pLinePrv->SetPt0(ptInt);
-            else
+            } else {
               pLinePrv->SetPt1(ptInt);
+}
             pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegPrv);
           } else if (wPrvKeyDwn == ID_OP3) {
             if (CVec(lnPrv[0], ptInt).Length() < CVec(lnPrv[1], ptInt).Length()) lnPrv[0] = lnPrv[1];
@@ -154,10 +155,11 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
             return 0;
           }
           pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSec);
-          if (CVec(pLine->Pt0(), ptInt).Length() < CVec(pLine->Pt1(), ptInt).Length())
+          if (CVec(pLine->Pt0(), ptInt).Length() < CVec(pLine->Pt1(), ptInt).Length()) {
             pLine->SetPt0(ptInt);
-          else
+          } else {
             pLine->SetPt1(ptInt);
+}
           pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegSec);
         } else {
           if (!line::Intersection(lnPrv, lnSec, ptInt))  // Two lines do not define an intersection
@@ -168,10 +170,11 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
           if (wPrvKeyDwn == ID_OP2) {
             pLine = static_cast<CPrimLine*>(pPrimPrv);
             pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
-            if (CVec(pLine->Pt0(), ptInt).Length() < CVec(pLine->Pt1(), ptInt).Length())
+            if (CVec(pLine->Pt0(), ptInt).Length() < CVec(pLine->Pt1(), ptInt).Length()) {
               pLine->SetPt0(ptInt);
-            else
+            } else {
               pLine->SetPt1(ptInt);
+}
             pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegPrv);
           } else if (wPrvKeyDwn == ID_OP3) {
             if (CVec(lnPrv[0], ptInt).Length() < CVec(lnPrv[1], ptInt).Length()) lnPrv[0] = lnPrv[1];
@@ -215,10 +218,11 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
           }
           pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSec);
           pLine = static_cast<CPrimLine*>(pPrimSec);
-          if (CVec(pLine->Pt0(), ptInt).Length() < CVec(pLine->Pt1(), ptInt).Length())
+          if (CVec(pLine->Pt0(), ptInt).Length() < CVec(pLine->Pt1(), ptInt).Length()) {
             pLine->SetPt0(ptInt);
-          else
+          } else {
             pLine->SetPt1(ptInt);
+}
           pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSegSec);
           app.ModeLineUnhighlightOp(wPrvKeyDwn);
         }
@@ -255,9 +259,9 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
             //	   Center point is defined .. determine arc endpoints
             lnPrv[1] = lnPrv.ProjPt(ptCP);
             lnSec[0] = lnSec.ProjPt(ptCP);
-            if (wPrvKeyDwn == ID_OP1)
+            if (wPrvKeyDwn == ID_OP1) {
               ;
-            else if (wPrvKeyDwn == ID_OP2) {
+            } else if (wPrvKeyDwn == ID_OP2) {
               pLine = static_cast<CPrimLine*>(pPrimPrv);
               pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegPrv);
               pLine->SetPt0(lnPrv[0]);
@@ -274,9 +278,9 @@ LRESULT CALLBACK SubProcFixup(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
             pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_ERASE_SAFE, pSegSec);
             pLine->SetPt0(lnSec[0]);
             pLine->SetPt1(lnSec[1]);
-            if (LOWORD(wParam) == ID_OP3)
+            if (LOWORD(wParam) == ID_OP3) {
               pSegSec->AddTail(new CPrimLine(lnPrv[1], lnSec[0]));
-            else {
+            } else {
               double dAng;
               CVec rPrvEndInter(lnPrv[1], ptInt);
               CVec rPrvEndSecBeg(lnPrv[1], lnSec[0]);

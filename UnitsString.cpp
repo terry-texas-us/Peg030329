@@ -134,10 +134,11 @@ double UnitsString_ParseLength(TCHAR* aszLen) {
       break;
 
     case 'M':
-      if (toupper((int)szEndPtr[1]) == 'M')
+      if (toupper((int)szEndPtr[1]) == 'M') {
         dRetVal *= 0.03937007874015748;
-      else
+      } else {
         dRetVal *= 39.37007874015748;
+}
       break;
 
     case 'C':
@@ -165,9 +166,9 @@ double UnitsString_ParseLength(EUnits eUnits, TCHAR* aszLen) {  // Convert lengt
     lex::Parse(aszLen);
     lex::EvalTokenStream(nullptr, &iTokId, &lDef, &iTyp, (void*)dVal, bufferSize);
 
-    if (iTyp == lex::TOK_LENGTH_OPERAND)
+    if (iTyp == lex::TOK_LENGTH_OPERAND) {
       return (dVal[0]);
-    else {
+    } else {
       lex::ConvertValTyp(iTyp, lex::TOK_REAL, &lDef, dVal);
 
       switch (eUnits) {

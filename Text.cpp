@@ -30,10 +30,11 @@ void text_Display0(CPegView* pView, CDC* pDC, const CFontDef& fd, const CRefSys&
     while (nEnd < strText.GetLength()) {
       TCHAR c = strText[nEnd];
       if (c == '\r') {
-        if (bTrueType)
+        if (bTrueType) {
           text_Display(pView, pDC, fd, rs, strText.Mid(nOff, nEnd - nOff));
-        else
+        } else {
           text_Display(pView, pDC, fd, tm, nOff, nEnd - nOff, strText);
+}
 
         if (strText[++nEnd] == '\n') ++nEnd;
         nOff = nEnd;
@@ -53,29 +54,32 @@ void text_Display0(CPegView* pView, CDC* pDC, const CFontDef& fd, const CRefSys&
             if (nNumEndDel != -1) {
               if (nNumEndDel < nCmdEndDel) {
                 nLen = nEnd - nOff - 1;
-                if (bTrueType)
+                if (bTrueType) {
                   text_Display(pView, pDC, fd, rs, strText.Mid(nOff, nLen));
-                else
+                } else {
                   text_Display(pView, pDC, fd, tm, nOff, nLen, strText);
+}
                 rs.SetOrigin(text_GetNewLinePos(fd, rs, -.35, nLen * (1 + .32 / .6)));
                 ptRef = rs.Origin();
                 tm = rs.GetTransformMatrix();
                 tm.Inverse();
 
                 nLen = nNumEndDel - n;
-                if (bTrueType)
+                if (bTrueType) {
                   text_Display(pView, pDC, fd, rs, strText.Mid(n, nLen));
-                else
+                } else {
                   text_Display(pView, pDC, fd, tm, n, nLen, strText);
+}
                 rs.SetOrigin(text_GetNewLinePos(fd, rs, .35, nLen * (1 + .32 / .6) - .72));
                 ptRef = rs.Origin();
                 tm = rs.GetTransformMatrix();
                 tm.Inverse();
 
-                if (bTrueType)
+                if (bTrueType) {
                   text_Display(pView, pDC, fd, rs, strText.Mid(nNumEndDel, 1));
-                else
+                } else {
                   text_Display(pView, pDC, fd, tm, nNumEndDel, 1, strText);
+}
                 n = nNumEndDel + 1;
                 rs.SetOrigin(text_GetNewLinePos(fd, rs, .35, .72));
                 ptRef = rs.Origin();
@@ -83,10 +87,11 @@ void text_Display0(CPegView* pView, CDC* pDC, const CFontDef& fd, const CRefSys&
                 tm.Inverse();
 
                 nLen = nCmdEndDel - n;
-                if (bTrueType)
+                if (bTrueType) {
                   text_Display(pView, pDC, fd, rs, strText.Mid(n, nLen));
-                else
+                } else {
                   text_Display(pView, pDC, fd, tm, n, nLen, strText);
+}
 
                 rs.SetOrigin(text_GetNewLinePos(fd, rs, -.35, nLen * (1 + .32 / .6)));
                 ptRef = rs.Origin();
@@ -103,13 +108,15 @@ void text_Display0(CPegView* pView, CDC* pDC, const CFontDef& fd, const CRefSys&
       //else if (c == '\\')
       //{
       //}
-      else
+      else {
         ++nEnd;
+}
     }
-    if (bTrueType)
+    if (bTrueType) {
       text_Display(pView, pDC, fd, rs, strText.Mid(nOff, nEnd - nOff));
-    else
+    } else {
       text_Display(pView, pDC, fd, tm, nOff, nEnd - nOff, strText);
+}
   }
 }
 ///<summary>Displays a text string using a simple stroke font.</summary>
@@ -244,48 +251,54 @@ void text_GetBottomLeft(const CFontDef& fd, int iChrs, CPnt& pt) {
 
     if (fd.TextPath() == CFontDef::PATH_RIGHT || fd.TextPath() == CFontDef::PATH_LEFT) {
       if (fd.TextPath() == CFontDef::PATH_RIGHT) {
-        if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_LEFT)
+        if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_LEFT) {
           pt[0] = 0.;
-        else if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_CENTER)
+        } else if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_CENTER) {
           pt[0] = -dTxtExt * .5;
-        else if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_RIGHT)
+        } else if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_RIGHT) {
           pt[0] = -dTxtExt;
+}
       } else {
-        if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_LEFT)
+        if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_LEFT) {
           pt[0] = dTxtExt;
-        else if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_CENTER)
+        } else if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_CENTER) {
           pt[0] = dTxtExt * .5;
-        else if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_RIGHT)
+        } else if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_RIGHT) {
           pt[0] = 0.;
+}
         pt[0] = pt[0] - 1.;
       }
-      if (fd.TextVerAlign() == CFontDef::VER_ALIGN_BOTTOM)
+      if (fd.TextVerAlign() == CFontDef::VER_ALIGN_BOTTOM) {
         pt[1] = 0.;
-      else if (fd.TextVerAlign() == CFontDef::VER_ALIGN_MIDDLE)
+      } else if (fd.TextVerAlign() == CFontDef::VER_ALIGN_MIDDLE) {
         pt[1] = -.5;
-      else if (fd.TextVerAlign() == CFontDef::VER_ALIGN_TOP)
+      } else if (fd.TextVerAlign() == CFontDef::VER_ALIGN_TOP) {
         pt[1] = -1.;
+}
     } else if (fd.TextPath() == CFontDef::PATH_DOWN || fd.TextPath() == CFontDef::PATH_UP) {
-      if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_LEFT)
+      if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_LEFT) {
         pt[0] = 0.;
-      else if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_CENTER)
+      } else if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_CENTER) {
         pt[0] = -.5;
-      else if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_RIGHT)
+      } else if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_RIGHT) {
         pt[0] = -1.;
+}
       if (fd.TextPath() == CFontDef::PATH_UP) {
-        if (fd.TextVerAlign() == CFontDef::VER_ALIGN_BOTTOM)
+        if (fd.TextVerAlign() == CFontDef::VER_ALIGN_BOTTOM) {
           pt[1] = 0.;
-        else if (fd.TextVerAlign() == CFontDef::VER_ALIGN_MIDDLE)
+        } else if (fd.TextVerAlign() == CFontDef::VER_ALIGN_MIDDLE) {
           pt[1] = -dTxtExt * .5;
-        else if (fd.TextVerAlign() == CFontDef::VER_ALIGN_TOP)
+        } else if (fd.TextVerAlign() == CFontDef::VER_ALIGN_TOP) {
           pt[1] = -dTxtExt;
+}
       } else {
-        if (fd.TextVerAlign() == CFontDef::VER_ALIGN_BOTTOM)
+        if (fd.TextVerAlign() == CFontDef::VER_ALIGN_BOTTOM) {
           pt[1] = dTxtExt;
-        else if (fd.TextVerAlign() == CFontDef::VER_ALIGN_MIDDLE)
+        } else if (fd.TextVerAlign() == CFontDef::VER_ALIGN_MIDDLE) {
           pt[1] = dTxtExt * .5;
-        else if (fd.TextVerAlign() == CFontDef::VER_ALIGN_TOP)
+        } else if (fd.TextVerAlign() == CFontDef::VER_ALIGN_TOP) {
           pt[1] = 0.;
+}
         pt[1] = pt[1] - 1.;
       }
     }
@@ -309,31 +322,34 @@ void text_GetBoundingBox(const CFontDef& fd, const CRefSys& cs, int nLen, double
     double dTxtWid = 1.;
     double d = (double)nLen + dChrSpac * (double)(nLen - 1);
 
-    if (fd.TextPath() == CFontDef::PATH_RIGHT || fd.TextPath() == CFontDef::PATH_LEFT)
+    if (fd.TextPath() == CFontDef::PATH_RIGHT || fd.TextPath() == CFontDef::PATH_LEFT) {
       dTxtWid = d;
-    else
+    } else {
       dTxtHgt = d;
+}
 
     ptsBox[0] = ORIGIN;
     ptsBox[1] = ptsBox[0];
     ptsBox[2] = ptsBox[0];
     ptsBox[3] = ptsBox[0];
 
-    if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_LEFT)
+    if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_LEFT) {
       ptsBox[2][0] = dTxtWid;
-    else if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_CENTER) {
+    } else if (fd.TextHorAlign() == CFontDef::HOR_ALIGN_CENTER) {
       ptsBox[0][0] = -dTxtWid * .5;
       ptsBox[2][0] = ptsBox[0][0] + dTxtWid;
-    } else
+    } else {
       ptsBox[0][0] = -dTxtWid;
+}
 
-    if (fd.TextVerAlign() == CFontDef::VER_ALIGN_TOP)
+    if (fd.TextVerAlign() == CFontDef::VER_ALIGN_TOP) {
       ptsBox[0][1] = -dTxtHgt;
-    else if (fd.TextVerAlign() == CFontDef::VER_ALIGN_MIDDLE) {
+    } else if (fd.TextVerAlign() == CFontDef::VER_ALIGN_MIDDLE) {
       ptsBox[0][1] = -dTxtHgt * .5;
       ptsBox[2][1] = ptsBox[0][1] + dTxtHgt;
-    } else
+    } else {
       ptsBox[2][1] = dTxtHgt;
+}
 
     if (dSpacFac > DBL_EPSILON) {
       ptsBox[0][0] -= dSpacFac / .6;
@@ -347,8 +363,9 @@ void text_GetBoundingBox(const CFontDef& fd, const CRefSys& cs, int nLen, double
     ptsBox[3][1] = ptsBox[2][1];
 
     for (int n = 0; n < 4; n++) ptsBox[n] = tm * ptsBox[n];
-  } else
+  } else {
     for (int n = 0; n < 4; n++) ptsBox[n] = cs.Origin();
+}
 }
 CPnt text_GetNewLinePos(const CFontDef& fd, const CRefSys& rs, double dLineSpaceFac, double dChrSpaceFac) {
   CPnt pt = rs.Origin();

@@ -14,7 +14,7 @@ void CDlgSetText::DoDataExchange(CDataExchange* pDX) {
   CDialog::DoDataExchange(pDX);
   DDX_Text(pDX, IDC_TEXT, m_sText);
 }
-BOOL CDlgSetText::OnInitDialog(void) {
+BOOL CDlgSetText::OnInitDialog() {
   if (!m_strTitle.IsEmpty()) { SetWindowText(m_strTitle); }
   CDialog::OnInitDialog();
   return TRUE;

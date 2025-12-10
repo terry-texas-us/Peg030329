@@ -142,9 +142,10 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
               lpd::GenSection(dWid[1], dDep[1], &lnPar[2]);
               lpd::bContSec = true;
               lpd::pEndCapSeg = pDoc->WorkLayerGetTail();
-            } else
+            } else {
               // Zero length section specified
               msgInformation(0);
+}
           } else if (wPrvKeyDwn == ID_OP3) {
             ptCur = UserAxisSnapLn(ptPrv, ptCur);
             lnLead(ptPrv, ptCur);
@@ -153,9 +154,10 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
               ptCur = Mid(lnPar[2][1], lnPar[3][1]);
               lpd::bContSec = true;
               lpd::pEndCapSeg = nullptr;
-            } else
+            } else {
               // Zero length section specified
               msgInformation(0);
+}
           }
         } else {                // Work with existing end-cap
           if (iEndCapId > 0) {  // Begin at end-cap
@@ -221,8 +223,9 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
               lpd::bContSec = false;
               lpd::pEndCapSeg = nullptr;
               wPrvKeyDwn = ID_OP2;
-            } else  // Zero length section specified
+            } else {  // Zero length section specified
               msgInformation(0);
+}
           } else if (wPrvKeyDwn == ID_OP3) {
             ptCur = UserAxisSnapLn(ptPrv, ptCur);  // Constrain point to user axis
             lnPar[0] = lnPar[2];
@@ -236,8 +239,9 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
               lpd::bContSec = false;
               lpd::pEndCapSeg = nullptr;
               wPrvKeyDwn = ID_OP2;
-            } else  // Zero length section specified
+            } else {  // Zero length section specified
               msgInformation(0);
+}
           }
         } else  // Work with existing end-cap
         {
@@ -266,8 +270,9 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
           pEndCapSeg = nullptr;
           pEndCapMark = nullptr;
           ptPrv = ptCur;
-        } else
+        } else {
           msgInformation(0);
+}
         break;
 
       case ID_OP5:  // Full ell takeoff
@@ -319,8 +324,9 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
                 }
                 // lpd::GenRiseDrop(INDEX('UD', C_ANS(:1)), dWid[1], dDep[1], lnPar);
                 ptCur = Mid(lnPar[2][1], lnPar[3][1]);
-              } else  // Zero length section specified
+              } else {  // Zero length section specified
                 msgInformation(0);
+}
             } else if (wPrvKeyDwn == ID_OP3) {
               ptCur = UserAxisSnapLn(ptPrv, ptCur);  // Constrain point to user axis
               lnLead(ptPrv, ptCur);
@@ -329,8 +335,9 @@ LRESULT CALLBACK SubProcLPD(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lParam)
                 lpd::GenTransition(Begin, iJus, dSlo, dWid, dDep, &lnPar[2]);
                 // lpd::GenRiseDrop(INDEX('UD', C_ANS(:1)), dWid[1], dDep[1], lnPar);
                 ptCur = Mid(lnPar[2][1], lnPar[3][1]);
-              } else  // Zero length section specified
+              } else {  // Zero length section specified
                 msgInformation(0);
+}
             }
           } else  // Work with existing end-cap
           {
@@ -432,8 +439,9 @@ bool lpd::Fnd2LnsGivLn(CPrimLine* pTestLine, double dAccAng, CPrim*& pLeftLine, 
         ptBeg = ptEnd;
         ptEnd = ptTmp;
       } else if (ptEnd != lnTest[0] &&
-                 ptEnd != lnTest[1])  //	No endpoint coincides with one of the test line endpoints
+                 ptEnd != lnTest[1]) {  //	No endpoint coincides with one of the test line endpoints
         continue;
+}
 
       dLnAng = fmod(line::GetAngAboutZAx(CLine(ptBeg, ptEnd)), PI);
       if (fabs(fabs(dLnAng0 - dLnAng) - HALF_PI) <= dAccAng) {
@@ -472,9 +480,10 @@ int lpd::GenElbow(double adWid, double adDep, CLine* pLns) {
 
   int iDir = pLns[0].DirRelOfPt(pLns[2][1]);
 
-  if (iDir == 0)
+  if (iDir == 0) {
     // No turn indicated
     return 0;
+}
 
   CPnt* points = new CPnt[6];
 
@@ -904,12 +913,13 @@ bool lpd::GenTap(CPegView* pView, CPnt arPrvPt, CPnt arCurPos, double adWid, dou
   if (lpd::bContSec) lpd::GenElbow(adWid, adDep, pLns);
   dTSiz = 9. / app.GetScale();
   iJus = lnLead.DirRelOfPt(arCurPos);
-  if (iJus == 1)
+  if (iJus == 1) {
     iOut = 3;
-  else if (iJus == -1)
+  } else if (iJus == -1) {
     iOut = 2;
-  else
+  } else {
     return false;
+}
 
   iJus = -iJus;
   dWid[0] = adWid;
@@ -1175,9 +1185,9 @@ int lpd::GenTransition(ETransition eEnd, int* aiJus, double* adSlo, double* adWi
     lpd::GenEndCap(lines[1][1], lines[0][1], adWid[I0 + 1], adDep[I0 + 1], pSeg);
     pSeg->AddTail(new CPrimLine(lines[0][1], ptLeftEnd));
   }
-  if (pSeg->IsEmpty())
+  if (pSeg->IsEmpty()) {
     delete pSeg;
-  else {
+  } else {
     pDoc->WorkLayerAddTail(pSeg);
     pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
   }

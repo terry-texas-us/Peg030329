@@ -219,11 +219,11 @@ void DlgProcFileManageDoLayerDelete(HWND hDlg) {
     int iLayerId = pDoc->LayersLookup(strName);
     CLayer* pLayer = pDoc->LayersGetAt(iLayerId);
 
-    if (iLayerId == 0)
+    if (iLayerId == 0) {
       msgWarning(IDS_MSG_LAYER_NO_DELETE_0);
-    else if (pLayer->IsHot())
+    } else if (pLayer->IsHot()) {
       msgWarning(IDS_MSG_LAYER_NO_DELETE_WORK, strName);
-    else {
+    } else {
       pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_LAYER_ERASE, pLayer);
       pDoc->LayersRemoveAt(iLayerId);
       ::SendDlgItemMessage(hDlg, IDC_LAY, LB_DELETESTRING, static_cast<WPARAM>(lrCurSel), 0L);
@@ -276,9 +276,9 @@ void DlgProcFileManageDoLayerRename(HWND hDlg) {
     int iLayerId = pDoc->LayersLookup(strName);
     CLayer* pLayer = pDoc->LayersGetAt(iLayerId);
 
-    if (iLayerId == 0)
+    if (iLayerId == 0) {
       msgWarning(IDS_MSG_LAYER_NO_RENAME_0);
-    else {
+    } else {
       _tcscpy_s(szLayerName, sizeof(szLayerName), strName.GetString());
       if (pGetLayerName()) {
         if (_tcslen(szLayerName) > 0) {

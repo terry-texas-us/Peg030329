@@ -1,3 +1,6 @@
-Checks: '-*,modernize-*'
-#,cppcoreguidelines-*,readability-*'
-  
+---
+Checks:            '-*,google-readability-braces-around-statements,modernize-raw-string-literal,modernize-redundant-void-arg,modernize-return-braced-init-list,modernize-use-auto,modernize-use-designated-initializers,modernize-use-nullptr'
+WarningsAsErrors:  ''
+HeaderFilterRegex: '.*'
+FormatStyle:       'file'
+User:              tsmit

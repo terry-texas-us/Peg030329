@@ -89,11 +89,12 @@ LRESULT CALLBACK SubProcTrapRemove(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM 
           return 0;
 
         case ID_OP9:
-          if (!trapsegs.IsEmpty())
+          if (!trapsegs.IsEmpty()) {
             ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_TRAP_MODIFY), hwnd,
                         reinterpret_cast<DLGPROC>(DlgProcTrapModify));
-          else
+          } else {
             msgInformation(0);
+}
           return 0;
 
         case IDM_RETURN:

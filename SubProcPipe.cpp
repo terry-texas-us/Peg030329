@@ -96,15 +96,16 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
         break;
 
       case ID_OP2:
-        if (wPrvKeyDwn == 0)
+        if (wPrvKeyDwn == 0) {
           pt[0] = pt[1];
-        else {
+        } else {
           pt[1] = UserAxisSnapLn(pt[0], pt[1]);
 
-          if (CVec(pt[0], pt[1]).Length() > pipe::dCSize)
+          if (CVec(pt[0], pt[1]).Length() > pipe::dCSize) {
             pipe::GenFits(wPrvKeyDwn, pt[0], ID_OP2, pt[1]);
-          else
+          } else {
             ;  // error
+}
 
           pt[0] = pt[1];
         }
@@ -141,18 +142,20 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 
           pstate.SetPen(pDC, nPenColor, nPenStyle);
 
-          if (eJoinHor == pipe::End)
+          if (eJoinHor == pipe::End) {
             // Ending on an existing horizontal pipe section
             pipe::GenFits(wPrvKeyDwn, pt[0], ID_OP3, pt[1]);
+}
 
           wPrvKeyDwn = ID_OP3;
 
           pLineHor = nullptr;
           eJoinHor = pipe::No;
         } else if (eJoinVer != pipe::No) {  // On an existing vertical pipe section
-          if (eJoinVer == pipe::End)
+          if (eJoinVer == pipe::End) {
             // Ending on an existing vertical pipe section
             pipe::GenFits(wPrvKeyDwn, pt[0], ID_OP5, pt[1]);
+}
           wPrvKeyDwn = ID_OP4;
           pArcVer = nullptr;
           eJoinVer = pipe::No;
@@ -223,9 +226,10 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
           pLineHor = nullptr;
           eJoinHor = pipe::No;
         } else if (eJoinVer != pipe::No) {  // On an existing vertical pipe section
-          if (eJoinVer == pipe::End)
+          if (eJoinVer == pipe::End) {
             // Dropping into an existing vertical pipe section
             pipe::GenFits(wPrvKeyDwn, pt[0], ID_OP4, pt[1]);
+}
           wPrvKeyDwn = ID_OP4;
           pArcVer = nullptr;
           eJoinVer = pipe::No;
@@ -297,9 +301,10 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
           pLineHor = nullptr;
           eJoinHor = pipe::No;
         } else if (eJoinVer != pipe::No) {  // On an existing vertical pipe section
-          if (eJoinVer == pipe::End)
+          if (eJoinVer == pipe::End) {
             // Rising into an existing vertical pipe section
             pipe::GenFits(wPrvKeyDwn, pt[0], ID_OP5, pt[1]);
+}
           wPrvKeyDwn = ID_OP5;
           pArcVer = nullptr;
           eJoinVer = pipe::No;
@@ -384,12 +389,14 @@ LRESULT CALLBACK SubProcPipe(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
             eJoinHor = pipe::No;
             wPrvKeyDwn = ID_OP3;
             app.RubberBandingStartAtEnable(pt[0], Lines);
-          } else
+          } else {
             // error
             pt[1] = pt[2];
-        } else
+}
+        } else {
           // error
           pt[1] = pt[2];
+}
 
         break;
 
@@ -418,23 +425,24 @@ void pipe::GenFits(WORD wPrvKeyDwn, const CPnt& PP, WORD CUR, const CPnt& PC) {
   CPnt pt1 = PP;
   CPnt pt2 = PC;
 
-  if (wPrvKeyDwn == ID_OP3)
+  if (wPrvKeyDwn == ID_OP3) {
     // Previous fitting is an elbow or side tee
     pipe::GenTicMark(PP, PC, pipe::dCSize);
-  else if (wPrvKeyDwn == ID_OP4) {  // Previous fitting is an elbow down, riser down or bottom tee
+  } else if (wPrvKeyDwn == ID_OP4) {  // Previous fitting is an elbow down, riser down or bottom tee
     pt1 = Pnt_ProjPtTo(PP, PC, pipe::dCSize);
     pipe::GenTicMark(pt1, PC, pipe::dCSize);
-  } else if (wPrvKeyDwn == ID_OP5)
+  } else if (wPrvKeyDwn == ID_OP5) {
     // Previous fitting is an elbow up, riser up or top tee
     pipe::GenTicMark(PP, PC, 2. * pipe::dCSize);
+}
 
-  if (CUR == ID_OP3)
+  if (CUR == ID_OP3) {
     // Current fitting is an elbow or side tee
     pipe::GenTicMark(PC, PP, pipe::dCSize);
-  else if (CUR == ID_OP4)
+  } else if (CUR == ID_OP4) {
     // Current fitting is an elbow down, riser down or bottom tee
     pipe::GenTicMark(PC, PP, 2. * pipe::dCSize);
-  else if (CUR == ID_OP5) {  // Current fitting is an elbow up, riser up or top tee
+  } else if (CUR == ID_OP5) {  // Current fitting is an elbow up, riser up or top tee
     pt2 = Pnt_ProjPtTo(PC, PP, pipe::dCSize);
     pipe::GenTicMark(PC, PP, 2. * pipe::dCSize);
   }

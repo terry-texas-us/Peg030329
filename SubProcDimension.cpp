@@ -122,9 +122,9 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
           app.RubberBandingDisable();
           if (ptPrv != ptCur) {
             CSeg* pSeg = new CSeg;
-            if (wPrvOp == ID_OP4)
+            if (wPrvOp == ID_OP4) {
               annotate::GenArrowHead(1, .1, ptCur, ptPrv, pSeg);
-            else {
+            } else {
               app.ModeLineUnhighlightOp(wPrvOp);
               wPrvOp = app.ModeLineHighlightOp(ID_OP4);
             }
@@ -139,12 +139,14 @@ LRESULT CALLBACK SubProcDimension(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM l
             pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
 
             ptPrv = ptCur;
-          } else
+          } else {
             msgInformation(0);
-        } else
+}
+        } else {
           // error finish prior op first
 
           app.CursorPosSet(ptCur);
+}
         app.RubberBandingStartAtEnable(ptCur, Lines);
         break;
 
@@ -284,12 +286,13 @@ CPnt dimension::AddArrowHead(CPnt arPt) {
     while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
       CLine ln;
-      if (pPrim->Is(CPrim::Type::Line))
+      if (pPrim->Is(CPrim::Type::Line)) {
         static_cast<CPrimLine*>(pPrim)->GetLine(ln);
-      else if (pPrim->Is(CPrim::Type::Dim))
+      } else if (pPrim->Is(CPrim::Type::Dim)) {
         ln = static_cast<CPrimDim*>(pPrim)->Line();
-      else
+      } else {
         continue;
+}
 
       CPnt ptProj;
       double dRel[2];
@@ -455,8 +458,9 @@ CPnt dimension::ProjPtToLn(CPnt pt) {
         static_cast<CPrimLine*>(pPrim)->GetLine(ln);
       } else if (pPrim->Is(CPrim::Type::Dim)) {
         ln = static_cast<CPrimDim*>(pPrim)->Line();
-      } else
+      } else {
         continue;
+}
 
       if (line::EvalPtProx_xy(ln, pt, .05, ptProj, dRel, &dDis)) return (*dRel <= .5) ? ln[0] : ln[1];
     }

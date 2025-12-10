@@ -32,7 +32,7 @@ CPrim*& CPrimTag::Copy(CPrim*& pPrim) const {
   return (pPrim);
 }
 void CPrimTag::Display(CPegView*, CDC* pDC) const {
-  if (pDC == 0) {
+  if (pDC == nullptr) {
     PENCOLOR nPenColor = LogicalPenColor();
     opengl::SetCurrentColor(app.PenColorsGetHot(nPenColor));
 

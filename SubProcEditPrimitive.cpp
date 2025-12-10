@@ -100,16 +100,17 @@ void DoEditPrimitiveTransform(WORD wId) {
 
     tm.Translate(ORIGIN - app.GetEditSegBeg());
 
-    if (wId == ID_OP2)
+    if (wId == ID_OP2) {
       tm *= dlgproceditops::GetRotTrnMat();
-    else if (wId == ID_OP3)
+    } else if (wId == ID_OP3) {
       tm *= dlgproceditops::GetInvertedRotTrnMat();
-    else if (wId == ID_OP6)
+    } else if (wId == ID_OP6) {
       tm.Scale(dlgproceditops::GetMirrorScale());
-    else if (wId == ID_OP7)
+    } else if (wId == ID_OP7) {
       tm.Scale(dlgproceditops::GetInvertedScale());
-    else
+    } else {
       tm.Scale(dlgproceditops::GetScale());
+}
 
     tm.Translate(app.GetEditSegBeg());
 

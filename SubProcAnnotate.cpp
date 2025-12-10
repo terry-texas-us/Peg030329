@@ -72,9 +72,9 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
             if (dD12 > DBL_EPSILON)  // Points do not coincide
             {
               pSeg = new CSeg;
-              if (wPrvKeyDwn == ID_OP2)
+              if (wPrvKeyDwn == ID_OP2) {
                 pSeg->AddTail(new CPrimLine(1, 1, pt[0], pt[1]));
-              else {
+              } else {
                 if (wPrvKeyDwn == ID_OP3) {
                   annotate::GenArrowHead(annotate::iArrowTyp, annotate::dArrowSiz, pt[1], pt[0], pSeg);
                   pSeg->AddTail(new CPrimLine(1, 1, pt[0], pt[1]));
@@ -92,15 +92,16 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
                 app.ModeLineUnhighlightOp(wPrvKeyDwn);
                 wPrvKeyDwn = app.ModeLineHighlightOp(ID_OP2);
               }
-              if (pSeg->IsEmpty())
+              if (pSeg->IsEmpty()) {
                 delete pSeg;
-              else {
+              } else {
                 pDoc->WorkLayerAddTail(pSeg);
                 pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
               }
               pt[0] = pt[1];
-            } else
+            } else {
               msgInformation(0);
+}
           }
           // app.CursorPosSet(pt[0]);
           app.RubberBandingStartAtEnable(pt[0], Lines);
@@ -142,15 +143,16 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
                 app.ModeLineUnhighlightOp(wPrvKeyDwn);
                 wPrvKeyDwn = app.ModeLineHighlightOp(ID_OP3);
               }
-              if (pSeg->IsEmpty())
+              if (pSeg->IsEmpty()) {
                 delete pSeg;
-              else {
+              } else {
                 pDoc->WorkLayerAddTail(pSeg);
                 pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEG_SAFE, pSeg);
               }
               pt[0] = pt[1];
-            } else  // Two points coincide
+            } else {  // Two points coincide
               msgInformation(0);
+}
           }
           // app.CursorPosSet(pt[0]);
           app.RubberBandingStartAtEnable(pt[0], Lines);
@@ -167,9 +169,9 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
             _tcscpy_s(annotate::szCurTxt, sizeof(annotate::szCurTxt), dlg.m_sText.GetString());
           }
           pSeg = new CSeg;
-          if (wPrvKeyDwn == 0 || wPrvKeyDwn == ID_OP4)  // No operation pending
+          if (wPrvKeyDwn == 0 || wPrvKeyDwn == ID_OP4) {  // No operation pending
             wPrvKeyDwn = ID_OP4;
-          else  // Operation pending
+          } else  // Operation pending
           {
             app.RubberBandingDisable();
             dD12 = CVec(pt[0], pt[1]).Length();
@@ -253,9 +255,9 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
 
           pSeg = new CSeg;
 
-          if (wPrvKeyDwn == 0)
+          if (wPrvKeyDwn == 0) {
             wPrvKeyDwn = app.ModeLineHighlightOp(ID_OP5);
-          else {
+          } else {
             app.RubberBandingDisable();
             dD12 = CVec(pt[0], pt[1]).Length();
             if (dD12 > DBL_EPSILON) {
@@ -455,10 +457,11 @@ LRESULT CALLBACK SubProcAnnotate(HWND hwnd, UINT anMsg, WPARAM wParam, LPARAM lP
                 pLine->SetPt1(ptsBox[0]);
                 pLineNew->SetPt0(ptsBox[1]);
                 pSeg->AddTail(pLineNew);
-              } else if (dRel[0] <= DBL_EPSILON)
+              } else if (dRel[0] <= DBL_EPSILON) {
                 pLine->SetPt0(ptsBox[1]);
-              else if (dRel[1] >= 1. - DBL_EPSILON)
+              } else if (dRel[1] >= 1. - DBL_EPSILON) {
                 pLine->SetPt1(ptsBox[0]);
+}
 
               pt[0] = pt[1];
               app.CursorPosSet(pt[0]);

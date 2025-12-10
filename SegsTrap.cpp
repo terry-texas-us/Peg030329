@@ -28,8 +28,9 @@ void CSegsTrap::AddSegsAtPt(CPegView* pView, CSegsDet* pSegs, CPnt pt) {
   while (pos != nullptr) {
     CSeg* pSeg = pSegs->GetNext(pos);
 
-    if (Find(pSeg) != nullptr)  // already in trap
+    if (Find(pSeg) != nullptr) {  // already in trap
       continue;
+}
 
     POSITION posPrim = pSeg->GetHeadPosition();
     while (posPrim != nullptr) {

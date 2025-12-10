@@ -101,13 +101,14 @@ LRESULT CALLBACK SubProcPower(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
           }
         }
         if (eJoin == No) {  // Not on a symbol
-          if (wPrvKeyDwn == 0)
+          if (wPrvKeyDwn == 0) {
             // Begin circuit generation
             wPrvKeyDwn = ID_OP1;
-          else {
-            if (wPrvKeyDwn == ID_OP1)
+          } else {
+            if (wPrvKeyDwn == ID_OP1) {
               // Generate first circuit
               pt[1] = UserAxisSnapLn(pt[0], pt[1]);
+}
 
             if (pt[0] != pt[1]) {
               pSegPrv = new CSeg;
@@ -160,14 +161,16 @@ LRESULT CALLBACK SubProcPower(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam
             pt2 = pt1;
 
             if (fabs(ptEnd[0] - ptBeg[0]) > .025) {
-              if (ptBeg[0] > ptEnd[0])
+              if (ptBeg[0] > ptEnd[0]) {
                 pt3 = ptBeg;
-              else
+              } else {
                 pt3 = ptEnd;
-            } else if (ptBeg[1] > ptEnd[1])
+}
+            } else if (ptBeg[1] > ptEnd[1]) {
               pt3 = ptBeg;
-            else
+            } else {
               pt3 = ptEnd;
+}
 
             bConductor = true;
             goto l400;

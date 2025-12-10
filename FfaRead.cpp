@@ -18,7 +18,7 @@ void ffaReadFile(const CString& strPathName) {
 
   if (fl.Open(strPathName, CFile::modeRead | CFile::typeText)) {
     TCHAR szLine[256]{};
-    while (fl.ReadString(szLine, sizeof(szLine) - 1) != 0) {
+    while (fl.ReadString(szLine, sizeof(szLine) - 1) != nullptr) {
       CString strLine(szLine);
       int nComment = strLine.Find(_T("//"));
 
@@ -32,7 +32,7 @@ void ffaReadFile(const CString& strPathName) {
         pDoc->TracingMap(strName);
         pDoc->TracingFuse(strName);
         CLayer* pLayer = pDoc->LayersGet(strName);
-        if (pLayer != 0) {
+        if (pLayer != nullptr) {
           strName = strLine.Mid(nComment + 2);
           strName.Trim();
           pLayer->SetName(strName);

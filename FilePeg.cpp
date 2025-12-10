@@ -48,7 +48,7 @@ void CFilePeg::ReadBlocksSection(CPegDoc* pDoc) {
     CPnt pt;
     pt.Read(*this);
 
-    CBlock* pBlock = new CBlock(wBlkTypFlgs, pt, szXRefPathNam);
+    auto* pBlock = new CBlock(wBlkTypFlgs, pt, szXRefPathNam);
     pDoc->BlksSetAt(strName, pBlock);
 
     for (WORD wPrim = 0; wPrim < wPrimCount; wPrim++) {
@@ -68,7 +68,7 @@ void CFilePeg::ReadEntitiesSection(CPegDoc* pDoc) {
   for (WORD w = 0; w < wTblSize; w++) {
     CLayer* pLayer = pDoc->LayersGetAt(w);
 
-    if (pLayer == 0) return;
+    if (pLayer == nullptr) return;
 
     WORD wSegCount = FilePeg_ReadWord(*this);
 
@@ -82,8 +82,9 @@ void CFilePeg::ReadEntitiesSection(CPegDoc* pDoc) {
         }
         pLayer->AddTail(pSeg);
       }
-    } else
+    } else {
       pDoc->TracingLoadLayer(pLayer->GetName(), pLayer);
+}
   }
   if (FilePeg_ReadWord(*this) != SECTION_END) throw _T("Exception CFilePeg: Expecting sentinel SECTION_END.");
 }
@@ -113,11 +114,11 @@ void CFilePeg::ReadLayerTable(CPegDoc* pDoc) {
       // HACK is this correct
       if (strName.Find('.') == -1) strName += _T(".jb1");
     }
-    PENCOLOR nPenColor = PENCOLOR(FilePeg_ReadWord(*this));
+    auto nPenColor = PENCOLOR(FilePeg_ReadWord(*this));
     FilePeg_ReadString(*this, strPenStyleName);
 
     if (pDoc->LayersLookup(strName) < 0) {
-      CLayer* pLayer = new CLayer(strName, wStateFlgs);
+      auto* pLayer = new CLayer(strName, wStateFlgs);
 
       pLayer->SetTracingFlg(wTracingFlgs);
       pLayer->SetPenColor(nPenColor);
@@ -137,7 +138,7 @@ void CFilePeg::ReadLnTypsTable(CPegDoc* pDoc) {
   CString strDescr;
   WORD wDefLen;
   WORD iStdFlgs;
-  double* dDash = new double[32];
+  auto* dDash = new double[32];
 
   double dPatternLen;
 
@@ -154,8 +155,9 @@ void CFilePeg::ReadLnTypsTable(CPegDoc* pDoc) {
 
     for (WORD wDash = 0; wDash < wDefLen; wDash++) FilePeg_ReadDouble(*this, dDash[wDash]);
 
-    if (pDoc->PenStylesLookup(strName) == PENSTYLE_LookupErr)
+    if (pDoc->PenStylesLookup(strName) == PENSTYLE_LookupErr) {
       pDoc->PenStylesAdd(new CPenStyle(strName, strDescr, wDefLen, dDash));
+}
   }
   delete[] dDash;
 
@@ -199,7 +201,7 @@ void CFilePeg::WriteBlocksSection(CPegDoc* pDoc) {
   CBlock* pBlock;
 
   POSITION pos = pDoc->BlksGetStartPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     pDoc->BlksGetNextAssoc(pos, strKey, pBlock);
 
     ULONGLONG dwCountPosition = CFile::GetPosition();
@@ -213,7 +215,7 @@ void CFilePeg::WriteBlocksSection(CPegDoc* pDoc) {
 #pragma tasMSG(TODO if block is an xref add a pathname)
 
     POSITION posPrim = pBlock->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pBlock->GetNext(posPrim);
       if (pPrim->Write(*this)) iPrimCount++;
     }
@@ -237,12 +239,13 @@ void CFilePeg::WriteEntitiesSection(CPegDoc* pDoc) {
       FilePeg_WriteWord(*this, static_cast<WORD>(pLayer->GetCount()));
 
       POSITION pos = pLayer->GetHeadPosition();
-      while (pos != 0) {
+      while (pos != nullptr) {
         CSeg* pSeg = pLayer->GetNext(pos);
         pSeg->Write(*this);
       }
-    } else
+    } else {
       FilePeg_WriteWord(*this, 0);
+}
   }
   FilePeg_WriteWord(*this, SECTION_END);
 }
@@ -269,8 +272,9 @@ void CFilePeg::WriteLayerTable(CPegDoc* pDoc) {
       FilePeg_WriteWord(*this, pLayer->GetStateFlgs());
       FilePeg_WriteWord(*this, pLayer->PenColor());
       FilePeg_WriteString(*this, pLayer->GetPenStyleName());
-    } else
+    } else {
       iTblSize--;
+}
   }
   FilePeg_WriteWord(*this, TABLE_END);
 
@@ -301,7 +305,7 @@ void CFilePeg::WritePenStyleTable(CPegDoc* pDoc) {
     FilePeg_WriteDouble(*this, dPatternLen);
 
     if (wDefLen > 0) {
-      double* dDash = new double[wDefLen];
+      auto* dDash = new double[wDefLen];
       pPenStyle->GetDashLen(dDash);
       for (WORD w = 0; w < wDefLen; w++) FilePeg_WriteDouble(*this, dDash[w]);
 

@@ -9,9 +9,9 @@
 #include "SafeMath.h"
 
 // State list maintenance
-CPrimState* psSav[] = {0, 0, 0, 0};
+CPrimState* psSav[] = {nullptr, nullptr, nullptr, nullptr};
 
-HPEN hPen[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+HPEN hPen[8] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
 PENSTYLE nPenStyles[8];
 int nPenWidths[8];
 COLORREF crColRef[8];
@@ -30,7 +30,7 @@ const CPrimState& CPrimState::operator=(const CPrimState& src) {
 void CPrimState::Restore(CDC* pDC, int iSaveId) {
   if (static_cast<size_t>(iSaveId) >= (sizeof(psSav) / sizeof(psSav[0]))) { return; }
 
-  if (psSav[iSaveId] != 0) {
+  if (psSav[iSaveId] != nullptr) {
     SetPen(pDC, psSav[iSaveId]->PenColor(), psSav[iSaveId]->PenStyle());
 
     m_fd = psSav[iSaveId]->m_fd;
@@ -41,17 +41,17 @@ void CPrimState::Restore(CDC* pDC, int iSaveId) {
     SetPolygonIntStyleId(psSav[iSaveId]->PolygonIntStyleId());
 
     delete psSav[iSaveId];
-    psSav[iSaveId] = 0;
+    psSav[iSaveId] = nullptr;
   }
 }
 int CPrimState::Save() {
   int iSaveId = sizeof(psSav) / sizeof(psSav[0]) - 1;
 
-  while (iSaveId >= 0 && psSav[iSaveId] != 0) iSaveId--;
+  while (iSaveId >= 0 && psSav[iSaveId] != nullptr) iSaveId--;
 
-  if (iSaveId < 0)
+  if (iSaveId < 0) {
     msgWarning(IDS_MSG_SAVE_STATE_LIST_ERROR);
-  else {
+  } else {
     SetPolygonIntStyle(pstate.PolygonIntStyle());
     psSav[iSaveId] = new CPrimState;
     *psSav[iSaveId] = pstate;
@@ -107,7 +107,7 @@ void CPrimState::SetPen(CDC* pDC, PENCOLOR nPenColor, int nPenWidth, PENSTYLE nP
   }
   double dLogWidth = 0.;
 
-  if (pView != NULL && pView->m_bViewPenWidths) {
+  if (pView != nullptr && pView->m_bViewPenWidths) {
     int iLogPixelsX = pDC->GetDeviceCaps(LOGPIXELSX);
     dLogWidth = app.PenWidthsGet(nPenColor) * double(iLogPixelsX);
     dLogWidth *= std::min(1., pView->GetWidthInInches() / pView->ModelViewGetUExt());
@@ -118,7 +118,7 @@ void CPrimState::SetPen(CDC* pDC, PENCOLOR nPenColor, int nPenWidth, PENSTYLE nP
 
   int iPen = 0;
   for (int i = 0; i < nPens; i++) {
-    if (hPen[i] != 0 && nPenStyles[i] == nPenStyle && nPenWidths[i] == nPenWidth && crColRef[i] == pColTbl[nPenColor]) {
+    if (hPen[i] != nullptr && nPenStyles[i] == nPenStyle && nPenWidths[i] == nPenWidth && crColRef[i] == pColTbl[nPenColor]) {
       //if (hPenCur != hPen[i])
       {
         hPenCur = hPen[i];
@@ -126,16 +126,16 @@ void CPrimState::SetPen(CDC* pDC, PENCOLOR nPenColor, int nPenWidth, PENSTYLE nP
       }
       return;
     }
-    if (hPen[i] == 0) iPen = i;
+    if (hPen[i] == nullptr) iPen = i;
   }
 
   HPEN hPenNew = ::CreatePen(nPenStyle, nPenWidth, pColTbl[nPenColor]);
 
-  if (hPenNew != 0) {
+  if (hPenNew != nullptr) {
     hPenCur = hPenNew;
     pDC->SelectObject(CPen::FromHandle(hPenNew));
 
-    if (hPen[iPen] != 0) ::DeleteObject(hPen[iPen]);
+    if (hPen[iPen] != nullptr) ::DeleteObject(hPen[iPen]);
 
     hPen[iPen] = hPenNew;
     nPenStyles[iPen] = nPenStyle;
@@ -145,7 +145,7 @@ void CPrimState::SetPen(CDC* pDC, PENCOLOR nPenColor, int nPenWidth, PENSTYLE nP
 }
 void CPrimState::SetPenColor(PENCOLOR nPenColor) {
   CPegView* pView = CPegView::GetActiveView();
-  CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+  CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
   m_nPenColor = nPenColor;
   SetPen(pDC, nPenColor, 0, m_nPenStyle);
@@ -153,7 +153,7 @@ void CPrimState::SetPenColor(PENCOLOR nPenColor) {
 void CPrimState::SetPenStyle(PENSTYLE nPenStyle) {
   CPegView* pView = CPegView::GetActiveView();
   // CrashSite: pView is undefined on display tree started as a print preview
-  CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+  CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
   m_nPenStyle = nPenStyle;
   SetPen(pDC, m_nPenColor, 0, nPenStyle);

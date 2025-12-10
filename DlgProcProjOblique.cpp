@@ -46,11 +46,11 @@ INT_PTR CALLBACK DlgProcProjOblique(HWND hDlg, UINT anMsg, WPARAM wParam, LPARAM
 
           ptProjRefPt = CPnt(-sin(dPhi) * cos(dTheta), -sin(dPhi) * sin(dTheta), -cos(dPhi));
 
-          if (fabs(dPhi) <= DBL_EPSILON)
+          if (fabs(dPhi) <= DBL_EPSILON) {
             vVwUp(-cos(dTheta), -sin(dTheta), 0.);
-          else if (fabs(dPhi - PI) <= DBL_EPSILON)
+          } else if (fabs(dPhi - PI) <= DBL_EPSILON) {
             vVwUp(cos(dTheta), sin(dTheta), 0.);
-          else {
+          } else {
             vVwUp = vVwPlnNorm ^ ZDIR;
             vVwUp = vVwUp ^ vVwPlnNorm;
             vVwUp.Normalize();

@@ -115,17 +115,19 @@ void WndProcKeyPlanOnMouseMove(HWND hwnd, WPARAM wParam, LPARAM lParam) {
     ::Rectangle(hDCKeyplan, CDlgViewZoom::m_rcWnd.left, CDlgViewZoom::m_rcWnd.top, CDlgViewZoom::m_rcWnd.right,
                 CDlgViewZoom::m_rcWnd.bottom);
 
-    if (bPtInRect)
+    if (bPtInRect) {
       ::OffsetRect(&CDlgViewZoom::m_rcWnd, (pntCur.x - pnt.x), (pntCur.y - pnt.y));
-    else {
-      if (pntCur.x > CDlgViewZoom::m_rcWnd.right)
+    } else {
+      if (pntCur.x > CDlgViewZoom::m_rcWnd.right) {
         CDlgViewZoom::m_rcWnd.right += (pntCur.x - pnt.x);
-      else if (pntCur.x < CDlgViewZoom::m_rcWnd.left)
+      } else if (pntCur.x < CDlgViewZoom::m_rcWnd.left) {
         CDlgViewZoom::m_rcWnd.left += (pntCur.x - pnt.x);
-      if (pntCur.y > CDlgViewZoom::m_rcWnd.bottom)
+}
+      if (pntCur.y > CDlgViewZoom::m_rcWnd.bottom) {
         CDlgViewZoom::m_rcWnd.bottom += (pntCur.y - pnt.y);
-      else if (pntCur.y < CDlgViewZoom::m_rcWnd.top)
+      } else if (pntCur.y < CDlgViewZoom::m_rcWnd.top) {
         CDlgViewZoom::m_rcWnd.top += (pntCur.y - pnt.y);
+}
       ::SendMessage(::GetParent(hwnd), WM_COMMAND, (WPARAM)::GetWindowLong(hwnd, GWL_ID), (LPARAM)hwnd);
     }
     pnt = pntCur;

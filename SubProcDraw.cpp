@@ -225,8 +225,9 @@ void CDrawHandler::HandleOp5(CPnt cursorPosition) {
         app.ModeLineUnhighlightOp(state.previousKeyDown);
         state.reset();
       }
-    } else
+    } else {
       msgInformation(IDS_MSG_PTS_COINCIDE);
+}
   }
 }
 
@@ -245,9 +246,9 @@ void CDrawHandler::HandleOp6(CPnt cursorPosition) {
       state.points.resize(newSize);
     }
 
-    if (state.numberOfPoints == 1)
+    if (state.numberOfPoints == 1) {
       app.RubberBandingDisable();
-    else {  // rubber banding for splines required display
+    } else {  // rubber banding for splines required display
       // in main window proc. It is erased here and displayed there.
       int iDrawMode = pstate.SetROP2(deviceContext, R2_XORPEN);
       CPrimBSpline BSp(WORD(state.numberOfPoints + 1), state.points.data());
@@ -317,15 +318,17 @@ void CDrawHandler::HandleOp8(CPnt cursorPosition) {
         app.ModeLineUnhighlightOp(state.previousKeyDown);
         state.reset();
       }
-    } else
+    } else {
       msgInformation(IDS_MSG_PTS_COINCIDE);
+}
   }
 }
 
 void CDrawHandler::HandleOp9(HWND hwnd) {
   auto* document = CPegDoc::GetDoc();
-  if (document->BlksSize() > 0)
+  if (document->BlksSize() > 0) {
     ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_INSERT_BLOCK), hwnd, DlgProcBlockInsert);
+}
 }
 
 /// @brief Finalize the current drawing action: disable rubber-banding, end any active fill-area or spline definition depending on the previously active operation key, unhighlight the mode-line operation, and reset the working point count.
@@ -375,12 +378,14 @@ void CDrawHandler::HandleMouseMove(CPnt cursorPosition, CDC* deviceContext) {
     int iDrawMode = pstate.SetROP2(deviceContext, R2_XORPEN);
 
     CPrimBSpline splinePrimitive(WORD(state.numberOfPoints + 1), state.points.data());
-    if (state.points[state.numberOfPoints - 1] != state.points[state.numberOfPoints])
+    if (state.points[state.numberOfPoints - 1] != state.points[state.numberOfPoints]) {
       splinePrimitive.Display(view, deviceContext);
+}
     state.points[state.numberOfPoints] = cursorPosition;
     splinePrimitive.SetPoint(state.numberOfPoints, state.points[state.numberOfPoints]);
-    if (state.points[state.numberOfPoints - 1] != state.points[state.numberOfPoints])
+    if (state.points[state.numberOfPoints - 1] != state.points[state.numberOfPoints]) {
       splinePrimitive.Display(view, deviceContext);
+}
 
     pstate.SetROP2(deviceContext, iDrawMode);
   } else if (state.previousKeyDown == ID_OP8 && state.numberOfPoints == 2) {
