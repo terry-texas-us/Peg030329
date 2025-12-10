@@ -30,7 +30,7 @@ CVec CVec::operator^(const CVec& v) const {  // Determines the cross product of 
   double dx = m_d[1] * v.m_d[2] - m_d[2] * v.m_d[1];
   double dy = m_d[2] * v.m_d[0] - m_d[0] * v.m_d[2];
   double dz = m_d[0] * v.m_d[1] - m_d[1] * v.m_d[0];
-  return (CVec(dx, dy, dz));
+  return {dx, dy, dz};
 }
 
 // Methods

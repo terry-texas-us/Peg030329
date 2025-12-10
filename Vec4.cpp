@@ -70,16 +70,16 @@ void CVec4::operator()(const double dX, const double dY, const double dZ, const 
   m_d[2] = dZ;
   m_d[3] = dW;
 }
-CVec4 operator-(const CVec4& vA) { return CVec4(-vA.m_d[0], -vA.m_d[1], -vA.m_d[2], -vA.m_d[3]); }
+CVec4 operator-(const CVec4& vA) { return {-vA.m_d[0], -vA.m_d[1], -vA.m_d[2], -vA.m_d[3]}; }
 CVec4 operator+(const CVec4& vA, const CVec4& vB) {
-  return CVec4(vA.m_d[0] + vB.m_d[0], vA.m_d[1] + vB.m_d[1], vA.m_d[2] + vB.m_d[2], vA.m_d[3] + vB.m_d[3]);
+  return {vA.m_d[0] + vB.m_d[0], vA.m_d[1] + vB.m_d[1], vA.m_d[2] + vB.m_d[2], vA.m_d[3] + vB.m_d[3]};
 }
 CVec4 operator-(const CVec4& vA, const CVec4& vB) {
   CVec4 v = vA;
   return v -= vB;
 }
 CVec4 operator*(const CVec4& vA, const double d) {
-  return CVec4(d * vA.m_d[0], d * vA.m_d[1], d * vA.m_d[2], d * vA.m_d[3]);
+  return {d * vA.m_d[0], d * vA.m_d[1], d * vA.m_d[2], d * vA.m_d[3]};
 }
 CVec4 operator*(const double d, const CVec4& vA) { return vA * d; }
 double operator*(const CVec4& vA, const CVec4& vB) {
@@ -87,7 +87,7 @@ double operator*(const CVec4& vA, const CVec4& vB) {
 }
 CVec4 operator/(const CVec4& vA, const double d) {
   double d_inv = 1. / d;
-  return CVec4(vA.m_d[0] * d_inv, vA.m_d[1] * d_inv, vA.m_d[2] * d_inv, vA.m_d[3] * d_inv);
+  return {vA.m_d[0] * d_inv, vA.m_d[1] * d_inv, vA.m_d[2] * d_inv, vA.m_d[3] * d_inv};
 }
 bool operator==(const CVec4& vA, const CVec4& vB) {
   return (vA.m_d[0] == vB.m_d[0]) && (vA.m_d[1] == vB.m_d[1]) && (vA.m_d[2] == vB.m_d[2]) && (vA.m_d[3] == vB.m_d[3]);
@@ -99,10 +99,10 @@ void Exchange(CVec4& vA, CVec4& vB) {
   vB = vTmp;
 }
 CVec4 Max(const CVec4& vA, const CVec4& vB) {
-  return CVec4(std::max(vA.m_d[0], vB.m_d[0]), std::max(vA.m_d[1], vB.m_d[1]), std::max(vA.m_d[2], vB.m_d[2]),
-               std::max(vA.m_d[3], vB.m_d[3]));
+  return {std::max(vA.m_d[0], vB.m_d[0]), std::max(vA.m_d[1], vB.m_d[1]), std::max(vA.m_d[2], vB.m_d[2]),
+          std::max(vA.m_d[3], vB.m_d[3])};
 }
 CVec4 Min(const CVec4& vA, const CVec4& vB) {
-  return CVec4(std::min(vA.m_d[0], vB.m_d[0]), std::min(vA.m_d[1], vB.m_d[1]), std::min(vA.m_d[2], vB.m_d[2]),
-               std::min(vA.m_d[3], vB.m_d[3]));
+  return {std::min(vA.m_d[0], vB.m_d[0]), std::min(vA.m_d[1], vB.m_d[1]), std::min(vA.m_d[2], vB.m_d[2]),
+          std::min(vA.m_d[3], vB.m_d[3])};
 }

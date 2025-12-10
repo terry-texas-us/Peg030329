@@ -1,19 +1,23 @@
-Code	File	Line	Column
-MainFrm.cpp
 
-  #include "dde.h"						
-  dde::Uninitialize();					
-
-PegAEsys.cpp
+# MainFrm.cpp
 
   #include "Dde.h"						
+  
+  dde::Uninitialize();					
+
+# PegAEsys.cpp
+
+  #include "Dde.h"						
+  
   dde::Setup(m_hInstance);				
+  
   dde::PostAdvise(dde::ExtNumInfo);		
   dde::PostAdvise(dde::ExtStrInfo);		
 
-PegAEsysView.cpp
+# PegAEsysView.cpp
 
-  #include "Dde.h"						
+  #include "DdeGItms.h"						
+  
   dde::PostAdvise(dde::ScaleInfo);		
   dde::PostAdvise(dde::DimLenInfo);		
   dde::PostAdvise(dde::DimAngZInfo);	
@@ -21,26 +25,62 @@ PegAEsysView.cpp
   dde::PostAdvise(dde::RelPosYInfo);	
   dde::PostAdvise(dde::RelPosZInfo);	
 
-PrimDim.cpp
+# PrimDim.cpp
 
-  #include "DdeGItms.h"						
+  #include "DdeGItms.h"	
+  
   dde::PostAdvise(dde::EngLenInfo);		
   dde::PostAdvise(dde::EngAngZInfo);	
   
-PrimLine.cpp  
+# PrimLine.cpp  
 
-  #include "DdeGItms.h"						
+  #include "DdeGItms.h"	
+  
   dde::PostAdvise(dde::EngLenInfo);		
   dde::PostAdvise(dde::EngAngZInfo);	
    
-PrimPolygon.cpp
+# PrimPolygon.cpp
 
-  #include "DdeGItms.h"						
+  #include "DdeGItms.h"	
+  
   dde::PostAdvise(dde::EngLenInfo);		
   dde::PostAdvise(dde::EngAngZInfo);	
 
-PrimPolyline.cpp
+# PrimPolyline.cpp
 
   #include "DdeGItms.h"						
+
   dde::PostAdvise(dde::EngLenInfo);		
-  dde::PostAdvise(dde::EngAngZInfo);	
+  dde::PostAdvise(dde::EngAngZInfo);
+  
+  # Dde.cpp
+
+  #include "PegAEsys.h"
+  #include "lex.h"
+  #include "Messages.h"
+
+  # DdeCmds.cpp
+
+  #include "PegAEsys.h"
+  #include "PegAEsysDoc.h"
+
+  #include "CharCellDef.h"
+  #include "FileJob.h"
+  #include "FontDef.h"
+  #include "Layer.h"
+  #include "Pnt.h"
+  #include "Prim.h"
+  #include "PrimState.h"
+  #include "PrimText.h"
+  #include "RefSys.h"
+  #include "Seg.h"
+  #include "SegsDet.h"
+  #include "SegsTrap.h"
+  #include "Text.h"
+  #include "UnitsString.h"
+  #include "Vec.h"
+
+  # DdeGItms.cpp
+
+  #include "PegAEsys.h"
+  #include "PegAEsysView.h"

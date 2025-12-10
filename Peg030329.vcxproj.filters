@@ -769,6 +769,9 @@
     <None Include="Help Peg.pdf">
       <Filter>Documents</Filter>
     </None>
+    <None Include="Dde Description and Few Uses.md">
+      <Filter>Documents</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Job File Format.md">

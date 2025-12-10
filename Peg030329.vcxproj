@@ -390,6 +390,7 @@
     <None Include=".clang-format" />
     <None Include=".clang-tidy" />
     <None Include="cpp.hint" />
+    <None Include="Dde Description and Few Uses.md" />
     <None Include="Help Peg.pdf" />
     <None Include="Micro Modernization Steps.md">
       <SubType>

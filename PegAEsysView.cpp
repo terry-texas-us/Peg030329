@@ -7,9 +7,6 @@
 
 #include <atltypes.h>
 
-#include <string.h>
-#include <string_view>
-
 #include <algorithm>
 #include <cctype>
 #include <cfloat>
@@ -17,12 +14,11 @@
 #include <cstdlib>
 #include <exception>
 #include <string>
+#include <string_view>
 
 #include "PegAEsys.h"
 #include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
-
-#include "Dde.h"
 #include "DdeGItms.h"
 #include "DlgSetAngle.h"
 #include "DlgSetLength.h"

@@ -48,7 +48,6 @@ class CVec4 : public CObject {
   friend CVec4 operator*(const double d, const CVec4& v);
   friend CVec4 operator*(const CTMat& m, const CVec4& v);
 
-  friend CVec4 operator*(const CVec4& v, CTMat& m4);
   friend CVec4 operator/(const CVec4& v, const double d);
   friend void Exchange(CVec4& vA, CVec4& vB);
   friend CVec4 Max(const CVec4& vA, const CVec4& vB);
