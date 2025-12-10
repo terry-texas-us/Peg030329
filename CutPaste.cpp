@@ -8,23 +8,23 @@
 #include "SegsTrap.h"
 #include "Vec.h"
 
-///<summary>Get the drawing using a file opened somewhere else.</summary>
-void mfGetAll(CFile& f, const CVec& vTrns) {
-  CPegDoc* pDoc = CPegDoc::GetDoc();
+//<summary>Get the drawing using a file opened somewhere else.</summary>
+void mfGetAll(CFile& file, const CVec& translation) {
+  auto* document = CPegDoc::GetDoc();
 
   if (!trapsegs.IsEmpty()) {
-    pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE, &trapsegs);
+    document->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE, &trapsegs);
     trapsegs.RemoveAll();
   }
-  TCHAR* pBuf = new TCHAR[CPrim::BUFFER_SIZE];
+  char* buffer = new char[CPrim::BUFFER_SIZE];
 
-  CSeg* pSeg;
-  while (filejob_GetNextSeg(f, 3, pBuf, pSeg)) {
-    pDoc->WorkLayerAddTail(pSeg);
-    trapsegs.AddTail(pSeg);
+  CSeg* segment;
+  while (filejob_GetNextSeg(file, 3, buffer, segment)) {
+    document->WorkLayerAddTail(segment);
+    trapsegs.AddTail(segment);
   }
-  delete[] pBuf;
+  delete[] buffer;
 
-  trapsegs.Translate(vTrns);
-  pDoc->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE_TRAP, &trapsegs);
+  trapsegs.Translate(translation);
+  document->UpdateAllViews(nullptr, CPegDoc::HINT_SEGS_SAFE_TRAP, &trapsegs);
 }

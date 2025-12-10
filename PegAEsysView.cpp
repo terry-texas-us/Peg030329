@@ -1028,7 +1028,9 @@ void CPegView::OnPrimPerpJump() {
     }
   }
 }
-void CPegView::OnHelpKey() { ::WinHelp(GetSafeHwnd(), _T("peg.hlp"), HELP_KEY, reinterpret_cast<DWORD_PTR>(_T("READY"))); }
+void CPegView::OnHelpKey() {
+  ::WinHelp(GetSafeHwnd(), _T("peg.hlp"), HELP_KEY, reinterpret_cast<DWORD_PTR>(_T("READY")));
+}
 
 void CPegView::DoCustomMouseClick(const std::string& customCommand) const {
   if (customCommand.empty()) { return; }

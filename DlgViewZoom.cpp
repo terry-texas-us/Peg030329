@@ -273,8 +273,8 @@ void CDlgViewZoom::OnEnChangeRatio() {
 
     TCHAR* end = nullptr;
     double ratio = _tcstod(itemText.data(), &end);
-    // skip trailing whitespace 
-    while (*end != _T('\0') && _istspace((unsigned int)*end))++ end;
+    // skip trailing whitespace
+    while (*end != _T('\0') && _istspace((unsigned int)*end)) ++end;
     // Validate: non-empty, fully parsed as double, and meets minimum threshold
     if (end != itemText.data() && *end == _T('\0') && ratio > 0.0) {
       SendDlgItemMessage(IDC_KEYPLAN_AREA, WM_USER_ON_NEW_RATIO, 0, (LPARAM)(LPDWORD)&ratio);

@@ -31,7 +31,8 @@ CFontDef& CFontDef::operator=(const CFontDef& fd) {
 }
 CString CFontDef::FormatTextHorAlign() const {
   CString strAlign[] = {_T("Left"), _T("Center"), _T("Right")};
-  CString str = (m_wTextHorAlign >= 1 && m_wTextHorAlign <= 3) ? strAlign[m_wTextHorAlign - 1] : CString(_T("Invalid!"));
+  CString str =
+      (m_wTextHorAlign >= 1 && m_wTextHorAlign <= 3) ? strAlign[m_wTextHorAlign - 1] : CString(_T("Invalid!"));
 
   return (str);
 }
@@ -49,7 +50,8 @@ CString CFontDef::FormatTextPrec() const {
 }
 CString CFontDef::FormatTextVerAlign() const {
   CString strAlign[] = {_T("Top"), _T("Middle"), _T("Bottom")};
-  CString str = (m_wTextVerAlign >= 2 && m_wTextVerAlign <= 4) ? strAlign[m_wTextVerAlign - 2] : CString(_T("Invalid!"));
+  CString str =
+      (m_wTextVerAlign >= 2 && m_wTextVerAlign <= 4) ? strAlign[m_wTextVerAlign - 2] : CString(_T("Invalid!"));
 
   return (str);
 }

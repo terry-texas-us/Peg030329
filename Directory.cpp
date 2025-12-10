@@ -42,7 +42,7 @@ void Directory_ExamineFile(TCHAR* oldfile, TCHAR* newfile) {
       return;
     }
     // strip the path
-    TCHAR* pLast = strrchr(oldfile, pathchar);
+    TCHAR* pLast = _tcsrchr(oldfile, pathchar);
     _tcscpy_s(oldfile, sizeof(oldfile), ++pLast);
   }
   _tcscpy_s(newfile, sizeof(newfile), oldfile);

@@ -36,7 +36,8 @@ void CFileBlock::ReadBlocks(CBlocks& blks) {
     }
     blks[strName] = pBlock;
   }
-  if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_END) throw _T("Exception CFileBlock: Expecting sentinel SECTION_END.");
+  if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_END)
+    throw _T("Exception CFileBlock: Expecting sentinel SECTION_END.");
 }
 void CFileBlock::ReadFile(const CString& strPathName, CBlocks& blks) {
   CFileException e;
@@ -52,7 +53,8 @@ void CFileBlock::ReadHeader() {
 
   // 	with addition of info where will loop key-value pairs till SECTION_END sentinel
 
-  if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_END) throw _T("Exception CFileBlock: Expecting sentinel SECTION_END.");
+  if (FilePeg_ReadWord(*this) != CFilePeg::SECTION_END)
+    throw _T("Exception CFileBlock: Expecting sentinel SECTION_END.");
 }
 void CFileBlock::WriteBlock(const CString& strName, CBlock* pBlock) {
   WORD wPrims = 0;

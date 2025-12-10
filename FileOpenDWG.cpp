@@ -76,7 +76,8 @@ bool CFileOpenDWG::Initialize(short* nError) {
     adSetupDwgRead();
     adSetupDxfRead();
   } else {
-    msgInformation(_T("Initialization data not loaded. (adinit.dat file must reside in same directory as application.)"));
+    msgInformation(
+        _T("Initialization data not loaded. (adinit.dat file must reside in same directory as application.)"));
   }
   return m_bInitialized;
 }
@@ -917,7 +918,9 @@ CPrimInsert::CPrimInsert(AD_DB_HANDLE hdb, PAD_ENT_HDR henhd, PAD_ENT hen) {
   m_vScale(hen->insert.xscale, hen->insert.yscale, hen->insert.zscale);
   m_dRotation = hen->insert.rotang;
 
-  if (henhd->extrusion[2] < 0.) { TRACE(_T("Insert (block - %s) Entity Norm[2] = %f\n"), blkh.name, henhd->extrusion[2]); }
+  if (henhd->extrusion[2] < 0.) {
+    TRACE(_T("Insert (block - %s) Entity Norm[2] = %f\n"), blkh.name, henhd->extrusion[2]);
+  }
 
   m_vX = Prim_ComputeArbitraryAxis(m_vZ);
   m_vY = m_vZ ^ m_vX;

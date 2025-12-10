@@ -66,7 +66,7 @@ void CFileJob::ReadSegs(CLayer* pLayer) {
   CSeg* pSeg;
 
   while (filejob_GetNextSeg(*this, m_iVersion, m_PrimBuf, pSeg)) {
-    if (pSeg != 0) pLayer->AddTail(pSeg);
+    if (pSeg != nullptr) pLayer->AddTail(pSeg);
   }
 }
 int CFileJob::ReleaseVersion() {
@@ -97,7 +97,7 @@ void CFileJob::WriteSeg(CSeg* pSeg) {
   *((short*)&m_PrimBuf[1]) = short(pSeg->GetCount());
 
   POSITION pos = pSeg->GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CPrim* pPrim = pSeg->GetNext(pos);
     pPrim->Write(*this, m_PrimBuf);
   }
@@ -107,7 +107,7 @@ void CFileJob::WriteSegs(CLayer* pLayer) {
   pLayer->BreakPolylines();
 
   POSITION pos = pLayer->GetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = pLayer->GetNext(pos);
     WriteSeg(pSeg);
   }
@@ -116,7 +116,7 @@ void CFileJob::WriteSegs(CLayer* pLayer) {
 bool filejob_GetNextSeg(CFile& f, int iVersion, char* pBuf, CSeg*& pSeg) {
   ULONGLONG dwPosition = f.GetPosition();
 
-  pSeg = 0;
+  pSeg = nullptr;
   try {
     CPrim* pPrim;
     if (!filejob_GetNextPrim(f, iVersion, pBuf, pPrim)) return false;
@@ -134,7 +134,7 @@ bool filejob_GetNextSeg(CFile& f, int iVersion, char* pBuf, CSeg*& pSeg) {
     }
   } catch (TCHAR* szMessage) {
     if (dwPosition >= 96) {
-      if (::MessageBox(0, szMessage, 0, MB_ICONERROR | MB_RETRYCANCEL) == IDCANCEL) return false;
+      if (::MessageBox(nullptr, szMessage, nullptr, MB_ICONERROR | MB_RETRYCANCEL) == IDCANCEL) return false;
     }
     f.Seek(static_cast<LONGLONG>(dwPosition + 32), CFile::begin);
   }
@@ -774,7 +774,7 @@ CPrimText::CPrimText(char* p, int iVer) {
     char* context = nullptr;
     char* pChr = _tcstok_s(&p[44], "\\", &context);
 
-    if (pChr == 0)
+    if (pChr == nullptr)
       m_strText = _T("CFileJob.PrimText error: Missing string terminator.");
     else if (strlen(pChr) > 132)
       m_strText = _T("CFileJob.PrimText error: Text too long.");

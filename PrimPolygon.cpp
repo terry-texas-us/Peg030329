@@ -253,7 +253,8 @@ CString CPrimPolygon::FormatIntStyle() const {
 }
 void CPrimPolygon::FormatExtra(CString& str) const {
   std::stringstream ss;
-  ss << _T("Color;") << StdFormatPenColor() << _T("\t") << _T("Style;") << StdFormatPenStyle() << _T("\t") << _T("Points;") << m_wPts;
+  ss << _T("Color;") << StdFormatPenColor() << _T("\t") << _T("Style;") << StdFormatPenStyle() << _T("\t")
+     << _T("Points;") << m_wPts;
   str = ss.str().c_str();
 }
 CPnt CPrimPolygon::GetCtrlPt() const {

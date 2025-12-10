@@ -464,7 +464,7 @@ LPSTR dde::GetCFNameFromId(WORD wFmt, LPSTR lpBuf, size_t iSize) {
   // Try for a standard one first
   while (pCTN->wFmt) {
     if (pCTN->wFmt == wFmt) {
-      strncpy_s(lpBuf, iSize, pCTN->pszName, _TRUNCATE);
+      _tcsnccpy_s(lpBuf, iSize, pCTN->pszName, _TRUNCATE);
       return lpBuf;
     }
     pCTN++;
@@ -608,13 +608,13 @@ bool dde::ParseCmd(LPSTR* ppszCmdLine, PTOPICINFO pTopic, LPSTR pszError, UINT u
   LPSTR pCmd = lex::SkipWhiteSpace(*ppszCmdLine);
 
   if (!lex::ScanForChar('[', &pCmd)) {  // Scan for a command leading
-    strncpy_s(pszError, uiErrorSize, _T("Missing '['"), _TRUNCATE);
+    _tcsnccpy_s(pszError, uiErrorSize, _T("Missing '['"), _TRUNCATE);
     return false;
   }
 
   pExecFnInfo = ScanForCommand(pTopic->pCmdList, &pCmd);
   if (!pExecFnInfo) {  // Not a valid command
-    strncpy_s(pszError, uiErrorSize, _T("Invalid Command"), _TRUNCATE);
+    _tcsnccpy_s(pszError, uiErrorSize, _T("Invalid Command"), _TRUNCATE);
     return false;
   }
   *ppOp++ = pExecFnInfo->pFn;  // Add the function pointer to the opcode list
@@ -630,20 +630,20 @@ bool dde::ParseCmd(LPSTR* ppszCmdLine, PTOPICINFO pTopic, LPSTR pszError, UINT u
     } while (cTerm == ',');
 
     if ((cTerm != ')') && (!lex::ScanForChar(')', &pCmd))) {  // Do not have a terminating ) character
-      strncpy_s(pszError, uiErrorSize, _T("Missing ')'"), _TRUNCATE);
+      _tcsnccpy_s(pszError, uiErrorSize, _T("Missing ')'"), _TRUNCATE);
       return false;
     }
   }
   if (!lex::ScanForChar(']', &pCmd)) {  // Do not have a terminating ] character
-    strncpy_s(pszError, uiErrorSize, _T("Missing ']'"), _TRUNCATE);
+    _tcsnccpy_s(pszError, uiErrorSize, _T("Missing ']'"), _TRUNCATE);
     return false;
   }
   if (uiNargs < pExecFnInfo->uiMinArgs) {
-    strncpy_s(pszError, uiErrorSize, _T("Too few arguments"), _TRUNCATE);
+    _tcsnccpy_s(pszError, uiErrorSize, _T("Too few arguments"), _TRUNCATE);
     return false;
   }
   if (uiNargs > pExecFnInfo->uiMaxArgs) {
-    strncpy_s(pszError, uiErrorSize, _T("Too many arguments"), _TRUNCATE);
+    _tcsnccpy_s(pszError, uiErrorSize, _T("Too many arguments"), _TRUNCATE);
     return false;
   }
   *ppOp++ = 0;  // Terminate this op list with a 0

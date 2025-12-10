@@ -153,7 +153,8 @@ void CPrimMark::DisRep(const CPnt&) const {
 }
 void CPrimMark::FormatExtra(CString& str) const {
   std::stringstream ss;
-  ss << _T("Color;") << StdFormatPenColor() << _T("\t") << _T("Style;") << std::setw(3) << std::setfill('0') << m_nMarkStyle;
+  ss << _T("Color;") << StdFormatPenColor() << _T("\t") << _T("Style;") << std::setw(3) << std::setfill('0')
+     << m_nMarkStyle;
   str = ss.str().c_str();
 }
 void CPrimMark::FormatGeometry(CString& str) const {

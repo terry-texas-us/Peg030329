@@ -78,7 +78,8 @@ void CPrimText::FormatExtra(CString& str) const {
      << _T("Font;") << m_fd.TextFont().GetString() << _T("\t")
      << _T("Precision;") << m_fd.FormatTextPrec().GetString() << _T("\t")
      << _T("Path;") << m_fd.FormatTextPath().GetString() << _T("\t")
-     << _T("Alignment;(") << m_fd.FormatTextHorAlign().GetString() << _T(", ") << m_fd.FormatTextVerAlign().GetString() << _T(")\t")
+     << _T("Alignment;(") << m_fd.FormatTextHorAlign().GetString() << _T(", ") << m_fd.FormatTextVerAlign().GetString()
+     << _T(")\t")
      << _T("Spacing;") << m_fd.ChrSpac() << _T("\t")
      << _T("Length;") << m_strText.GetLength() << _T("\t")
      << _T("Text;") << m_strText.GetString();

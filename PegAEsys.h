@@ -63,7 +63,7 @@ class CPegApp : public CWinApp {
   CPnt m_ptEditSegEnd;
   CPnt m_ptHomePoint[9];
   WORD m_wOpHighlighted;
-  TCHAR* m_pStrokeFontDef;      // 0
+  TCHAR* m_pStrokeFontDef;     // 0
   std::string m_strShadowDir;  // `PegAEsys Shadow Files`
 
  public:
