@@ -56,7 +56,7 @@
   # Dde.cpp
 
   #include "PegAEsys.h"
-  #include "lex.h"
+  #include "Lex.h"
   #include "Messages.h"
 
   # DdeCmds.cpp

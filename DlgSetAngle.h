@@ -22,8 +22,8 @@ class CDlgSetAngle : public CDialog {
   enum { IDD = IDD_SET_ANGLE };
 
  protected:
-  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV support
-  virtual BOOL OnInitDialog();
+  void DoDataExchange(CDataExchange* pDX) override;  // DDX/DDV support
+  BOOL OnInitDialog() override;
 
  public:
   double m_dAngle;

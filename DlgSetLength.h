@@ -22,9 +22,9 @@ class CDlgSetLength : public CDialog {
   enum { IDD = IDD_SET_LENGTH };
 
  protected:
-  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV support
-  virtual BOOL OnInitDialog();
-  virtual void OnOK();
+  void DoDataExchange(CDataExchange* pDX) override;  // DDX/DDV support
+  BOOL OnInitDialog() override;
+  void OnOK() override;
 
  public:
   double m_dLength{};

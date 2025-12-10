@@ -218,6 +218,7 @@ class CPegDoc : public CDocument {
   afx_msg void OnFileManage();
   afx_msg void OnFileQuery();
   afx_msg void OnFileSave();
+  /// @brief Displays a file dialog to open a tracing file and loads it if the user selects one.
   afx_msg void OnFileTracing();
   afx_msg void OnLayerActive();
   afx_msg void OnLayerHidden();
@@ -234,6 +235,7 @@ class CPegDoc : public CDocument {
   afx_msg void OnPensRemoveUnusedStyles();
   afx_msg void OnPensTranslate();
   afx_msg void OnPrimBreak();
+  /// @brief Searches for closest detectible primitive. If found, primitive is lifted from its segment, inserted into a new segment which is added to deleted segment list. The primitive resources are not freed.
   afx_msg void OnPrimDelete();
   afx_msg void OnPrimExtractNum();
   afx_msg void OnPrimExtractStr();

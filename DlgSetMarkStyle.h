@@ -30,11 +30,11 @@ class CDlgSetMarkStyle : public CDialog {
   double m_dMarkSize = 0.0;  // mark size: positive=world units, negative=pixels
 
  protected:
-  virtual void DoDataExchange(CDataExchange* pDX) override;  // DDX/DDV support
+  void DoDataExchange(CDataExchange* pDX) override;  // DDX/DDV support
 
  protected:
-  virtual BOOL OnInitDialog() override;
-  virtual void OnOK() override;
+  BOOL OnInitDialog() override;
+  void OnOK() override;
 
   DECLARE_MESSAGE_MAP()
 };

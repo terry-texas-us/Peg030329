@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include <corecrt.h>
-#include <string.h>
+#include <cstring>
 
 #include <cctype>
 
@@ -10,27 +10,27 @@
 #include "Dde.h"
 #include "DdeCmds.h"
 #include "DdeGItms.h"
-#include "ddeSys.h"
-#include "lex.h"
+#include "DdeSys.h"
+#include "Lex.h"
 #include "Messages.h"
 
 using namespace dde;
 
 // Standard format name lookup table
 // String names for standard Windows Clipboard formats
-CFTAGNAME dde::CFNames[] = {{CF_TEXT, {const_cast<LPSTR>("TEXT")}},
-                            {CF_BITMAP, {const_cast<LPSTR>("BITMAP")}},
-                            {CF_METAFILEPICT, {const_cast<LPSTR>("METAFILEPICT")}},
-                            {CF_SYLK, {const_cast<LPSTR>("SYLK")}},
-                            {CF_DIF, {const_cast<LPSTR>("DIF")}},
-                            {CF_TIFF, {const_cast<LPSTR>("TIFF")}},
-                            {CF_OEMTEXT, {const_cast<LPSTR>("OEMTEXT")}},
-                            {CF_DIB, {const_cast<LPSTR>("DIB")}},
-                            {CF_PALETTE, {const_cast<LPSTR>("PALETTE")}},
-                            {CF_PENDATA, {const_cast<LPSTR>("PENDATA")}},
-                            {CF_RIFF, {const_cast<LPSTR>("RIFF")}},
-                            {CF_WAVE, {const_cast<LPSTR>("WAVE")}},
-                            {0, {nullptr}}};
+CFTAGNAME dde::CFNames[] = {{CF_TEXT, const_cast<LPSTR>("TEXT")},
+                            {CF_BITMAP, const_cast<LPSTR>("BITMAP")},
+                            {CF_METAFILEPICT, const_cast<LPSTR>("METAFILEPICT")},
+                            {CF_SYLK, const_cast<LPSTR>("SYLK")},
+                            {CF_DIF, const_cast<LPSTR>("DIF")},
+                            {CF_TIFF, const_cast<LPSTR>("TIFF")},
+                            {CF_OEMTEXT, const_cast<LPSTR>("OEMTEXT")},
+                            {CF_DIB, const_cast<LPSTR>("DIB")},
+                            {CF_PALETTE, const_cast<LPSTR>("PALETTE")},
+                            {CF_PENDATA, const_cast<LPSTR>("PENDATA")},
+                            {CF_RIFF, const_cast<LPSTR>("RIFF")},
+                            {CF_WAVE, const_cast<LPSTR>("WAVE")},
+                            {0, nullptr}};
 // Local data
 SERVERINFO dde::ServerInfo;
 // Format lists
@@ -196,8 +196,9 @@ bool dde::DoCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hszTopic, HSZ hszIt
                      HDDEDATA* phReturnData) {
   PTOPICINFO pTopic = TopicFind(hszTopic);
 
-  if (!pTopic)  // Don't know the topic
+  if (!pTopic) {  // Don't know the topic
     return false;
+  }
 
   if (wType == XTYP_EXECUTE) {                          // Execute request for the topic
     if (pTopic->pfnExec) {                              // User supplied a function to handle this
@@ -228,8 +229,9 @@ bool dde::DoCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hszTopic, HSZ hszIt
   // that the format requested is supported for that item.
 
   PITEMINFO pItem = ItemFind(pTopic, hszItem);
-  if (!pItem)  // Not an item we support
+  if (!pItem) {  // Not an item we support
     return false;
+  }
 
   // See if this is a supported format
 
@@ -238,8 +240,9 @@ bool dde::DoCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hszTopic, HSZ hszIt
     if (*pFormat == wFmt) break;
     pFormat++;
   }
-  if (!*pFormat)  // not a format we support
+  if (!*pFormat) {  // not a format we support
     return false;
+  }
 
   PPOKEFN pfnPoke;
   CONVINFO ci{};
@@ -255,15 +258,17 @@ bool dde::DoCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hszTopic, HSZ hszIt
     case XTYP_ADVDATA:  // It came from elsewhere.
       *phReturnData = (HDDEDATA)DDE_FNOTPROCESSED;
       pfnPoke = pItem->pfnPoke;
-      if (!pfnPoke)                 // No poke function for this item
+      if (!pfnPoke) {               // No poke function for this item
         pfnPoke = pTopic->pfnPoke;  // Use poke function for this topic in general.
+      }
       if (pfnPoke) {
         if ((*pfnPoke)(wFmt, hszTopic, hszItem, hData))  // Data at the server has changed.
         {
           ci.cb = sizeof(CONVINFO);
           if (DdeQueryConvInfo(hConv, (DWORD)QID_SYNC, &ci)) {
-            if (!(ci.wStatus & ST_ISSELF))                              // It came from elsewhere (not a poke)
+            if (!(ci.wStatus & ST_ISSELF)) {                            // It came from elsewhere (not a poke)
               DdePostAdvise(ServerInfo.dwInstance, hszTopic, hszItem);  // Advise ourself of the change.
+            }
           }
           *phReturnData = (HDDEDATA)(DWORD)DDE_FACK;  // Say we took it
         }
@@ -276,10 +281,11 @@ bool dde::DoCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hszTopic, HSZ hszIt
       // a generic one for the topic
       pfnRequest = pItem->pfnRequest;
       if (!pfnRequest) pfnRequest = pTopic->pfnRequest;
-      if (pfnRequest)
+      if (pfnRequest) {
         *phReturnData = (*pfnRequest)(wFmt, hszTopic, hszItem);
-      else
+      } else {
         *phReturnData = (HDDEDATA) nullptr;
+      }
       break;
 
     default:
@@ -306,8 +312,9 @@ void dde::AddFormatsToList(LPWORD pMain, int iMax, LPWORD pList) {
   {
     pFmt = pMain;
     while (*pFmt) {
-      if (*pFmt == *pList)  // Already got this one
+      if (*pFmt == *pList) {  // Already got this one
         goto next_fmt;
+      }
 
       pFmt++;
     }
@@ -351,14 +358,16 @@ HDDEDATA dde::DoWildConnect(HSZ hszTopic) {
       pTopic = pTopic->pNext;
     }
   }
-  if (!iTopics)  // No match or no topics at all. No Connect.
+  if (!iTopics) {  // No match or no topics at all. No Connect.
     return (HDDEDATA) nullptr;
+  }
 
   // Big enough for all the HSZPAIRS we'll be sending back plus space for a 0 entry on the end
   hData = DdeCreateDataHandle(ServerInfo.dwInstance, nullptr, (iTopics + 1) * sizeof(HSZPAIR), 0, nullptr, 0, 0);
 
-  if (!hData)  // Failed to create mem object!
+  if (!hData) {  // Failed to create mem object!
     return (HDDEDATA) nullptr;
+  }
 
   pHszPair = (PHSZPAIR)DdeAccessData(hData, nullptr);
   if (hszTopic == nullptr)  // all the topics (includes the system topic)
@@ -389,8 +398,9 @@ PEXECCMDFNINFO dde::ExecCmdAdd(const char* pszTopic, const char* pszCmdName, PEX
 
   PTOPICINFO pTopic = TopicFind(pszTopic);
 
-  if (!pTopic)  // Do Not already have this topic.	We need to add this as a new topic
+  if (!pTopic) {  // Do Not already have this topic.	We need to add this as a new topic
     pTopic = TopicAdd(pszTopic, nullptr, nullptr, nullptr);
+  }
 
   if (!pTopic) return nullptr;  // failed
 
@@ -436,18 +446,20 @@ PEXECCMDFNINFO dde::ExecCmdFind(PTOPICINFO pTopic, const char* lpszCmd) {
 bool dde::ExecCmdRemove(LPSTR pszTopic, LPSTR pszCmdName) {
   PTOPICINFO pTopic = TopicFind(pszTopic);
 
-  if (!pTopic)  // See if we have this topic
+  if (!pTopic) {  // See if we have this topic
     return false;
+  }
 
   PEXECCMDFNINFO pPrevCmd = nullptr;
   PEXECCMDFNINFO pCmd = pTopic->pCmdList;
 
   while (pCmd) {                                        // Walk the topic item list looking for this cmd.
     if (lstrcmpi(pCmd->pszCmdName, pszCmdName) == 0) {  // Found it.  Unlink it from the list.
-      if (pPrevCmd)
+      if (pPrevCmd) {
         pPrevCmd->pNext = pCmd->pNext;
-      else
+      } else {
         pTopic->pCmdList = pCmd->pNext;
+      }
 
       // Free the memory associated with it
       delete[] pCmd;
@@ -470,8 +482,9 @@ LPSTR dde::GetCFNameFromId(WORD wFmt, LPSTR lpBuf, size_t iSize) {
     }
     pCTN++;
   }
-  if (GetClipboardFormatName(wFmt, lpBuf, (int)iSize) == 0)  // It's unknown (not registered)
+  if (GetClipboardFormatName(wFmt, lpBuf, (int)iSize) == 0) {  // It's unknown (not registered)
     *lpBuf = '\0';
+  }
 
   return lpBuf;
 }
@@ -510,8 +523,9 @@ HDDEDATA dde::MakeDataFromFormatList(LPWORD pFmt, WORD wFmt, HSZ hszItem) {
 }
 ///<summary>Post an advise request about an item</summary>
 void dde::PostAdvise(PITEMINFO pItemInfo) {
-  if (pItemInfo && pItemInfo->pTopic)
+  if (pItemInfo && pItemInfo->pTopic) {
     DdePostAdvise(ServerInfo.dwInstance, pItemInfo->pTopic->hszTopicName, pItemInfo->hszItemName);
+  }
 }
 // DDE Execute command parser
 
@@ -547,10 +561,11 @@ bool dde::ProcessExecRequest(PTOPICINFO pTopic, HDDEDATA hData) {
     bResult = ParseCmd(&pData, pTopic, szResult, sizeof(szResult), OpTable, MAXOPS, pArgBuf);  // Parse a single command
 
     if (!bResult) {
-      if (pCI && pCI->pResultItem)
+      if (pCI && pCI->pResultItem) {
         // Current conversation has a results item to pass the error string back in
         pCI->pResultItem->hData = DdeCreateDataHandle(ServerInfo.dwInstance, (LPBYTE)szResult, lstrlen(szResult) + 1u,
                                                       0, pCI->pResultItem->hszItemName, CF_TEXT, 0);
+      }
 
       goto PER_exit;
     }
@@ -567,15 +582,17 @@ bool dde::ProcessExecRequest(PTOPICINFO pTopic, HDDEDATA hData) {
       szResult[0] = '\0';
       bResult = (*((PEXECCMDFN)*ppOp))(pTopic, szResult, sizeof(szResult), uiNargs, (LPSTR*)ppArg);
 
-      if (pCI && pCI->pResultItem)
+      if (pCI && pCI->pResultItem) {
         // Current conversation has a results item to pass the result string back in
         pCI->pResultItem->hData = DdeCreateDataHandle(ServerInfo.dwInstance, (LPBYTE)szResult, lstrlen(szResult) + 1u,
                                                       0, pCI->pResultItem->hszItemName, CF_TEXT, 0);
+      }
 
       if (!bResult) goto PER_exit;
 
-      while (*ppOp)  // move on to the next function
+      while (*ppOp) {  // move on to the next function
         ppOp++;
+      }
       ppOp++;
     }
   }
@@ -669,11 +686,12 @@ bool dde::SysResultExecCmd(PTOPICINFO pTopic, LPSTR, UINT, UINT, LPSTR* ppArgs) 
 
   if (!pCI) return false;  // internal error
 
-  if (pCI->pResultItem)  // Already have a temporary result item. Get rid of it
+  if (pCI->pResultItem) {  // Already have a temporary result item. Get rid of it
     ItemRemove(pTopic->pszTopicName, pCI->pResultItem->pszItemName);
+  }
 
   // Add a new temporary result item to the current conversation
-  pCI->pResultItem = ItemAdd(pTopic->pszTopicName, ppArgs[0], SysFormatList, SysReqResultInfo, nullptr);  
+  pCI->pResultItem = ItemAdd(pTopic->pszTopicName, ppArgs[0], SysFormatList, SysReqResultInfo, nullptr);
 
   return true;
 }
@@ -685,8 +703,9 @@ HDDEDATA dde::SysReqResultInfo(UINT wFmt, HSZ hszTopic, HSZ hszItem) {
   PITEMINFO pItem = ItemFind(pTopic, hszItem);
   HDDEDATA hData = pItem->hData;
 
-  if (!hData)  // No data to return. Send back an empty string
+  if (!hData) {  // No data to return. Send back an empty string
     hData = DdeCreateDataHandle(ServerInfo.dwInstance, (LPBYTE) "", 1, 0, hszItem, CF_TEXT, wFmt);
+  }
 
   ItemRemove(pTopic->pszTopicName, pItem->pszItemName);
 
@@ -701,11 +720,13 @@ PEXECCMDFNINFO dde::ScanForCommand(PEXECCMDFNINFO pCmdInfo, LPSTR* ppStr) {
   LPSTR pStart = lex::SkipWhiteSpace(*ppStr);
   LPSTR p = pStart;
 
-  if (!isalpha(*p))  // First character is not alpha
+  if (!isalpha(*p)) {  // First character is not alpha
     return nullptr;
+  }
 
-  while (isalnum(*p))  // Collect alpha-num characters until we get to a non-alpha.
+  while (isalnum(*p)) {  // Collect alpha-num characters until we get to a non-alpha.
     p++;
+  }
 
   char cSave = *p;  // Terminate the source temporarily with a null
   *p = '\0';
@@ -720,6 +741,6 @@ PEXECCMDFNINFO dde::ScanForCommand(PEXECCMDFNINFO pCmdInfo, LPSTR* ppStr) {
     }
     pCmdInfo = pCmdInfo->pNext;
   }
-  *p = cSave;  // Didn't find it, so restore delimiter and return
+  *p = cSave;      // Didn't find it, so restore delimiter and return
   return nullptr;  // not found
 }

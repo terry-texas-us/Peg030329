@@ -19,7 +19,7 @@ class CDlgSetScale : public CDialog {
   enum { IDD = IDD_SET_SCALE };
 
  protected:
-  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV support
+  virtual void DoDataExchange(CDataExchange* pDX) override;  // DDX/DDV support
 
  public:
   double m_dScale;

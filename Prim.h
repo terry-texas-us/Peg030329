@@ -6,8 +6,7 @@
 #include <afxstr.h>
 #include <afxwin.h>
 
-#include <string.h>
-
+#include <cstring>
 #include <string>
 
 #include "Line.h"

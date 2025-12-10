@@ -38,7 +38,7 @@
 #include "FileTracing.h"
 #include "FontDef.h"
 #include "Layer.h"
-#include "lex.h"
+#include "Lex.h"
 #include "OpenGL.h"
 #include "PenStyle.h"
 #include "Pnt.h"
@@ -87,12 +87,12 @@ void DoEditTrapPopupCommands(HWND hwnd) {
   ::GetCursorPos(&pnt);
   HMENU hMenu = ::LoadMenu(app.GetInstance(), MAKEINTRESOURCE(IDR_TRAP));
   hMenu = ::GetSubMenu(hMenu, 0);
-  ::TrackPopupMenu(hMenu, 0, pnt.x, pnt.y, 0, hwnd, 0);
+  ::TrackPopupMenu(hMenu, 0, pnt.x, pnt.y, 0, hwnd, nullptr);
   ::DestroyMenu(hMenu);
 }
 
 void DoEditTrapCopy(CPegView* view) {
-  ::OpenClipboard(NULL);
+  ::OpenClipboard(nullptr);
   ::EmptyClipboard();
 
   if (app.GetEditCFText()) {
@@ -100,11 +100,11 @@ void DoEditTrapCopy(CPegView* view) {
     CString strBuf;
 
     POSITION pos = trapsegs.GetHeadPosition();
-    while (pos != 0) {
+    while (pos != nullptr) {
       CSeg* pSeg = trapsegs.GetNext(pos);
 
       POSITION posPrim = pSeg->GetHeadPosition();
-      while (posPrim != 0) {
+      while (posPrim != nullptr) {
         CPrim* pPrim = pSeg->GetNext(posPrim);
         if (pPrim->Is(CPrim::Type::Text)) {
           strBuf += static_cast<CPrimText*>(pPrim)->Text();
@@ -117,7 +117,7 @@ void DoEditTrapCopy(CPegView* view) {
       ::CloseClipboard();
       return;
     }
-    LPSTR lpBuffer = (LPSTR)GlobalLock(hGMem);
+    auto lpBuffer = (LPSTR)GlobalLock(hGMem);
     _tcscpy_s(lpBuffer, static_cast<rsize_t>(strBuf.GetLength() + 1), strBuf);
     GlobalUnlock(hGMem);
     ::SetClipboardData(CF_TEXT, hGMem);
@@ -143,7 +143,7 @@ void DoEditTrapCopy(CPegView* view) {
     mf.SetLength(96);
     mf.SeekToEnd();
 
-    TCHAR* pBuf = new TCHAR[CPrim::BUFFER_SIZE];
+    auto pBuf = new TCHAR[CPrim::BUFFER_SIZE];
 
     trapsegs.Write(mf, pBuf);
     trapsegs.GetExtents(ptMin, ptMax, activeView->ModelViewGetMatrix());
@@ -159,7 +159,7 @@ void DoEditTrapCopy(CPegView* view) {
     ptMin.Write(mf);
 
     GLOBALHANDLE hGMem = GlobalAlloc(GHND, SIZE_T(dwSizeOfBuffer));
-    LPSTR lpBuffer = (LPSTR)GlobalLock(hGMem);
+    auto lpBuffer = (LPSTR)GlobalLock(hGMem);
 
     mf.SeekToBegin();
     mf.Read(lpBuffer, UINT(dwSizeOfBuffer));
@@ -171,7 +171,7 @@ void DoEditTrapCopy(CPegView* view) {
 }
 
 UINT AFXAPI HashKey(CString& str) {
-  LPCTSTR pStr = (LPCTSTR)str;
+  auto pStr = (LPCTSTR)str;
   UINT nHash = 0;
   while (*pStr) { nHash = (nHash << 5) + nHash + *pStr++; }
   return nHash;
@@ -258,7 +258,7 @@ void CPegDoc::Serialize(CArchive& ar) {
       }
 #endif
     } else if (m_wOpenFileType == FILE_TYPE_PEG) {
-      CFilePeg* pFile = (CFilePeg*)ar.GetFile();
+      auto* pFile = (CFilePeg*)ar.GetFile();
       pFile->Unload(this);
     } else if (FileTypeIsTracing(m_wOpenFileType)) {
       CLayer* pLayer = LayersGet(szFileName);
@@ -320,82 +320,82 @@ void CPegDoc::Dump(CDumpContext& dc) const { CDocument::Dump(dc); }
 #endif  //_DEBUG
 
 BEGIN_MESSAGE_MAP(CPegDoc, CDocument)
-ON_COMMAND(ID_BLOCKS_LOAD, OnBlocksLoad)
-ON_COMMAND(ID_BLOCKS_REMOVEUNUSED, OnBlocksRemoveUnused)
-ON_COMMAND(ID_BLOCKS_UNLOAD, OnBlocksUnload)
-ON_COMMAND(ID_CLEAR_ACTIVELAYERS, OnClearActiveLayers)
-ON_COMMAND(ID_CLEAR_ALLLAYERS, OnClearAllLayers)
-ON_COMMAND(ID_CLEAR_ALLTRACINGS, OnClearAllTracings)
-ON_COMMAND(ID_CLEAR_MAPPEDTRACINGS, OnClearMappedTracings)
-ON_COMMAND(ID_CLEAR_VIEWEDTRACINGS, OnClearViewedTracings)
-ON_COMMAND(ID_CLEAR_WORKINGLAYER, OnClearWorkingLayer)
-ON_COMMAND(ID_EDIT_IMAGETOCLIPBOARD, OnEditImageToClipboard)
-ON_COMMAND(ID_EDIT_SEGTOWORK, OnEditSegToWork)
-ON_COMMAND(ID_EDIT_TRACE, OnEditTrace)
-ON_COMMAND(ID_EDIT_TRAPCOPY, OnEditTrapCopy)
-ON_COMMAND(ID_EDIT_TRAPCUT, OnEditTrapCut)
-ON_COMMAND(ID_EDIT_TRAPDELETE, OnEditTrapDelete)
-ON_COMMAND(ID_EDIT_TRAPPASTE, OnEditTrapPaste)
-ON_COMMAND(ID_EDIT_TRAPQUIT, OnEditTrapQuit)
-ON_COMMAND(ID_EDIT_TRAPWORK, OnEditTrapWork)
-ON_COMMAND(ID_EDIT_TRAPWORKANDACTIVE, OnEditTrapWorkAndActive)
-ON_COMMAND(ID_FILE, OnFile)
-ON_COMMAND(ID_FILE_QUERY, OnFileQuery)
-ON_COMMAND(ID_FILE_MANAGE, OnFileManage)
-ON_COMMAND(ID_FILE_SAVE, OnFileSave)
+ON_COMMAND(ID_BLOCKS_LOAD, &CPegDoc::OnBlocksLoad)
+ON_COMMAND(ID_BLOCKS_REMOVEUNUSED, &CPegDoc::OnBlocksRemoveUnused)
+ON_COMMAND(ID_BLOCKS_UNLOAD, &CPegDoc::OnBlocksUnload)
+ON_COMMAND(ID_CLEAR_ACTIVELAYERS, &CPegDoc::OnClearActiveLayers)
+ON_COMMAND(ID_CLEAR_ALLLAYERS, &CPegDoc::OnClearAllLayers)
+ON_COMMAND(ID_CLEAR_ALLTRACINGS, &CPegDoc::OnClearAllTracings)
+ON_COMMAND(ID_CLEAR_MAPPEDTRACINGS, &CPegDoc::OnClearMappedTracings)
+ON_COMMAND(ID_CLEAR_VIEWEDTRACINGS, &CPegDoc::OnClearViewedTracings)
+ON_COMMAND(ID_CLEAR_WORKINGLAYER, &CPegDoc::OnClearWorkingLayer)
+ON_COMMAND(ID_EDIT_IMAGETOCLIPBOARD, &CPegDoc::OnEditImageToClipboard)
+ON_COMMAND(ID_EDIT_SEGTOWORK, &CPegDoc::OnEditSegToWork)
+ON_COMMAND(ID_EDIT_TRACE, &CPegDoc::OnEditTrace)
+ON_COMMAND(ID_EDIT_TRAPCOPY, &CPegDoc::OnEditTrapCopy)
+ON_COMMAND(ID_EDIT_TRAPCUT, &CPegDoc::OnEditTrapCut)
+ON_COMMAND(ID_EDIT_TRAPDELETE, &CPegDoc::OnEditTrapDelete)
+ON_COMMAND(ID_EDIT_TRAPPASTE, &CPegDoc::OnEditTrapPaste)
+ON_COMMAND(ID_EDIT_TRAPQUIT, &CPegDoc::OnEditTrapQuit)
+ON_COMMAND(ID_EDIT_TRAPWORK, &CPegDoc::OnEditTrapWork)
+ON_COMMAND(ID_EDIT_TRAPWORKANDACTIVE, &CPegDoc::OnEditTrapWorkAndActive)
+ON_COMMAND(ID_FILE, &CPegDoc::OnFile)
+ON_COMMAND(ID_FILE_QUERY, &CPegDoc::OnFileQuery)
+ON_COMMAND(ID_FILE_MANAGE, &CPegDoc::OnFileManage)
+ON_COMMAND(ID_FILE_SAVE, &CPegDoc::OnFileSave)
 ON_COMMAND(ID_FILE_SEND_MAIL, CDocument::OnFileSendMail)
-ON_COMMAND(ID_FILE_TRACING, OnFileTracing)
-ON_COMMAND(ID_LAYER_ACTIVE, OnLayerActive)
-ON_COMMAND(ID_LAYER_STATIC, OnLayerStatic)
-ON_COMMAND(ID_LAYER_HIDDEN, OnLayerHidden)
-ON_COMMAND(ID_LAYER_MELT, OnLayerMelt)
-ON_COMMAND(ID_LAYER_WORK, OnLayerWork)
-ON_COMMAND(ID_LAYERS_ACTIVEALL, OnLayersActiveAll)
-ON_COMMAND(ID_LAYERS_STATICALL, OnLayersStaticAll)
-ON_COMMAND(ID_LAYERS_REMOVEEMPTY, OnLayersRemoveEmpty)
-ON_COMMAND(ID_MAINTENANCE_REMOVEEMPTYNOTES, OnMaintenanceRemoveEmptyNotes)
-ON_COMMAND(ID_MAINTENANCE_REMOVEEMPTYSEGMENTS, OnMaintenanceRemoveEmptySegments)
-ON_COMMAND(ID_PENS_REMOVEUNUSEDSTYLES, OnPensRemoveUnusedStyles)
-ON_COMMAND(ID_PENS_EDITCOLORS, OnPensEditColors)
-ON_COMMAND(ID_PENS_LOADCOLORS, OnPensLoadColors)
-ON_COMMAND(ID_PENS_TRANSLATE, OnPensTranslate)
-ON_COMMAND(ID_PRIM_BREAK, OnPrimBreak)
-ON_COMMAND(ID_PRIM_EXTRACTNUM, OnPrimExtractNum)
-ON_COMMAND(ID_PRIM_EXTRACTSTR, OnPrimExtractStr)
-ON_COMMAND(ID_PRIM_SNAPTOENDPOINT, OnPrimSnapToEndPoint)
-ON_COMMAND(ID_PRIM_GOTOCENTERPOINT, OnPrimGotoCenterPoint)
-ON_COMMAND(ID_PRIM_DELETE, OnPrimDelete)
-ON_COMMAND(ID_PRIM_MODIFY_ATTRIBUTES, OnPrimModifyAttributes)
-ON_COMMAND(ID_SEG_BREAK, OnSegBreak)
-ON_COMMAND(ID_SEG_DELETE, OnSegDelete)
-ON_COMMAND(ID_SEG_DELETELAST, OnSegDeleteLast)
-ON_COMMAND(ID_SEG_EXCHANGE, OnSegExchange)
-ON_COMMAND(ID_SEG_INSERT, OnSegInsert)
-ON_COMMAND(ID_SETUP_PENCOLOR, OnSetupPenColor)
-ON_COMMAND(ID_SETUP_PENSTYLE, OnSetupPenStyle)
-ON_COMMAND(ID_SETUP_FILL_HOLLOW, OnSetupFillHollow)
-ON_COMMAND(ID_SETUP_FILL_SOLID, OnSetupFillSolid)
-ON_COMMAND(ID_SETUP_FILL_PATTERN, OnSetupFillPattern)
-ON_COMMAND(ID_SETUP_FILL_HATCH, OnSetupFillHatch)
-ON_COMMAND(ID_SETUP_MARKSTYLE, OnSetupMarkStyle)
-ON_COMMAND(ID_SETUP_NOTE, OnSetupNote)
-ON_COMMAND(ID_SETUP_SAVEPOINT, OnSetupSavePoint)
-ON_COMMAND(ID_SETUP_GOTOPOINT, OnSetupGotoPoint)
-ON_COMMAND(ID_SETUP_OPTIONS_DRAW, OnSetupOptionsDraw)
-ON_COMMAND(ID_TRACING_MAP, OnTracingMap)
-ON_COMMAND(ID_TRACING_VIEW, OnTracingView)
-ON_COMMAND(ID_TRACING_CLOAK, OnTracingCloak)
-ON_COMMAND(ID_TRACING_FUSE, OnTracingFuse)
-ON_COMMAND(ID_TRACING_OPEN, OnTracingOpen)
-ON_COMMAND(ID_TRAPCOMMANDS_HIGHLIGHT, OnTrapCommandsHighlight)
-ON_COMMAND(ID_TRAPCOMMANDS_COMPRESS, OnTrapCommandsCompress)
-ON_COMMAND(ID_TRAPCOMMANDS_EXPAND, OnTrapCommandsExpand)
-ON_COMMAND(ID_TRAPCOMMANDS_INVERT, OnTrapCommandsInvert)
-ON_COMMAND(ID_TRAPCOMMANDS_SQUARE, OnTrapCommandsSquare)
-ON_COMMAND(ID_TRAPCOMMANDS_QUERY, OnTrapCommandsQuery)
-ON_COMMAND(ID_TRAPCOMMANDS_FILTER, OnTrapCommandsFilter)
-ON_COMMAND(ID_TRAPCOMMANDS_BLOCK, OnTrapCommandsBlock)
-ON_COMMAND(ID_TRAPCOMMANDS_UNBLOCK, OnTrapCommandsUnblock)
+ON_COMMAND(ID_FILE_TRACING, &CPegDoc::OnFileTracing)
+ON_COMMAND(ID_LAYER_ACTIVE, &CPegDoc::OnLayerActive)
+ON_COMMAND(ID_LAYER_STATIC, &CPegDoc::OnLayerStatic)
+ON_COMMAND(ID_LAYER_HIDDEN, &CPegDoc::OnLayerHidden)
+ON_COMMAND(ID_LAYER_MELT, &CPegDoc::OnLayerMelt)
+ON_COMMAND(ID_LAYER_WORK, &CPegDoc::OnLayerWork)
+ON_COMMAND(ID_LAYERS_ACTIVEALL, &CPegDoc::OnLayersActiveAll)
+ON_COMMAND(ID_LAYERS_STATICALL, &CPegDoc::OnLayersStaticAll)
+ON_COMMAND(ID_LAYERS_REMOVEEMPTY, &CPegDoc::OnLayersRemoveEmpty)
+ON_COMMAND(ID_MAINTENANCE_REMOVEEMPTYNOTES, &CPegDoc::OnMaintenanceRemoveEmptyNotes)
+ON_COMMAND(ID_MAINTENANCE_REMOVEEMPTYSEGMENTS, &CPegDoc::OnMaintenanceRemoveEmptySegments)
+ON_COMMAND(ID_PENS_REMOVEUNUSEDSTYLES, &CPegDoc::OnPensRemoveUnusedStyles)
+ON_COMMAND(ID_PENS_EDITCOLORS, &CPegDoc::OnPensEditColors)
+ON_COMMAND(ID_PENS_LOADCOLORS, &CPegDoc::OnPensLoadColors)
+ON_COMMAND(ID_PENS_TRANSLATE, &CPegDoc::OnPensTranslate)
+ON_COMMAND(ID_PRIM_BREAK, &CPegDoc::OnPrimBreak)
+ON_COMMAND(ID_PRIM_EXTRACTNUM, &CPegDoc::OnPrimExtractNum)
+ON_COMMAND(ID_PRIM_EXTRACTSTR, &CPegDoc::OnPrimExtractStr)
+ON_COMMAND(ID_PRIM_SNAPTOENDPOINT, &CPegDoc::OnPrimSnapToEndPoint)
+ON_COMMAND(ID_PRIM_GOTOCENTERPOINT, &CPegDoc::OnPrimGotoCenterPoint)
+ON_COMMAND(ID_PRIM_DELETE, &CPegDoc::OnPrimDelete)
+ON_COMMAND(ID_PRIM_MODIFY_ATTRIBUTES, &CPegDoc::OnPrimModifyAttributes)
+ON_COMMAND(ID_SEG_BREAK, &CPegDoc::OnSegBreak)
+ON_COMMAND(ID_SEG_DELETE, &CPegDoc::OnSegDelete)
+ON_COMMAND(ID_SEG_DELETELAST, &CPegDoc::OnSegDeleteLast)
+ON_COMMAND(ID_SEG_EXCHANGE, &CPegDoc::OnSegExchange)
+ON_COMMAND(ID_SEG_INSERT, &CPegDoc::OnSegInsert)
+ON_COMMAND(ID_SETUP_PENCOLOR, &CPegDoc::OnSetupPenColor)
+ON_COMMAND(ID_SETUP_PENSTYLE, &CPegDoc::OnSetupPenStyle)
+ON_COMMAND(ID_SETUP_FILL_HOLLOW, &CPegDoc::OnSetupFillHollow)
+ON_COMMAND(ID_SETUP_FILL_SOLID, &CPegDoc::OnSetupFillSolid)
+ON_COMMAND(ID_SETUP_FILL_PATTERN, &CPegDoc::OnSetupFillPattern)
+ON_COMMAND(ID_SETUP_FILL_HATCH, &CPegDoc::OnSetupFillHatch)
+ON_COMMAND(ID_SETUP_MARKSTYLE, &CPegDoc::OnSetupMarkStyle)
+ON_COMMAND(ID_SETUP_NOTE, &CPegDoc::OnSetupNote)
+ON_COMMAND(ID_SETUP_SAVEPOINT, &CPegDoc::OnSetupSavePoint)
+ON_COMMAND(ID_SETUP_GOTOPOINT, &CPegDoc::OnSetupGotoPoint)
+ON_COMMAND(ID_SETUP_OPTIONS_DRAW, &CPegDoc::OnSetupOptionsDraw)
+ON_COMMAND(ID_TRACING_MAP, &CPegDoc::OnTracingMap)
+ON_COMMAND(ID_TRACING_VIEW, &CPegDoc::OnTracingView)
+ON_COMMAND(ID_TRACING_CLOAK, &CPegDoc::OnTracingCloak)
+ON_COMMAND(ID_TRACING_FUSE, &CPegDoc::OnTracingFuse)
+ON_COMMAND(ID_TRACING_OPEN, &CPegDoc::OnTracingOpen)
+ON_COMMAND(ID_TRAPCOMMANDS_HIGHLIGHT, &CPegDoc::OnTrapCommandsHighlight)
+ON_COMMAND(ID_TRAPCOMMANDS_COMPRESS, &CPegDoc::OnTrapCommandsCompress)
+ON_COMMAND(ID_TRAPCOMMANDS_EXPAND, &CPegDoc::OnTrapCommandsExpand)
+ON_COMMAND(ID_TRAPCOMMANDS_INVERT, &CPegDoc::OnTrapCommandsInvert)
+ON_COMMAND(ID_TRAPCOMMANDS_SQUARE, &CPegDoc::OnTrapCommandsSquare)
+ON_COMMAND(ID_TRAPCOMMANDS_QUERY, &CPegDoc::OnTrapCommandsQuery)
+ON_COMMAND(ID_TRAPCOMMANDS_FILTER, &CPegDoc::OnTrapCommandsFilter)
+ON_COMMAND(ID_TRAPCOMMANDS_BLOCK, &CPegDoc::OnTrapCommandsBlock)
+ON_COMMAND(ID_TRAPCOMMANDS_UNBLOCK, &CPegDoc::OnTrapCommandsUnblock)
 END_MESSAGE_MAP()
 
 ///<summary>Constructs 0 to many seperate text primitives for each `\r\n` delimited substr.</summary>
@@ -552,8 +552,6 @@ int CPegDoc::PenStylesFillCB(HWND hwnd) const {
 }
 
 PENSTYLE CPegDoc::PenStylesLookup(const CString& strName) const {
-  if (this == NULL) return 0;
-
   if (strName.CompareNoCase(_T("ByBlock")) == 0) { return PENSTYLE(1); }
   for (WORD w = 0; w < m_PenStyles.GetSize(); w++) {
     CPenStyle* pPenStyle = m_PenStyles[w];
@@ -890,7 +888,7 @@ void CPegDoc::SetOpenFile(WORD wFileType, const CString& strFileName) {
 void CPegDoc::TracingFuse(CString& layerName) const {
   CLayer* layer = LayersGet(layerName);
   if (layer != 0) {
-    TCHAR* title = new TCHAR[MAX_PATH];
+    auto title = new TCHAR[MAX_PATH];
     GetFileTitle(layerName, title, MAX_PATH);
     TCHAR* context = nullptr;
     _tcstok_s(title, _T("."), &context);
@@ -1162,7 +1160,7 @@ void CPegDoc::OnPrimBreak() {
     if (pPrim->Is(CPrim::Type::Polyline)) {
       pSeg->FindAndRemovePrim(pPrim);
 
-      CPrimPolyline* pPolyline = static_cast<CPrimPolyline*>(pPrim);
+      auto* pPolyline = static_cast<CPrimPolyline*>(pPrim);
 
       CPnts pts;
       pPolyline->GetAllPts(pts);
@@ -1175,7 +1173,7 @@ void CPegDoc::OnPrimBreak() {
       delete pPrim;
       detsegs.DetSeg() = 0;
     } else if (pPrim->Is(CPrim::Type::SegRef)) {
-      CPrimSegRef* pSegRef = static_cast<CPrimSegRef*>(pPrim);
+      auto* pSegRef = static_cast<CPrimSegRef*>(pPrim);
 
       CBlock* pBlock;
 
@@ -1393,7 +1391,7 @@ void CPegDoc::OnEditTrace() {
           CMemFile memoryFile;
           CVec translationVector;
 
-          LPCSTR buffer = (LPCSTR)GlobalLock(clipboardData);
+          auto buffer = (LPCSTR)GlobalLock(clipboardData);
           if (buffer != nullptr) {
             DWORD sizeOfBuffer = *((DWORD*)buffer);  // first 4 bytes is size of buffer (defined in DoEditTrapCopy)
             memoryFile.Write(buffer, UINT(sizeOfBuffer));
@@ -1453,7 +1451,7 @@ void CPegDoc::OnEditTrapPaste() {
           CPnt ptPvt(app.CursorPosGet());
           trapsegs.PvtPt() = ptPvt;
 
-          LPCSTR lpBuffer = (LPCSTR)GlobalLock(hGbl);
+          auto lpBuffer = (LPCSTR)GlobalLock(hGbl);
 
           DWORD dwSizeOfBuffer = *((DWORD*)lpBuffer);
 
@@ -1474,9 +1472,9 @@ void CPegDoc::OnEditTrapPaste() {
     } else if (IsClipboardFormatAvailable(CF_TEXT)) {
       HGLOBAL hGbl = GetClipboardData(CF_TEXT);
 
-      LPSTR lpText = new TCHAR[GlobalSize(hGbl)];
+      auto lpText = new TCHAR[GlobalSize(hGbl)];
 
-      LPCSTR lpBuffer = (LPCSTR)GlobalLock(hGbl);
+      auto lpBuffer = (LPCSTR)GlobalLock(hGbl);
       lstrcpy(lpText, lpBuffer);
       GlobalUnlock(hGbl);
 
@@ -1697,11 +1695,6 @@ void CPegDoc::OnPrimGotoCenterPoint() {
     app.CursorPosSet(pt);
   }
 }
-///<summary>
-/// Searches for closest detectible primitive.
-/// If found, primitive is lifted from its segment, inserted into a new segment
-/// which is added to deleted segment list. The primitive resources are not freed.
-///</summary>
 void CPegDoc::OnPrimDelete() { DoPrimDelete(app.CursorPosGet()); }
 ///<summary>Picks a primative and modifies its attributes to current settings.</summary>
 void CPegDoc::OnPrimModifyAttributes() {
@@ -1731,18 +1724,19 @@ void CPegDoc::OnFileManage() {
   CWnd* pWnd = AfxGetApp()->GetMainWnd();
   ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_FILE_MANAGE), pWnd->GetSafeHwnd(), DlgProcFileManage);
 }
-void CPegDoc::OnFileTracing() {
-  static DWORD nFilterIndex{1};
 
-  TCHAR szFilter[256]{};
-  ::LoadString(app.GetInstance(), IDS_OPENFILE_FILTER_TRACINGS, szFilter, sizeof(szFilter));
+void CPegDoc::OnFileTracing() {
+  static DWORD filterIndex{1};
+
+  TCHAR filter[256]{};
+  ::LoadString(app.GetInstance(), IDS_OPENFILE_FILTER_TRACINGS, filter, sizeof(filter));
 
   OPENFILENAME of{};
 
   of.lStructSize = sizeof(OPENFILENAME);
-  of.hwndOwner = 0;
+  of.hwndOwner = nullptr;
   of.hInstance = app.GetInstance();
-  of.lpstrFilter = szFilter;
+  of.lpstrFilter = filter;
   of.lpstrFile = new TCHAR[MAX_PATH];
   of.lpstrFile[0] = 0;
   of.nMaxFile = MAX_PATH;
@@ -1753,7 +1747,7 @@ void CPegDoc::OnFileTracing() {
   of.lpTemplateName = MAKEINTRESOURCE(IDD_TRACING_EX);
 
   if (GetOpenFileName(&of)) {
-    nFilterIndex = of.nFilterIndex;
+    filterIndex = of.nFilterIndex;
 
     TracingOpen(of.lpstrFile);
   }
@@ -1811,8 +1805,8 @@ void CPegDoc::OnPensTranslate() {
     while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0) wCols++;
 
     if (wCols > 0) {
-      PENCOLOR* pColNew = new PENCOLOR[wCols];
-      PENCOLOR* pCol = new PENCOLOR[wCols];
+      auto pColNew = new PENCOLOR[wCols];
+      auto pCol = new PENCOLOR[wCols];
 
       WORD w = 0;
 
@@ -1902,10 +1896,10 @@ void CPegDoc::OnPrimExtractStr() {
 }
 // Returns a pointer to the currently active document.
 CPegDoc* CPegDoc::GetDoc(void) {
-  CMDIFrameWnd* pFrame = (CMDIFrameWnd*)(AfxGetApp()->m_pMainWnd);
+  auto* pFrame = (CMDIFrameWnd*)(AfxGetApp()->m_pMainWnd);
   if (pFrame == NULL) return NULL;
 
-  CMDIChildWnd* pChild = (CMDIChildWnd*)pFrame->MDIGetActive();
+  auto* pChild = (CMDIChildWnd*)pFrame->MDIGetActive();
 
   return (pChild == NULL) ? NULL : (CPegDoc*)pChild->GetActiveDocument();
 }
