@@ -11,8 +11,8 @@
 #include "PegAEsys.h"
 #include "PegAEsysView.h"
 
-#include "dde.h"
-#include "ddeGItms.h"
+#include "Dde.h"
+#include "DdeGItms.h"
 #include "FilePeg.h"
 #include "Line.h"
 #include "Messages.h"

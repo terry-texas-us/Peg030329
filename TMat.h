@@ -19,7 +19,7 @@ class CTMat : public CMat4 {
 
   CTMat(const CTMat& other) : CMat4(other) {}
 
-  ~CTMat() {}
+  ~CTMat() override {}
 
  public:  // Operators
   CTMat& operator=(const CTMat& other) {

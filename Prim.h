@@ -70,7 +70,7 @@ class CPrim : public CObject {
   CPrim(const CPrim&) = delete;
   CPrim& operator=(const CPrim&) = delete;
 
-  virtual ~CPrim() {}
+  ~CPrim() override {}
 
  public:  // Methods - absolute virtuals
   virtual void AddToTreeViewControl(HWND, HTREEITEM) const = 0;

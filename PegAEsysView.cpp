@@ -91,14 +91,14 @@ CPegView::CPegView() {
   m_dPlotScaleFactor = 1.;
 }
 
-CPegView::~CPegView() {}
+CPegView::~CPegView() = default;
 
 BOOL CPegView::PreCreateWindow(CREATESTRUCT& cs) {
   if (!CView::PreCreateWindow(cs)) { return FALSE; }
   cs.lpszClass = AfxRegisterWndClass(CS_DBLCLKS | CS_HREDRAW | CS_VREDRAW | CS_OWNDC,
                                      AfxGetApp()->LoadCursor(IDR_MAINFRAME), ::CreateSolidBrush(crHotCols[0]));
 
-  return (cs.lpszClass != NULL) ? TRUE : FALSE;
+  return (cs.lpszClass != nullptr) ? TRUE : FALSE;
 }
 
 BEGIN_MESSAGE_MAP(CPegView, CView)
@@ -238,14 +238,14 @@ void CPegView::ModelViewAdjustWnd(double& dUMin, double& dVMin, double& dUMax, d
 }
 // CPegView drawing
 void CPegView::BackgroundImageDisplay(CDC* pDC) {
-  if (m_bViewBackgroundImage && (HBITMAP)m_bmBackgroundImage != NULL) {
+  if (m_bViewBackgroundImage && (HBITMAP)m_bmBackgroundImage != nullptr) {
     int iWidDst = int(m_vpActive.GetWidth());
     int iHgtDst = int(m_vpActive.GetHeight());
 
     BITMAP bm;
     m_bmBackgroundImage.GetBitmap(&bm);
     CDC dcMem;
-    dcMem.CreateCompatibleDC(NULL);
+    dcMem.CreateCompatibleDC(nullptr);
     CBitmap* pBitmap = dcMem.SelectObject(&m_bmBackgroundImage);
     CPalette* pPalette = pDC->SelectPalette(&m_palBackgroundImage, FALSE);
     pDC->RealizePalette();
@@ -284,7 +284,7 @@ void CPegView::OnDraw(CDC* pDC) {
 
   if (m_bViewRendered) {
     opengl::Clear();
-    pDoc->LayersDisplayAll(this, 0);
+    pDoc->LayersDisplayAll(this, nullptr);
   } else {
     BackgroundImageDisplay(pDC);
     grid::Display(this, pDC);
@@ -360,8 +360,8 @@ BOOL CPegView::OnPreparePrinting(CPrintInfo* pInfo) {
     CPrintInfo pi;
     if (AfxGetApp()->GetPrinterDeviceDefaults(&pi.m_pPD->m_pd)) {
       HDC hDC = pi.m_pPD->m_pd.hDC;
-      if (hDC == NULL) { hDC = pi.m_pPD->CreatePrinterDC(); }
-      if (hDC != NULL) {
+      if (hDC == nullptr) { hDC = pi.m_pPD->CreatePrinterDC(); }
+      if (hDC != nullptr) {
         UINT nHorzPages;
         UINT nVertPages;
         CDC dc;
@@ -486,7 +486,7 @@ void CPegView::DoCameraRotate(int iDir) {
   }
   ModelViewSetEye(ptEye);
   ModelViewSetVwUp(vV);
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 void CPegView::DoWindowPan(double dRatio) {
   double dUExt = GetWidthInInches() / dRatio;
@@ -505,7 +505,7 @@ void CPegView::DoWindowPan(double dRatio) {
   ModelViewSetEye(vDirection);
 
   app.CursorPosSet(ptCur);
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 void CPegView::DoWindowPan0(int dir) {
   CPnt pt = app.CursorPosGet();
@@ -534,7 +534,7 @@ void CPegView::DoWindowPan0(int dir) {
   ModelViewSetEye(ModelViewGetDirection());
 
   app.CursorPosSet(pt);
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 
 // CPegView message handlers
@@ -639,13 +639,13 @@ void CPegView::OnMouseMove(UINT, CPoint point) {
     int iDrawMode = pstate.SetROP2(pDC, R2_XORPEN);
     int iPrimState = pstate.Save();
 
-    if (trapsegs.Identify() && trapsegs.Find(pSeg) != 0) CPrim::SpecPenColor() = trapsegs.PenColor();
+    if (trapsegs.Identify() && trapsegs.Find(pSeg) != nullptr) CPrim::SpecPenColor() = trapsegs.PenColor();
 
-    if (pPrim != 0) {
+    if (pPrim != nullptr) {
       pPrim->Display(this, pDC);
       pPrim->Transform(tm);
       pPrim->Display(this, pDC);
-    } else if (pSeg != 0) {
+    } else if (pSeg != nullptr) {
       pSeg->Display(this, pDC);
       pSeg->Transform(tm);
       pSeg->Display(this, pDC);
@@ -673,85 +673,85 @@ void CPegView::On3dViewsTop() {
   ModelViewSetDirection(ZDIR);
   ModelViewSetVwUp(YDIR);
   ModelViewSetPerspectiveEnabled(false);
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 void CPegView::On3dViewsBottom() {
   ModelViewSetEye(-ZDIR);
   ModelViewSetDirection(-ZDIR);
   ModelViewSetVwUp(YDIR);
   ModelViewSetPerspectiveEnabled(false);
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 void CPegView::On3dViewsLeft() {
   ModelViewSetEye(-XDIR);
   ModelViewSetDirection(-XDIR);
   ModelViewSetVwUp(ZDIR);
   ModelViewSetPerspectiveEnabled(false);
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 void CPegView::On3dViewsRight() {
   ModelViewSetEye(XDIR);
   ModelViewSetDirection(XDIR);
   ModelViewSetVwUp(ZDIR);
   ModelViewSetPerspectiveEnabled(false);
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 void CPegView::On3dViewsFront() {
   ModelViewSetEye(-YDIR);
   ModelViewSetDirection(-YDIR);
   ModelViewSetVwUp(ZDIR);
   ModelViewSetPerspectiveEnabled(false);
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 void CPegView::On3dViewsBack() {
   ModelViewSetEye(YDIR);
   ModelViewSetDirection(YDIR);
   ModelViewSetVwUp(ZDIR);
   ModelViewSetPerspectiveEnabled(false);
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 void CPegView::On3dViewsIsometric() {
   ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_ISOMETRIC), GetSafeHwnd(), DlgProcProjIsometric);
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 void CPegView::On3dViewsAxonometric() {
   ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_AXONOMETRIC), GetSafeHwnd(), DlgProcProjAxonometric);
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 void CPegView::On3dViewsOblique() {
   ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_OBLIQUE), GetSafeHwnd(), DlgProcProjOblique);
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 void CPegView::On3dViewsPerspective() {
   ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_PROJ_PERSPECTIVE), GetSafeHwnd(), DlgProcProjPerspective);
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 void CPegView::OnViewTrueTypeFonts() {
   m_bViewTrueTypeFonts = !m_bViewTrueTypeFonts;
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 void CPegView::OnViewPenWidths() {
   m_bViewPenWidths = !m_bViewPenWidths;
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 void CPegView::OnViewOdometer() {
   m_bViewOdometer = !m_bViewOdometer;
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
-void CPegView::OnViewRefresh() { InvalidateRect(NULL, TRUE); }
+void CPegView::OnViewRefresh() { InvalidateRect(nullptr, TRUE); }
 void CPegView::OnViewZoom() {
   CDlgViewZoom dlg;
   dlg.m_dRatio = GetWidthInInches() / ModelViewGetUExt();
 
-  if (dlg.DoModal() == IDOK) { InvalidateRect(NULL, TRUE); }
+  if (dlg.DoModal() == IDOK) { InvalidateRect(nullptr, TRUE); }
 }
 void CPegView::OnViewWireframe() {
   m_bViewWireframe = !m_bViewWireframe;
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 void CPegView::OnViewRendered() {
   m_bViewRendered = !m_bViewRendered;
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 void CPegView::OnViewParameters() {
   ::DialogBox(app.GetInstance(), MAKEINTRESOURCE(IDD_VIEWPARAMS), GetSafeHwnd(), DlgProcViewParameters);
@@ -788,7 +788,7 @@ void CPegView::OnWindowBest() {
     ModelViewSetEye(ModelViewGetDirection());
 
     app.CursorPosSet(ptTarget);
-    InvalidateRect(NULL, TRUE);
+    InvalidateRect(nullptr, TRUE);
   }
 }
 void CPegView::OnWindowLast() {
@@ -814,7 +814,7 @@ void CPegView::OnViewWindow() {
 
   HMENU hMenu = ::LoadMenu(app.GetInstance(), MAKEINTRESOURCE(IDR_WINDOW));
   hMenu = GetSubMenu(hMenu, 0);
-  ::TrackPopupMenu(hMenu, TPM_LEFTALIGN, pnt.x, pnt.y, 0, GetSafeHwnd(), 0);
+  ::TrackPopupMenu(hMenu, TPM_LEFTALIGN, pnt.x, pnt.y, 0, GetSafeHwnd(), nullptr);
   ::DestroyMenu(hMenu);
 }
 void CPegView::OnSetupDimLength() {
@@ -1011,7 +1011,7 @@ void CPegView::OnPrimSnapTo() {
       return;
     }
   }
-  if (detsegs.SelSegAndPrimUsingPoint(pt) != 0) {
+  if (detsegs.SelSegAndPrimUsingPoint(pt) != nullptr) {
     ptDet = detsegs.DetPt();
     detsegs.DetPrim()->DisRep(ptDet);
     app.CursorPosSet(ptDet);
@@ -1020,7 +1020,7 @@ void CPegView::OnPrimSnapTo() {
 void CPegView::OnPrimPerpJump() {
   CPnt pt = app.CursorPosGet();
 
-  if (detsegs.SelSegAndPrimUsingPoint(pt) != 0) {
+  if (detsegs.SelSegAndPrimUsingPoint(pt) != nullptr) {
     if (detsegs.DetPrim()->Is(CPrim::Type::Line)) {
       CPrimLine* pPrimLine = static_cast<CPrimLine*>(detsegs.DetPrim());
       pt = pPrimLine->ProjPt(app.m_ptCursorPosWorld);
@@ -1065,22 +1065,23 @@ void CPegView::DoCustomMouseClick(const std::string& customCommand) const {
 }
 
 // Returns a pointer to the currently active view.
-CPegView* CPegView::GetActiveView(void) {
-  CMDIFrameWnd* pFrame = (CMDIFrameWnd*)(AfxGetApp()->m_pMainWnd);
 
-  if (pFrame == NULL) return NULL;
+auto CPegView::GetActiveView() -> CPegView* {
+  auto* frame = (CMDIFrameWnd*)(AfxGetApp()->m_pMainWnd);
 
-  CMDIChildWnd* pChild = pFrame->MDIGetActive();
+  if (frame == nullptr) return nullptr;
 
-  if (pChild == NULL) return NULL;
+  CMDIChildWnd* child = frame->MDIGetActive();
 
-  CView* pView = pChild->GetActiveView();
+  if (child == nullptr) return nullptr;
+
+  CView* activeView = child->GetActiveView();
 
   // Fail if the view is the wrong kind (this could occur with splitter windows,
   // or additional views in a single document.
-  if (!pView->IsKindOf(RUNTIME_CLASS(CPegView))) return NULL;
+  if (!activeView->IsKindOf(RUNTIME_CLASS(CPegView))) return nullptr;
 
-  return (CPegView*)pView;
+  return (CPegView*)activeView;
 }
 void CPegView::OnUpdateViewOdometer(CCmdUI* pCmdUI) { pCmdUI->SetCheck(m_bViewOdometer); }
 void CPegView::DisplayOdometer() {
@@ -1123,15 +1124,15 @@ void CPegView::DisplayOdometer() {
 
     CRect rc(iLeft, rcClient.top, rcClient.right, rcClient.top + tm.tmHeight);
     UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), m_vRelPos[0]);
-    pDC->ExtTextOut(rc.left, rc.top, fuOptions, &rc, szBuf, (UINT)_tcslen(szBuf), 0);
+    pDC->ExtTextOut(rc.left, rc.top, fuOptions, &rc, szBuf, (UINT)_tcslen(szBuf), nullptr);
 
     rc.SetRect(iLeft, rcClient.top + 1 * tm.tmHeight, rcClient.right, rcClient.top + 2 * tm.tmHeight);
     UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), m_vRelPos[1]);
-    pDC->ExtTextOut(rc.left, rc.top, fuOptions, &rc, szBuf, (UINT)_tcslen(szBuf), 0);
+    pDC->ExtTextOut(rc.left, rc.top, fuOptions, &rc, szBuf, (UINT)_tcslen(szBuf), nullptr);
 
     rc.SetRect(iLeft, rcClient.top + 2 * tm.tmHeight, rcClient.right, rcClient.top + 3 * tm.tmHeight);
     UnitsString_FormatLength(szBuf, sizeof(szBuf), app.GetUnits(), m_vRelPos[2]);
-    pDC->ExtTextOut(rc.left, rc.top, fuOptions, &rc, szBuf, (UINT)_tcslen(szBuf), 0);
+    pDC->ExtTextOut(rc.left, rc.top, fuOptions, &rc, szBuf, (UINT)_tcslen(szBuf), nullptr);
 
     pDC->SetBkColor(crBk);
     pDC->SetTextColor(crText);
@@ -1150,32 +1151,34 @@ void CPegView::OnBackgroundImageLoad() {
 
     fbmp.Load(dlg.GetPathName(), m_bmBackgroundImage, m_palBackgroundImage);
     m_bViewBackgroundImage = true;
-    InvalidateRect(NULL, TRUE);
+    InvalidateRect(nullptr, TRUE);
   }
 }
 
 void CPegView::OnBackgroundImageRemove() {
-  if ((HBITMAP)m_bmBackgroundImage != NULL) {
+  if ((HBITMAP)m_bmBackgroundImage != nullptr) {
     m_bmBackgroundImage.DeleteObject();
     m_palBackgroundImage.DeleteObject();
     m_bViewBackgroundImage = false;
-    InvalidateRect(NULL, TRUE);
+    InvalidateRect(nullptr, TRUE);
   }
 }
 
 void CPegView::OnViewBackgroundImage() {
   m_bViewBackgroundImage = !m_bViewBackgroundImage;
-  InvalidateRect(NULL, TRUE);
+  InvalidateRect(nullptr, TRUE);
 }
 
 void CPegView::OnUpdateViewBackgroundImage(CCmdUI* pCmdUI) {
-  pCmdUI->Enable((HBITMAP)m_bmBackgroundImage != NULL);
+  pCmdUI->Enable((HBITMAP)m_bmBackgroundImage != nullptr);
   pCmdUI->SetCheck(m_bViewBackgroundImage);
 }
 
-void CPegView::OnUpdateBackgroundimageLoad(CCmdUI* pCmdUI) { pCmdUI->Enable((HBITMAP)m_bmBackgroundImage == NULL); }
+void CPegView::OnUpdateBackgroundimageLoad(CCmdUI* pCmdUI) { pCmdUI->Enable((HBITMAP)m_bmBackgroundImage == nullptr); }
 
-void CPegView::OnUpdateBackgroundimageRemove(CCmdUI* pCmdUI) { pCmdUI->Enable((HBITMAP)m_bmBackgroundImage != NULL); }
+void CPegView::OnUpdateBackgroundimageRemove(CCmdUI* pCmdUI) {
+  pCmdUI->Enable((HBITMAP)m_bmBackgroundImage != nullptr);
+}
 
 void CPegView::OnUpdateViewRendered(CCmdUI* pCmdUI) { pCmdUI->SetCheck(m_bViewRendered); }
 

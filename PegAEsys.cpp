@@ -10,11 +10,10 @@
 #include <ShlObj_core.h>
 #include <tchar.h>
 
-#include <direct.h>
-#include <string.h>
-
 #include <cmath>
 #include <cstdlib>
+#include <direct.h>
+
 #include <exception>
 #include <fstream>
 #include <iomanip>
@@ -131,7 +130,7 @@ CPegApp::CPegApp() {
   m_dScale = 1.;
   m_iUnitsPrec = 8;
   m_eUnits = Inches;
-  m_pStrokeFontDef = 0;
+  m_pStrokeFontDef = nullptr;
 }
 
 // The one and only CPegApp object
@@ -169,7 +168,7 @@ BOOL CPegApp::InitInstance() {
                                        RUNTIME_CLASS(CPegView));
   AddDocTemplate(pDocTemplate);
   // create main Peg Frame window
-  CMainFrame* pMainFrame = new CMainFrame;
+  auto* pMainFrame = new CMainFrame;
   if (!pMainFrame->LoadFrame(IDR_MAINFRAME)) return FALSE;
   m_pMainWnd = pMainFrame;
   // call DragAcceptFiles only if there's a suffix
@@ -202,10 +201,10 @@ BOOL CPegApp::InitInstance() {
   wc.cbClsExtra = 0;
   wc.cbWndExtra = 0;
   wc.hInstance = m_hInstance;
-  wc.hIcon = 0;
-  wc.hCursor = ::LoadCursor(0, IDC_CROSS);
+  wc.hIcon = nullptr;
+  wc.hCursor = ::LoadCursor(nullptr, IDC_CROSS);
   wc.hbrBackground = (HBRUSH)::GetStockObject(BLACK_BRUSH);
-  wc.lpszMenuName = 0;
+  wc.lpszMenuName = nullptr;
   wc.lpszClassName = _T("View");
 
   if (!::RegisterClass(&wc)) return (FALSE);
@@ -215,10 +214,10 @@ BOOL CPegApp::InitInstance() {
   wc.cbClsExtra = 0;
   wc.cbWndExtra = 0;
   wc.hInstance = m_hInstance;
-  wc.hIcon = 0;
-  wc.hCursor = ::LoadCursor(0, IDC_CROSS);
+  wc.hIcon = nullptr;
+  wc.hCursor = ::LoadCursor(nullptr, IDC_CROSS);
   wc.hbrBackground = (HBRUSH)::GetStockObject(BLACK_BRUSH);
-  wc.lpszMenuName = 0;
+  wc.lpszMenuName = nullptr;
   wc.lpszClassName = _T("Preview");
 
   if (!::RegisterClass(&wc)) return (FALSE);
@@ -348,11 +347,11 @@ void CPegApp::OnModeNodal() {
   pstate.SetMarkStyle(11);
 
   POSITION pos = pDoc->WorkLayerGetHeadPosition();
-  while (pos != 0) {
+  while (pos != nullptr) {
     CSeg* pSeg = pDoc->WorkLayerGetNext(pos);
 
     POSITION posPrim = pSeg->GetHeadPosition();
-    while (posPrim != 0) {
+    while (posPrim != nullptr) {
       CPrim* pPrim = pSeg->GetNext(posPrim);
 
       pPrim->GetAllPts(pts);
@@ -376,7 +375,7 @@ void CPegApp::OnModePrimEdit() {
 
   CSeg* pSeg = detsegs.SelSegAndPrimUsingPoint(app.GetEditSegBeg());
 
-  if (pSeg != 0) {
+  if (pSeg != nullptr) {
     SetWindowMode(ID_MODE_PRIM_EDIT);
     AppSetGinCur(pSeg, detsegs.DetPrim());
   }
@@ -386,7 +385,7 @@ void CPegApp::OnModeSegEdit() {
 
   CSeg* pSeg = detsegs.SelSegAndPrimUsingPoint(app.GetEditSegBeg());
 
-  if (pSeg != 0) {
+  if (pSeg != nullptr) {
     SetWindowMode(ID_MODE_SEG_EDIT);
     AppSetGinCur(pSeg);
   }
@@ -402,7 +401,7 @@ void CPegApp::OnModePrimMend() {
   CPnt4 ptView(pt, 1.);
   pView->ModelViewTransform(ptView);
 
-  pPrimToMend = 0;
+  pPrimToMend = nullptr;
 
   if (detsegs.IsSegEngaged()) {  // Segment is currently engaged, see if cursor is on a control point
     CPnt ptDet;
@@ -416,14 +415,14 @@ void CPegApp::OnModePrimMend() {
       pPrimToMend = pPrim;
     }
   }
-  if (pPrimToMend == 0) {  // No engaged segment, or engaged primitive to far from cursor
-    if (detsegs.SelSegAndPrimUsingPoint(ptMendPrimBeg) != 0) {  // Segment successfully engaged
+  if (pPrimToMend == nullptr) {  // No engaged segment, or engaged primitive to far from cursor
+    if (detsegs.SelSegAndPrimUsingPoint(ptMendPrimBeg) != nullptr) {  // Segment successfully engaged
       pPrimToMend = detsegs.DetPrim();
     }
   }
   ptMendPrimBeg = pt;
 
-  if (pPrimToMend != 0) {
+  if (pPrimToMend != nullptr) {
     pPrimToMend->Copy(pPrimToMendCopy);
     ptMendPrimBeg = pPrimToMend->SelAtCtrlPt(pView, ptView);
     dwMendPrimPtId = 1U << static_cast<DWORD>(CPrim::CtrlPt());
@@ -455,11 +454,11 @@ void CPegApp::OnFileRun() {
     StartupInfo.dwFlags = STARTF_USESHOWWINDOW;  // Enable the wShowWindow flag
     StartupInfo.wShowWindow = SW_SHOW;
 
-    PROCESS_INFORMATION processInfo{0};  // Will receive process and thread info
+    PROCESS_INFORMATION processInfo{nullptr};  // Will receive process and thread info
 
     // Call CreateProcess
     BOOL success =
-        CreateProcess(NULL, (LPTSTR)strFile.GetBuffer(), NULL, NULL, FALSE, 0, NULL, NULL, &StartupInfo, &processInfo);
+        CreateProcess(nullptr, (LPTSTR)strFile.GetBuffer(), nullptr, nullptr, FALSE, 0, nullptr, nullptr, &StartupInfo, &processInfo);
 
     if (!success) {
       // Handle error, e.g., via GetLastError()
@@ -542,7 +541,7 @@ void CPegApp::SetShadowDir(const std::string& strDir) {
 }
 CPnt CPegApp::CursorPosGet() {
   CPegView* pView = CPegView::GetActiveView();
-  if (pView == NULL) return ORIGIN;
+  if (pView == nullptr) return ORIGIN;
 
   CPoint pntCurPos;
 
@@ -573,7 +572,7 @@ void CPegApp::CursorPosSet(const CPnt& pt) {
     pView->ModelViewSetTarget(pt);
     pView->ModelViewSetEye(pView->ModelViewGetDirection());
 
-    m_pMainWnd->InvalidateRect(NULL, TRUE);
+    m_pMainWnd->InvalidateRect(nullptr, TRUE);
 
     ptView = pt;
     pView->ModelViewTransform(ptView);
@@ -603,7 +602,7 @@ void CPegApp::HatchesLoad(const CString& strFileName) {
   int iNmbHatLns{0};
   int iTblId{0};
 
-  while (fl.ReadString(szLn, sizeof(szLn) - 1) != 0) {
+  while (fl.ReadString(szLn, sizeof(szLn) - 1) != nullptr) {
     if (*szLn == '!')  // New Hatch index
     {
       if (iHatId != 0) hatch::fTableValue[hatch::iTableOffset[iHatId]] = float(iNmbHatLns);
@@ -616,12 +615,12 @@ void CPegApp::HatchesLoad(const CString& strFileName) {
       dTotStrsLen = 0.;
       TCHAR* context = nullptr;
       TCHAR* pTok = _tcstok_s(szLn, szValDel, &context);
-      while (pTok != 0) {
+      while (pTok != nullptr) {
         hatch::fTableValue[iTblId] = float(atof(pTok));
         iNmbEnts++;
         if (iNmbEnts >= 6) dTotStrsLen = dTotStrsLen + hatch::fTableValue[iTblId];
         iTblId++;
-        pTok = _tcstok_s(0, szValDel, &context);
+        pTok = _tcstok_s(nullptr, szValDel, &context);
       }
       hatch::fTableValue[iNmbStrsId++] = float(iNmbEnts - 5);
       hatch::fTableValue[iNmbStrsId] = float(dTotStrsLen);
@@ -692,7 +691,7 @@ void CPegApp::LineFontRelease() {
 ///<summary>Loads the PenStyle table.</summary>
 void CPegApp::PenStylesLoad(const CString& strFileName) {
   CPegDoc* pDoc = CPegDoc::GetDoc();
-  if (pDoc == NULL) return;
+  if (pDoc == nullptr) return;
 
   CStdioFile fl;
 
@@ -704,12 +703,12 @@ void CPegApp::PenStylesLoad(const CString& strFileName) {
     TCHAR pBuf[128]{};
 
     WORD wLensMax = 8;
-    double* pLen = new double[wLensMax];
+    auto* pLen = new double[wLensMax];
     TCHAR* context = nullptr;
-    while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != 0) {
+    while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != nullptr) {
       int iId = _ttoi(_tcstok_s(pBuf, _T("="), &context));
-      strName = _tcstok_s(0, _T(","), &context);
-      strDescription = _tcstok_s(0, _T("\n"), &context);
+      strName = _tcstok_s(nullptr, _T(","), &context);
+      strDescription = _tcstok_s(nullptr, _T("\n"), &context);
       fl.ReadString(pBuf, sizeof(pBuf) - 1);
 
       WORD wLens = WORD(_ttoi(_tcstok_s(pBuf, _T(",\n"), &context)));
@@ -719,7 +718,7 @@ void CPegApp::PenStylesLoad(const CString& strFileName) {
         pLen = new double[wLens];
         wLensMax = wLens;
       }
-      for (WORD w = 0; w < wLens; w++) pLen[w] = atof(_tcstok_s(0, _T(",\n"), &context));
+      for (WORD w = 0; w < wLens; w++) pLen[w] = atof(_tcstok_s(nullptr, _T(",\n"), &context));
 
       pDoc->PenStylesInsert(iId, new CPenStyle(strName, strDescription, wLens, pLen));
     }
@@ -749,7 +748,7 @@ void CPegApp::PenColorsChoose() {
   ::ChooseColor(&cc);
   SetBackGround(crHotCols[0]);
 
-  CPegDoc::GetDoc()->UpdateAllViews(NULL, 0L, NULL);
+  CPegDoc::GetDoc()->UpdateAllViews(nullptr, 0L, nullptr);
 }
 // Loads the color table.
 void CPegApp::PenColorsLoad(const CString& strFileName) {
@@ -764,13 +763,9 @@ void CPegApp::PenColorsLoad(const CString& strFileName) {
     TCHAR* context = nullptr;
     while (fl.ReadString(pBuf, sizeof(pBuf) - 1) != nullptr && *pBuf != '<') {
       pId = _tcstok_s(pBuf, _T("="), &context);
-      pRed = _tcstok_s(0, _T(","), &context);
-      pGreen = _tcstok_s(0, _T(","), &context);
-      pBlue = _tcstok_s(0, _T(","), &context);
-      crHotCols[_ttoi(pId)] = RGB(_ttoi(pRed), _ttoi(pGreen), _ttoi(pBlue));
-      pRed = _tcstok_s(0, _T(","), &context);
-      pGreen = _tcstok_s(0, _T(","), &context);
-      pBlue = _tcstok_s(0, _T("\n"), &context);
+      pRed = _tcstok_s(nullptr, _T(","), &context);
+      pGreen = _tcstok_s(nullptr, _T(","), &context);
+      pBlue = _tcstok_s(nullptr, _T("\n"), &context);
       crWarmCols[_ttoi(pId)] = RGB(_ttoi(pRed), _ttoi(pGreen), _ttoi(pBlue));
     }
   }
@@ -778,7 +773,7 @@ void CPegApp::PenColorsLoad(const CString& strFileName) {
 // Disables rubberbanding.
 void CPegApp::RubberBandingDisable() {
   CPegView* pView = CPegView::GetActiveView();
-  CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+  CDC* pDC = (pView == nullptr) ? nullptr : pView->GetDC();
 
   if (m_iGinRubTyp == 0) return;
 
@@ -846,7 +841,7 @@ void CPegApp::RubberBandingStartAtEnable(const CPnt& pt, ERubs eRub) {
 }
 void CPegApp::SetBackGround(COLORREF cr) {
   CPegView* pView = CPegView::GetActiveView();
-  if (pView != NULL) {
+  if (pView != nullptr) {
     ::SetClassLongPtr(pView->GetSafeHwnd(), GCLP_HBRBACKGROUND, reinterpret_cast<LONG_PTR>(::CreateSolidBrush(cr)));
     CDC* pDC = pView->GetDC();
     pDC->SetBkColor(cr);
@@ -913,7 +908,7 @@ void CPegApp::SetModeCursor(int iModeId) {
   }
   HCURSOR hCursor = LoadCursor(MAKEINTRESOURCE(wResourceId));
 
-  if (hCursor != 0) SetCursor(hCursor);
+  if (hCursor != nullptr) SetCursor(hCursor);
 }
 void CPegApp::SetWindowMode(int aiModeId) {
   CFrameWnd* pFrame = (CFrameWnd*)m_pMainWnd;
@@ -1002,7 +997,7 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli) const {
   if (m_bViewStateInfo) {
     CPegView* pView = CPegView::GetActiveView();
 
-    if (pView == NULL) return;
+    if (pView == nullptr) return;
 
     CDC* pDC = pView->GetDC();
 
@@ -1023,22 +1018,22 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli) const {
     if (sli == All || sli == WorkCnt) {  // print num in work
       rc.SetRect(0, rcClient.top, 8 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
       std::string str = std::to_string(CPegDoc::GetDoc()->GetHotCount() + CPegDoc::GetDoc()->GetWarmCount()) + _T("  ");
-      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
+      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), nullptr);
     }
     if (sli == All || sli == TrapCnt) {  // print num in trap
       rc.SetRect(10 * tm.tmAveCharWidth, rcClient.top, 19 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
       std::string str = _T(" ") + std::to_string(trapsegs.GetCount()) + _T("  ");
-      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
+      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), nullptr);
     }
     if (sli == All || sli == Pen) {  // print pen  info
       rc.SetRect(21 * tm.tmAveCharWidth, rcClient.top, 27 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
       std::string str = _T("P ") + std::to_string(pstate.PenColor()) + _T(" ");
-      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
+      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), nullptr);
     }
     if (sli == All || sli == Line) {  // print line info
       rc.SetRect(29 * tm.tmAveCharWidth, rcClient.top, 35 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
       std::string str = _T("L ") + std::to_string(pstate.PenStyle());
-      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
+      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), nullptr);
     }
     if (sli == All || sli == TextHeight) {  // print text height
       CCharCellDef ccd;
@@ -1047,14 +1042,14 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli) const {
       std::stringstream ss;
       ss << _T("T ") << std::fixed << std::setprecision(2) << ccd.ChrHgtGet();
       std::string str = ss.str();
-      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
+      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), nullptr);
     }
     if (sli == All || sli == Scale) {  //print scale
       rc.SetRect(49 * tm.tmAveCharWidth, rcClient.top, 59 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
       std::stringstream ss;
       ss << _T("1: ") << std::fixed << std::setprecision(2) << GetScale();
       std::string str = ss.str();
-      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
+      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), nullptr);
     }
     if (sli == All || sli == WndRatio) {  //print zoom
       rc.SetRect(61 * tm.tmAveCharWidth, rcClient.top, 71 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
@@ -1062,19 +1057,19 @@ void CPegApp::StatusLineDisplay(EStatusLineItem sli) const {
       std::stringstream ss;
       ss << _T("@ ") << std::fixed << std::setprecision(3) << dRatio;
       std::string str = ss.str();
-      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
+      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), nullptr);
     }
     if (sli == All || sli == DimLen) {  // print DimLen
       rc.SetRect(73 * tm.tmAveCharWidth, rcClient.top, 90 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
       UnitsString_FormatLength(szBuf, sizeof(szBuf), GetUnits(), GetDimLen());
-      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT)_tcslen(szBuf), 0);
+      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, szBuf, (UINT)_tcslen(szBuf), nullptr);
     }
     if (sli == All || sli == DimAng) {  // print DimAngle
       rc.SetRect(92 * tm.tmAveCharWidth, rcClient.top, 107 * tm.tmAveCharWidth, rcClient.top + tm.tmHeight);
       std::stringstream ss;
       ss << _T(">> ") << std::fixed << std::setprecision(4) << GetDimAngZ();
       std::string str = ss.str();
-      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), 0);
+      pDC->ExtTextOut(rc.left, rc.top, ETO_CLIPPED | ETO_OPAQUE, &rc, str.c_str(), (UINT)str.length(), nullptr);
     }
     // restore Device Context to its original state
     pDC->SetBkColor(crBk);
@@ -1092,18 +1087,19 @@ void CPegApp::StrokeFontLoad(const CString& strPathName) {
     LPVOID fontptr;
 
     // Open binary resources
-    hrsrc = FindResource(NULL, MAKEINTRESOURCE(IDR_PEGSTROKEFONT), _T("STROKEFONT"));
-    fontlen = static_cast<int>(SizeofResource(NULL, hrsrc));
+    hrsrc = FindResource(nullptr, MAKEINTRESOURCE(IDR_PEGSTROKEFONT), _T("STROKEFONT"));
+    fontlen = static_cast<int>(SizeofResource(nullptr, hrsrc));
     m_pStrokeFontDef = new TCHAR[static_cast<size_t>(fontlen)];
 
-    fontptr = LockResource(LoadResource(NULL, hrsrc));
+    fontptr = LockResource(LoadResource(nullptr, hrsrc));
     memcpy(m_pStrokeFontDef, fontptr, static_cast<size_t>(fontlen));
 
   } else {
-    HANDLE hFile = CreateFile(strPathName, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+    HANDLE hFile =
+        CreateFile(strPathName, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
     if (hFile != ((HANDLE)-1)) {
-      if (SetFilePointer(hFile, 0, 0, FILE_BEGIN) != (DWORD)-1) {
-        if (m_pStrokeFontDef == 0) m_pStrokeFontDef = new TCHAR[16384];
+      if (SetFilePointer(hFile, 0, nullptr, FILE_BEGIN) != (DWORD)-1) {
+        if (m_pStrokeFontDef == nullptr) m_pStrokeFontDef = new TCHAR[16384];
 
         DWORD nBytesRead;
         ReadFile(hFile, m_pStrokeFontDef, 16384U, &nBytesRead, 0);
@@ -1115,7 +1111,7 @@ void CPegApp::StrokeFontLoad(const CString& strPathName) {
 void CPegApp::StrokeFontRelease() {
   // Releases a large character array loaded for stroke fonts.
 
-  if (m_pStrokeFontDef != 0) delete[] m_pStrokeFontDef;
+  if (m_pStrokeFontDef != nullptr) delete[] m_pStrokeFontDef;
 }
 COLORREF AppGetTextCol() { return (~(crHotCols[0] | 0xff000000)); }
 void CPegApp::OnUpdateModeDraw(CCmdUI* pCmdUI) { pCmdUI->SetCheck(m_iModeId == ID_MODE_DRAW); }
@@ -1146,11 +1142,11 @@ void CPegApp::OnUpdateModeRlpd(CCmdUI* pCmdUI) { pCmdUI->SetCheck(m_iModeId == I
 
 void CPegApp::OnViewModeInformation() {
   m_bViewModeInfo = !m_bViewModeInfo;
-  CPegDoc::GetDoc()->UpdateAllViews(NULL, 0L, NULL);
+  CPegDoc::GetDoc()->UpdateAllViews(nullptr, 0L, nullptr);
 }
 void CPegApp::OnUpdateViewModeinformation(CCmdUI* pCmdUI) { pCmdUI->SetCheck(m_bViewModeInfo); }
 void CPegApp::OnViewStateInformation() {
   m_bViewStateInfo = !m_bViewStateInfo;
-  CPegDoc::GetDoc()->UpdateAllViews(NULL, 0L, NULL);
+  CPegDoc::GetDoc()->UpdateAllViews(nullptr, 0L, nullptr);
 }
 void CPegApp::OnUpdateViewStateinformation(CCmdUI* pCmdUI) { pCmdUI->SetCheck(m_bViewStateInfo); }

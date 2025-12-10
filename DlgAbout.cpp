@@ -15,7 +15,7 @@ class CDlgAbout : public CDialog {
   enum { IDD = IDD_ABOUTBOX };
 
  protected:
-  virtual void DoDataExchange(CDataExchange* pDX) override;  // DDX/DDV support
+  void DoDataExchange(CDataExchange* pDX) override;  // DDX/DDV support
 
   // Implementation
 };

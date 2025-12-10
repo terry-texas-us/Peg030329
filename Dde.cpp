@@ -7,9 +7,9 @@
 
 #include "PegAEsys.h"
 
-#include "dde.h"
-#include "ddeCmds.h"
-#include "ddeGItms.h"
+#include "Dde.h"
+#include "DdeCmds.h"
+#include "DdeGItms.h"
 #include "ddeSys.h"
 #include "lex.h"
 #include "Messages.h"
@@ -18,18 +18,18 @@ using namespace dde;
 
 // Standard format name lookup table
 // String names for standard Windows Clipboard formats
-CFTAGNAME dde::CFNames[] = {{CF_TEXT, {const_cast<LPSTR>(_T("TEXT"))}},
-                            {CF_BITMAP, {const_cast<LPSTR>(_T("BITMAP"))}},
-                            {CF_METAFILEPICT, {const_cast<LPSTR>(_T("METAFILEPICT"))}},
-                            {CF_SYLK, {const_cast<LPSTR>(_T("SYLK"))}},
-                            {CF_DIF, {const_cast<LPSTR>(_T("DIF"))}},
-                            {CF_TIFF, {const_cast<LPSTR>(_T("TIFF"))}},
-                            {CF_OEMTEXT, {const_cast<LPSTR>(_T("OEMTEXT"))}},
-                            {CF_DIB, {const_cast<LPSTR>(_T("DIB"))}},
-                            {CF_PALETTE, {const_cast<LPSTR>(_T("PALETTE"))}},
-                            {CF_PENDATA, {const_cast<LPSTR>(_T("PENDATA"))}},
-                            {CF_RIFF, {const_cast<LPSTR>(_T("RIFF"))}},
-                            {CF_WAVE, {const_cast<LPSTR>(_T("WAVE"))}},
+CFTAGNAME dde::CFNames[] = {{CF_TEXT, {const_cast<LPSTR>("TEXT")}},
+                            {CF_BITMAP, {const_cast<LPSTR>("BITMAP")}},
+                            {CF_METAFILEPICT, {const_cast<LPSTR>("METAFILEPICT")}},
+                            {CF_SYLK, {const_cast<LPSTR>("SYLK")}},
+                            {CF_DIF, {const_cast<LPSTR>("DIF")}},
+                            {CF_TIFF, {const_cast<LPSTR>("TIFF")}},
+                            {CF_OEMTEXT, {const_cast<LPSTR>("OEMTEXT")}},
+                            {CF_DIB, {const_cast<LPSTR>("DIB")}},
+                            {CF_PALETTE, {const_cast<LPSTR>("PALETTE")}},
+                            {CF_PENDATA, {const_cast<LPSTR>("PENDATA")}},
+                            {CF_RIFF, {const_cast<LPSTR>("RIFF")}},
+                            {CF_WAVE, {const_cast<LPSTR>("WAVE")}},
                             {0, {nullptr}}};
 // Local data
 SERVERINFO dde::ServerInfo;
@@ -40,6 +40,7 @@ WORD dde::MyFormats[] = {CF_TEXT, 0};
 DWORD dde::dwInstance = 0;
 
 ///<summary>Startup our DDE services and do the basic initialization.</summary>
+
 void dde::Setup(HINSTANCE) {
 #pragma warning(push)
 #pragma warning(disable : 4191)
@@ -51,14 +52,14 @@ void dde::Setup(HINSTANCE) {
 
   UINT uiResult = DdeInitialize(&ServerInfo.dwInstance, ServerInfo.pfnStdCallback, dwFilterFlags, 0L);
   if (uiResult != DMLERR_NO_ERROR) {
-    msgWarning(IDS_MSG_DDE_INIT_FAILURE, _T("PegAEsys"));
+    msgWarning(IDS_MSG_DDE_INIT_FAILURE, "PegAEsys");
     ::DestroyWindow(app.GetSafeHwnd());
     return;
   }
   dwInstance = ServerInfo.dwInstance;
 
-  ServerInfo.lpszServiceName = const_cast<TCHAR*>(_T("PegAEsys"));
-  ServerInfo.hszServiceName = DdeCreateStringHandle(ServerInfo.dwInstance, _T("PegAEsys"), CP_WINANSI);
+  ServerInfo.lpszServiceName = const_cast<char*>("PegAEsys");
+  ServerInfo.hszServiceName = DdeCreateStringHandle(ServerInfo.dwInstance, "PegAEsys", CP_WINANSI);
 
   // Register the name of the service
   DdeNameService(ServerInfo.dwInstance, ServerInfo.hszServiceName, (HSZ) nullptr, DNS_REGISTER);
@@ -70,44 +71,44 @@ void dde::Setup(HINSTANCE) {
   ItemAdd(SZDDESYS_TOPIC, SZDDE_ITEM_ITEMLIST, SysFormatList, SysReqItems, nullptr);
   ItemAdd(SZDDESYS_TOPIC, SZDDESYS_ITEM_TOPICS, SysFormatList, SysReqTopics, nullptr);
 
-  ItemAdd(SZDDESYS_TOPIC, _T("Protocols"), SysFormatList, SysReqProtocols, nullptr);
+  ItemAdd(SZDDESYS_TOPIC, "Protocols", SysFormatList, SysReqProtocols, nullptr);
 
-  ExecCmdAdd(SZDDESYS_TOPIC, _T("TracingOpen"), ExecTracingOpen, 1, 2);
-  ExecCmdAdd(SZDDESYS_TOPIC, _T("TracingMap"), ExecTracingMap, 1, 2);
-  ExecCmdAdd(SZDDESYS_TOPIC, _T("TracingView"), ExecTracingView, 1, 2);
+  ExecCmdAdd(SZDDESYS_TOPIC, "TracingOpen", ExecTracingOpen, 1, 2);
+  ExecCmdAdd(SZDDESYS_TOPIC, "TracingMap", ExecTracingMap, 1, 2);
+  ExecCmdAdd(SZDDESYS_TOPIC, "TracingView", ExecTracingView, 1, 2);
 
   // Add each General!Item pair
-  DimAngZInfo = ItemAdd(_T("General"), _T("DimAngZ"), MyFormats, DimAngZRequest, DimAngZPoke);
-  DimLenInfo = ItemAdd(_T("General"), _T("DimLen"), MyFormats, DimLenRequest, DimLenPoke);
-  EngAngZInfo = ItemAdd(_T("General"), _T("EngAngZ"), MyFormats, EngAngZRequest, nullptr);
-  EngLenInfo = ItemAdd(_T("General"), _T("EngLen"), MyFormats, EngLenRequest, nullptr);
-  ExtNumInfo = ItemAdd(_T("General"), _T("ExtNum"), MyFormats, ExtNumRequest, nullptr);
-  ExtStrInfo = ItemAdd(_T("General"), _T("ExtStr"), MyFormats, ExtStrRequest, nullptr);
-  RelPosZInfo = ItemAdd(_T("General"), _T("RelPosZ"), MyFormats, RelPosZRequest, nullptr);
-  RelPosYInfo = ItemAdd(_T("General"), _T("RelPosY"), MyFormats, RelPosYRequest, nullptr);
-  RelPosXInfo = ItemAdd(_T("General"), _T("RelPosX"), MyFormats, RelPosXRequest, nullptr);
-  ScaleInfo = ItemAdd(_T("General"), _T("Scale"), MyFormats, ScaleRequest, ScalePoke);
+  DimAngZInfo = ItemAdd("General", "DimAngZ", MyFormats, DimAngZRequest, DimAngZPoke);
+  DimLenInfo = ItemAdd("General", "DimLen", MyFormats, DimLenRequest, DimLenPoke);
+  EngAngZInfo = ItemAdd("General", "EngAngZ", MyFormats, EngAngZRequest, nullptr);
+  EngLenInfo = ItemAdd("General", "EngLen", MyFormats, EngLenRequest, nullptr);
+  ExtNumInfo = ItemAdd("General", "ExtNum", MyFormats, ExtNumRequest, nullptr);
+  ExtStrInfo = ItemAdd("General", "ExtStr", MyFormats, ExtStrRequest, nullptr);
+  RelPosZInfo = ItemAdd("General", "RelPosZ", MyFormats, RelPosZRequest, nullptr);
+  RelPosYInfo = ItemAdd("General", "RelPosY", MyFormats, RelPosYRequest, nullptr);
+  RelPosXInfo = ItemAdd("General", "RelPosX", MyFormats, RelPosXRequest, nullptr);
+  ScaleInfo = ItemAdd("General", "Scale", MyFormats, ScaleRequest, ScalePoke);
 
   // Add Topic for command execute connections
-  TopicAdd(_T("Commands"), nullptr, nullptr, nullptr);
+  TopicAdd("Commands", nullptr, nullptr, nullptr);
 
   // Add each Command!Item pair
-  ExecCmdAdd(_T("Commands"), _T("TracingBlank"), ExecTracingBlank, 1, 2);
-  ExecCmdAdd(_T("Commands"), _T("TracingMap"), ExecTracingMap, 1, 2);
-  ExecCmdAdd(_T("Commands"), _T("TracingOpen"), ExecTracingOpen, 1, 2);
-  ExecCmdAdd(_T("Commands"), _T("TracingView"), ExecTracingView, 1, 2);
-  ExecCmdAdd(_T("Commands"), _T("FileGet"), ExecFileGet, 1, 2);
-  ExecCmdAdd(_T("Commands"), _T("GotoPoint"), ExecGotoPoint, 1, 1);
-  ExecCmdAdd(_T("Commands"), _T("Line"), ExecLine, 1, 1);
-  ExecCmdAdd(_T("Commands"), _T("Pen"), ExecPen, 1, 1);
-  ExecCmdAdd(_T("Commands"), _T("Note"), ExecNote, 1, 1);
-  ExecCmdAdd(_T("Commands"), _T("Send"), ExecSend, 1, 1);
-  ExecCmdAdd(_T("Commands"), _T("SetPoint"), ExecSetPoint, 1, 1);
-  ExecCmdAdd(_T("Commands"), _T("DimAngZ"), ExecDA, 1, 1);
-  ExecCmdAdd(_T("Commands"), _T("DimLen"), ExecDL, 1, 1);
-  ExecCmdAdd(_T("Commands"), _T("Scale"), ExecScale, 1, 1);
-  ExecCmdAdd(_T("Commands"), _T("Fill"), ExecFill, 1, 1);
-  ExecCmdAdd(_T("Commands"), _T("NoteHT"), ExecNoteHT, 1, 1);
+  ExecCmdAdd("Commands", "TracingBlank", ExecTracingBlank, 1, 2);
+  ExecCmdAdd("Commands", "TracingMap", ExecTracingMap, 1, 2);
+  ExecCmdAdd("Commands", "TracingOpen", ExecTracingOpen, 1, 2);
+  ExecCmdAdd("Commands", "TracingView", ExecTracingView, 1, 2);
+  ExecCmdAdd("Commands", "FileGet", ExecFileGet, 1, 2);
+  ExecCmdAdd("Commands", "GotoPoint", ExecGotoPoint, 1, 1);
+  ExecCmdAdd("Commands", "Line", ExecLine, 1, 1);
+  ExecCmdAdd("Commands", "Pen", ExecPen, 1, 1);
+  ExecCmdAdd("Commands", "Note", ExecNote, 1, 1);
+  ExecCmdAdd("Commands", "Send", ExecSend, 1, 1);
+  ExecCmdAdd("Commands", "SetPoint", ExecSetPoint, 1, 1);
+  ExecCmdAdd("Commands", "DimAngZ", ExecDA, 1, 1);
+  ExecCmdAdd("Commands", "DimLen", ExecDL, 1, 1);
+  ExecCmdAdd("Commands", "Scale", ExecScale, 1, 1);
+  ExecCmdAdd("Commands", "Fill", ExecFill, 1, 1);
+  ExecCmdAdd("Commands", "NoteHT", ExecNoteHT, 1, 1);
 
   return;
 }
@@ -136,8 +137,8 @@ void dde::Uninitialize() {
     }
     pTopic = pTopic->pNext;
   }
-  TopicRemove(_T("Commands"));
-  TopicRemove(_T("General"));
+  TopicRemove("Commands");
+  TopicRemove("General");
   TopicRemove(SZDDESYS_TOPIC);
 
   // Release DDEML
@@ -210,7 +211,7 @@ bool dde::DoCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hszTopic, HSZ hszIt
         return true;
       }
     } else {
-      TCHAR sz[32]{};
+      char sz[32]{};
       DdeGetData(hData, (LPBYTE)sz, (DWORD)sizeof(sz), (DWORD)0);
       ::PostMessage(app.GetSafeHwnd(), WM_CHAR, (WPARAM)sz[0], (LPARAM)1);
       *phReturnData = (HDDEDATA)(DWORD)DDE_FACK;
@@ -354,12 +355,12 @@ HDDEDATA dde::DoWildConnect(HSZ hszTopic) {
     return (HDDEDATA) nullptr;
 
   // Big enough for all the HSZPAIRS we'll be sending back plus space for a 0 entry on the end
-  hData = DdeCreateDataHandle(ServerInfo.dwInstance, nullptr, (iTopics + 1) * sizeof(HSZPAIR), 0, 0, 0, 0);
+  hData = DdeCreateDataHandle(ServerInfo.dwInstance, nullptr, (iTopics + 1) * sizeof(HSZPAIR), 0, nullptr, 0, 0);
 
   if (!hData)  // Failed to create mem object!
     return (HDDEDATA) nullptr;
 
-  pHszPair = (PHSZPAIR)DdeAccessData(hData, 0);
+  pHszPair = (PHSZPAIR)DdeAccessData(hData, nullptr);
   if (hszTopic == nullptr)  // all the topics (includes the system topic)
   {
     pTopic = ServerInfo.pTopicList;
@@ -381,7 +382,7 @@ HDDEDATA dde::DoWildConnect(HSZ hszTopic) {
 
   return hData;
 }
-PEXECCMDFNINFO dde::ExecCmdAdd(const TCHAR* pszTopic, const TCHAR* pszCmdName, PEXECCMDFN pExecCmdFn, UINT uiMinArgs,
+PEXECCMDFNINFO dde::ExecCmdAdd(const char* pszTopic, const char* pszCmdName, PEXECCMDFN pExecCmdFn, UINT uiMinArgs,
                                UINT uiMaxArgs) {
   PEXECCMDFNINFO pCmd = nullptr;
   PEXECCMDFNINFO pHead;
@@ -389,7 +390,7 @@ PEXECCMDFNINFO dde::ExecCmdAdd(const TCHAR* pszTopic, const TCHAR* pszCmdName, P
   PTOPICINFO pTopic = TopicFind(pszTopic);
 
   if (!pTopic)  // Do Not already have this topic.	We need to add this as a new topic
-    pTopic = TopicAdd(pszTopic, 0, nullptr, 0);
+    pTopic = TopicAdd(pszTopic, nullptr, nullptr, nullptr);
 
   if (!pTopic) return nullptr;  // failed
 
@@ -400,7 +401,7 @@ PEXECCMDFNINFO dde::ExecCmdAdd(const TCHAR* pszTopic, const TCHAR* pszCmdName, P
     pCmd->uiMinArgs = uiMinArgs;
     pCmd->uiMaxArgs = uiMaxArgs;
   } else {  // New command item
-    pCmd = (PEXECCMDFNINFO) new TCHAR[sizeof(EXECCMDFNINFO)];
+    pCmd = (PEXECCMDFNINFO) new char[sizeof(EXECCMDFNINFO)];
     if (!pCmd) return nullptr;
 
     ::ZeroMemory(pCmd, sizeof(EXECCMDFNINFO));
@@ -417,12 +418,12 @@ PEXECCMDFNINFO dde::ExecCmdAdd(const TCHAR* pszTopic, const TCHAR* pszCmdName, P
     // If this was the first command added to the list, add the `Result` command too.
     // This supports the Execute Control 1 protocol.
 
-    ExecCmdAdd(pszTopic, _T("Result"), SysResultExecCmd, 1, 1);
+    ExecCmdAdd(pszTopic, "Result", SysResultExecCmd, 1, 1);
   }
   return pCmd;
 }
 ///<summary>Find a DDE execute command from its string name.</summary>
-PEXECCMDFNINFO dde::ExecCmdFind(PTOPICINFO pTopic, const TCHAR* lpszCmd) {
+PEXECCMDFNINFO dde::ExecCmdFind(PTOPICINFO pTopic, const char* lpszCmd) {
   PEXECCMDFNINFO pCmd = pTopic->pCmdList;
 
   while (pCmd) {
@@ -464,7 +465,7 @@ LPSTR dde::GetCFNameFromId(WORD wFmt, LPSTR lpBuf, size_t iSize) {
   // Try for a standard one first
   while (pCTN->wFmt) {
     if (pCTN->wFmt == wFmt) {
-      _tcsnccpy_s(lpBuf, iSize, pCTN->pszName, _TRUNCATE);
+      strncpy_s(lpBuf, iSize, pCTN->pszName, _TRUNCATE);
       return lpBuf;
     }
     pCTN++;
@@ -485,9 +486,10 @@ HDDEDATA dde::MakeCFText(UINT wFmt, LPSTR lpszStr, HSZ hszItem) {
 // Returns: A DDE data handle to a list of the format names.
 HDDEDATA dde::MakeDataFromFormatList(LPWORD pFmt, WORD wFmt, HSZ hszItem) {
   DWORD cb{0};
-  TCHAR buf[256]{};
+  char buf[256]{};
 
-  HDDEDATA hData = DdeCreateDataHandle(ServerInfo.dwInstance, 0, 0, 0, hszItem, wFmt, 0);  // Empty data object to fill
+  HDDEDATA hData =
+      DdeCreateDataHandle(ServerInfo.dwInstance, nullptr, 0, 0, hszItem, wFmt, 0);  // Empty data object to fill
   DWORD cbOffset{0};
 
   while (*pFmt)  // Walk the format list
@@ -523,18 +525,18 @@ bool dde::ProcessExecRequest(PTOPICINFO pTopic, HDDEDATA hData) {
   POP OpTable[MAXOPS];
   PPOP ppOp, ppArg;
   UINT uiNargs;
-  LPSTR pArgBuf = 0;
+  LPSTR pArgBuf = nullptr;
   PCONVERSATIONINFO pCI;
-  TCHAR szResult[MAXRESULTSIZE]{};
+  char szResult[MAXRESULTSIZE]{};
 
   if (!hData) return false;
 
-  LPSTR pData = (LPSTR)DdeAccessData(hData, 0);
+  LPSTR pData = (LPSTR)DdeAccessData(hData, nullptr);
 
   if (!pData) return false;
 
   // Allocate double required size we might need so we can avoid doing any space tests.
-  pArgBuf = (LPSTR) new TCHAR[2 * strlen(pData)];
+  pArgBuf = (LPSTR) new char[2 * strlen(pData)];
   if (!pArgBuf) goto PER_exit;
 
   ::ZeroMemory(pArgBuf, 2 * strlen(pData));
@@ -602,19 +604,19 @@ bool dde::ParseCmd(LPSTR* ppszCmdLine, PTOPICINFO pTopic, LPSTR pszError, UINT u
   PPOP ppOp = pOpTable;
   PEXECCMDFNINFO pExecFnInfo;
   UINT uiNargs;
-  TCHAR cTerm;
+  char cTerm;
 
-  *ppOp = 0;
+  *ppOp = nullptr;
   LPSTR pCmd = lex::SkipWhiteSpace(*ppszCmdLine);
 
   if (!lex::ScanForChar('[', &pCmd)) {  // Scan for a command leading
-    _tcsnccpy_s(pszError, uiErrorSize, _T("Missing '['"), _TRUNCATE);
+    strncpy_s(pszError, uiErrorSize, "Missing '['", _TRUNCATE);
     return false;
   }
 
   pExecFnInfo = ScanForCommand(pTopic->pCmdList, &pCmd);
   if (!pExecFnInfo) {  // Not a valid command
-    _tcsnccpy_s(pszError, uiErrorSize, _T("Invalid Command"), _TRUNCATE);
+    strncpy_s(pszError, uiErrorSize, "Invalid Command", _TRUNCATE);
     return false;
   }
   *ppOp++ = pExecFnInfo->pFn;  // Add the function pointer to the opcode list
@@ -630,25 +632,25 @@ bool dde::ParseCmd(LPSTR* ppszCmdLine, PTOPICINFO pTopic, LPSTR pszError, UINT u
     } while (cTerm == ',');
 
     if ((cTerm != ')') && (!lex::ScanForChar(')', &pCmd))) {  // Do not have a terminating ) character
-      _tcsnccpy_s(pszError, uiErrorSize, _T("Missing ')'"), _TRUNCATE);
+      strncpy_s(pszError, uiErrorSize, "Missing ')'", _TRUNCATE);
       return false;
     }
   }
   if (!lex::ScanForChar(']', &pCmd)) {  // Do not have a terminating ] character
-    _tcsnccpy_s(pszError, uiErrorSize, _T("Missing ']'"), _TRUNCATE);
+    strncpy_s(pszError, uiErrorSize, "Missing ']'", _TRUNCATE);
     return false;
   }
   if (uiNargs < pExecFnInfo->uiMinArgs) {
-    _tcsnccpy_s(pszError, uiErrorSize, _T("Too few arguments"), _TRUNCATE);
+    strncpy_s(pszError, uiErrorSize, "Too few arguments", _TRUNCATE);
     return false;
   }
   if (uiNargs > pExecFnInfo->uiMaxArgs) {
-    _tcsnccpy_s(pszError, uiErrorSize, _T("Too many arguments"), _TRUNCATE);
+    strncpy_s(pszError, uiErrorSize, "Too many arguments", _TRUNCATE);
     return false;
   }
-  *ppOp++ = 0;  // Terminate this op list with a 0
+  *ppOp++ = nullptr;  // Terminate this op list with a 0
   pCmd = lex::SkipWhiteSpace(pCmd);
-  *ppOp = 0;            // Put a final 0 on the op list
+  *ppOp = nullptr;      // Put a final 0 on the op list
   *ppszCmdLine = pCmd;  // Update the buffer pointer
 
   return true;
@@ -670,8 +672,8 @@ bool dde::SysResultExecCmd(PTOPICINFO pTopic, LPSTR, UINT, UINT, LPSTR* ppArgs) 
   if (pCI->pResultItem)  // Already have a temporary result item. Get rid of it
     ItemRemove(pTopic->pszTopicName, pCI->pResultItem->pszItemName);
 
-  pCI->pResultItem = ItemAdd(pTopic->pszTopicName, ppArgs[0], SysFormatList, SysReqResultInfo,
-                             0);  // Add a new temporary result item to the current conversation
+  // Add a new temporary result item to the current conversation
+  pCI->pResultItem = ItemAdd(pTopic->pszTopicName, ppArgs[0], SysFormatList, SysReqResultInfo, nullptr);  
 
   return true;
 }
@@ -700,12 +702,12 @@ PEXECCMDFNINFO dde::ScanForCommand(PEXECCMDFNINFO pCmdInfo, LPSTR* ppStr) {
   LPSTR p = pStart;
 
   if (!isalpha(*p))  // First character is not alpha
-    return 0;
+    return nullptr;
 
   while (isalnum(*p))  // Collect alpha-num characters until we get to a non-alpha.
     p++;
 
-  TCHAR cSave = *p;  // Terminate the source temporarily with a null
+  char cSave = *p;  // Terminate the source temporarily with a null
   *p = '\0';
 
   while (pCmdInfo)  // Search for a command that matches the name we have
@@ -719,5 +721,5 @@ PEXECCMDFNINFO dde::ScanForCommand(PEXECCMDFNINFO pCmdInfo, LPSTR* ppStr) {
     pCmdInfo = pCmdInfo->pNext;
   }
   *p = cSave;  // Didn't find it, so restore delimiter and return
-  return 0;    // not found
+  return nullptr;  // not found
 }

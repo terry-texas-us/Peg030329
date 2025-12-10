@@ -9,6 +9,7 @@
 #include "PegAEsysDoc.h"
 
 #include "CharCellDef.h"
+#include "Dde.h"
 #include "ddeCmds.h"
 #include "FileJob.h"
 #include "FontDef.h"
@@ -30,8 +31,8 @@ using namespace dde;
 ///<summary>Sets the Text Height.</summary>
 
 bool dde::ExecNoteHT(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
-  TCHAR szBuf[32]{};
-  _tcsncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  char szBuf[32]{};
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
   CCharCellDef ccd;
   pstate.GetCharCellDef(ccd);
   ccd.ChrHgtSet(atof(szBuf));
@@ -40,31 +41,31 @@ bool dde::ExecNoteHT(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
 }
 ///<summary>Sets the Fill.</summary>
 bool dde::ExecFill(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
-  TCHAR szBuf[8]{};
-  _tcsncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  char szBuf[8]{};
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
   pstate.SetPolygonIntStyleId(static_cast<short>(_ttoi(szBuf)));
   return true;
 }
 ///<summary>Sets the Scale.</summary>
 bool dde::ExecScale(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
-  TCHAR szBuf[32]{};
-  _tcsncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  char szBuf[32]{};
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
   app.SetScale(atof(szBuf));
   app.StatusLineDisplay(Scale);
   return true;
 }
 ///<summary>Sets the Diamond Length.</summary>
 bool dde::ExecDL(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
-  TCHAR szBuf[32]{};
-  _tcsncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  char szBuf[32]{};
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
   app.SetDimLen(UnitsString_ParseLength(app.GetUnits(), szBuf));
   app.StatusLineDisplay(DimLen);
   return true;
 }
 ///<summary>Sets the Diamond Angle.</summary>
 bool dde::ExecDA(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
-  TCHAR szBuf[32]{};
-  _tcsncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  char szBuf[32]{};
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
   app.SetDimAngZ(atof(szBuf));
   app.StatusLineDisplay(DimAng);
   return true;
@@ -137,9 +138,9 @@ bool dde::ExecFileGet(PTOPICINFO, LPSTR, UINT, UINT uiNargs, LPSTR* ppArgs) {
 }
 ///<summary>Set the position of the cursor.</summary>
 bool dde::ExecGotoPoint(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
-  TCHAR szBuf[8]{};
+  char szBuf[8]{};
 
-  _tcsncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 
   int iStakeId = _ttoi(szBuf);
   app.CursorPosSet(app.HomePointGet(iStakeId));
@@ -148,9 +149,9 @@ bool dde::ExecGotoPoint(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
 }
 ///<summary>Sets the pen color.</summary>
 bool dde::ExecPen(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
-  TCHAR szBuf[8]{};
+  char szBuf[8]{};
 
-  _tcsncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 
   pstate.SetPenColor(PENCOLOR(_ttoi(szBuf)));
   app.StatusLineDisplay(Pen);
@@ -159,9 +160,9 @@ bool dde::ExecPen(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
 }
 ///<summary>Sets the pen style</summary>
 bool dde::ExecLine(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
-  TCHAR szBuf[8]{};
+  char szBuf[8]{};
 
-  _tcsncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 
   pstate.SetPenStyle(PENSTYLE(_ttoi(szBuf)));
   app.StatusLineDisplay(Line);
@@ -193,7 +194,7 @@ bool dde::ExecNote(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
 ///<summary>Posts message to force key driven action.</summary>
 bool dde::ExecSend(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
   HWND hWndTarget = GetFocus();
-  TCHAR* pIdx = (LPSTR)ppArgs[0];
+  char* pIdx = (LPSTR)ppArgs[0];
   while (*pIdx != 0) {
     if (*pIdx == '{') {
       *pIdx++;
@@ -209,9 +210,9 @@ bool dde::ExecSend(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
 }
 ///<summary>Sets a home point.</summary>
 bool dde::ExecSetPoint(PTOPICINFO, LPSTR, UINT, UINT, LPSTR* ppArgs) {
-  TCHAR szBuf[8]{};
+  char szBuf[8]{};
 
-  _tcsncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
+  strncpy_s(szBuf, sizeof(szBuf), ppArgs[0], _TRUNCATE);
 
   int iStakeId = _ttoi(szBuf);
 

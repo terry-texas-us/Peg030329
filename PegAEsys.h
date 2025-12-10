@@ -166,7 +166,7 @@ class CPegApp : public CWinApp {
 
   // Overrides
  public:
-  virtual BOOL InitInstance();
+  BOOL InitInstance() override;
 
  protected:
   afx_msg void OnAppAbout();
@@ -225,4 +225,4 @@ bool AppGetGinCur(CPrim*&);
 bool AppGetGinCur(CSeg*&);
 bool AppGetGinCur(CSeg*&, CPrim*&);
 COLORREF AppGetTextCol();
-void AppSetGinCur(CSeg* = 0, CPrim* = 0);
+void AppSetGinCur(CSeg* = nullptr, CPrim* = nullptr);

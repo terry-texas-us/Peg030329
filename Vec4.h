@@ -8,7 +8,7 @@ class CVec;
 
 class CVec4 : public CObject {
  private:
-  double m_d[4];
+  double m_d[4]{};
 
  public:  // Constructors and destructor
   CVec4() { m_d[0] = m_d[1] = m_d[2] = m_d[3] = 0.; }
@@ -18,7 +18,7 @@ class CVec4 : public CObject {
   CVec4(const CPnt4& pt0, const CPnt4& pt1);
   CVec4(const CVec& v, const double d);
 
-  ~CVec4() {}
+  ~CVec4() override {}
 
  public:  // Operators
   CVec4& operator=(const CVec4& v);

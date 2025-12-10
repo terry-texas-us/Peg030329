@@ -5,10 +5,9 @@
 
 #include "MainFrm.h"
 #include "PegAEsys.h"
-#include "PegAEsysDoc.h"
 #include "PegAEsysView.h"
 
-#include "dde.h"
+#include "Dde.h"
 #include "FileJob.h"
 #include "Lex.h"
 #include "OpenGL.h"
@@ -37,9 +36,9 @@ static int numberOfIndicators = sizeof(indicators) / sizeof(UINT);
 
 // CMainFrame construction/destruction
 
-CMainFrame::CMainFrame() {}
-CMainFrame::~CMainFrame() {}
-BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs) {
+CMainFrame::CMainFrame() = default;
+CMainFrame::~CMainFrame() = default;
+auto CMainFrame::PreCreateWindow(CREATESTRUCT& cs) -> BOOL {
   if (!CMDIFrameWnd::PreCreateWindow(cs)) return FALSE;
 
   return TRUE;
@@ -56,7 +55,7 @@ void CMainFrame::Dump(CDumpContext& dc) const { CMDIFrameWnd::Dump(dc); }
 
 // CMainFrame message handlers
 
-int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct) {
+auto CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct) -> int {
   if (CMDIFrameWnd::OnCreate(lpCreateStruct) == -1) return -1;
 
   if (!m_wndToolBar.CreateEx(
@@ -84,14 +83,14 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct) {
 void CMainFrame::OnDestroy() {
   TRACE(_T("CMainFrame::OnDestroy() - Entering\n"));
 
-  CPegView* pView = CPegView::GetActiveView();
-  CDC* pDC = (pView == NULL) ? NULL : pView->GetDC();
+  auto* activeView = CPegView::GetActiveView();
+  CDC* pDC = (activeView == nullptr) ? nullptr : activeView->GetDC();
 
-  if (pDC != NULL) {
+  if (pDC != nullptr) {
     // Stock objects are never left `current` so it is safe to delete whatever the old object is
     pDC->SelectStockObject(BLACK_PEN)->DeleteObject();
     pDC->SelectStockObject(WHITE_BRUSH)->DeleteObject();
-    // pView->ReleaseDC();	// Release to DC associated with the view
+    // activeView->ReleaseDC();	// Release to DC associated with the view
   }
 
   opengl::Release();

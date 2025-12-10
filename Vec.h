@@ -16,7 +16,7 @@ typedef double Vecd[3];
 
 class CVec : public CObject {
  private:
-  double m_d[3];
+  double m_d[3]{};
 
  public:  // constructors and destructor
   CVec() { m_d[0] = m_d[1] = m_d[2] = 0.; }
@@ -31,7 +31,7 @@ class CVec : public CObject {
   CVec(const CLine& ln);
   CVec(const CVec4& v);
 
-  ~CVec() {}
+  ~CVec() override {}
 
  public:  // operators
   CVec& operator=(const CVec& v);

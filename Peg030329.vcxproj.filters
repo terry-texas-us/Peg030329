@@ -720,13 +720,7 @@
     <None Include="res\PegAEsys.rc2">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Peg &amp; Tra File Formats.docx">
-      <Filter>Documents</Filter>
-    </None>
     <None Include="Peg &amp; Tra File Formats.md">
-      <Filter>Documents</Filter>
-    </None>
-    <None Include="Peg &amp; Tra File Formats.pdf">
       <Filter>Documents</Filter>
     </None>
     <None Include="cpp.hint" />
@@ -777,18 +771,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Peg &amp; Tra File Formats.txt">
-      <Filter>Documents</Filter>
-    </Text>
-    <Text Include="Peg &amp; Tra File Formats (extracted FilePeg comments).txt">
-      <Filter>Documents</Filter>
-    </Text>
-    <Text Include="Job File Format.txt">
+    <Text Include="Job File Format.md">
       <Filter>Documents</Filter>
     </Text>
     <Text Include="res\Pens\Widths.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="Dde Description and Few Uses.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\PegAEsys.ico">

@@ -3,8 +3,6 @@
 #include <afxstr.h>
 #include <afxwin.h>
 
-#include <string.h>
-
 #include <algorithm>
 #include <cctype>
 #include <cfloat>
@@ -776,7 +774,7 @@ CPrimText::CPrimText(char* p, int iVer) {
 
     if (pChr == nullptr)
       m_strText = _T("CFileJob.PrimText error: Missing string terminator.");
-    else if (strlen(pChr) > 132)
+    else if (std::strlen(pChr) > 132)
       m_strText = _T("CFileJob.PrimText error: Text too long.");
     else {
       while (*pChr != 0) {

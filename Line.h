@@ -45,7 +45,7 @@ class CLine : public CObject {
     m_pt[1] = ln.m_pt[1];
   }
 
-  ~CLine() {}
+  ~CLine() override {}
 
  public:  // Operators
   CLine& operator=(const CLine& ln) {

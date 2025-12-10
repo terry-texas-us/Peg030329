@@ -395,9 +395,7 @@
       <SubType>
       </SubType>
     </None>
-    <None Include="Peg &amp; Tra File Formats.docx" />
     <None Include="Peg &amp; Tra File Formats.md" />
-    <None Include="Peg &amp; Tra File Formats.pdf" />
     <None Include="res\Mode_Annotate.CUR" />
     <None Include="res\Mode_Apps.CUR" />
     <None Include="res\Mode_Cut.CUR" />
@@ -414,9 +412,8 @@
     <None Include="res\Simplex.psf" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Job File Format.txt" />
-    <Text Include="Peg &amp; Tra File Formats (extracted FilePeg comments).txt" />
-    <Text Include="Peg &amp; Tra File Formats.txt" />
+    <Text Include="Dde Description and Few Uses.txt" />
+    <Text Include="Job File Format.md" />
     <Text Include="res\Pens\Widths.txt" />
   </ItemGroup>
   <ItemGroup>

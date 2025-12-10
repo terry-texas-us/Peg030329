@@ -4,7 +4,6 @@
 
 #include <corecrt.h>
 #include <io.h>
-#include <string.h>
 
 #include <cstdlib>
 

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "dde.h"
+#include "Dde.h"
+#include "DdeGItms.h"
 
 namespace dde {
 extern PITEMINFO DimAngZInfo;

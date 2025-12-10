@@ -12,7 +12,7 @@ typedef CArray<CPnt4, CPnt4&> CPnt4s;
 
 class CPnt4 : public CObject {
  private:
-  double m_d[4];
+  double m_d[4]{};
 
  public:  // Constructors and destructor
   CPnt4() { m_d[0] = m_d[1] = m_d[2] = m_d[3] = 0.; }
@@ -26,7 +26,7 @@ class CPnt4 : public CObject {
 
   CPnt4(const CPnt& pt, const double d);
 
-  ~CPnt4() {}
+  ~CPnt4() override {}
 
  public:  // Operators
   CPnt4& operator=(const CPnt& pt);

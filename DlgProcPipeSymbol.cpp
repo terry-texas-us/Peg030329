@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <string.h>
-
 #include "PegAEsys.h"
 
 #include "SubProcPipe.h"

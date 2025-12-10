@@ -25,7 +25,8 @@
 
 #include "Block.h"
 #include "CharCellDef.h"
-#include "ddeGItms.h"
+#include "Dde.h"
+#include "DdeGItms.h"
 #include "DlgSetMarkStyle.h"
 #include "DlgProcFileManage.h"
 #include "FileBlock.h"

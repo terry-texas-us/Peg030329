@@ -13,7 +13,7 @@ class CMat4 : public CObject {
   CMat4(const CMat4& m);
   CMat4(const CVec4& v0, const CVec4& v1, const CVec4& v2, const CVec4& v3);
 
-  virtual ~CMat4() {}
+  ~CMat4() override {}
 
  public:  // Operators
   CMat4& operator=(const CMat4& m);

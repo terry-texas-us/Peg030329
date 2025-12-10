@@ -284,7 +284,7 @@ class CPegView : public CView {
   afx_msg void OnPrimPerpJump();
   afx_msg void OnHelpKey();
   // Returns a pointer to the currently active view.
-  static CPegView* GetActiveView(void);
+  static CPegView* GetActiveView();
   afx_msg void OnUpdateViewOdometer(CCmdUI* pCmdUI);
   afx_msg void OnUpdateViewTrueTypeFonts(CCmdUI* pCmdUI);
 

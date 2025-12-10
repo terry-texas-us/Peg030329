@@ -2,8 +2,6 @@
 
 #include <afxstr.h>
 
-#include <string.h>
-
 #include <cstdlib>
 
 #include "PegAEsys.h"

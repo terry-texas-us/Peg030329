@@ -68,11 +68,11 @@ When a tracing (tra) file is loaded the required Linetype Table can no longer be
 	Base point				            point3d
 	{0 or more primitive definitions}
 
- # Groups definition
-	Number of Group definition		    uint16_t
-	{0 or more group definitions}
+ # Segments definition
+	Number of Segment definition	    uint16_t
+	{0 or more segment definitions}
 
- # Group definition
+ # Segment definition
 	Number of primitive definitions		uint16_t
 	{0 or more primitive definitions}
  
@@ -103,7 +103,7 @@ When a tracing (tra) file is loaded the required Linetype Table can no longer be
 		Type code <0x0102>		uint16_t	[0-1]
 		Pen color			    uint16_t	[2-3]
 		Line type			    uint16_t	[4-5]
-		Group name			    string
+		Segment name		    string
 		Insertion point			point3d
 		Local normal vector		vector3d
 		Scale factors(x, y, z)	vector3d

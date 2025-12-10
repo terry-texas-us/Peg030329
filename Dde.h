@@ -110,21 +110,21 @@ bool ConversationRemove(HCONV hConv, HSZ hszTopic);
 bool DoCallback(UINT wType, UINT wFmt, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, HDDEDATA* phReturnData);
 HDDEDATA DoWildConnect(HSZ hszTopic);
 
-PEXECCMDFNINFO ExecCmdAdd(const TCHAR* pszTopic, const TCHAR* pszCmdName, PEXECCMDFN pExecCmdFn, UINT uiMinArgs,
+PEXECCMDFNINFO ExecCmdAdd(const char* pszTopic, const char* pszCmdName, PEXECCMDFN pExecCmdFn, UINT uiMinArgs,
                           UINT uiMaxArgs);
-PEXECCMDFNINFO ExecCmdFind(PTOPICINFO pTopic, const TCHAR* lpszCmd);
+PEXECCMDFNINFO ExecCmdFind(PTOPICINFO pTopic, const char* lpszCmd);
 bool ExecCmdRemove(LPSTR pszTopic, LPSTR pszCmdName);
 
-PITEMINFO ItemAdd(const TCHAR* lpszTopic, const TCHAR* lpszItem, LPWORD pFormatList, PREQUESTFN lpReqFn,
+PITEMINFO ItemAdd(const char* lpszTopic, const char* lpszItem, LPWORD pFormatList, PREQUESTFN lpReqFn,
                   PPOKEFN lpPokeFn);
 PITEMINFO ItemFind(PTOPICINFO pTopic, HSZ hszItem);
-PITEMINFO ItemFind(PTOPICINFO pTopic, const TCHAR* lpszItem);
+PITEMINFO ItemFind(PTOPICINFO pTopic, const char* lpszItem);
 bool ItemRemove(LPSTR lpszTopic, LPSTR lpszItem);
 
-PTOPICINFO TopicAdd(const TCHAR* lpszTopic, PEXECFN pfnExec, PREQUESTFN pfnRequest, PPOKEFN pfnPoke);
+PTOPICINFO TopicAdd(const char* lpszTopic, PEXECFN pfnExec, PREQUESTFN pfnRequest, PPOKEFN pfnPoke);
 PTOPICINFO TopicFind(HSZ hszName);
-PTOPICINFO TopicFind(const TCHAR* lpszName);
-bool TopicRemove(const TCHAR* lpszTopic);
+PTOPICINFO TopicFind(const char* lpszName);
+bool TopicRemove(const char* lpszTopic);
 
 LPSTR GetCFNameFromId(WORD wFmt, LPSTR lpBuf, size_t iSize);
 HDDEDATA MakeCFText(UINT, LPSTR, HSZ);

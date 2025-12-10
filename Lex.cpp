@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <string.h>
-
 #include <algorithm>
 #include <cctype>
 #include <cfloat>
@@ -141,7 +139,7 @@ void lex::ConvertValToString(char* acVal, CD* arCD, char* acPic, size_t picBuffe
         memcpy(lVal, &acVal[iValId], 4);
         iValId += 4;
         _ltoa_s(*lVal, &acPic[iLnLoc], picBufferSize - iLnLoc, 10);
-        iVLen = (int)strlen(&acPic[iLnLoc]);
+        iVLen = (int)std::strlen(&acPic[iLnLoc]);
         iLnLoc += iVLen;
       } else {
         memcpy(dVal, &acVal[iValId], 8);
@@ -152,7 +150,7 @@ void lex::ConvertValToString(char* acVal, CD* arCD, char* acPic, size_t picBuffe
           char* context = nullptr;
           szpVal = _tcstok_s(cVal, " ", &context);
           _tcscpy_s(&acPic[iLnLoc], picBufferSize - iLnLoc, szpVal);
-          iLnLoc += (int)strlen(szpVal);
+          iLnLoc += (int)std::strlen(szpVal);
         } else if (lTyp == TOK_LENGTH_OPERAND) {
 #pragma tasMSG(TODO : Length to length string)
           iLnLoc += iVLen;
@@ -447,7 +445,7 @@ void lex::Parse(const char* szLine) {
   char szTok[256]{};
 
   int iBeg = 0;
-  int iLnLen = (int)strlen(szLine);
+  int iLnLen = (int)std::strlen(szLine);
 
   while (iBeg < iLnLen) {
     int iTyp = Scan(szTok, sizeof(szTok), szLine, iBeg);
@@ -456,13 +454,13 @@ void lex::Parse(const char* szLine) {
     if (iToks == TOKS_MAX) return;
 
     iTokenType[iToks] = iTyp;
-    int iLen = (int)strlen(szTok);
+    int iLen = (int)std::strlen(szTok);
     int iDim;
     double dVal;
 
     switch (iTyp) {
       case TOK_IDENTIFIER:
-        iDim = (int)strlen(szTok);
+        iDim = (int)std::strlen(szTok);
         iLen = 1 + (iDim - 1) / 4;
 
         iValLoc[iToks] = iValsCount + 1;
@@ -495,7 +493,7 @@ void lex::Parse(const char* szLine) {
   }
 }
 void lex::ParseStringOperand(const char* pszTok) {
-  if (strlen(pszTok) < 3) {
+  if (std::strlen(pszTok) < 3) {
     msgInformation(IDS_MSG_ZERO_LENGTH_STRING);
     return;
   }

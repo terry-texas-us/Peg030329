@@ -11,13 +11,11 @@ IMPLEMENT_DYNCREATE(CChildFrame, CMDIChildWnd)
 BEGIN_MESSAGE_MAP(CChildFrame, CMDIChildWnd)
 END_MESSAGE_MAP()
 
-CChildFrame::CChildFrame() {
-  // TODO: add member initialization code here
-}
+CChildFrame::CChildFrame() = default;
 
-CChildFrame::~CChildFrame() {}
+CChildFrame::~CChildFrame() = default;
 
-BOOL CChildFrame::PreCreateWindow(CREATESTRUCT& cs) {
+auto CChildFrame::PreCreateWindow(CREATESTRUCT& cs) -> BOOL {
   // TODO: Modify the Window class or styles here by modifying the CREATESTRUCT cs
   if (!CMDIChildWnd::PreCreateWindow(cs)) return FALSE;
 

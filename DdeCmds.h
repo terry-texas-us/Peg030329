@@ -1,7 +1,5 @@
 #pragma once
 
-#include "dde.h"
-
 // prototypes for handling procedures
 
 namespace dde {

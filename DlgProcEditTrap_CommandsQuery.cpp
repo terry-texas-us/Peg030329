@@ -2,10 +2,6 @@
 
 #include <afxstr.h>
 
-#include <algorithm>
-
-#include <string.h>
-
 #include "Prim.h"
 #include "SegsTrap.h"
 

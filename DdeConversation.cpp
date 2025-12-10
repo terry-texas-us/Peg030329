@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
-#include "dde.h"
+#include "Dde.h"
 
 using namespace dde;
 
 /// @brief Add a conversation to our list.
 bool dde::ConversationAdd(HCONV hConv, HSZ hszTopic) {
-  PCONVERSATIONINFO pCI = (PCONVERSATIONINFO) new TCHAR[sizeof(CONVERSATIONINFO)];
+  PCONVERSATIONINFO pCI = (PCONVERSATIONINFO) new char[sizeof(CONVERSATIONINFO)];
   if (!pCI) return false;
 
   ::ZeroMemory(pCI, sizeof(CONVERSATIONINFO));
